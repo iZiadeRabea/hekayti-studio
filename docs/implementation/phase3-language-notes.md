@@ -1,0 +1,41 @@
+# Phase 3 Arabic and language implementation
+
+Worker: GPT-6.1 Sol. Pure TypeScript; public boundary `@hekayti/core/language`. Owned files are `story-language.ts`, its application test, `examples/phase3/language-pairs.json` and this note. No paid provider, network, filesystem or private input is used by the module.
+
+## Drafting and semantic boundary
+
+`createStoryDraft(request, concept, blueprint, draftId)` and `MockStoryDraftProvider.createDraft` return unapproved `story-draft/1.0` editions with actual mock provenance even when source preference is `ai`. Canonical sources remain untouched. MSA, Egyptian and English have independently authored action sentences; lexical noun labels are inputs, not a search-and-replace translator. English keeps canonical character names and uses the existing LTR language metadata. Arabic retains logical Unicode and approved combining marks; metadata comes from existing `languageInfo` in review notes because the frozen `LanguageEdition` has no separate `lang`/`dir` fields.
+
+The mock supports reusable micro-actions and their concrete, vetted state outcomes, coordinated with the Story worker. It does not accept arbitrary English state descriptions and guess prose. Every after-state is `${focus.en}: <outcome>`, with the first before-state `${focus.en}: object awaits shared attention` and subsequent before-states matching the previous after-state.
+
+| Action                      | Supported outcome                                                                                       |
+| --------------------------- | ------------------------------------------------------------------------------------------------------- |
+| recognize / reveal / repeat | object recognized / object uncovered / object recognized again                                          |
+| notice / try                | object noticed / object explored with support                                                           |
+| compare / ask-help          | object features compared / help requested with object                                                   |
+| cooperate / discover        | object explored together / object location discovered                                                   |
+| solve / return / settle     | object task completed with support / object returned to familiar place / object rests in familiar place |
+
+Vetted lexical subjects are ball, basket, ribbon and leaf, plus the independently tested quantity of three blocks. Locations are garden, room and beside the window. Mode-specific lexical labels/location equivalents must match this registry, allowing supplied diacritics. Unsupported objects, quantities, locations, emotions or state/action pairs fail with readable `LANGUAGE_INPUT` errors; manual drafting or an explicitly reviewed registry extension is needed. Supported emotions are warm, curious and reassured. Curious exploration uses its narrative tone rather than a mechanical emotion suffix on every sentence; explicit curiosity is introduced once for older readers and closing reassurance is narrated. No unreviewed scientific statement is invented. Referenced facts need a source and human reviewer, and fact text is never blindly inserted as child prose.
+
+Under 1 uses recognition/reveal labels and a refrain, not a shortened preschool plot. 12–23 months uses short familiar actions with support. 24+ adds sequencing to linked canonical actions; richer structures come from the Age and Story workers. No extra concrete problem, helper identity, object quantity or feature is invented to make the generic state descriptions more entertaining. For example, “task completed with support” remains a supported task rather than spontaneously becoming a built tower. Canonical objectives, characters, state/emotion, actor IDs and ordered beat/page references are validated before writing. Page subdivisions hold the same visible object/location on subsequent pages instead of replaying an attempt, solving twice or returning the object again. Parent participation stays in `blueprint.parentParticipation`, outside child word counts.
+
+## Agreement and review
+
+Lead-provided shared commits `c4c88cc` and `0fec64e` added optional authored grammatical gender to character bibles and synthetic personalization respectively. These were explicitly authorized cherry-picks into the worker branch, not independent shared edits. Arabic never infers gender from a name. Known metadata selects fully authored masculine/feminine action clauses. Missing metadata uses event-subject or object-subject sentences, for example “جاء طلب المساعدة من ليلى …” / “طلب المساعدة جه من ليلى …”; the requester stays the requester. This fallback is less fluid than a reviewed finite-verb edition and receives an agreement-review finding. The unknown-gender level-3 synthetic hero is tested separately. Object agreement uses the vetted lexical registry; quantities remain three across MSA, Egyptian and English.
+
+`reviewStoryLanguage` reports separate evidence for source revision, edition/page mappings, character/speaker drift, quantities/lexical labels, word totals, embedded bidi controls, mixed script, possible register contamination and manual kashida. Word totals measure narration plus dialogue, excluding alt text, notes and caregiver cues. Dialogue is not invented by the mock; manually supplied dialogue is checked for canonical speaker attribution. Alternative human prose gets a semantic-review finding rather than an automatic equivalence claim. Diacritic normalization occurs only in lint comparison; original text is never stripped, reversed or normalized in output.
+
+Every review requires full-story native read-aloud and page-by-page comparison of outcomes, quantities, emotions, facts and objectives. Register heuristics are narrow and can miss errors or flag intentional words. Lexical matching cannot prove causality or meaning. Alt text is a prose placeholder, not a reviewed description of future art. No automatic linguistic, developmental, accessibility, clinical, visual or production approval is claimed. Editorial word/page budgets must also be reviewed through the Age module after attaching editions; the mock does not pad sparse semantic input with invented events to satisfy a target.
+
+## Verification and integration
+
+Independent tests cover representative paired 8/20/48-month stories, held pages, quantity preservation, immutable inputs, feminine/masculine/missing agreement, unknown-gender level-3 hero, canonical request/character/action/state mismatch, unsupported combinations, stale revisions, page order, counts, dialogue attribution, selective diacritics and JSON/UTF-8 round trips, bidi controls, register drift, fact boundaries and provider provenance.
+
+Read-only coordination with the final Story worker source and Age worker source exercised 60 real concept/blueprint/draft compositions: five age bands, four generation offsets, three concepts per set. All composed successfully without high/blocker language findings. The three paired fixture requests/concepts/drafts also passed the Story worker runtime schemas. These ephemeral checks introduced no cross-worktree import into the committed module or tests. Official integrated regression, creator UI, native read-aloud and visual rendering remain lead-owned later gates.
+
+Draft identifiers use the canonical `Id` character policy and a readable 106-character limit, reserving space for the longest language-mode suffix within the derived edition's 120-character bound. Both draft and derived IDs are tested at the boundary; colon, empty IDs and overflowing lengths fail with `LANGUAGE_INPUT`.
+
+Verification on 2026-10-06: 17 scoped language tests pass; `scripts/test.ps1` passes 100 foundation assertions, 329 design assertions, typecheck and 52 application tests. Final prose/quantity refinements also pass typecheck and all 52 application tests. Online `scripts/health-check.ps1` passes with zero failures and zero warnings. No native/visual acceptance is inferred from these results.
+
+Integration should cherry-pick only the worker's final four-path commit onto a lead branch that already contains the shared grammar contracts; do not reapply the two prerequisite shared cherry-picks.

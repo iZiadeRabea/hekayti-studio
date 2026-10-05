@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "language-pairs/1.0",
+  "origin": "synthetic",
+  "approval": "unapproved editorial fixtures; full-story native review required",
+  "cases": [
+    {
+      "id": "under-1-recognition",
+      "ageMonths": 8,
+      "actor": null,
+      "focus": {
+        "ar-MSA-simple": "الكرة",
+        "ar-EG": "الكورة",
+        "en": "the ball"
+      },
+      "detail": {
+        "ar-MSA-simple": "في الغرفة",
+        "ar-EG": "في الأوضة",
+        "en": "in the room"
+      },
+      "actions": ["recognize", "reveal", "repeat", "settle"],
+      "pagesPerBeat": [2, 2, 2, 2],
+      "meaning": "One ball, shared recognition and reveal, repeated label, calm closing; zero conventional plot events.",
+      "firstPages": {
+        "ar-MSA-simple": [
+          "الكرة في الغرفة.",
+          "الكرة في الغرفة.",
+          "الكرة في الغرفة. مرة أخرى.",
+          "الكرة في الغرفة."
+        ],
+        "ar-EG": [
+          "الكورة في الأوضة.",
+          "الكورة في الأوضة.",
+          "الكورة في الأوضة. تاني.",
+          "الكورة في الأوضة."
+        ],
+        "en": [
+          "the ball in the room.",
+          "the ball in the room.",
+          "the ball in the room. Again.",
+          "the ball in the room."
+        ]
+      }
+    },
+    {
+      "id": "1-to-2-supported-routine",
+      "ageMonths": 20,
+      "actor": { "name": "نور", "grammaticalGender": "feminine" },
+      "focus": {
+        "ar-MSA-simple": "الكرة",
+        "ar-EG": "الكورة",
+        "en": "the ball"
+      },
+      "detail": {
+        "ar-MSA-simple": "في الغرفة",
+        "ar-EG": "في الأوضة",
+        "en": "in the room"
+      },
+      "actions": ["notice", "try", "settle"],
+      "pagesPerBeat": [3, 3, 2],
+      "meaning": "Noor notices one ball, explores it with help, then feels reassured as it rests in its familiar room. No quest or peril.",
+      "firstPages": {
+        "ar-MSA-simple": [
+          "لاحظت نور الكرة في الغرفة.",
+          "جرّبت نور الكرة في الغرفة بمساعدة.",
+          "الكرة مستقرة في مكانها في الغرفة. نور مطمئنة."
+        ],
+        "ar-EG": [
+          "نور خدت بالها من الكورة في الأوضة.",
+          "نور جرّبت الكورة في الأوضة بمساعدة.",
+          "الكورة ثابتة في مكانها في الأوضة. نور مطمّنة."
+        ],
+        "en": [
+          "نور notices the ball in the room.",
+          "نور explores the ball in the room with help.",
+          "the ball rests in its familiar place in the room. نور feels reassured."
+        ]
+      }
+    },
+    {
+      "id": "3-plus-shared-exploration",
+      "ageMonths": 48,
+      "actor": { "name": "سلمى", "grammaticalGender": "feminine" },
+      "focus": {
+        "ar-MSA-simple": "المكعبات الثلاثة",
+        "ar-EG": "٣ مكعبات",
+        "en": "three blocks"
+      },
+      "detail": {
+        "ar-MSA-simple": "في الغرفة",
+        "ar-EG": "في الأوضة",
+        "en": "in the room"
+      },
+      "actions": [
+        "notice",
+        "ask-help",
+        "cooperate",
+        "solve",
+        "return",
+        "settle"
+      ],
+      "pagesPerBeat": [2, 2, 2, 2, 2, 2],
+      "meaning": "Salma notices three blocks, asks for help, explores them together, completes the task with support, returns the same three blocks to their place, then feels reassured. No extra helper identity or block quantity.",
+      "firstPages": {
+        "ar-MSA-simple": [
+          "لاحظت سلمى المكعبات الثلاثة في الغرفة. سلمى فضولية.",
+          "ثم طلبت سلمى المساعدة مع المكعبات الثلاثة في الغرفة.",
+          "ثم شاركت سلمى في استكشاف المكعبات الثلاثة في الغرفة.",
+          "ثم أكملت سلمى المهمة مع المكعبات الثلاثة في الغرفة بمساعدة.",
+          "ثم أعادت سلمى المكعبات الثلاثة إلى مكانها في الغرفة.",
+          "ثم المكعبات الثلاثة مستقرة في مكانها في الغرفة. سلمى مطمئنة."
+        ],
+        "ar-EG": [
+          "سلمى خدت بالها من ٣ مكعبات في الأوضة. سلمى نفسها تعرف أكتر.",
+          "وبعد كده، سلمى طلبت مساعدة مع ٣ مكعبات في الأوضة.",
+          "وبعد كده، سلمى شاركت في استكشاف ٣ مكعبات في الأوضة.",
+          "وبعد كده، سلمى خلّصت المهمة مع ٣ مكعبات في الأوضة بمساعدة.",
+          "وبعد كده، سلمى رجّعت ٣ مكعبات لمكانهم في الأوضة.",
+          "وبعد كده، ٣ مكعبات ثابتين في مكانهم في الأوضة. سلمى مطمّنة."
+        ],
+        "en": [
+          "سلمى notices three blocks in the room. سلمى is curious.",
+          "Then, سلمى asks for help with three blocks in the room.",
+          "Then, سلمى joins in exploring three blocks in the room.",
+          "Then, سلمى finishes the task with three blocks in the room, with help.",
+          "Then, سلمى returns three blocks to their familiar place in the room.",
+          "Then, three blocks rest in their familiar place in the room. سلمى feels reassured."
+        ]
+      }
+    }
+  ]
+}
