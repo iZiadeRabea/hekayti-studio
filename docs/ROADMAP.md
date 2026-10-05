@@ -17,6 +17,6 @@ Phase1 below = research/design, distinct from business Phase1 (owner tool) and b
 
 Phases3–9 use small vertical slices: manual short story → imported art → single output → repeated pipeline. UI is not postponed until everything is finished, yet a broad Dashboard is not first milestone. Video basic composition required for complete owner V1; generative animation later. No dates/cost estimates fabricated.
 
-## Next task after approval
+## Current status — 2026-10-06
 
-Phase 2 core/feasibility is complete. STOP and await approval for Phase 3: one small manual/synthetic Story Engine vertical slice using existing canonical contracts and advisory Age Engine. No paid AI integration or full production UI is implicitly authorized. Confirm private-order backup/consent boundaries before any real data.
+Phase 2 core/feasibility is stable at v0.3.0-core. Phase 3 synthetic Story Engine implementation and independent QA fixes are complete; package 0.4.0 release preparation and consolidated gates are authorized, final Astra release review pending. Existing later-phase roadmap above remains unchanged. No paid AI, later production features or full UI is implicitly authorized. Confirm private-order backup/consent boundaries before any real data.

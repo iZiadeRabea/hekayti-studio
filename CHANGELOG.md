@@ -2,6 +2,10 @@
 
 ## Phase 3 in progress — 2026-10-06
 
+0.4.0 preparation: independent Red Team RT-001/RT-002 closed after exact historical approval/report-draft binding and retained canonical character validation fixes. Added save/reopen/corruption-preservation regressions; independent focused confirmation 40/40 PASS. Workspace package versions prepared at 0.4.0 without dependency upgrades. Final Astra release decision remains pending; no stable release tag created.
+
+Preparation gates completed: 100 foundation + 329 design assertions, 112 application tests/typecheck, online health/history security and production build PASS. Actual unsigned Windows x64 0.4.0 package plus development/packaged creator restart/approval/staleness and both six-page export smokes PASS; seven legacy UI groups PASS. Original product/app/data paths retained. Final Astra release decision remains pending; exact ignored evidence paths in phase3-testing.md.
+
 Verified Astra/Sol model routing and clean Phase 2 baseline; published pre-Phase-3 safety checkpoint. Froze semantic story contracts and explicitly versioned synthetic personalization support. Parallel specialist implementation follows the reviewed ownership plan; no Phase 3 completion claimed.
 
 Accepted and integrated specialist Story/Age/Language core plus Engineering workflow: strict portable snapshots, additive SQLite v2, immutable history/CAS, exact QA/approval source hashes, detached provider inputs, narrow secure IPC and minimal synthetic Story Creator with restart/reopen. Engineering handoff passed 91 application tests/typecheck/build, workflow/security/restart smoke, all seven original UI groups and six-page development export proof. Independent Red Team and final release remain pending. Owner lean-execution override delegates routine integration/tests/fixes to Sol with one consolidated Astra architecture review; final private Drive backup follows the stable release gate.

@@ -2,12 +2,18 @@ import { _electron as electron } from "playwright";
 import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import assert from "node:assert/strict";
+const packaged = process.argv.includes("--packaged");
 await mkdir("temp/phase3-ui", { recursive: true });
 const data = await mkdtemp(resolve("temp/phase3-ui/run-"));
 const launch = () =>
   electron.launch({
-    executablePath: resolve("node_modules/electron/dist/electron.exe"),
-    args: [resolve("apps/desktop"), "--phase2-data=" + data],
+    executablePath: packaged
+      ? resolve("dist/phase2-package/win-unpacked/Hekayti Studio Phase 2.exe")
+      : resolve("node_modules/electron/dist/electron.exe"),
+    args: [
+      ...(packaged ? [] : [resolve("apps/desktop")]),
+      "--phase2-data=" + data,
+    ],
     timeout: 30000,
   });
 let desktop = await launch(),
@@ -165,6 +171,7 @@ try {
   });
   const result = {
     status: "PASS",
+    packaged,
     data,
     projectId,
     checks: [

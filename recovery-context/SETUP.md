@@ -25,3 +25,9 @@ Read docs/PHASE_1_INDEX.md for design rationale. Bootstrap restores foundation/s
 ## Approved Phase 2 prototype
 
 Owner approved core/feasibility implementation on 2026-10-06. Follow docs/implementation/development-setup.md: install supported Node, npm ci, npm run build/desktop. No API keys required. Run scripts/test.ps1 for all suites. Portable Windows package is unsigned/local-test only; app data outside binaries, synthetic-only.
+
+## Phase 3 synthetic Story Creator — 0.4.0 preparation
+
+Install pinned dependencies with `npm ci --ignore-scripts`; for actual desktop/package checks run the pinned Electron hook `node node_modules/electron/install.js`. Use `npm run build` then `npm run desktop`. Story Creator supports synthetic request → concepts → explicit selection → immutable blueprint → paired draft editions → advisory QA → explicit approval, with SQLite restart/reopen. No API key/network generation or real-child input is enabled. Existing desktop name and app-data path retain Phase 2 naming for compatible additive migration.
+
+Full gates: `pwsh -File scripts/test.ps1`, online `pwsh -File scripts/health-check.ps1`, production build, `node scripts/phase3-ui-smoke.mjs`, legacy `node scripts/ui-smoke.mjs` and `node scripts/desktop-smoke.mjs`. Windows packaging uses the existing pinned electron-builder configuration. `node scripts/phase3-ui-smoke.mjs --packaged` and `node scripts/desktop-smoke.mjs --packaged` use fresh isolated storage; they do not overwrite normal app data. Native editorial/physical print/private-order controls remain future gates. Stable release authorization is pending Astra review.

@@ -1,6 +1,6 @@
 {
   "name": "@hekayti/core",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "exports": {
@@ -11,7 +11,7 @@
     "./workflow": "./src/story-workflow.ts"
   },
   "dependencies": {
-    "@hekayti/contracts": "0.3.0",
+    "@hekayti/contracts": "0.4.0",
     "zod": "4.6.5"
   }
 }

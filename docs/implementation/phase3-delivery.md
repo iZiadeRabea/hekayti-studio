@@ -2,6 +2,14 @@
 
 This document records verified intermediate recovery, not Phase 3 release completion. Final release gates and exact final archive receipt will be recorded after Engineering and independent Red Team.
 
+## Integration and release preparation
+
+Feature branch and checkpoint/phase3-engine-integration were published and independently read back at 67180ab70f2b76da386476f04602ec498fab355e. Independent QA findings RT-001/RT-002 are fixed and confirmed closed, 40/40 focused tests. Package 0.4.0 preparation is local and pending final Astra review; no final release/main update/Drive archive is claimed.
+
+Consolidated preparation gates passed: 100 foundation/329 design assertions, 112 application tests/typecheck, online health/history security, production build, unsigned Windows x64 package, development/packaged creator restart/approval/staleness, seven legacy UI groups and both development/packaged six-page export smokes. Exact evidence paths/hashes are in phase3-testing.md and ignored `temp/phase3-release-preparation/verification-receipt.json`. These are local engineering evidence, not a published release or cloud recovery. Final Astra review remains pending.
+
+Final backup identity belongs in an external receipt under ignored backups/receipts and the private Drive Manifests folder. That receipt will identify the final immutable release/checkpoint Git SHA, ZIP/file hashes, Drive IDs/permissions, downloaded readback and fresh restore results. Keeping exact final identity external avoids inserting a commit's own SHA into its tracked source. Historical Wave 1 receipt below remains exact and is not re-labelled as final recovery.
+
 ## Wave 1 checkpoint
 
 Private GitHub feature/phase3-story-engine and checkpoint/phase3-wave1 published at d4118398205bffa0eff0a08fb9bc27992ff560d2. Main remains v0.3.0-core.

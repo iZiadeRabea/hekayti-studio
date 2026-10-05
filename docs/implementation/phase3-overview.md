@@ -1,5 +1,7 @@
 # Phase 3 integrated engineering slice
 
+Release preparation: workspace package versions 0.4.0; independent RT-001/RT-002 fixes confirmed closed. Final Astra stable release review pending. Original desktop product name, app ID, package output path and synthetic user-data location remain compatible with Phase 2; smoke runs use isolated storage.
+
 Synthetic owner-operated Story Creator composes the accepted Story, Age and Language modules. No paid provider, network generation, real child input, final editor, image or video generation is implemented. The fixed fictional name is ليلى; optional grammatical agreement is authored, never inferred. Objective description and success scenario are editable synthetic goals, with unsupported goals surfaced by advisory QA.
 
 ## Workflow and authority
@@ -22,4 +24,4 @@ Renderer access remains the narrow preload bridge; no Node, filesystem or databa
 
 ## Scope limits
 
-Open/Save JSON remains explicitly a legacy blueprint-only fixture tool. Workflow history persists in SQLite and is not silently presented as portable JSON export. The UI labels this limitation and routes workflow projects away from legacy inspect/save. Full workflow portable import/export, private operational backup, production provider integration, literary/native/developmental review, final design, print certification and packaged Phase 3 acceptance remain future gates. Deterministic tests and automated screenshots are engineering evidence, not story-quality or visual acceptance.
+Open/Save JSON remains explicitly a legacy blueprint-only fixture tool. Workflow history persists in SQLite and is not silently presented as portable JSON export. The UI labels this limitation and routes workflow projects away from legacy inspect/save. Full workflow portable import/export, private operational backup, production provider integration, literary/native/developmental review, final design, print certification and signed production distribution remain future gates. Preparation includes an actual unsigned Windows x64 package and packaged creator/export smoke PASS; final Astra release authorization remains pending. Deterministic tests and automated screenshots are engineering evidence, not story-quality or visual acceptance.

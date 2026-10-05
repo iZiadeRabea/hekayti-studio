@@ -2,6 +2,8 @@
 
 ## Phase 3 shared decisions — 2026-10-06
 
+- D029: Independent Sol Red Team found historical approval draft/report cross-linking and omitted canonical character validation; both were fixed in one Engineering batch and independently confirmed closed. Existing workflow/report links and character keys suffice; shared contracts remain frozen. Package 0.4.0 preparation is authorized, but final Astra stable release review remains pending. Original desktop product name/app ID/output path and synthetic user-data path stay compatible; packaged checks use isolated storage.
+
 - D026: Owner authorizes Story Engine core, not production AI. Astra leads architecture/review; explicitly routed GPT-6.1 Sol workers implement in isolated worktrees. Alternative: one agent or uncontrolled parallel edits. Reason: requested model orchestration and reviewed integration. Execution plan records platform routing evidence and file ownership.
 - D027: Blueprint/1.1 permits synthetic personalization levels 0–3 while 1.0 retains its original level-0 boundary. Alternative: silently loosen persisted 1.0. Reason: preserve compatibility and explicit schema evolution. Private profiles/photos remain rejected; hero role is explicit, not inferred from a name.
 - D028: Shared semantic beats and provider-neutral request/concept/draft contracts precede implementation. Source preference is separate from actual mock provenance; reviewed facts remain separate from creative output. Alternative: provider-specific prompts or unrelated localized stories. Consequence: pure reusable core, independent age/language specialists and human approval after structured advisory QA; production source remains undecided.

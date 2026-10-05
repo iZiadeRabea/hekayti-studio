@@ -27,3 +27,20 @@ Screenshots were inspected for the minimal creator layout; no final visual/nativ
 Integrated independent QA commit a41ef706 into the canonical feature branch as 75535c9, preserving its assertions/report. Fixed RT-001 by requiring every historical approval's draft ID to equal its exact report source-link draft ID; forged same-blueprint/different-draft approval records now fail on save and tampered reopen. Fixed RT-002 by cross-checking every retained blueprint character bible against canonical project/character/version rows. Missing, malformed or changed historical rows raise WORKFLOW_CORRUPT; original rows and workflow snapshots are retained without repair.
 
 Focused command `node --import tsx --test tests/app/phase3-red-team.test.ts tests/app/story-workflow.test.ts tests/app/persistence.test.ts`: 40/40 PASS (19 independent QA, 13 workflow, 8 persistence), zero skipped/cancelled. `npm run typecheck`: PASS. Two additional workflow regressions cover forged historical approval save/reopen and all three historical character corruption cases, including retained raw database payload checks. No shared contract, independent assertion, domain module, UI or release change. Independent QA confirmation and full pre-release gates remain separate.
+
+## Final preparation gates — 2026-10-06
+
+Independent QA confirmation integrated as b26f131; both RT findings CLOSED. Workspace versions and internal package references are 0.4.0; no external dependency upgrade. Final Astra stable release review remains PENDING. A single consolidated full pass completed:
+
+- `pwsh -File scripts/test.ps1`: 100 foundation + 329 design assertions and 112/112 application tests PASS; typecheck PASS; zero failures/skips.
+- Online `pwsh -File scripts/health-check.ps1`: PASS, zero failures/warnings; `scripts/security-check.ps1 -History`: PASS.
+- `npm run build`: PASS. `npx electron-builder --config apps/desktop/electron-builder.json --win --x64`: PASS unsigned directory package at `dist/phase2-package/win-unpacked`; packaged app.asar metadata independently read back version0.4.0 and original product name. Builder warns about absent description/author and unsigned metadata; no signing/editing settings bypassed or changed.
+- Development `scripts/phase3-ui-smoke.mjs`: eight checks PASS; receipt `temp/phase3-ui/run-0BVuLx/phase3-ui-result.json` and approved/stale screenshots in that directory.
+- Packaged `scripts/phase3-ui-smoke.mjs --packaged`: eight checks PASS, including actual process restart/reopen, explicit approval and request/selection staleness; receipt `temp/phase3-ui/run-v4QUKy/phase3-ui-result.json` and approved/stale screenshots. Captured packaged stale view manually inspected; no final usability/native/literary certification.
+- Legacy `scripts/ui-smoke.mjs`: seven groups PASS, isolated storage/screenshot `temp/phase2-ui/run-M3MUy6`.
+- Development `scripts/desktop-smoke.mjs`: PASS; generated receipt `temp/phase2-smoke/run-pvxWiN/smoke-result.json`.
+- Packaged `scripts/desktop-smoke.mjs --packaged`: PASS; receipt `temp/phase2-smoke/run-qXaLU7/smoke-result.json`. Both prove SQLite v2/three fixtures/security/staleness and six-page print/digital export; packaged runtime reports Electron44.5.1/Node24.21.0/Chromium152/SQLite3.53.4.
+
+Local consolidated receipt: `temp/phase3-release-preparation/verification-receipt.json`, recorded from observed command outputs/exits and generated smoke receipts. Adjacent transcript files contain execution metadata only: the host did not capture native child stdout, so they are not full test logs. No repeated foundation run solely to recreate logs. Package SHA256: app.asar `4F15135D58C8B46A73D3F5E879E21531F9BC08DEDD544163025D5EE459E3DDB5`; executable `9B9729EEFA80ED3BB24F7DC92130C89EC244FCE9E25E3656E1FF04334819ECEC`.
+
+All smoke storage is isolated; normal synthetic user data is preserved. Original Phase 2 product/app/output names remain for compatibility. No release tag/main merge/push/Drive archive was performed. Mock semantic/factual/editorial limits, unsigned distribution, legacy-only JSON export and future private operational controls remain explicit.
