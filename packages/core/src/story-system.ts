@@ -218,7 +218,9 @@ export function createConceptSet(
       origin: "synthetic" as const,
       ...(!((hero && i === 0) || (support && i === 1))
         ? { grammaticalGender: "feminine" as const }
-        : {}),
+        : request.personalization.grammaticalGender !== undefined
+          ? { grammaticalGender: request.personalization.grammaticalGender }
+          : {}),
       displayName:
         (hero && i === 0) || (support && i === 1)
           ? request.personalization.displayName!

@@ -530,3 +530,49 @@ test("QA returns safe findings for malformed canonical shape", () => {
     f.every((x) => x.category === "validation" && x.severity === "blocker"),
   );
 });
+test("explicit synthetic grammatical gender passes through requested roles without name inference", () => {
+  for (const grammaticalGender of ["masculine", "feminine"] as const) {
+    for (const role of ["child-protagonist", "supporting"] as const) {
+      const r = request(role === "child-protagonist" ? 3 : 2);
+      r.personalization.heroMode = role;
+      r.personalization.grammaticalGender = grammaticalGender;
+      const s = {
+          ...structure(),
+          activeCharacterRange: [2, 3] as [number, number],
+        },
+        c = createConceptSet(r, s).concepts[0]!;
+      const personalized = c.characters.find(
+        (x) => x.displayName === r.personalization.displayName,
+      )!;
+      assert.equal(personalized.grammaticalGender, grammaticalGender);
+      const b = buildStoryBlueprint(r, s, c, "gender-b");
+      assert.equal(
+        b.characterBibles.find(
+          (x) => x.characterId === personalized.characterId,
+        )!.grammaticalGender,
+        grammaticalGender,
+      );
+      assert.equal(
+        b.syntheticPersonalization!.grammaticalGender,
+        grammaticalGender,
+      );
+    }
+  }
+  const unknown = request(3);
+  assert.equal(
+    createConceptSet(unknown, structure()).concepts[0]!.characters[0]!
+      .grammaticalGender,
+    undefined,
+  );
+  const nameOnly = request(1);
+  nameOnly.personalization.grammaticalGender = "masculine";
+  assert.ok(
+    createConceptSet(nameOnly, structure()).concepts[0]!.characters.every(
+      (x) => x.grammaticalGender === "feminine",
+    ),
+  );
+  const level0 = request();
+  level0.personalization.grammaticalGender = "feminine";
+  assert.equal(StoryRequestSchema.safeParse(level0).success, false);
+  assert.throws(() => createConceptSet(level0, structure()));
+});
