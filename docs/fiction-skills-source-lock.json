@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "skills": {
+    "beta-reader-critique-simulator": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/beta-reader-critique-simulator/SKILL.md",
+      "computedHash": "a7d56f41a87613d9fbb421ec1ce7a8c9d479f2a97f133f346f62a5b9dd5ea154"
+    },
+    "braille-accessibility-formatter": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/braille-accessibility-formatter/SKILL.md",
+      "computedHash": "23de5f5df2836b9ec059b97d838732dc90bdb3ea39598082438139aa0f04fa71"
+    },
+    "character-designer-psychologist": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/character-designer-psychologist/SKILL.md",
+      "computedHash": "3282b0a43e8e44f6c02c67daa64ea0c65b9fd2405c7a2250f57ae40c4f1f047b"
+    },
+    "children-story-creator": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/children-story-creator/SKILL.md",
+      "computedHash": "8b399fef54956fdd3bf7f06f112008838a307d7c77dd6c4f5f926638f40acc13"
+    },
+    "comic-webtoon-scriptwriter": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/comic-webtoon-scriptwriter/SKILL.md",
+      "computedHash": "e77a6d951f6f278d58117310185cb74bfb55eed668e562c618ea8ca17108cf67"
+    },
+    "fiction-agent-update-manager": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fiction-agent-update-manager/SKILL.md",
+      "computedHash": "af9fa10eda181d89fe79b161c05fc21f0c38a3a4e043f82af7daf0a667aaba46"
+    },
+    "fiction-book-orchestrator": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fiction-book-orchestrator/SKILL.md",
+      "computedHash": "029ff05e5dd7199eb59168f2baeb2b29588bf5433488300e6dd799b365a0875c"
+    },
+    "fiction-cover-designer": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fiction-cover-designer/SKILL.md",
+      "computedHash": "150275239a78c120237e2a4665604ca5d0bce0b2e66abc38b0fcf6526ce8f313"
+    },
+    "fiction-layout-exporter": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fiction-layout-exporter/SKILL.md",
+      "computedHash": "de9af6ed56b9ebd57444f296feb667f5e259146a81d00085bbb3b25384e33884"
+    },
+    "fiction-market-trend-analyst": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fiction-market-trend-analyst/SKILL.md",
+      "computedHash": "c7a089a32a10dc0c2e4eab99221ee39125f9a2fa5cb9fe0f4696620fc062ff8f"
+    },
+    "novel-scene-writer": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/novel-scene-writer/SKILL.md",
+      "computedHash": "1bc634716c9690b471290ff27350d395f45d4c143d6a9234b8c102eced8e0887"
+    },
+    "plot-hole-continuity-checker": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/plot-hole-continuity-checker/SKILL.md",
+      "computedHash": "2e555d9ba049aedc1ff2a28ef9f80d30eeb4abcc5e9325d618d96ecd839a6c80"
+    },
+    "plot-narrative-architect": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/plot-narrative-architect/SKILL.md",
+      "computedHash": "3bf646406462b50854296e8c835defdc72585ba1307cf8901793b627e1440b11"
+    },
+    "prose-dialogue-polisher": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/prose-dialogue-polisher/SKILL.md",
+      "computedHash": "943b1a42ba5c8faa2549e5f3f8c75990a7f87db2f51e480969371a384cec2349"
+    },
+    "story-concept-intake": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/story-concept-intake/SKILL.md",
+      "computedHash": "fa6e6e2cf63b5a5f5d864a79bf8ccdc42d088d1492cbbca773f63e5b1351e542"
+    },
+    "storyboard-scene-planner": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/storyboard-scene-planner/SKILL.md",
+      "computedHash": "cd0e590e0e49ee750c74b31d04181dafe9a6e71546b8258cf9ab21009f2a5222"
+    },
+    "wattpad-publisher-formatter": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/wattpad-publisher-formatter/SKILL.md",
+      "computedHash": "a463203ee765d0cc69abc947df911f804cf07f7a789460dbbc7d56f0d1f1f6ad"
+    },
+    "worldbuilding-architect": {
+      "source": "lensetek/Fiction-book-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/worldbuilding-architect/SKILL.md",
+      "computedHash": "f5b3a959ad89a4a2aab94ac059ff6f731219b8ed0156b1d0aecd9f93a51122f8"
+    }
+  }
+}

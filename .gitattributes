@@ -1,0 +1,12 @@
+* text=auto
+*.md text eol=lf
+*.ps1 text eol=lf
+*.json text eol=lf
+*.sh text eol=lf
+*.png binary
+*.jpg binary
+*.zip binary
+*.bundle binary
+# Preserve upstream instruction snapshots byte-for-byte for SHA-256 recovery.
+skills/vendor/** -text
+.agents/skills/** -text

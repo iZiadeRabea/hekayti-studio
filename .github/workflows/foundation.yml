@@ -1,0 +1,17 @@
+name: Foundation checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  foundation:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4, resolved 2026-10-05
+        with:
+          fetch-depth: 0
+      - name: Test foundation
+        shell: pwsh
+        run: ./scripts/test.ps1
+      - name: Health (offline remote checks)
+        shell: pwsh
+        run: ./scripts/health-check.ps1 -Offline

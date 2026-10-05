@@ -1,0 +1,48 @@
+{
+  "repository": "iZiadeRabea/hekayti-studio",
+  "drive": {
+    "mode": "connector",
+    "rootId": "1lR1vXpezkB53ZY1Qhd4OFW0TTKLV0rkN",
+    "rootUrl": "https://drive.google.com/drive/folders/1lR1vXpezkB53ZY1Qhd4OFW0TTKLV0rkN",
+    "folders": {
+      "Latest": {
+        "success": true,
+        "id": "1RxGyANYPD0Yor7YVwJ5DTrI1cy4ADDbC",
+        "url": "https://drive.google.com/drive/folders/1RxGyANYPD0Yor7YVwJ5DTrI1cy4ADDbC",
+        "title": "Latest",
+        "parent_id": "1lR1vXpezkB53ZY1Qhd4OFW0TTKLV0rkN"
+      },
+      "Checkpoints": {
+        "success": true,
+        "id": "1ZyPBOLWajKkk4XnR4DcX73zXeGwiqDqc",
+        "url": "https://drive.google.com/drive/folders/1ZyPBOLWajKkk4XnR4DcX73zXeGwiqDqc",
+        "title": "Checkpoints",
+        "parent_id": "1lR1vXpezkB53ZY1Qhd4OFW0TTKLV0rkN"
+      },
+      "Releases": {
+        "success": true,
+        "id": "1KY-VhQdb22mlbI7UBIO_dhdg8SMLk4i5",
+        "url": "https://drive.google.com/drive/folders/1KY-VhQdb22mlbI7UBIO_dhdg8SMLk4i5",
+        "title": "Releases",
+        "parent_id": "1lR1vXpezkB53ZY1Qhd4OFW0TTKLV0rkN"
+      },
+      "Recovery": {
+        "success": true,
+        "id": "1iSbsoLdsc46yqbj39223XlAKyUC5YbfB",
+        "url": "https://drive.google.com/drive/folders/1iSbsoLdsc46yqbj39223XlAKyUC5YbfB",
+        "title": "Recovery",
+        "parent_id": "1lR1vXpezkB53ZY1Qhd4OFW0TTKLV0rkN"
+      },
+      "Manifests": {
+        "success": true,
+        "id": "14t3MGDWGSY9iicls6JktdwT9-PeTS7i-",
+        "url": "https://drive.google.com/drive/folders/14t3MGDWGSY9iicls6JktdwT9-PeTS7i-",
+        "title": "Manifests",
+        "parent_id": "1lR1vXpezkB53ZY1Qhd4OFW0TTKLV0rkN"
+      }
+    }
+  },
+  "localRecoveryFolder": "Hekayti-Studio-Recovery",
+  "privateDataIncluded": false
+}
+

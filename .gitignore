@@ -1,0 +1,49 @@
+# Local-only secrets and customer/private data
+.env
+.env.*
+!.env.example
+secrets/
+private/
+customer-data/
+child-photos/
+customer-uploads/
+uploads/private/
+local-db/
+private-db/
+temp/
+cache/
+generated/private/
+exports/private/
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+*.db
+auth.json
+credentials.json
+credentials*.json
+id_rsa*
+id_ed25519*
+# Build/runtime files
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+dist/
+build/
+.coverage
+coverage/
+*.log
+.DS_Store
+Thumbs.db
+# Recovery artifacts/receipts must not recurse into Git
+backups/*
+!backups/README.md
+# Machine-local configuration
+*.local.json
+*.local.toml
+# Source assets, docs, .agents skills and synthetic tests remain tracked.
+
