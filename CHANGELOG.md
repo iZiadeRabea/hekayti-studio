@@ -4,6 +4,8 @@
 
 Verified Astra/Sol model routing and clean Phase 2 baseline; published pre-Phase-3 safety checkpoint. Froze semantic story contracts and explicitly versioned synthetic personalization support. Parallel specialist implementation follows the reviewed ownership plan; no Phase 3 completion claimed.
 
+Accepted and integrated specialist Story/Age/Language core plus Engineering workflow: strict portable snapshots, additive SQLite v2, immutable history/CAS, exact QA/approval source hashes, detached provider inputs, narrow secure IPC and minimal synthetic Story Creator with restart/reopen. Engineering handoff passed 91 application tests/typecheck/build, workflow/security/restart smoke, all seven original UI groups and six-page development export proof. Independent Red Team and final release remain pending. Owner lean-execution override delegates routine integration/tests/fixes to Sol with one consolidated Astra architecture review; final private Drive backup follows the stable release gate.
+
 ## v0.3.0-core - 2026-10-06
 
 Owner-approved core: versioned runtime validation/migration of preserved synthetic fixtures, advisory deterministic Age Engine, approval hashes/transitive staleness, SQLite migration/CRUD/atomic rollback and safe portable assets. 35 application tests and strict compile passed. Added secure Electron/React lab, seven UI workflow checks, native Arabic editing review, actual packaged Windows smoke and two fully reviewed six-page Arabic/mixed PDFs. Fixed embedded font fallback and Arabic ink padding; saved synthetic acceptance evidence. Existing recovery/bootstrap/test infrastructure preserved and extended. No paid AI, private data or production editor.
@@ -32,3 +34,6 @@ Verified independent private Drive source+Git-bundle download/hash and fresh-fol
 
 ### 2026-10-06 00:35:36 +03:00 — checkpoint/pdf-windows-spikes
 Verified 35 application tests, native RTL editing, two fully reviewed embedded-font PDFs and actual packaged Windows smoke; retained synthetic evidence and non-destructive recovery infrastructure.
+
+### 2026-10-06 02:08:21 +03:00 — checkpoint/phase3-engine-integration
+Integrated accepted Engineering workflow under owner lean override; independent Red Team pending. Worker build/UI receipts retained; no final release or Drive backup.
