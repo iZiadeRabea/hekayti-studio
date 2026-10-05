@@ -30,4 +30,16 @@ For each new significant decision append date, choice, alternatives, reason, con
 
 All scope/style/age limits are editorial design choices, not clinical or compliance certification. Exact package versions/SQLite binding/font/printer/provider deferred to approval-gated implementation. Supporting evidence and source dates: docs/research/source-register.md; alternatives/details: docs/architecture/technical-architecture.md.
 
+## Phase 2 decisions - 2026-10-06
+
+| ID | Decision | Alternatives / reason | Consequences |
+|---|---|---|---|
+| D020 | Owner-approved synthetic implementation in npm workspaces, domain/contracts independent of Electron | Single desktop file would hard-wire rules to UI | No paid AI, private data or full editor; approval supersedes historical design-only boundary |
+| D021 | Zod 4.6.5 runtime schemas with inferred TS contracts, strict fields/cross-ref checks, blueprint/1.0 and explicit 0.1 in-memory migration | Compile-time types alone do not protect persisted data; separate handwritten schema risks drift | Invalid/future versions fail readably without rewriting originals; no automatic human approval |
+| D022 | Node built-in node:sqlite behind repository port for this prototype | better-sqlite3 adds Electron native ABI/toolchain rebuild | Actual SQLite transactions, WAL, user_version=1, immutable canonical rows; Node 22 API is experimental and binding remains replaceable before production |
+| D023 | WebCrypto SHA256 plus revision/dependency IDs for pure-core approval/staleness | Global approved Boolean loses dependency validity | No Node imports in core; web reuse; deterministic metadata, no promise AI/PDF bytes deterministic |
+| D024 | Licensed Noto Sans Arabic via pinned @fontsource package; Chromium export proof, not production prepress | Brand/commercial font or PDF library without shaping proof | OFL licence bundled; no font binary committed; final children's font and PDF/X/ICC/printer proof undecided |
+
+Registry selections (non-prerelease exact pins): Electron 44.5.1, React/DOM 19.3.0, TypeScript 7.0.2, Vite 8.3.2, esbuild 0.28.2, tsx 4.23.15, Playwright 1.63.0, electron-builder 26.15.3, Fontsource 5.3.0. Installed toolchain Node 22.23.2/npm 12.0.2 meets registry engine requirements; embedded Electron Node/Chromium/SQLite versions will be recorded from actual launch. Sources: [Electron security](https://www.electronjs.org/docs/latest/tutorial/security), [Node SQLite](https://nodejs.org/api/sqlite.html), [Zod](https://zod.dev/basics), [Noto OFL](https://github.com/notofonts/arabic/blob/main/OFL.txt), package-lock integrity hashes.
+
 2026-10-05 — D010: preserve the original v0.1.0-foundation/checkpoint tags and add v0.1.1-foundation for the archive-option repair and completed recovery verification. Alternative: move the initial tag. Reason: preserve published history and immutable checkpoints. Consequence: the latest verified foundation is v0.1.1-foundation; the project still started at the requested v0.1.0-foundation.

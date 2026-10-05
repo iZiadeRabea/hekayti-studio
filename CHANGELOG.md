@@ -1,5 +1,9 @@
 # Changelog
 
+## Phase 2 in progress - 2026-10-06
+
+Owner-approved contracts/core slice: versioned runtime validation/migration of preserved synthetic fixtures, advisory deterministic Age Engine, approval hashes/transitive staleness, SQLite migration/CRUD/rollback and safe portable asset handles. 30 application tests and TypeScript compile passed. Windows/RTL/PDF/packaging acceptance pending; no paid AI or private data.
+
 ## v0.2.0-product-design — 2026-10-05
 - Researched official CDC/WHO/UNICEF/AAP sources, including updated2026 AAP media guidance; separated evidence from editorial heuristics.
 - Specified age/story/blueprint/localization/personalization/style/illustration/print/digital/video/QA/approval systems; no application implemented.
