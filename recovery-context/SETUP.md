@@ -18,3 +18,6 @@ Skills documentation sources (checked 2026-10-05):
 
 Backups and the source skill snapshots work without a Codex account. Service accounts/permissions must be reauthorized after account changes. Account passwords, recovery codes and hardware MFA recovery belong in an independent password manager, never in Git or these packages.
 
+## Phase1 design handoff
+
+Read docs/PHASE_1_INDEX.md and the architecture recommendation before choosing dependencies. No application setup step is authorized by running bootstrap: it restores foundation/skills only. Product toolchain selection/install begins after owner approval and Windows/Arabic feasibility spikes.

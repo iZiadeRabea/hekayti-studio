@@ -1,0 +1,469 @@
+{
+  "schemaVersion": "blueprint/0.1",
+  "specificationOnly": true,
+  "profileOrigin": "synthetic",
+  "storyId": "test-b-1-to-2",
+  "projectId": "demo-product-design",
+  "revisionId": "test-b-1-to-2-spec-v1",
+  "workingTitle": "ننّو وسلّة اللعب",
+  "ageMonths": 20,
+  "ageBandId": "12-23m",
+  "ageProfileVersion": "age-profiles/0.1",
+  "languageModes": [
+    "msa-simple"
+  ],
+  "primaryLanguageMode": "msa-simple",
+  "primaryCategory": "behavioral",
+  "secondaryCategories": [],
+  "objective": {
+    "kind": "behavioral",
+    "description": "Model a supported one-step routine of putting a large soft toy away, without shame or independent self-control requirement.",
+    "successScenario": "Owner reviews whether wording/action offers the stated opportunity; not a child outcome guarantee"
+  },
+  "educationalObjective": null,
+  "behavioralObjective": "Model a supported one-step routine of putting a large soft toy away, without shame or independent self-control requirement.",
+  "emotionalObjective": null,
+  "theme": "Model a supported one-step routine of putting a large soft toy away, without shame or independent self-control requirement.",
+  "tone": "warm child-friendly",
+  "readingMode": "adult-read",
+  "protagonistId": "char-nunu",
+  "supportingCharacterIds": [
+    "char-care"
+  ],
+  "characterBibleRefs": [
+    {
+      "characterId": "char-nunu",
+      "bibleVersion": "v1"
+    },
+    {
+      "characterId": "char-care",
+      "bibleVersion": "v1"
+    }
+  ],
+  "characterBibles": [
+    {
+      "characterId": "char-nunu",
+      "bibleVersion": "v1",
+      "origin": "synthetic",
+      "displayName": "ننّو",
+      "species": "fictional cat",
+      "ageRange": "toddler-like",
+      "hair": "short orange paper fur",
+      "skinTone": "orange/cream paper palette",
+      "facialTraits": "round face",
+      "clothing": "teal tunic",
+      "proportions": "round head/short body",
+      "expressions": [
+        "curious",
+        "pleased",
+        "mildly frustrated"
+      ],
+      "accessories": [],
+      "intendedAnatomy": "two arms/two legs/cat tail; simple mitten paws",
+      "approvedReferenceImages": [],
+      "illustrationReference": null,
+      "consistencyNotes": "tunic teal; toy unique; adult presence reassuring"
+    },
+    {
+      "characterId": "char-care",
+      "bibleVersion": "v1",
+      "origin": "synthetic",
+      "displayName": "ماما القطّة",
+      "species": "fictional adult cat",
+      "clothing": "cream apron",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "adult assists, never punishes"
+    }
+  ],
+  "personalization": {
+    "level": 0,
+    "heroMode": "none",
+    "privateProfileRef": null
+  },
+  "setting": "familiar safe playroom",
+  "environmentBibleRef": "demo-env-test-b-1-to-2/v1",
+  "meaningBeats": [
+    {
+      "beatId": "beat-1",
+      "sequence": 1,
+      "purpose": "routine-start",
+      "actionOrDiscovery": "routine-start",
+      "emotion": "curiosity / supported feeling",
+      "visibleFacts": [
+        "one soft toy",
+        "one basket",
+        "caregiver nearby"
+      ],
+      "beforeState": "opening",
+      "afterState": "after beat-1",
+      "nextBeatId": "beat-2"
+    },
+    {
+      "beatId": "beat-2",
+      "sequence": 2,
+      "purpose": "supported-action",
+      "actionOrDiscovery": "supported-action",
+      "emotion": "curiosity / supported feeling",
+      "visibleFacts": [
+        "one soft toy",
+        "one basket",
+        "caregiver nearby"
+      ],
+      "beforeState": "after beat-1",
+      "afterState": "after beat-2",
+      "nextBeatId": "beat-3"
+    },
+    {
+      "beatId": "beat-3",
+      "sequence": 3,
+      "purpose": "warm-result",
+      "actionOrDiscovery": "warm-result",
+      "emotion": "warm connection",
+      "visibleFacts": [
+        "one soft toy",
+        "one basket",
+        "caregiver nearby"
+      ],
+      "beforeState": "after beat-2",
+      "afterState": "after beat-3",
+      "nextBeatId": null
+    }
+  ],
+  "pagePlan": [
+    {
+      "pageId": "page-01",
+      "order": 1,
+      "beatIds": [
+        "beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Nunu cat plays with one large soft toy on safe floor; basket nearby.",
+      "mustShow": [
+        "Nunu cat plays with one large soft toy on safe floor; basket nearby."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "toy near play area, basket stable"
+    },
+    {
+      "pageId": "page-02",
+      "order": 2,
+      "beatIds": [
+        "beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Play ends; Nunu looks at toy; same basket visible.",
+      "mustShow": [
+        "Play ends; Nunu looks at toy; same basket visible."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "toy near play area, basket stable"
+    },
+    {
+      "pageId": "page-03",
+      "order": 3,
+      "beatIds": [
+        "beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Close view of single basket in fixed place, toy remains nearby.",
+      "mustShow": [
+        "Close view of single basket in fixed place, toy remains nearby."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "toy near play area, basket stable"
+    },
+    {
+      "pageId": "page-04",
+      "order": 4,
+      "beatIds": [
+        "beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Adult cat points to basket reassuringly; Nunu watches.",
+      "mustShow": [
+        "Adult cat points to basket reassuringly; Nunu watches."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "toy near play area, basket stable"
+    },
+    {
+      "pageId": "page-05",
+      "order": 5,
+      "beatIds": [
+        "beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Nunu carries soft toy toward basket with both intended paws.",
+      "mustShow": [
+        "Nunu carries soft toy toward basket with both intended paws."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "toy carried with adult assistance"
+    },
+    {
+      "pageId": "page-06",
+      "order": 6,
+      "beatIds": [
+        "beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Adult assists the same toy; no extra limbs, no second toy.",
+      "mustShow": [
+        "Adult assists the same toy; no extra limbs, no second toy."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "toy carried with adult assistance"
+    },
+    {
+      "pageId": "page-07",
+      "order": 7,
+      "beatIds": [
+        "beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Nunu and adult place unique toy inside basket.",
+      "mustShow": [
+        "Nunu and adult place unique toy inside basket."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "toy inside basket"
+    },
+    {
+      "pageId": "page-08",
+      "order": 8,
+      "beatIds": [
+        "beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Toy visible within basket, Nunu looking at it.",
+      "mustShow": [
+        "Toy visible within basket, Nunu looking at it."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "toy inside basket"
+    },
+    {
+      "pageId": "page-09",
+      "order": 9,
+      "beatIds": [
+        "beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Nunu and adult smile beside basket holding toy.",
+      "mustShow": [
+        "Nunu and adult smile beside basket holding toy."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "toy inside basket"
+    },
+    {
+      "pageId": "page-10",
+      "order": 10,
+      "beatIds": [
+        "beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Nunu waves goodbye to toy still inside basket.",
+      "mustShow": [
+        "Nunu waves goodbye to toy still inside basket."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "toy inside basket"
+    }
+  ],
+  "languageVersions": [
+    {
+      "languageVersionId": "test-b-1-to-2-msa-draft",
+      "mode": "msa-simple",
+      "sourceRevision": "test-b-1-to-2-spec-v1",
+      "status": "proposed-copy-for-spec-not-approved-manuscript",
+      "diacriticsPolicy": "selective; native review pending",
+      "pages": [
+        {
+          "pageId": "page-01",
+          "narration": "لعب ننّو بلعبته الناعمة.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 4
+        },
+        {
+          "pageId": "page-02",
+          "narration": "انتهى اللعب. أين مكان اللعبة؟",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 5
+        },
+        {
+          "pageId": "page-03",
+          "narration": "هذه سلّة ننّو. السلّة هنا.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 5
+        },
+        {
+          "pageId": "page-04",
+          "narration": "أشارت ماما إلى السلّة.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 4
+        },
+        {
+          "pageId": "page-05",
+          "narration": "حمل ننّو اللعبة برفق.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 4
+        },
+        {
+          "pageId": "page-06",
+          "narration": "اللعبة كبيرة. ساعدته ماما.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 4
+        },
+        {
+          "pageId": "page-07",
+          "narration": "وضعا اللعبة داخل السلّة.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 4
+        },
+        {
+          "pageId": "page-08",
+          "narration": "أين اللعبة؟ في السلّة!",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 4
+        },
+        {
+          "pageId": "page-09",
+          "narration": "ابتسم ننّو. رتّبا المكان معًا.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 5
+        },
+        {
+          "pageId": "page-10",
+          "narration": "لوّح ننّو. إلى اللقاء يا لعبة!",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 6
+        }
+      ],
+      "totalWords": 45,
+      "glossaryRefs": [],
+      "review": "pending native editor"
+    }
+  ],
+  "illustrationBrief": "hek-paper-cut/0.1; text-free separated art; no images generated",
+  "styleProfileRef": "hek-paper-cut/0.1",
+  "videoAdaptationNotes": {
+    "childViewingEligibility": "ineligible-child-viewing",
+    "reason": "conservative under-two policy; parent-only preview not child product",
+    "shotPlanStatus": "not generated"
+  },
+  "outputIntents": [
+    "print",
+    "digital",
+    "video"
+  ],
+  "safetyQualityChecks": [
+    {
+      "check": "synthetic-only",
+      "status": "PASS"
+    },
+    {
+      "check": "age-screen-eligibility",
+      "status": "specified-not-implemented"
+    },
+    {
+      "check": "native-developmental-art-export-review",
+      "status": "PENDING"
+    }
+  ],
+  "approvalRecords": [],
+  "parentParticipation": "Invite gesture; support action; do not quiz/shame",
+  "accessibility": {
+    "colourNotOnlyCue": true,
+    "readAloud": true
+  },
+  "lineage": {
+    "parentRevisionId": null
+  },
+  "dependencyHashes": {
+    "status": "not-production-hashes"
+  },
+  "generatedAssets": [],
+  "exportRefs": [],
+  "testExpectations": {
+    "storyWordRange": [
+      20,
+      100
+    ],
+    "storyPageCount": 10,
+    "videoEligible": false,
+    "realPersonalData": false,
+    "heroImplicit": false,
+    "conventionalPlotRequired": false
+  }
+}

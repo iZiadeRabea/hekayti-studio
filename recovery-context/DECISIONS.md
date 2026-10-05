@@ -12,6 +12,22 @@
 | D008 / 2026-10-05 | Drive connector upload now; optional Desktop copy later | Store passwords/tokens in backup script | Existing supported connector is authenticated | Script prepares upload-ready files; connector upload must be verified separately |
 | D009 / 2026-10-05 | PowerShell 7 infrastructure, plain tests, no product dependencies | Framework/toolchain now | Windows portability without premature stack | Future app tests must be added to checkpoint health gate |
 
-For each new significant decision append date, choice, alternatives, reason, consequences and superseded decision if any. Technology, database, AI, image, print, video and private-data decisions remain open.
+For each new significant decision append date, choice, alternatives, reason, consequences and superseded decision if any. AI providers, final print profiles and private-data production controls remain open; Phase1 planning choices follow below.
+
+## Phase1 decisions — 2026-10-05 (Africa/Cairo)
+
+| ID | Decision / status | Alternatives considered | Reason | Consequences |
+|---|---|---|---|---|
+| D011 | Research/specification only now; implementation requires approval | Scaffold whole app now | Owner's Phase1 scope | Supersedes D004 authorization boundary for design only; no app code/dependencies |
+| D012 | One canonical Blueprint meaning layer with linked language/output derivatives | Three unrelated generated products; English master text | Maintain story/objective/continuity | Immutable approved versions, stable beat/page IDs and dependency invalidation |
+| D013 | Extensible month bands, soft editorial ranges, hard safety gates | Rigid words/minutes formula; broad ages only | Evidence does not justify precise story quotas | Native/qualified review and boundary tests; 2-year group explicit; 5+ profile limited provisionally |
+| D014 | Personalization optional, default0; photo-reference and hero independent | Child always protagonist; photo compulsory | User product context and data minimization | Levels1–3 require private controls; level4 later gated; no face recognition |
+| D015 | Under-two child-facing video excluded; older video co-viewed/finite | Sell infant-screen product; one long AI video | Conservative WHO-informed product policy, current AAP contextual guidance considered | Print/caregiver reading primary; basic approved-image video assembly for eligible stories |
+| D016 | Electron + React/TypeScript + SQLite planning baseline, conditional feasibility | Tauri/Rust, local browser service, native .NET | Owner Windows packaging, one-language core reuse and media/render route | Not implemented; accepts footprint/security-update costs; pure core ports; RTL/print/install spikes required |
+| D017 | Strict owner V1, sequential vertical slices, public site later | Full15-module big bang; accounts/payments first | Quality/cost control and manual-order workflow | Basic print/digital/video complete V1; English/photo/generative animation later |
+| D018 | Human approvals attached to hashes/revisions; targeted page repairs | Blind one-click approvals; overwrite whole book | Controlled production and recoverability | Stale assets cannot export; candidates and old finals retained |
+| D019 | Source-code recovery separate from PRIVATE operational-order recovery | Put all customer stories/database in Git/Drive ZIP | Personal data survives in names/illustrated likeness too | Real-orders gate: consent/provider/legal review, encrypted data/key recovery and rehearsed snapshot restore |
+
+All scope/style/age limits are editorial design choices, not clinical or compliance certification. Exact package versions/SQLite binding/font/printer/provider deferred to approval-gated implementation. Supporting evidence and source dates: docs/research/source-register.md; alternatives/details: docs/architecture/technical-architecture.md.
 
 2026-10-05 — D010: preserve the original v0.1.0-foundation/checkpoint tags and add v0.1.1-foundation for the archive-option repair and completed recovery verification. Alternative: move the initial tag. Reason: preserve published history and immutable checkpoints. Consequence: the latest verified foundation is v0.1.1-foundation; the project still started at the requested v0.1.0-foundation.

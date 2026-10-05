@@ -35,7 +35,7 @@ $manifest=@"
 - Latest stable tag: $stable
 - Latest checkpoint: $checkpoint
 - Repository name: iZiadeRabea/hekayti-studio
-- Tests: PASS — foundation tests; no product test suite yet
+- Tests: PASS — foundation and design-document/fixture suites; no application runtime suite yet
 - Health check: $healthSummary (offline); cloud reachability/receipts verified separately
 - Backup source: clean committed HEAD at $script:ProjectRoot
 - Content: project/ source/docs/prompts/templates/skills/scripts/examples/tests/config examples/context; git/project.bundle with all reachable refs/history; FILES_SHA256.json

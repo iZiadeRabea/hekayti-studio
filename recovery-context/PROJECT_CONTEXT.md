@@ -5,7 +5,7 @@ Project: Hekayti Studio. Initial market: Egypt only.
 
 ## Language and ages
 Primary modes: simplified Modern Standard Arabic; Egyptian Arabic. English is additional/later support.
-Initial child age groups: under 1 year; 1–2 years; 3+ years. Keep age ranges extensible; do not hard-code these as an immutable taxonomy. The boundary between 2 and 3 and suitability of adventure stories needs later refinement.
+Initial public child age groups: under 1 year; 1–2 years; 3+ years. Keep ranges extensible. Phase1 design refines internal bands to 0–11,12–23,24–35,36–59,60–95 months; explicitly include two-year-olds rather than leave a gap. 5+ initial profile covers only5–8 provisionally; older ranges require new research. See docs/age-engine.md.
 
 ## Stories and personalization
 Educational, behavioral, values-based and learning stories for older children. Adventure stories for children older than approximately two years.
@@ -14,7 +14,7 @@ Future reference photos supplied by a parent/guardian may support a consistent i
 
 ## Visual direction
 Colorful layered paper-cut art, paper collage, cut-paper shapes, soft layered depth and playful child-friendly design.
-A reusable Style Bible will define the identity later. It has not been authored or implemented during foundation setup.
+A reusable design Style Bible now lives in docs/art/paper-cut-style-bible.md. No final art generated or owner-approved yet; production consistency must be tested.
 
 ## Outputs
 Printed Book; Digital Book; Video Story.
@@ -24,8 +24,13 @@ Phase 1: manual/local creator studio operated by the owner. Customers do not ope
 Phase 2: only after the workflow proves reliable and high quality, consider a customer-facing website with story type, age, language, optional child-photo upload, personalization, and digital/printed/video orders.
 
 ## Architecture principle
-Design future core logic for reuse by a web application without rewriting the whole product. No technology stack, database, AI provider, image pipeline, print or video architecture is selected yet.
+Design core logic for reuse by a web application without rewriting the whole product. Planning baseline: Electron + React/TypeScript, pure domain/application boundaries, local SQLite and asset-store adapters. Arabic/print/Windows feasibility gates remain before implementation; AI/image provider, printer, exact dependencies and real-data retention are unselected. See docs/architecture/technical-architecture.md.
 
 ## Current authorization
-Only development/recovery infrastructure is authorized in v0.1.0-foundation. No story generator, UI, image/character/PDF/video generator, database or website.
+The original v0.1.0-foundation session authorized infrastructure only. Owner's Phase1 instruction now authorizes research/product/system design, synthetic specifications, tests of documentation, checkpoint/push and source backups. No application scaffold, story/image/PDF/video engine, UI, database or website implementation in this phase. Stop at v0.2.0-product-design and await implementation approval.
 
+## Canonical production design
+One versioned Story Blueprint meaning layer with linked natural-language editions feeds Printed Book, Digital Book and eligible Video Story. Personalization levels0–4 are optional; photo-reference level4 does not automatically make a child protagonist. Age word/page limits are provisional editorial guidance, not clinical facts. Human approvals bind revisions/hashes and downstream changes mark artifacts stale.
+Under-two child-facing video disabled by conservative product policy; caregiver shared reading primary. Current2026 AAP guidance and WHO2019 advice are documented separately. Children's photos/names/illustrated likeness and operational orders remain private and excluded from source recovery backups. Private operational backup/consent/retention controls required before real orders.
+
+Business Phase1 (owner studio) is distinct from engineering Phase1 (this design milestone). Complete internal V1 includes basic approved-illustration video assembly, not whole-video AI generation. Public website/accounts/payments deferred. docs/PHASE_1_INDEX.md routes all design documents; docs/ROADMAP.md describes future approval-gated steps.

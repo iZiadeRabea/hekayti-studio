@@ -1,0 +1,673 @@
+{
+  "schemaVersion": "blueprint/0.1",
+  "specificationOnly": true,
+  "profileOrigin": "synthetic",
+  "storyId": "test-c-3-plus",
+  "projectId": "demo-product-design",
+  "revisionId": "test-c-3-plus-spec-v1",
+  "workingTitle": "بيب والورقة البرتقالية",
+  "ageMonths": 48,
+  "ageBandId": "36-59m",
+  "ageProfileVersion": "age-profiles/0.1",
+  "languageModes": [
+    "msa-simple"
+  ],
+  "primaryLanguageMode": "msa-simple",
+  "primaryCategory": "adventure",
+  "secondaryCategories": [],
+  "objective": {
+    "kind": "emotional",
+    "description": "A bounded garden discovery models asking a friend for help, observing clues and enjoying a shared solution; no danger or forced moral.",
+    "successScenario": "Owner reviews whether wording/action offers the stated opportunity; not a child outcome guarantee"
+  },
+  "educationalObjective": null,
+  "behavioralObjective": null,
+  "emotionalObjective": "A bounded garden discovery models asking a friend for help, observing clues and enjoying a shared solution; no danger or forced moral.",
+  "theme": "A bounded garden discovery models asking a friend for help, observing clues and enjoying a shared solution; no danger or forced moral.",
+  "tone": "warm child-friendly",
+  "readingMode": "adult-read",
+  "protagonistId": "char-pip",
+  "supportingCharacterIds": [
+    "char-lulu"
+  ],
+  "characterBibleRefs": [
+    {
+      "characterId": "char-pip",
+      "bibleVersion": "v1"
+    },
+    {
+      "characterId": "char-lulu",
+      "bibleVersion": "v1"
+    }
+  ],
+  "characterBibles": [
+    {
+      "characterId": "char-pip",
+      "bibleVersion": "v1",
+      "origin": "synthetic",
+      "displayName": "بيب",
+      "species": "paper bird",
+      "ageRange": "preschool-like fictional",
+      "hair": "none",
+      "skinTone": "blue/cream paper",
+      "facialTraits": "ochre beak/dot eyes",
+      "clothing": "red neckerchief",
+      "proportions": "oval body/small wings",
+      "expressions": [
+        "curious",
+        "disappointed",
+        "hopeful",
+        "pleased"
+      ],
+      "accessories": [
+        "red neckerchief"
+      ],
+      "intendedAnatomy": "two wings/two bird feet, no hands",
+      "approvedReferenceImages": [],
+      "illustrationReference": null,
+      "consistencyNotes": "red neckerchief, blue body/cream belly fixed"
+    },
+    {
+      "characterId": "char-lulu",
+      "bibleVersion": "v1",
+      "origin": "synthetic",
+      "displayName": "لولو",
+      "species": "paper rabbit",
+      "clothing": "green waistcoat",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "long rounded ears, intended paws and legs, no sudden outfit change"
+    }
+  ],
+  "personalization": {
+    "level": 0,
+    "heroMode": "none",
+    "privateProfileRef": null
+  },
+  "setting": "bounded familiar garden, trusted adult nearby outside cast",
+  "environmentBibleRef": "demo-env-test-c-3-plus/v1",
+  "meaningBeats": [
+    {
+      "beatId": "beat-1",
+      "sequence": 1,
+      "purpose": "wish",
+      "actionOrDiscovery": "wish",
+      "emotion": "curiosity / supported feeling",
+      "visibleFacts": [
+        "one orange leaf; second green leaf only in closing collage",
+        "bench, pot and safe garden table fixed"
+      ],
+      "beforeState": "opening",
+      "afterState": "after beat-1",
+      "nextBeatId": "beat-2"
+    },
+    {
+      "beatId": "beat-2",
+      "sequence": 2,
+      "purpose": "setback",
+      "actionOrDiscovery": "setback",
+      "emotion": "curiosity / supported feeling",
+      "visibleFacts": [
+        "one orange leaf; second green leaf only in closing collage",
+        "bench, pot and safe garden table fixed"
+      ],
+      "beforeState": "after beat-1",
+      "afterState": "after beat-2",
+      "nextBeatId": "beat-3"
+    },
+    {
+      "beatId": "beat-3",
+      "sequence": 3,
+      "purpose": "support",
+      "actionOrDiscovery": "support",
+      "emotion": "curiosity / supported feeling",
+      "visibleFacts": [
+        "one orange leaf; second green leaf only in closing collage",
+        "bench, pot and safe garden table fixed"
+      ],
+      "beforeState": "after beat-2",
+      "afterState": "after beat-3",
+      "nextBeatId": "beat-4"
+    },
+    {
+      "beatId": "beat-4",
+      "sequence": 4,
+      "purpose": "search",
+      "actionOrDiscovery": "search",
+      "emotion": "curiosity / supported feeling",
+      "visibleFacts": [
+        "one orange leaf; second green leaf only in closing collage",
+        "bench, pot and safe garden table fixed"
+      ],
+      "beforeState": "after beat-3",
+      "afterState": "after beat-4",
+      "nextBeatId": "beat-5"
+    },
+    {
+      "beatId": "beat-5",
+      "sequence": 5,
+      "purpose": "find",
+      "actionOrDiscovery": "find",
+      "emotion": "curiosity / supported feeling",
+      "visibleFacts": [
+        "one orange leaf; second green leaf only in closing collage",
+        "bench, pot and safe garden table fixed"
+      ],
+      "beforeState": "after beat-4",
+      "afterState": "after beat-5",
+      "nextBeatId": "beat-6"
+    },
+    {
+      "beatId": "beat-6",
+      "sequence": 6,
+      "purpose": "warm-return",
+      "actionOrDiscovery": "warm-return",
+      "emotion": "warm connection",
+      "visibleFacts": [
+        "one orange leaf; second green leaf only in closing collage",
+        "bench, pot and safe garden table fixed"
+      ],
+      "beforeState": "after beat-5",
+      "afterState": "after beat-6",
+      "nextBeatId": null
+    }
+  ],
+  "pagePlan": [
+    {
+      "pageId": "page-01",
+      "order": 1,
+      "beatIds": [
+        "beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Pip bird alone on garden ground sees fallen leaves; fixed bench and pot establish scene.",
+      "mustShow": [
+        "Pip bird alone on garden ground sees fallen leaves; fixed bench and pot establish scene."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 only; char-lulu first appears on page06",
+      "propStates": "orange leaf on ground beside bench"
+    },
+    {
+      "pageId": "page-02",
+      "order": 2,
+      "beatIds": [
+        "beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Pip looks at one orange leaf on ground beside bench.",
+      "mustShow": [
+        "Pip looks at one orange leaf on ground beside bench."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 only; char-lulu first appears on page06",
+      "propStates": "orange leaf on ground beside bench"
+    },
+    {
+      "pageId": "page-03",
+      "order": 3,
+      "beatIds": [
+        "beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Gentle wind moves that orange leaf behind bench; Pip stays safely on ground.",
+      "mustShow": [
+        "Gentle wind moves that orange leaf behind bench; Pip stays safely on ground."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 only; char-lulu first appears on page06",
+      "propStates": "orange leaf moved behind bench next to pot; not duplicated"
+    },
+    {
+      "pageId": "page-04",
+      "order": 4,
+      "beatIds": [
+        "beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Pip looks around beside bench, leaf out of sight; Lulu not introduced yet.",
+      "mustShow": [
+        "Pip looks around beside bench, leaf out of sight; Lulu not introduced yet."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 only; char-lulu first appears on page06",
+      "propStates": "orange leaf moved behind bench next to pot; not duplicated"
+    },
+    {
+      "pageId": "page-05",
+      "order": 5,
+      "beatIds": [
+        "beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Pip's mildly disappointed face/posture beside bench; no tears/terror.",
+      "mustShow": [
+        "Pip's mildly disappointed face/posture beside bench; no tears/terror."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 only; char-lulu first appears on page06",
+      "propStates": "orange leaf moved behind bench next to pot; not duplicated"
+    },
+    {
+      "pageId": "page-06",
+      "order": 6,
+      "beatIds": [
+        "beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Lulu rabbit in green waistcoat joins Pip and offers help.",
+      "mustShow": [
+        "Lulu rabbit in green waistcoat joins Pip and offers help."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 and char-lulu/v1; same clothing",
+      "propStates": "orange leaf moved behind bench next to pot; not duplicated"
+    },
+    {
+      "pageId": "page-07",
+      "order": 7,
+      "beatIds": [
+        "beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Pip indicates ground beside bench; both characters consider direction.",
+      "mustShow": [
+        "Pip indicates ground beside bench; both characters consider direction."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 and char-lulu/v1; same clothing",
+      "propStates": "orange leaf moved behind bench next to pot; not duplicated"
+    },
+    {
+      "pageId": "page-08",
+      "order": 8,
+      "beatIds": [
+        "beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Pair finds one green leaf at bench side, not orange; second leaf remains on ground.",
+      "mustShow": [
+        "Pair finds one green leaf at bench side, not orange; second leaf remains on ground."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 and char-lulu/v1; same clothing",
+      "propStates": "orange leaf moved behind bench next to pot; not duplicated"
+    },
+    {
+      "pageId": "page-09",
+      "order": 9,
+      "beatIds": [
+        "beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Lulu gestures to ground; pair walks beside same bench, no climbing.",
+      "mustShow": [
+        "Lulu gestures to ground; pair walks beside same bench, no climbing."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 and char-lulu/v1; same clothing",
+      "propStates": "orange leaf moved behind bench next to pot; not duplicated"
+    },
+    {
+      "pageId": "page-10",
+      "order": 10,
+      "beatIds": [
+        "beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Pip points to visible orange edge beside pot on ground.",
+      "mustShow": [
+        "Pip points to visible orange edge beside pot on ground."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 and char-lulu/v1; same clothing",
+      "propStates": "orange leaf moved behind bench next to pot; not duplicated"
+    },
+    {
+      "pageId": "page-11",
+      "order": 11,
+      "beatIds": [
+        "beat-5"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Orange leaf fully revealed next to pot; both on safe ground.",
+      "mustShow": [
+        "Orange leaf fully revealed next to pot; both on safe ground."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 and char-lulu/v1; same clothing",
+      "propStates": "orange leaf retrieved"
+    },
+    {
+      "pageId": "page-12",
+      "order": 12,
+      "beatIds": [
+        "beat-5"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Pip lifts the one fallen orange leaf, Lulu pleased.",
+      "mustShow": [
+        "Pip lifts the one fallen orange leaf, Lulu pleased."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 and char-lulu/v1; same clothing",
+      "propStates": "orange leaf retrieved"
+    },
+    {
+      "pageId": "page-13",
+      "order": 13,
+      "beatIds": [
+        "beat-6"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "At nearby table Pip sets orange leaf on collage base; no extra orange leaf.",
+      "mustShow": [
+        "At nearby table Pip sets orange leaf on collage base; no extra orange leaf."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 and char-lulu/v1; same clothing",
+      "propStates": "orange leaf on table collage; green leaf added on page14 only"
+    },
+    {
+      "pageId": "page-14",
+      "order": 14,
+      "beatIds": [
+        "beat-6"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Lulu adds the earlier green fallen leaf; collage has exactly orange+green leaves.",
+      "mustShow": [
+        "Lulu adds the earlier green fallen leaf; collage has exactly orange+green leaves."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 and char-lulu/v1; same clothing",
+      "propStates": "orange leaf on table collage; green leaf added on page14 only"
+    },
+    {
+      "pageId": "page-15",
+      "order": 15,
+      "beatIds": [
+        "beat-6"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Pip warmly thanks Lulu beside unchanged two-leaf collage.",
+      "mustShow": [
+        "Pip warmly thanks Lulu beside unchanged two-leaf collage."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 and char-lulu/v1; same clothing",
+      "propStates": "orange leaf on table collage; green leaf added on page14 only"
+    },
+    {
+      "pageId": "page-16",
+      "order": 16,
+      "beatIds": [
+        "beat-6"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Both smile at two-leaf collage; echo opening composition, same style.",
+      "mustShow": [
+        "Both smile at two-leaf collage; echo opening composition, same style."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "char-pip/v1 and char-lulu/v1; same clothing",
+      "propStates": "orange leaf on table collage; green leaf added on page14 only"
+    }
+  ],
+  "languageVersions": [
+    {
+      "languageVersionId": "test-c-3-plus-msa-draft",
+      "mode": "msa-simple",
+      "sourceRevision": "test-c-3-plus-spec-v1",
+      "status": "proposed-copy-for-spec-not-approved-manuscript",
+      "diacriticsPolicy": "selective; native review pending",
+      "pages": [
+        {
+          "pageId": "page-01",
+          "narration": "في الحديقة، رأى بيب أوراقًا ملوّنة على الأرض. أراد صنع لوحة صغيرة.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 12
+        },
+        {
+          "pageId": "page-02",
+          "narration": "أعجبته ورقة برتقالية قرب المقعد. كانت تشبه جناحًا ورقيًا لطيفًا.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 10
+        },
+        {
+          "pageId": "page-03",
+          "narration": "قبل أن يصل إليها، حرّكت نسمة خفيفة الورقة. اختفت وراء المقعد.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 11
+        },
+        {
+          "pageId": "page-04",
+          "narration": "وقف بيب قريبًا من المقعد. نظر حوله، لكنه لم يرَ الورقة.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 11
+        },
+        {
+          "pageId": "page-05",
+          "narration": "قال: «أشعر بالضيق. كنت أريد هذه الورقة للوحتي». بقي في المكان الآمن.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 12
+        },
+        {
+          "pageId": "page-06",
+          "narration": "اقتربت لولو وقالت: «هل تريد أن نبحث معًا؟» ابتسم بيب وأومأ.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 11
+        },
+        {
+          "pageId": "page-07",
+          "narration": "أشار بيب إلى المقعد: «كانت هنا. ربما تحرّكت إلى الجانب الآخر».",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 11
+        },
+        {
+          "pageId": "page-08",
+          "narration": "نظرا إلى جانب المقعد. وجدا ورقة خضراء، لكن الورقة البرتقالية لم تظهر.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 12
+        },
+        {
+          "pageId": "page-09",
+          "narration": "قالت لولو: «لننظر إلى الأرض بهدوء». سار الصديقان حول المقعد القريب.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 11
+        },
+        {
+          "pageId": "page-10",
+          "narration": "رأى بيب طرفًا برتقاليًا بجوار أصيص الزرع. توقف وأشار إليه بلطف.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 11
+        },
+        {
+          "pageId": "page-11",
+          "narration": "كانت الورقة على الأرض، بجوار الأصيص. لم يحتج أحد إلى تسلّق شيء.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 12
+        },
+        {
+          "pageId": "page-12",
+          "narration": "التقط بيب الورقة الساقطة برفق. قالت لولو: «وجدناها! لقد بحثنا معًا».",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 11
+        },
+        {
+          "pageId": "page-13",
+          "narration": "عاد الصديقان إلى الطاولة القريبة. وضع بيب الورقة البرتقالية على اللوحة.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 11
+        },
+        {
+          "pageId": "page-14",
+          "narration": "اختارت لولو ورقة خضراء ساقطة. صارت للوحة ورقتان واضحتان بلونين مختلفين.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 11
+        },
+        {
+          "pageId": "page-15",
+          "narration": "قال بيب: «كنت متضايقًا. الآن أنا سعيد. شكرًا لأنك ساعدتني يا لولو».",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 12
+        },
+        {
+          "pageId": "page-16",
+          "narration": "نظرا إلى اللوحة وابتسما. بقيت الورقتان في مكانهما، وانتهى يومهما بهدوء.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 11
+        }
+      ],
+      "totalWords": 180,
+      "glossaryRefs": [],
+      "review": "pending native editor"
+    }
+  ],
+  "illustrationBrief": "hek-paper-cut/0.1; text-free separated art; no images generated",
+  "styleProfileRef": "hek-paper-cut/0.1",
+  "videoAdaptationNotes": {
+    "childViewingEligibility": "eligible-with-caregiver",
+    "reason": "co-viewing, finite slow scene assembly only after story/art approval",
+    "shotPlanStatus": "not generated"
+  },
+  "outputIntents": [
+    "print",
+    "digital",
+    "video"
+  ],
+  "safetyQualityChecks": [
+    {
+      "check": "synthetic-only",
+      "status": "PASS"
+    },
+    {
+      "check": "age-screen-eligibility",
+      "status": "specified-not-implemented"
+    },
+    {
+      "check": "native-developmental-art-export-review",
+      "status": "PENDING"
+    }
+  ],
+  "approvalRecords": [],
+  "parentParticipation": "Optional ask what to try; acknowledge feeling; caregiver stays nearby",
+  "accessibility": {
+    "colourNotOnlyCue": true,
+    "readAloud": true
+  },
+  "lineage": {
+    "parentRevisionId": null
+  },
+  "dependencyHashes": {
+    "status": "not-production-hashes"
+  },
+  "generatedAssets": [],
+  "exportRefs": [],
+  "testExpectations": {
+    "storyWordRange": [
+      120,
+      400
+    ],
+    "storyPageCount": 16,
+    "videoEligible": true,
+    "realPersonalData": false,
+    "heroImplicit": false,
+    "conventionalPlotRequired": true
+  }
+}

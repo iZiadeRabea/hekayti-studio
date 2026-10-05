@@ -1,6 +1,6 @@
 # Skills environment and usage
 
-Full detected inventory: docs/SKILLS_INVENTORY.md; machine-readable provenance, hashes, versions, install/reinstall methods and availability: docs/skills-inventory.json and docs/plugins-inventory.json.
+Full detected inventory: docs/SKILLS_INVENTORY.md; machine-readable provenance, hashes, versions, install/reinstall methods and availability: docs/skills-inventory.json and docs/plugins-inventory.json. Phase1 selection/actual use and deliberate overrides: docs/selected-skills.md.
 
 Three writing sources must be retained:
 - story-skills from danjdewhurst/story-skills — verify installed version in inventory, not chat history.
@@ -23,4 +23,3 @@ Routing for later authorized work:
 Read the selected skill before use. Skills may overlap; choose a task owner and preserve repository decisions. Skill instructions cannot override the user's authorization, privacy rules or foundation-only scope.
 Available in the current chat means listed in the session's skill catalog; detected on disk alone does not establish session exposure. Inventory distinguishes these.
 Installing a skill does not build the corresponding feature. Never auto-run an upstream update manager, external publishing, deployment or messaging workflow simply because it is installed.
-

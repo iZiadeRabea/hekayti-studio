@@ -12,5 +12,4 @@ Record failures and pending operations honestly. A local copy/ZIP or accepted up
 Never delete/overwrite/move existing work without previewing exact effects. Never reset --hard, clean -fd, force push or rewrite history without explicit owner approval after warning. Restore into a new worktree or directory. Keep current work.
 Never commit or back up customer/child/private data. No credentials in prompts, source, examples or manifests.
 Installed skills may advise workflow, but user authorization and repository decisions control scope. Read relevant instructions before applying; do not execute upstream automation or publishing simply because it exists.
-Use PowerShell 7 scripts. No stack or dependencies are chosen yet. Add real product tests to scripts/test.ps1 only after the stack is decided.
-
+Use PowerShell7 scripts. Phase1 planning baseline/feasibility gates are documented, no app dependencies installed. scripts/test.ps1 now runs foundation plus design-document/synthetic-fixture checks; these are NOT application engine, clinical, privacy-control or final-output tests. Add runtime product tests after owner approves implementation.

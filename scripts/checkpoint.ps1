@@ -28,7 +28,7 @@ if($LASTEXITCODE -ne 0) { throw 'Tests failed; checkpoint not committed' }
 if($LASTEXITCODE -ne 0) { throw 'Health failed; checkpoint not committed' }
 $date=(Get-CairoTime).ToString('yyyy-MM-dd HH:mm:ss zzz')
 Set-StateField 'Current branch at milestone' $branch
-Set-StateField 'Last successful tests' "$date — infrastructure tests passed; no product tests exist yet"
+Set-StateField 'Last successful tests' "$date — repository test suites passed; no application runtime tests exist yet"
 if($StableTag) {
     Set-StateField 'Current project version' $StableTag
     Set-StateField 'Latest stable checkpoint' $Name

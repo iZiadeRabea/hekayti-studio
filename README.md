@@ -1,6 +1,6 @@
 # Hekayti Studio
 
-Version: v0.1.1-foundation (initial release v0.1.0-foundation preserved). Status: infrastructure only; application development has not started.
+Target milestone: v0.2.0-product-design (foundation tags preserved). Status: research/design complete; application implementation has not started. Read CURRENT_STATE.md and live Git tags for stable state.
 
 Hekayti Studio will be an owner-operated creator studio for children's stories in Egypt, initially in simplified Modern Standard Arabic and Egyptian Arabic. Read [START_HERE.md](START_HERE.md) before changing anything.
 
@@ -22,4 +22,6 @@ pwsh -File scripts/health-check.ps1
 pwsh -File tests/foundation.tests.ps1
 ```
 
-No application stack, database, website, UI, story/image/PDF/video generator or product dependency has been selected or implemented.
+Phase1 design entrypoint: [Product intelligence index](docs/PHASE_1_INDEX.md), [MVP scope](docs/product/mvp-scope.md), [roadmap](docs/ROADMAP.md), [architecture recommendation](docs/architecture/technical-architecture.md).
+
+Electron/React/TypeScript + SQLite is a planning recommendation with feasibility gates. No application/database/UI/generator or product dependencies implemented/installed. The owner must approve Phase2 before coding. Three synthetic demo blueprints and documentation tests are not final customer stories or validated educational products.

@@ -1,0 +1,377 @@
+{
+  "schemaVersion": "blueprint/0.1",
+  "specificationOnly": true,
+  "profileOrigin": "synthetic",
+  "storyId": "test-a-under-1",
+  "projectId": "demo-product-design",
+  "revisionId": "test-a-under-1-spec-v1",
+  "workingTitle": "كرة… أين الكرة؟",
+  "ageMonths": 8,
+  "ageBandId": "0-11m",
+  "ageProfileVersion": "age-profiles/0.1",
+  "languageModes": [
+    "msa-simple"
+  ],
+  "primaryLanguageMode": "msa-simple",
+  "primaryCategory": "early-learning",
+  "secondaryCategories": [],
+  "objective": {
+    "kind": "connection",
+    "description": "Caregiver naming and warm back-and-forth object recognition; not a claim of infant colour mastery.",
+    "successScenario": "Owner reviews whether wording/action offers the stated opportunity; not a child outcome guarantee"
+  },
+  "educationalObjective": null,
+  "behavioralObjective": null,
+  "emotionalObjective": null,
+  "theme": "Caregiver naming and warm back-and-forth object recognition; not a claim of infant colour mastery.",
+  "tone": "warm child-friendly",
+  "readingMode": "adult-read",
+  "protagonistId": null,
+  "supportingCharacterIds": [],
+  "characterBibleRefs": [],
+  "characterBibles": [],
+  "personalization": {
+    "level": 0,
+    "heroMode": "none",
+    "privateProfileRef": null
+  },
+  "setting": "isolated paper field",
+  "environmentBibleRef": "demo-env-test-a-under-1/v1",
+  "meaningBeats": [
+    {
+      "beatId": "beat-1",
+      "sequence": 1,
+      "purpose": "recognize",
+      "actionOrDiscovery": "recognize",
+      "emotion": "curiosity / supported feeling",
+      "visibleFacts": [
+        "one coral paper ball, no detached tactile parts"
+      ],
+      "beforeState": "opening",
+      "afterState": "after beat-1",
+      "nextBeatId": "beat-2"
+    },
+    {
+      "beatId": "beat-2",
+      "sequence": 2,
+      "purpose": "name",
+      "actionOrDiscovery": "name",
+      "emotion": "curiosity / supported feeling",
+      "visibleFacts": [
+        "one coral paper ball, no detached tactile parts"
+      ],
+      "beforeState": "after beat-1",
+      "afterState": "after beat-2",
+      "nextBeatId": "beat-3"
+    },
+    {
+      "beatId": "beat-3",
+      "sequence": 3,
+      "purpose": "look",
+      "actionOrDiscovery": "look",
+      "emotion": "curiosity / supported feeling",
+      "visibleFacts": [
+        "one coral paper ball, no detached tactile parts"
+      ],
+      "beforeState": "after beat-2",
+      "afterState": "after beat-3",
+      "nextBeatId": "beat-4"
+    },
+    {
+      "beatId": "beat-4",
+      "sequence": 4,
+      "purpose": "reveal",
+      "actionOrDiscovery": "reveal",
+      "emotion": "warm connection",
+      "visibleFacts": [
+        "one coral paper ball, no detached tactile parts"
+      ],
+      "beforeState": "after beat-3",
+      "afterState": "after beat-4",
+      "nextBeatId": null
+    }
+  ],
+  "pagePlan": [
+    {
+      "pageId": "page-01",
+      "order": 1,
+      "beatIds": [
+        "beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Single large coral paper ball centered on cream, no character.",
+      "mustShow": [
+        "Single large coral paper ball centered on cream, no character."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "one unique ball"
+    },
+    {
+      "pageId": "page-02",
+      "order": 2,
+      "beatIds": [
+        "beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Same ball closer, softly layered edge, no tactile loose pieces.",
+      "mustShow": [
+        "Same ball closer, softly layered edge, no tactile loose pieces."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "one unique ball"
+    },
+    {
+      "pageId": "page-03",
+      "order": 3,
+      "beatIds": [
+        "beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Ball concealed behind one large blue paper panel; no duplicate ball.",
+      "mustShow": [
+        "Ball concealed behind one large blue paper panel; no duplicate ball."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "one unique ball"
+    },
+    {
+      "pageId": "page-04",
+      "order": 4,
+      "beatIds": [
+        "beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Same ball revealed beside panel; warm simple composition.",
+      "mustShow": [
+        "Same ball revealed beside panel; warm simple composition."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "one unique ball"
+    },
+    {
+      "pageId": "page-05",
+      "order": 5,
+      "beatIds": [
+        "beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Ball on the right of the cream field.",
+      "mustShow": [
+        "Ball on the right of the cream field."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "one unique ball"
+    },
+    {
+      "pageId": "page-06",
+      "order": 6,
+      "beatIds": [
+        "beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Ball on the left of the same field; no motion instructions.",
+      "mustShow": [
+        "Ball on the left of the same field; no motion instructions."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "one unique ball"
+    },
+    {
+      "pageId": "page-07",
+      "order": 7,
+      "beatIds": [
+        "beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Ball concealed behind the same blue panel again.",
+      "mustShow": [
+        "Ball concealed behind the same blue panel again."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "one unique ball"
+    },
+    {
+      "pageId": "page-08",
+      "order": 8,
+      "beatIds": [
+        "beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "quiet lower cream field; actual geometry from output profile",
+      "artBrief": "Ball revealed, matching opening scale and colour.",
+      "mustShow": [
+        "Ball revealed, matching opening scale and colour."
+      ],
+      "mustNotShow": [
+        "embedded body text",
+        "unapproved real child likeness",
+        "dangerous imitation"
+      ],
+      "characterStates": "fixed bible version; pose follows this page only",
+      "propStates": "one unique ball"
+    }
+  ],
+  "languageVersions": [
+    {
+      "languageVersionId": "test-a-under-1-msa-draft",
+      "mode": "msa-simple",
+      "sourceRevision": "test-a-under-1-spec-v1",
+      "status": "proposed-copy-for-spec-not-approved-manuscript",
+      "diacriticsPolicy": "selective; native review pending",
+      "pages": [
+        {
+          "pageId": "page-01",
+          "narration": "هذه كرة.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 2
+        },
+        {
+          "pageId": "page-02",
+          "narration": "كرة ناعمة.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 2
+        },
+        {
+          "pageId": "page-03",
+          "narration": "أين الكرة؟",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 2
+        },
+        {
+          "pageId": "page-04",
+          "narration": "ها هي الكرة!",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 3
+        },
+        {
+          "pageId": "page-05",
+          "narration": "كرة هنا.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 2
+        },
+        {
+          "pageId": "page-06",
+          "narration": "كرة هناك.",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 2
+        },
+        {
+          "pageId": "page-07",
+          "narration": "أين الكرة؟",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 2
+        },
+        {
+          "pageId": "page-08",
+          "narration": "ها هي!",
+          "dialogue": [],
+          "altText": "To draft after approved visual; no asset generated",
+          "wordCount": 2
+        }
+      ],
+      "totalWords": 17,
+      "glossaryRefs": [],
+      "review": "pending native editor"
+    }
+  ],
+  "illustrationBrief": "hek-paper-cut/0.1; text-free separated art; no images generated",
+  "styleProfileRef": "hek-paper-cut/0.1",
+  "videoAdaptationNotes": {
+    "childViewingEligibility": "ineligible-child-viewing",
+    "reason": "conservative under-two policy; parent-only preview not child product",
+    "shotPlanStatus": "not generated"
+  },
+  "outputIntents": [
+    "print",
+    "digital",
+    "video"
+  ],
+  "safetyQualityChecks": [
+    {
+      "check": "synthetic-only",
+      "status": "PASS"
+    },
+    {
+      "check": "age-screen-eligibility",
+      "status": "specified-not-implemented"
+    },
+    {
+      "check": "native-developmental-art-export-review",
+      "status": "PENDING"
+    }
+  ],
+  "approvalRecords": [],
+  "parentParticipation": "Follow looks/sounds; name/point; stop when baby disengages",
+  "accessibility": {
+    "colourNotOnlyCue": true,
+    "readAloud": true
+  },
+  "lineage": {
+    "parentRevisionId": null
+  },
+  "dependencyHashes": {
+    "status": "not-production-hashes"
+  },
+  "generatedAssets": [],
+  "exportRefs": [],
+  "testExpectations": {
+    "storyWordRange": [
+      0,
+      40
+    ],
+    "storyPageCount": 8,
+    "videoEligible": false,
+    "realPersonalData": false,
+    "heroImplicit": false,
+    "conventionalPlotRequired": false
+  }
+}
