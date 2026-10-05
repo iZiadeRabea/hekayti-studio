@@ -11,6 +11,7 @@
     "./workflow": "./src/story-workflow.ts"
   },
   "dependencies": {
-    "@hekayti/contracts": "0.3.0"
+    "@hekayti/contracts": "0.3.0",
+    "zod": "4.6.5"
   }
 }
