@@ -1,0 +1,73 @@
+{
+  "origin": "synthetic",
+  "authority": "editorial-D/H",
+  "profileVersion": "age-profiles/0.1",
+  "medicalValidation": false,
+  "note": "Representative policy summaries, not child observations or clinical capability predictions. Numeric ranges reuse the existing Age Engine; recognition units are separate from zero conventional infant events.",
+  "examples": [
+    {
+      "ageMonths": 8,
+      "ageBandId": "0-11m",
+      "narrativeForm": "recognition",
+      "conventionalEvents": [0, 0],
+      "recognitionUnits": [3, 5],
+      "mechanisms": ["recognition", "reveal", "sound-play"],
+      "conflict": "none",
+      "parentParticipation": "Point, name and respond; stop freely."
+    },
+    {
+      "ageMonths": 20,
+      "ageBandId": "12-23m",
+      "narrativeForm": "routine",
+      "events": [1, 3],
+      "mechanisms": ["routine", "helping", "discovery"],
+      "conflict": "supported-friction",
+      "parentParticipation": "Invite a gesture or one word; support a familiar routine."
+    },
+    {
+      "ageMonths": 30,
+      "ageBandId": "24-35m",
+      "narrativeForm": "simple-causal",
+      "events": [2, 4],
+      "mechanisms": ["discovery", "problem-solving", "helping", "building"],
+      "conflict": "supported-friction",
+      "parentParticipation": "Offer two familiar choices and model the action."
+    },
+    {
+      "ageMonths": 48,
+      "ageBandId": "36-59m",
+      "narrativeForm": "short-plot",
+      "events": [3, 6],
+      "mechanisms": [
+        "discovery",
+        "problem-solving",
+        "cooperation",
+        "journey",
+        "mystery",
+        "treasure-hunt",
+        "building",
+        "helping"
+      ],
+      "conflict": "bounded-problem",
+      "parentParticipation": "Ask an optional prediction or feeling question."
+    },
+    {
+      "ageMonths": 72,
+      "ageBandId": "60-95m",
+      "narrativeForm": "extended-plot",
+      "events": [5, 8],
+      "mechanisms": [
+        "discovery",
+        "problem-solving",
+        "cooperation",
+        "journey",
+        "mystery",
+        "treasure-hunt",
+        "building",
+        "helping"
+      ],
+      "conflict": "bounded-problem",
+      "parentParticipation": "Invite retelling and a safe off-screen activity; independent literacy is not assumed."
+    }
+  ]
+}
