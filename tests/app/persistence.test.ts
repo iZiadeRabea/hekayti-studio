@@ -31,10 +31,47 @@ test("nested project+blueprint unit of work rolls back all rows on failure", () 
   r.close();
 });
 const dir = () => mkdtempSync("temp/app-tests/run-");
+test("actual version-1 migration preserves all legacy rows and is transactional", () => {
+  const path = join(dir(), "v1.sqlite"),
+    original = new SqliteProjectRepository(path);
+  original.createProject(project());
+  original.saveBlueprint(fixture());
+  original.close();
+  const db = new DatabaseSync(path);
+  db.exec("DROP TABLE story_workflows; PRAGMA user_version=1");
+  db.close();
+  const migrated = new SqliteProjectRepository(path);
+  assert.equal(migrated.diagnostics().schemaVersion, 2);
+  assert.deepEqual(migrated.loadProject(project().projectId), project());
+  assert.deepEqual(migrated.loadBlueprint(fixture().revisionId), fixture());
+  assert.deepEqual(
+    migrated.loadEdition(fixture().languageVersions[0]!.languageVersionId),
+    fixture().languageVersions[0],
+  );
+  migrated.close();
+  const broken = join(dir(), "broken-v1.sqlite"),
+    corrupt = new DatabaseSync(broken);
+  corrupt.exec(
+    "CREATE TABLE projects(id TEXT PRIMARY KEY,payload TEXT,version INTEGER); PRAGMA user_version=1",
+  );
+  corrupt.close();
+  assert.throws(() => new SqliteProjectRepository(broken));
+  const retained = new DatabaseSync(broken);
+  assert.equal(retained.prepare("PRAGMA user_version").get()!.user_version, 1);
+  assert.equal(
+    retained
+      .prepare(
+        "SELECT count(*) AS n FROM sqlite_master WHERE name='story_workflows'",
+      )
+      .get()!.n,
+    0,
+  );
+  retained.close();
+});
 test("SQLite migration, CRUD, all synthetic fixture roundtrips, reopen persistence", () => {
   const path = join(dir(), "demo.sqlite");
   let r = new SqliteProjectRepository(path);
-  assert.equal(r.diagnostics().schemaVersion, 1);
+  assert.equal(r.diagnostics().schemaVersion, 2);
   r.createProject(project());
   for (const name of names) {
     const b = fixture(name);

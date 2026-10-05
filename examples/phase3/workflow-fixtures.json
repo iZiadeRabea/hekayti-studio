@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "workflow-fixtures/1.0",
+  "origin": "synthetic",
+  "provider": "mock",
+  "cases": [
+    {
+      "ageMonths": 6,
+      "category": "educational",
+      "personalizationLevel": 0,
+      "languages": ["ar-MSA-simple", "ar-EG"]
+    },
+    {
+      "ageMonths": 18,
+      "category": "behavioral",
+      "personalizationLevel": 1,
+      "languages": ["ar-MSA-simple", "ar-EG"]
+    },
+    {
+      "ageMonths": 30,
+      "category": "adventure",
+      "personalizationLevel": 2,
+      "languages": ["ar-MSA-simple", "ar-EG"]
+    },
+    {
+      "ageMonths": 42,
+      "category": "values",
+      "personalizationLevel": 3,
+      "languages": ["ar-MSA-simple", "ar-EG"]
+    },
+    {
+      "ageMonths": 72,
+      "category": "adventure",
+      "personalizationLevel": 0,
+      "languages": ["ar-MSA-simple", "ar-EG"]
+    }
+  ],
+  "limitations": "Representative deterministic integration cases; no real children, native review or literary certification."
+}

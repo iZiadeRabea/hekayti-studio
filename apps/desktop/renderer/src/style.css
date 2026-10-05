@@ -105,3 +105,39 @@ bdi {
 .mixed {
   font-size: 22px;
 }
+.story-creator fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 20px 0;
+}
+.story-creator fieldset label {
+  flex: 1 1 230px;
+}
+.story-creator select,
+.story-creator input[type="number"] {
+  display: block;
+  max-width: 100%;
+  padding: 8px;
+}
+.concept-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.concept-card {
+  padding: 16px;
+  border: 1px solid #94a3b8;
+  border-radius: 8px;
+  background: #fff;
+}
+.concept-card dl div {
+  margin: 8px 0;
+}
+.concept-card dt {
+  font-weight: 600;
+}
+.concept-card dd {
+  margin: 0;
+}

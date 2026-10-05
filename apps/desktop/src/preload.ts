@@ -1,6 +1,10 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { DesktopApi } from "./api";
 const api: DesktopApi = {
+  newStory: (request) => ipcRenderer.invoke("story:new", request),
+  loadStory: (projectId) => ipcRenderer.invoke("story:load", projectId),
+  reviseStory: (input) => ipcRenderer.invoke("story:revise", input),
+  storyAction: (input) => ipcRenderer.invoke("story:action", input),
   listProjects: () => ipcRenderer.invoke("projects:list"),
   seedSynthetic: () => ipcRenderer.invoke("projects:seed"),
   inspectProject: (id) => ipcRenderer.invoke("projects:inspect", id),

@@ -1,8 +1,24 @@
-import type { Project, StoryBlueprint } from "@hekayti/contracts";
+import type { Project, StoryBlueprint, StoryRequest } from "@hekayti/contracts";
+import type { WorkflowSnapshot } from "@hekayti/core/workflow";
 export type Result<T> =
   | { ok: true; value: T }
   | { ok: false; error: { code: string; message: string } };
 export interface DesktopApi {
+  newStory(request: StoryRequest): Promise<Result<WorkflowSnapshot>>;
+  loadStory(projectId: string): Promise<Result<WorkflowSnapshot | null>>;
+  reviseStory(input: {
+    projectId: string;
+    expectedVersion: number;
+    request: StoryRequest;
+  }): Promise<Result<WorkflowSnapshot>>;
+  storyAction(input: {
+    projectId: string;
+    expectedVersion: number;
+    action: "create-more" | "select" | "build" | "draft" | "qa" | "approve";
+    conceptId?: string;
+    reviewerAlias?: string;
+    advisoryAcknowledged?: boolean;
+  }): Promise<Result<WorkflowSnapshot>>;
   listProjects(): Promise<Result<Project[]>>;
   seedSynthetic(): Promise<Result<Project[]>>;
   inspectProject(id: string): Promise<Result<StoryBlueprint>>;

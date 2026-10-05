@@ -6,6 +6,7 @@ import { ageGuidance, invalidateDependents } from "@hekayti/core";
 import { rtlSamples } from "@hekayti/export";
 import type { Project, StoryBlueprint } from "@hekayti/contracts";
 import type { DesktopApi, Result } from "../../src/api";
+import { StoryCreator } from "./StoryCreator";
 declare global {
   interface Window {
     hekayti: DesktopApi;
@@ -44,6 +45,7 @@ function App() {
       <nav aria-label="Prototype sections">
         {[
           "Projects",
+          "Story Creator",
           "RTL Test",
           "Core Data Inspector",
           "Export Test",
@@ -55,6 +57,7 @@ function App() {
         ))}
       </nav>
       <main>
+        {tab === "Story Creator" && <StoryCreator />}
         <p role="status" className="status" dir="auto">
           {status}
         </p>
@@ -86,54 +89,57 @@ function App() {
               Open synthetic JSON safely
             </button>
             <ul>
-              {projects.map((p) => (
-                <li key={p.projectId}>
-                  <span>{p.title}</span>
-                  <bdi>{p.projectId}</bdi>
-                  <button
-                    onClick={async () => {
-                      const b = await unwrap(
-                        window.hekayti.inspectProject(p.projectId),
-                      );
-                      if (b) {
-                        setBlueprint(b);
-                        setTab("Core Data Inspector");
-                      }
-                    }}
-                  >
-                    Inspect
-                  </button>
-                  <button
-                    onClick={async () => {
-                      const saved = await unwrap(
-                        window.hekayti.updateTitle({
-                          projectId: p.projectId,
-                          title: p.title + " - test",
-                          expectedVersion: p.recordVersion,
-                        }),
-                      );
-                      if (saved) {
-                        await reload();
-                        setStatus(
-                          "SQLite update saved; version " + saved.recordVersion,
+              {projects
+                .filter((p) => p.projectId.startsWith("phase2-"))
+                .map((p) => (
+                  <li key={p.projectId}>
+                    <span>{p.title}</span>
+                    <bdi>{p.projectId}</bdi>
+                    <button
+                      onClick={async () => {
+                        const b = await unwrap(
+                          window.hekayti.inspectProject(p.projectId),
                         );
-                      }
-                    }}
-                  >
-                    Save synthetic title edit
-                  </button>
-                  <button
-                    onClick={async () => {
-                      const path = await unwrap(
-                        window.hekayti.saveProject(p.projectId),
-                      );
-                      if (path) setStatus("New snapshot saved: " + path);
-                    }}
-                  >
-                    Save new JSON snapshot
-                  </button>
-                </li>
-              ))}
+                        if (b) {
+                          setBlueprint(b);
+                          setTab("Core Data Inspector");
+                        }
+                      }}
+                    >
+                      Inspect
+                    </button>
+                    <button
+                      onClick={async () => {
+                        const saved = await unwrap(
+                          window.hekayti.updateTitle({
+                            projectId: p.projectId,
+                            title: p.title + " - test",
+                            expectedVersion: p.recordVersion,
+                          }),
+                        );
+                        if (saved) {
+                          await reload();
+                          setStatus(
+                            "SQLite update saved; version " +
+                              saved.recordVersion,
+                          );
+                        }
+                      }}
+                    >
+                      Save synthetic title edit
+                    </button>
+                    <button
+                      onClick={async () => {
+                        const path = await unwrap(
+                          window.hekayti.saveProject(p.projectId),
+                        );
+                        if (path) setStatus("New snapshot saved: " + path);
+                      }}
+                    >
+                      Save new JSON snapshot
+                    </button>
+                  </li>
+                ))}
             </ul>
           </section>
         )}

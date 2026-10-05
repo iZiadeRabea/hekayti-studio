@@ -25,6 +25,10 @@ import { ageGuidance, contentHash, invalidateDependents } from "@hekayti/core";
 import { SqliteProjectRepository, writeNewFile } from "@hekayti/persistence";
 import { proofHtml, proofMetadata, proofPages } from "@hekayti/export";
 import type { Result } from "./api";
+import { StoryRequestSchema } from "@hekayti/contracts/story";
+import { StoryWorkflowService } from "@hekayti/core/workflow";
+import { MockStoryConceptProvider } from "@hekayti/core/story";
+import { MockStoryDraftProvider } from "@hekayti/core/language";
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -51,6 +55,7 @@ else
     join(app.getPath("appData"), "Hekayti-Studio-Phase2-Synthetic"),
   );
 let repo: SqliteProjectRepository;
+let workflow: StoryWorkflowService;
 let win: BrowserWindow;
 const revisionByProject = new Map<string, string>();
 async function fixtures(): Promise<StoryBlueprint[]> {
@@ -190,6 +195,12 @@ app
     repo = new SqliteProjectRepository(
       join(app.getPath("userData"), "metadata", "synthetic.sqlite"),
     );
+    workflow = new StoryWorkflowService(
+      repo,
+      new MockStoryConceptProvider(),
+      new MockStoryDraftProvider(),
+      { id: () => randomUUID(), now: () => new Date().toISOString() },
+    );
     await seed();
     protocol.handle("hekayti", (request) => {
       const url = new URL(request.url);
@@ -218,6 +229,81 @@ app
     win.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
     win.webContents.on("will-navigate", (event) => event.preventDefault());
     handle("projects:list", () => repo.listProjects());
+    handle("story:new", (arg) => {
+      const request = validate(StoryRequestSchema, arg),
+        now = new Date().toISOString();
+      return repo.transaction(() => {
+        repo.createProject(
+          validate(ProjectSchema, {
+            schemaVersion: "project/1.0",
+            projectId: request.projectId,
+            title: "Synthetic story creator",
+            origin: "synthetic",
+            createdAt: now,
+            updatedAt: now,
+            recordVersion: 0,
+          }),
+        );
+        return workflow.create(request);
+      });
+    });
+    handle("story:load", (arg) => workflow.load(validate(Id, arg)));
+    handle("story:revise", (arg) => {
+      const x = validate(
+        z
+          .object({
+            projectId: Id,
+            expectedVersion: z.number().int().nonnegative(),
+            request: StoryRequestSchema,
+          })
+          .strict(),
+        arg,
+      );
+      return workflow.reviseRequest(x.projectId, x.expectedVersion, x.request);
+    });
+    const commandBase = {
+      projectId: Id,
+      expectedVersion: z.number().int().nonnegative(),
+    };
+    const commandSchema = z.discriminatedUnion("action", [
+      z.object({ ...commandBase, action: z.literal("create-more") }).strict(),
+      z
+        .object({ ...commandBase, action: z.literal("select"), conceptId: Id })
+        .strict(),
+      z.object({ ...commandBase, action: z.literal("build") }).strict(),
+      z.object({ ...commandBase, action: z.literal("draft") }).strict(),
+      z.object({ ...commandBase, action: z.literal("qa") }).strict(),
+      z
+        .object({
+          ...commandBase,
+          action: z.literal("approve"),
+          reviewerAlias: z.string().min(1).max(80),
+          advisoryAcknowledged: z.literal(true),
+        })
+        .strict(),
+    ]);
+    handle("story:action", (arg) => {
+      const x = validate(commandSchema, arg);
+      switch (x.action) {
+        case "create-more":
+          return workflow.createMore(x.projectId, x.expectedVersion);
+        case "select":
+          return workflow.select(x.projectId, x.expectedVersion, x.conceptId);
+        case "build":
+          return workflow.build(x.projectId, x.expectedVersion);
+        case "draft":
+          return workflow.draft(x.projectId, x.expectedVersion);
+        case "qa":
+          return workflow.qa(x.projectId, x.expectedVersion);
+        case "approve":
+          return workflow.approve(
+            x.projectId,
+            x.expectedVersion,
+            x.reviewerAlias,
+            x.advisoryAcknowledged,
+          );
+      }
+    });
     handle("projects:seed", () => seed());
     handle("projects:inspect", (arg) => {
       const id = validate(Id, arg);

@@ -1,6 +1,7 @@
 import { DatabaseSync } from "node:sqlite";
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
+import { createHash } from "node:crypto";
 import {
   ProjectSchema,
   BlueprintSchema,
@@ -14,9 +15,18 @@ import {
   type CharacterBible,
 } from "@hekayti/contracts";
 import { canonicalJson, type ProjectRepository } from "@hekayti/core";
+import {
+  WorkflowSnapshotSchema,
+  validateWorkflowAppend,
+  historicalWorkflowHashInput,
+  type WorkflowSnapshot,
+  type StoryWorkflowRepository,
+} from "@hekayti/core/workflow";
 export { LocalAssetStore, writeNewFile } from "./assets";
 
-export class SqliteProjectRepository implements ProjectRepository {
+export class SqliteProjectRepository
+  implements ProjectRepository, StoryWorkflowRepository
+{
   private readonly db: DatabaseSync;
   private transactionDepth = 0;
   constructor(path: string) {
@@ -27,7 +37,7 @@ export class SqliteProjectRepository implements ProjectRepository {
       const version = Number(
         this.db.prepare("PRAGMA user_version").get()!.user_version,
       );
-      if (version > 1)
+      if (version > 2)
         throw new AppError(
           "DATABASE_VERSION",
           "Database is newer than this prototype; it was not downgraded.",
@@ -55,6 +65,39 @@ export class SqliteProjectRepository implements ProjectRepository {
           PRAGMA user_version=1;`),
         );
       }
+      if (version <= 1) {
+        // Additive migration. SQLite rolls back DDL and user_version together.
+        this.transaction(() => {
+          for (const table of [
+            "projects",
+            "blueprints",
+            "editions",
+            "characters",
+          ])
+            this.db.prepare(`SELECT * FROM ${table} LIMIT 0`).all();
+          this.listProjects();
+          for (const row of this.db
+            .prepare("SELECT payload FROM blueprints")
+            .all())
+            validate(BlueprintSchema, JSON.parse(String(row.payload)));
+          for (const row of this.db
+            .prepare("SELECT payload FROM editions")
+            .all())
+            validate(LanguageEditionSchema, JSON.parse(String(row.payload)));
+          for (const row of this.db
+            .prepare("SELECT payload FROM characters")
+            .all())
+            validate(CharacterBibleSchema, JSON.parse(String(row.payload)));
+          this.db.exec(
+            "CREATE TABLE story_workflows(project_id TEXT PRIMARY KEY REFERENCES projects(id),payload TEXT NOT NULL,version INTEGER NOT NULL); PRAGMA user_version=2;",
+          );
+        });
+      }
+      this.db
+        .prepare(
+          "SELECT project_id,payload,version FROM story_workflows LIMIT 0",
+        )
+        .all();
       this.db.exec("PRAGMA journal_mode=WAL;");
     } catch (e) {
       this.db.close();
@@ -68,6 +111,11 @@ export class SqliteProjectRepository implements ProjectRepository {
     this.transactionDepth++;
     try {
       const value = fn();
+      if (value && typeof (value as { then?: unknown }).then === "function")
+        throw new AppError(
+          "TRANSACTION_ASYNC",
+          "Async work must finish before a SQLite transaction.",
+        );
       this.db.exec(nested ? `RELEASE ${savepoint}` : "COMMIT");
       return value;
     } catch (e) {
@@ -78,6 +126,122 @@ export class SqliteProjectRepository implements ProjectRepository {
     } finally {
       this.transactionDepth--;
     }
+  }
+  loadWorkflow(id: string): WorkflowSnapshot | null {
+    const row = this.db
+      .prepare("SELECT payload,version FROM story_workflows WHERE project_id=?")
+      .get(id);
+    if (!row) return null;
+    try {
+      const value = validate(
+        WorkflowSnapshotSchema,
+        JSON.parse(String(row.payload)),
+      );
+      if (value.projectId !== id || value.recordVersion !== Number(row.version))
+        throw new Error("identity");
+      this.validateWorkflowHashes(value);
+      for (const b of value.blueprints)
+        if (
+          canonicalJson(this.loadBlueprint(b.revisionId)) !== canonicalJson(b)
+        )
+          throw new Error("canonical blueprint");
+      for (const b of value.blueprints)
+        for (const e of b.languageVersions)
+          if (
+            canonicalJson(this.loadEdition(e.languageVersionId)) !==
+            canonicalJson(e)
+          )
+            throw new Error("placeholder edition");
+      for (const d of value.drafts)
+        for (const e of d.editions)
+          if (
+            canonicalJson(this.loadEdition(e.languageVersionId)) !==
+            canonicalJson(e)
+          )
+            throw new Error("canonical edition");
+      return value;
+    } catch {
+      throw new AppError(
+        "WORKFLOW_CORRUPT",
+        "Stored story state failed validation; original data was retained.",
+      );
+    }
+  }
+  private validateWorkflowHashes(s: WorkflowSnapshot) {
+    for (const report of s.reports)
+      if (
+        createHash("sha256")
+          .update(
+            canonicalJson(historicalWorkflowHashInput(s, report.reportId)),
+          )
+          .digest("hex") !== report.contentHash
+      )
+        throw new AppError(
+          "WORKFLOW_HASH",
+          "QA source hash no longer matches its exact reviewed content.",
+        );
+  }
+  createWorkflow(input: WorkflowSnapshot) {
+    const s = validate(WorkflowSnapshotSchema, input);
+    if (s.recordVersion !== 0)
+      throw new AppError(
+        "WORKFLOW_VERSION",
+        "New stories start at version zero.",
+      );
+    if (
+      s.requests.length !== 1 ||
+      s.conceptSets.length ||
+      s.blueprints.length ||
+      s.drafts.length ||
+      s.reports.length ||
+      s.approvals.length
+    )
+      throw new AppError(
+        "WORKFLOW_INITIAL",
+        "New stories start with one request and no generated or approved artifacts.",
+      );
+    this.transaction(() => {
+      if (!this.loadProject(s.projectId))
+        throw new AppError(
+          "PROJECT_MISSING",
+          "Create the synthetic project first.",
+        );
+      this.db
+        .prepare("INSERT INTO story_workflows VALUES(?,?,?)")
+        .run(s.projectId, canonicalJson(s), 0);
+    });
+  }
+  saveWorkflow(
+    input: WorkflowSnapshot,
+    expectedVersion: number,
+  ): WorkflowSnapshot {
+    const s = validate(WorkflowSnapshotSchema, {
+      ...input,
+      recordVersion: expectedVersion + 1,
+    });
+    return this.transaction(() => {
+      const previous = this.loadWorkflow(s.projectId);
+      if (!previous || previous.recordVersion !== expectedVersion)
+        throw new AppError(
+          "WORKFLOW_CONFLICT",
+          "Story changed or is missing; reload before continuing.",
+        );
+      validateWorkflowAppend(previous, s);
+      this.validateWorkflowHashes(s);
+      for (const b of s.blueprints) this.saveBlueprint(b);
+      for (const d of s.drafts) for (const e of d.editions) this.saveEdition(e);
+      const result = this.db
+        .prepare(
+          "UPDATE story_workflows SET payload=?,version=? WHERE project_id=? AND version=?",
+        )
+        .run(canonicalJson(s), s.recordVersion, s.projectId, expectedVersion);
+      if (result.changes !== 1)
+        throw new AppError(
+          "WORKFLOW_CONFLICT",
+          "Story changed; reload before continuing.",
+        );
+      return s;
+    });
   }
   createProject(value: Project) {
     const p = validate(ProjectSchema, value);

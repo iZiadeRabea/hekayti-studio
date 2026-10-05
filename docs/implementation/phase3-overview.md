@@ -1,0 +1,25 @@
+# Phase 3 integrated engineering slice
+
+Synthetic owner-operated Story Creator composes the accepted Story, Age and Language modules. No paid provider, network generation, real child input, final editor, image or video generation is implemented. The fixed fictional name is ليلى; optional grammatical agreement is authored, never inferred. Objective description and success scenario are editable synthetic goals, with unsupported goals surfaced by advisory QA.
+
+## Workflow and authority
+
+`@hekayti/core/workflow` exposes the pure `StoryWorkflowService`, strict portable `WorkflowSnapshotSchema`, deterministic ID/clock seams and repository port. Requests → concept generations → human selection → immutable blueprint → separate draft editions → structured advisory QA → explicit human text approval. Existing Story/Age/Language rules are composed without a parallel domain implementation. Providers receive detached inputs; results require schemas, ownership, actual configured mock provenance and semantic reviews. Async calls finish before synchronous SQLite commits; CAS rejects results when a concurrent writer changed the baseline. Provider failures retain committed history.
+
+Workflow snapshots use `workflow/1.0`, canonical project/story ownership, monotonically increasing recordVersion and generation, append-only artifact arrays, and explicit current pointers. Request history is unique by revisionId while requestId stays stable. Blueprint links retain exact concept/request revision; report links retain exact draft/request/concept. New requests and replacement selections invalidate dependent current pointers. Create-more replaces the current candidate set, clears current derivatives, and retains all previous artifacts. The UI can reopen workflows after an actual process restart.
+
+Blueprint prose editions are intentionally blank immutable placeholders. Draft editions have distinct IDs against the same canonical revision. QA assembles a validated temporary blueprint with actual draft prose; it does not overwrite the canonical placeholder record. The single expected empty-draft finding is deferred during blueprint construction only. All draft and final QA reviews run without that exception.
+
+QA findings are namespaced by concept/age/story/language and recomputed from persisted artifacts. Content SHA256 covers the exact request, selected concept, assembled blueprint and draft, excluding approval and QA metadata. Human approval requires a current draft, current QA, no high/blocker findings and explicit advisory acknowledgment. Approval records bind revision/hash/report/draft and preserve operator alias/time. Current approval is cleared by source or QA changes; historic approval is displayed as stale. The repository forbids replaying a stale historical approval by merely changing pointers. These hashes detect corruption, not malicious database rewriting with newly forged valid hashes/signatures; no cryptographic operator identity is claimed.
+
+## Persistence and security
+
+SQLite user_version 2 is additive: `story_workflows(project_id,payload,version)` references existing projects; all original tables remain. Migration from version 1 validates legacy payloads and creates the new table/version in one transaction; invalid/missing/future/unversioned databases fail without recovery writes. Existing synthetic app-data location stays `Hekayti-Studio-Phase2-Synthetic`, making legacy migration meaningful.
+
+The repository validates snapshot schemas, immutable prefixes, version CAS, historical source hashes, recomputed QA, and canonical-table equivalence for blueprint/placeholder/draft editions on load. Blueprint/edition artifacts are also stored in existing immutable canonical tables in the same commit transaction. Missing or corrupt copies fail visibly rather than hiding divergent export sources. Snapshot validation does not authorize arbitrary provider facts or automatic human approval.
+
+Renderer access remains the narrow preload bridge; no Node, filesystem or database access. IPC accepts strict request and discriminated action payloads with existing sender/frame/origin checks. Expected failures use readable codes and code-only diagnostics. Legacy Projects/RTL/Inspector/Export controls retain their original selectors and fixture behavior; workflow projects reopen through Story Creator.
+
+## Scope limits
+
+Open/Save JSON remains explicitly a legacy blueprint-only fixture tool. Workflow history persists in SQLite and is not silently presented as portable JSON export. The UI labels this limitation and routes workflow projects away from legacy inspect/save. Full workflow portable import/export, private operational backup, production provider integration, literary/native/developmental review, final design, print certification and packaged Phase 3 acceptance remain future gates. Deterministic tests and automated screenshots are engineering evidence, not story-quality or visual acceptance.
