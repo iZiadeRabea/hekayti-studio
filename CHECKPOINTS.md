@@ -28,3 +28,5 @@ Create named checkpoints with scripts/checkpoint.ps1. Commit the ledger before c
 - 2026-10-06 00:10:25 +03:00 — checkpoint/core-contracts; branch feature/phase2-core; stable tag: not marked stable. Resolve SHA from immutable Git tag. Tests/health passed before commit.
 
 - 2026-10-06 00:27:48 +03:00 — checkpoint/rtl-sqlite-spikes; branch feature/phase2-core; stable tag: not marked stable. Resolve SHA from immutable Git tag. Tests/health passed before commit.
+
+- 2026-10-06 00:35:36 +03:00 — checkpoint/pdf-windows-spikes; branch feature/phase2-core; stable tag: not marked stable. Resolve SHA from immutable Git tag. Tests/health passed before commit.

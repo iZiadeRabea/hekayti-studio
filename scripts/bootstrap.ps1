@@ -35,9 +35,10 @@ foreach($item in @($inventory.skills | Where-Object { $_.vendoredPath })) {
     } else { Write-Host "WARNING missing active skill: $($item.name); offline snapshot available; run bootstrap -RestoreSkills" }
 }
 & "$PSScriptRoot/health-check.ps1" -Offline:$Offline
+$bootstrapHealthCode=$LASTEXITCODE
 if(Test-Path -LiteralPath "$script:ProjectRoot/package.json") {
     if(Get-Command node -ErrorAction SilentlyContinue) { Write-Host "PASS Node available: $(& node --version)" }
     else { Write-Host 'WARNING install supported Node before application recovery' }
     Write-Host 'Application recovery: npm ci, npm run build, scripts/test.ps1; see docs/implementation/development-setup.md. No secrets or dependencies installed automatically.'
 }
-exit $LASTEXITCODE
+exit $bootstrapHealthCode

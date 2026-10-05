@@ -1,8 +1,8 @@
 # Changelog
 
-## Phase 2 in progress - 2026-10-06
+## Phase 2 feasibility verified - 2026-10-06
 
-Owner-approved contracts/core slice: versioned runtime validation/migration of preserved synthetic fixtures, advisory deterministic Age Engine, approval hashes/transitive staleness, SQLite migration/CRUD/rollback and safe portable asset handles. 30 application tests and TypeScript compile passed. Windows/RTL/PDF/packaging acceptance pending; no paid AI or private data.
+Owner-approved core: versioned runtime validation/migration of preserved synthetic fixtures, advisory deterministic Age Engine, approval hashes/transitive staleness, SQLite migration/CRUD/atomic rollback and safe portable assets. 35 application tests and strict compile passed. Added secure Electron/React lab, seven UI workflow checks, native Arabic editing review, actual packaged Windows smoke and two fully reviewed six-page Arabic/mixed PDFs. Fixed embedded font fallback and Arabic ink padding; saved synthetic acceptance evidence. Existing recovery/bootstrap/test infrastructure preserved and extended. No paid AI, private data or production editor.
 
 ## v0.2.0-product-design — 2026-10-05
 - Researched official CDC/WHO/UNICEF/AAP sources, including updated2026 AAP media guidance; separated evidence from editorial heuristics.
@@ -23,3 +23,6 @@ Owner-approved contracts/core slice: versioned runtime validation/migration of p
 - Added checkpoint, non-destructive restore, health, bootstrap, security, portable context and infrastructure tests.
 - Inventoried installed plugins and all skill files; archived writing skills for offline recovery.
 - Product development has not started.
+
+### 2026-10-06 00:35:36 +03:00 — checkpoint/pdf-windows-spikes
+Verified 35 application tests, native RTL editing, two fully reviewed embedded-font PDFs and actual packaged Windows smoke; retained synthetic evidence and non-destructive recovery infrastructure.

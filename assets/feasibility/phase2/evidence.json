@@ -1,0 +1,50 @@
+{
+  "reviewDate": "2026-10-06",
+  "dataClassification": "synthetic-only",
+  "environment": {
+    "os": "Windows 11 x64 10.0.26200",
+    "electron": "44.5.1",
+    "embeddedNode": "24.21.0",
+    "chromium": "152.0.7977.130",
+    "sqlite": "3.53.4",
+    "fontPackage": "@fontsource/noto-sans-arabic@5.3.0"
+  },
+  "packagedSmoke": {
+    "status": "PASS",
+    "isPackaged": true,
+    "projects": 3,
+    "rendererNodeAbsent": true,
+    "reactAndPreloadBridge": true,
+    "arabicDatabaseRoundTrip": "PASS",
+    "staleness": "stale",
+    "sourceHash": "f2e47689dc6b69bfcc87b4bcd597f33121af632ccee479b429fd5fd9c391018b"
+  },
+  "print": {
+    "file": "hekayti-phase2-print-proof.pdf",
+    "sha256": "6b5509d481182695e43bea09bc8e77efa72b1f5eb258937f1f91de454fab4bef",
+    "bytes": 153515,
+    "pages": 6,
+    "nominalTrimMm": [200, 200],
+    "bleedEachEdgeMm": 3,
+    "measuredMediaBoxMm": [205.99399294444444, 205.99399294444444],
+    "allFontsEmbeddedNotoOnly": true,
+    "allPagesRenderedAndVisuallyReviewed": true
+  },
+  "digital": {
+    "file": "hekayti-phase2-digital-proof.pdf",
+    "sha256": "f077a987af6a6f3ce045884350a394118dd15c5ff4377d2423440264469cf99d",
+    "bytes": 77307,
+    "pages": 6,
+    "measuredMediaBoxMm": [200.06733333333332, 200.06733333333332],
+    "allFontsEmbeddedNotoOnly": true,
+    "allPagesRenderedAndVisuallyReviewed": true
+  },
+  "rtlScreenshot": {
+    "file": "rtl-editing.png",
+    "sha256": "4ea38e34dcb2deb9520fdb13465dbdedbb19fc30ffaaE6f7132482c2dc3c7643",
+    "captureMethod": "Playwright browser-in-Electron; native Windows review separately documented",
+    "scope": "MSA/Egyptian/English/mixed four-field selection and multiline editing"
+  },
+  "dimensionToleranceMm": 0.1,
+  "notCertified": ["PDF/X", "PDF/UA", "physical printing", "production editor", "clinical age suitability", "all Windows devices"]
+}
