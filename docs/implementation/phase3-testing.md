@@ -21,3 +21,9 @@ Exact final commands/results and limitations are included in the engineering wor
 - `git diff --check`: PASS.
 
 Screenshots were inspected for the minimal creator layout; no final visual/native-language acceptance or packaged Phase 3 validation is claimed. Node22 SQLite experimental warnings remain the accepted Phase 2 adapter limitation. Root foundation/health/checkpoint and independent Red Team follow the lead's integrated milestone workflow.
+
+## Consolidated independent QA fixes — 2026-10-06
+
+Integrated independent QA commit a41ef706 into the canonical feature branch as 75535c9, preserving its assertions/report. Fixed RT-001 by requiring every historical approval's draft ID to equal its exact report source-link draft ID; forged same-blueprint/different-draft approval records now fail on save and tampered reopen. Fixed RT-002 by cross-checking every retained blueprint character bible against canonical project/character/version rows. Missing, malformed or changed historical rows raise WORKFLOW_CORRUPT; original rows and workflow snapshots are retained without repair.
+
+Focused command `node --import tsx --test tests/app/phase3-red-team.test.ts tests/app/story-workflow.test.ts tests/app/persistence.test.ts`: 40/40 PASS (19 independent QA, 13 workflow, 8 persistence), zero skipped/cancelled. `npm run typecheck`: PASS. Two additional workflow regressions cover forged historical approval save/reopen and all three historical character corruption cases, including retained raw database payload checks. No shared contract, independent assertion, domain module, UI or release change. Independent QA confirmation and full pre-release gates remain separate.

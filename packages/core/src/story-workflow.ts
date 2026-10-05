@@ -230,6 +230,8 @@ export const WorkflowSnapshotSchema = z
       if (
         !r ||
         !d ||
+        s.reportLinks.find((x) => x.reportId === a.reportId)?.draftId !==
+          a.draftId ||
         d.sourceRevision !== a.approval.revisionId ||
         r.sourceRevision !== d.sourceRevision ||
         r.contentHash !== a.approval.hash ||

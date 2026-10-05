@@ -388,3 +388,119 @@ test("concept adapters cannot promote injected facts or change request ownership
     repo.close();
   }
 });
+test("every historical approval binds its report's exact draft on save and reopen", async () => {
+  mkdirSync("temp/workflow-tests", { recursive: true });
+  const path = join(
+      mkdtempSync("temp/workflow-tests/approval-link-"),
+      "story.sqlite",
+    ),
+    { repo, service } = harness(undefined, undefined, path);
+  let s = await complete(service);
+  const firstReport = s.reports[0]!;
+  s = await service.draft(s.projectId, s.recordVersion);
+  s = await service.qa(s.projectId, s.recordVersion);
+  s = await service.approve(s.projectId, s.recordVersion, "operator", true);
+  const forged = structuredClone(s),
+    record = structuredClone(s.approvals[0]!);
+  record.approval.approvalId = "forged-historical-approval";
+  record.reportId = firstReport.reportId;
+  record.approval.hash = firstReport.contentHash;
+  forged.approvals.push(record);
+  forged.current.approvalId = null;
+  assert.equal(WorkflowSnapshotSchema.safeParse(forged).success, false);
+  assert.throws(() => repo.saveWorkflow(forged, s.recordVersion));
+  assert.deepEqual(repo.loadWorkflow(s.projectId), s);
+  repo.close();
+  const db = new DatabaseSync(path),
+    payload = JSON.stringify(forged);
+  db.prepare("UPDATE story_workflows SET payload=? WHERE project_id=?").run(
+    payload,
+    s.projectId,
+  );
+  db.close();
+  const reopened = new SqliteProjectRepository(path);
+  assert.throws(
+    () => reopened.loadWorkflow(s.projectId),
+    (error: any) => error.code === "WORKFLOW_CORRUPT",
+  );
+  reopened.close();
+  const retained = new DatabaseSync(path);
+  assert.equal(
+    retained
+      .prepare("SELECT payload FROM story_workflows WHERE project_id=?")
+      .get(s.projectId)!.payload,
+    payload,
+  );
+  retained.close();
+});
+test("historical canonical characters missing, malformed or changed fail without repair", async () => {
+  mkdirSync("temp/workflow-tests", { recursive: true });
+  for (const attack of ["missing", "malformed", "changed"]) {
+    const path = join(
+        mkdtempSync("temp/workflow-tests/character-history-"),
+        "story.sqlite",
+      ),
+      { repo, service } = harness(undefined, undefined, path);
+    let s = await complete(service);
+    const character = s.blueprints[0]!.characterBibles[0]!;
+    s = await service.createMore(s.projectId, s.recordVersion);
+    s = service.select(
+      s.projectId,
+      s.recordVersion,
+      s.conceptSets.at(-1)!.concepts[0]!.conceptId,
+    );
+    s = service.build(s.projectId, s.recordVersion);
+    assert.ok(
+      !s.blueprints
+        .at(-1)!
+        .characterBibles.some(
+          (c) =>
+            c.characterId === character.characterId &&
+            c.bibleVersion === character.bibleVersion,
+        ),
+    );
+    repo.close();
+    const db = new DatabaseSync(path),
+      keys = [s.projectId, character.characterId, character.bibleVersion];
+    const payload =
+      attack === "malformed"
+        ? "{bad"
+        : JSON.stringify({
+            ...character,
+            displayName: "changed synthetic character",
+          });
+    if (attack === "missing")
+      db.prepare(
+        "DELETE FROM characters WHERE project_id=? AND id=? AND version=?",
+      ).run(...keys);
+    else
+      db.prepare(
+        "UPDATE characters SET payload=? WHERE project_id=? AND id=? AND version=?",
+      ).run(payload, ...keys);
+    db.close();
+    const reader = new SqliteProjectRepository(path);
+    assert.throws(
+      () => reader.loadWorkflow(s.projectId),
+      (error: any) => error.code === "WORKFLOW_CORRUPT",
+    );
+    reader.close();
+    const retained = new DatabaseSync(path),
+      row = retained
+        .prepare(
+          "SELECT payload FROM characters WHERE project_id=? AND id=? AND version=?",
+        )
+        .get(...keys);
+    assert.equal(row?.payload, attack === "missing" ? undefined : payload);
+    assert.equal(
+      JSON.parse(
+        String(
+          retained
+            .prepare("SELECT payload FROM story_workflows WHERE project_id=?")
+            .get(s.projectId)!.payload,
+        ),
+      ).blueprints.length,
+      2,
+    );
+    retained.close();
+  }
+});

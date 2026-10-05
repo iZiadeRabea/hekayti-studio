@@ -146,6 +146,18 @@ export class SqliteProjectRepository
         )
           throw new Error("canonical blueprint");
       for (const b of value.blueprints)
+        for (const character of b.characterBibles)
+          if (
+            canonicalJson(
+              this.loadCharacter(
+                value.projectId,
+                character.characterId,
+                character.bibleVersion,
+              ),
+            ) !== canonicalJson(character)
+          )
+            throw new Error("canonical character");
+      for (const b of value.blueprints)
         for (const e of b.languageVersions)
           if (
             canonicalJson(this.loadEdition(e.languageVersionId)) !==
