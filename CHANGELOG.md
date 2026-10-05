@@ -1,5 +1,9 @@
 # Changelog
 
+## Phase 3 in progress — 2026-10-06
+
+Verified Astra/Sol model routing and clean Phase 2 baseline; published pre-Phase-3 safety checkpoint. Froze semantic story contracts and explicitly versioned synthetic personalization support. Parallel specialist implementation follows the reviewed ownership plan; no Phase 3 completion claimed.
+
 ## v0.3.0-core - 2026-10-06
 
 Owner-approved core: versioned runtime validation/migration of preserved synthetic fixtures, advisory deterministic Age Engine, approval hashes/transitive staleness, SQLite migration/CRUD/atomic rollback and safe portable assets. 35 application tests and strict compile passed. Added secure Electron/React lab, seven UI workflow checks, native Arabic editing review, actual packaged Windows smoke and two fully reviewed six-page Arabic/mixed PDFs. Fixed embedded font fallback and Arabic ink padding; saved synthetic acceptance evidence. Existing recovery/bootstrap/test infrastructure preserved and extended. No paid AI, private data or production editor.

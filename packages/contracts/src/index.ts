@@ -102,6 +102,38 @@ export const PersonalizationProfileSchema = z
 export type PersonalizationProfile = z.infer<
   typeof PersonalizationProfileSchema
 >;
+// Phase 3 shared contract: invented profiles only; no private/photo reference.
+export const SyntheticPersonalizationSchema = z
+  .object({
+    origin: z.literal("synthetic"),
+    profileId: Id,
+    level: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3)]),
+    displayName: z.string().min(1).max(60).optional(),
+    preferences: z.array(z.string().min(1).max(80)).max(6),
+    heroMode: z.enum(["none", "supporting", "child-protagonist"]),
+  })
+  .strict()
+  .superRefine((p, ctx) => {
+    const fail = (message: string) => ctx.addIssue({ code: "custom", message });
+    if (
+      p.level === 0 &&
+      (p.displayName !== undefined ||
+        p.preferences.length ||
+        p.heroMode !== "none")
+    )
+      fail("Level 0 has no personalized name, preferences or role.");
+    if (p.level > 0 && !p.displayName)
+      fail("Synthetic personalized profiles require an invented display name.");
+    if (p.level === 1 && (p.preferences.length || p.heroMode !== "none"))
+      fail("Level 1 is name-only, without an inferred story role.");
+    if (p.level === 2 && !p.preferences.length)
+      fail("Level 2 requires a synthetic preference.");
+    if ((p.level === 3) !== (p.heroMode === "child-protagonist"))
+      fail("A child protagonist must be an explicit level-3 choice.");
+  });
+export type SyntheticPersonalization = z.infer<
+  typeof SyntheticPersonalizationSchema
+>;
 export const CharacterBibleSchema = z
   .object({
     characterId: Id,
@@ -290,7 +322,7 @@ export type StoryVersion = z.infer<typeof StoryVersionSchema>;
 
 export const BlueprintSchema = z
   .object({
-    schemaVersion: z.literal("blueprint/1.0"),
+    schemaVersion: z.enum(["blueprint/1.0", "blueprint/1.1"]),
     profileOrigin: z.literal("synthetic"),
     specificationOnly: z.boolean(),
     storyId: Id,
@@ -329,6 +361,7 @@ export const BlueprintSchema = z
     ),
     characterBibles: z.array(CharacterBibleSchema),
     personalization: PersonalizationProfileSchema,
+    syntheticPersonalization: SyntheticPersonalizationSchema.optional(),
     setting: Text,
     environmentBibleRef: Text,
     meaningBeats: z.array(MeaningBeatSchema).min(1).max(200),
@@ -403,14 +436,70 @@ export const BlueprintSchema = z
     )
       error(["ageBandId"], "Age band does not match exact age.");
     if (
-      b.personalization.level !== 0 ||
-      b.personalization.heroMode !== "none" ||
-      b.personalization.privateProfileRef !== null
+      b.schemaVersion === "blueprint/1.0" &&
+      (b.personalization.level !== 0 ||
+        b.personalization.heroMode !== "none" ||
+        b.personalization.privateProfileRef !== null ||
+        b.syntheticPersonalization !== undefined)
     )
       error(
         ["personalization"],
         "Phase 2 accepts synthetic level-0 data only; private personalization is not enabled.",
       );
+    if (b.schemaVersion === "blueprint/1.1") {
+      const p = b.syntheticPersonalization;
+      if (
+        b.personalization.privateProfileRef !== null ||
+        b.personalization.level > 3
+      )
+        error(
+          ["personalization"],
+          "Private profiles and photo personalization remain disabled.",
+        );
+      if (b.personalization.level > 0 && !p)
+        error(
+          ["syntheticPersonalization"],
+          "An explicit synthetic profile is required.",
+        );
+      if (
+        p &&
+        (p.level !== b.personalization.level ||
+          p.heroMode !== b.personalization.heroMode)
+      )
+        error(
+          ["syntheticPersonalization"],
+          "Synthetic profile and canonical personalization disagree.",
+        );
+      if (!p && b.personalization.heroMode !== "none")
+        error(
+          ["personalization", "heroMode"],
+          "A role requires an explicit synthetic profile.",
+        );
+      if (
+        p?.heroMode === "child-protagonist" &&
+        !b.characterBibles.some(
+          (c) =>
+            c.characterId === b.protagonistId &&
+            c.displayName === p.displayName,
+        )
+      )
+        error(
+          ["protagonistId"],
+          "The explicitly selected synthetic protagonist must resolve to its character bible.",
+        );
+      if (
+        p?.heroMode === "supporting" &&
+        !b.characterBibles.some(
+          (c) =>
+            b.supportingCharacterIds.includes(c.characterId) &&
+            c.displayName === p.displayName,
+        )
+      )
+        error(
+          ["supportingCharacterIds"],
+          "The synthetic supporting role must resolve to a supporting character bible.",
+        );
+    }
     const charIds = new Set(b.characterBibles.map((c) => c.characterId));
     for (const id of [b.protagonistId, ...b.supportingCharacterIds].filter(
       Boolean,
@@ -517,7 +606,7 @@ export function loadBlueprint(value: unknown): {
   migrations: string[];
 } {
   const version = (value as { schemaVersion?: unknown } | null)?.schemaVersion;
-  if (version === "blueprint/1.0")
+  if (version === "blueprint/1.0" || version === "blueprint/1.1")
     return { blueprint: validate(BlueprintSchema, value), migrations: [] };
   if (version !== "blueprint/0.1")
     throw new ValidationError([
@@ -599,3 +688,4 @@ export interface VideoProvider {
     signal?: AbortSignal;
   }): Promise<{ candidateUri: string }>;
 }
+export type * from "./story-engine";

@@ -1,1 +1,15 @@
-{"name":"@hekayti/core","version":"0.3.0","private":true,"type":"module","exports":"./src/index.ts","dependencies":{"@hekayti/contracts":"0.3.0"}}
+{
+  "name": "@hekayti/core",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./story": "./src/story-system.ts",
+    "./age": "./src/story-age.ts",
+    "./language": "./src/story-language.ts"
+  },
+  "dependencies": {
+    "@hekayti/contracts": "0.3.0"
+  }
+}
