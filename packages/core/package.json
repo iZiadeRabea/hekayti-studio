@@ -7,7 +7,8 @@
     ".": "./src/index.ts",
     "./story": "./src/story-system.ts",
     "./age": "./src/story-age.ts",
-    "./language": "./src/story-language.ts"
+    "./language": "./src/story-language.ts",
+    "./workflow": "./src/story-workflow.ts"
   },
   "dependencies": {
     "@hekayti/contracts": "0.3.0"
