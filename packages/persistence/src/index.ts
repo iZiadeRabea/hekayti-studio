@@ -18,6 +18,7 @@ export { LocalAssetStore, writeNewFile } from "./assets";
 
 export class SqliteProjectRepository implements ProjectRepository {
   private readonly db: DatabaseSync;
+  private transactionDepth = 0;
   constructor(path: string) {
     if (path !== ":memory:") mkdirSync(dirname(path), { recursive: true });
     this.db = new DatabaseSync(path);
@@ -61,14 +62,21 @@ export class SqliteProjectRepository implements ProjectRepository {
     }
   }
   transaction<T>(fn: () => T): T {
-    this.db.exec("BEGIN IMMEDIATE");
+    const nested = this.transactionDepth > 0;
+    const savepoint = "hekayti_" + this.transactionDepth;
+    this.db.exec(nested ? `SAVEPOINT ${savepoint}` : "BEGIN IMMEDIATE");
+    this.transactionDepth++;
     try {
       const value = fn();
-      this.db.exec("COMMIT");
+      this.db.exec(nested ? `RELEASE ${savepoint}` : "COMMIT");
       return value;
     } catch (e) {
-      this.db.exec("ROLLBACK");
+      this.db.exec(
+        nested ? `ROLLBACK TO ${savepoint}; RELEASE ${savepoint}` : "ROLLBACK",
+      );
       throw e;
+    } finally {
+      this.transactionDepth--;
     }
   }
   createProject(value: Project) {

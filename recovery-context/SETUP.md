@@ -21,3 +21,7 @@ Backups and the source skill snapshots work without a Codex account. Service acc
 ## Phase1 design handoff
 
 Read docs/PHASE_1_INDEX.md and the architecture recommendation before choosing dependencies. No application setup step is authorized by running bootstrap: it restores foundation/skills only. Product toolchain selection/install begins after owner approval and Windows/Arabic feasibility spikes.
+
+## Approved Phase 2 prototype
+
+Owner approved core/feasibility implementation on 2026-10-06. Follow docs/implementation/development-setup.md: install supported Node, npm ci, npm run build/desktop. No API keys required. Run scripts/test.ps1 for all suites. Portable Windows package is unsigned/local-test only; app data outside binaries, synthetic-only.

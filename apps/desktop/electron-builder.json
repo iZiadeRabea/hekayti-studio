@@ -1,0 +1,7 @@
+{
+  "appId":"studio.hekayti.phase2", "productName":"Hekayti Studio Phase 2",
+  "directories":{"app":"apps/desktop","output":"dist/phase2-package"},
+  "files":["dist/**/*","package.json"], "asar":true,"npmRebuild":false,
+  "win":{"target":[{"target":"dir","arch":["x64"]}],"signAndEditExecutable":false},
+  "artifactName":"hekayti-studio-phase2-${version}-${arch}.${ext}"
+}

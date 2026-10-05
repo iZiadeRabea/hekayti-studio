@@ -1,0 +1,9 @@
+# Arabic / RTL feasibility
+
+Isolated React screen: RTL Test. Four editable synthetic samples: simplified MSA, Egyptian Arabic, English and mixed Arabic/Latin/numbers. Logical Unicode stored untouched; dir/lang per field, Noto self-hosted from the distribution. English LTR; Arabic RTL; no string reversal or MSA word-substitution translation.
+
+Manual Windows Computer Use review on 2026-10-06: opened actual Electron window, read shaped MSA/Egyptian text, focused MSA textarea, selected all (selected text returned), replaced with fully marked synthetic Arabic plus A-12/١٢, inserted Enter and typed second line. Both lines and marks visibly correct. Scrolled and inspected English left alignment and mixed punctuation/numerals; lower preview isolates Latin IDs with bdi. Focus outline and keyboard selection visible. Windows UIA sometimes reports document rather than inner textarea focus; screenshot/caret and selection evidence used, not falsely trusting UIA focus field.
+
+Automated browser-in-Electron script ui-smoke.mjs exercises fill/select/linebreak round-trip in all four fields, SQLite title update, safe host open/save with mocked native dialogs, no-clobber error, readable missing project and actual sandbox/contextIsolation/Node-disabled preferences. Mocked dialogs are explicitly NOT manual dialog appearance validation. Screenshot saved to temp/phase2-ui/<run>/rtl-editing.png; approved synthetic evidence copy in assets/feasibility/phase2.
+
+Manual checklist for future builds: connected letters/marks; Arabic comma/question/quotes; Arabic ١٢ and Latin 12/A-12; MSA/Egyptian/English/mixed blocks; caret, selection, deletion, Enter/wrapping; alignment and no clipping at actual window size. PASS here covers this small screen on this computer, not a final editor, all fonts, accessibility certification or all devices.

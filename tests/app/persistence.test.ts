@@ -12,6 +12,24 @@ import {
 import { countWords } from "@hekayti/contracts";
 import { fixture, project, names } from "./fixtures";
 mkdirSync("temp/app-tests", { recursive: true });
+test("nested project+blueprint unit of work rolls back all rows on failure", () => {
+  const r = new SqliteProjectRepository(":memory:");
+  assert.throws(() =>
+    r.transaction(() => {
+      r.createProject(project());
+      r.saveBlueprint(fixture());
+      throw new Error("synthetic failure after complete bundle");
+    }),
+  );
+  assert.equal(r.loadProject(project().projectId), null);
+  assert.equal(r.loadBlueprint(fixture().revisionId), null);
+  r.transaction(() => {
+    r.createProject(project());
+    r.saveBlueprint(fixture());
+  });
+  assert.equal(r.listProjects().length, 1);
+  r.close();
+});
 const dir = () => mkdtempSync("temp/app-tests/run-");
 test("SQLite migration, CRUD, all synthetic fixture roundtrips, reopen persistence", () => {
   const path = join(dir(), "demo.sqlite");
