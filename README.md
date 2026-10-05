@@ -1,6 +1,6 @@
 # Hekayti Studio
 
-Target milestone: v0.2.0-product-design (foundation tags preserved). Status: research/design complete; application implementation has not started. Read CURRENT_STATE.md and live Git tags for stable state.
+Milestone: v0.3.0-core (foundation/design tags preserved). Phase 2 reusable core and scoped Windows/Arabic/persistence/export feasibility complete. This is a synthetic internal lab, not a production publishing product. Read CURRENT_STATE.md and live Git tags for stable state.
 
 Hekayti Studio will be an owner-operated creator studio for children's stories in Egypt, initially in simplified Modern Standard Arabic and Egyptian Arabic. Read [START_HERE.md](START_HERE.md) before changing anything.
 
@@ -19,9 +19,11 @@ Run PowerShell 7 from this folder:
 ```powershell
 pwsh -File scripts/bootstrap.ps1
 pwsh -File scripts/health-check.ps1
-pwsh -File tests/foundation.tests.ps1
+npm ci
+npm run build
+pwsh -File scripts/test.ps1
 ```
 
 Phase1 design entrypoint: [Product intelligence index](docs/PHASE_1_INDEX.md), [MVP scope](docs/product/mvp-scope.md), [roadmap](docs/ROADMAP.md), [architecture recommendation](docs/architecture/technical-architecture.md).
 
-Electron/React/TypeScript + SQLite is a planning recommendation with feasibility gates. No application/database/UI/generator or product dependencies implemented/installed. The owner must approve Phase2 before coding. Three synthetic demo blueprints and documentation tests are not final customer stories or validated educational products.
+Implementation: [Phase 2 overview](docs/implementation/phase2-overview.md), [acceptance evidence](docs/implementation/phase2-acceptance.md), [development setup](docs/implementation/development-setup.md). npm workspaces separate reusable contracts/core/export from SQLite/files and secure Electron/React host. Three synthetic demo blueprints, lab UI and proof PDFs are not final customer stories or validated educational products. No paid AI/real private data; STOP and await later-phase approval.

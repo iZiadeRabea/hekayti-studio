@@ -1,5 +1,9 @@
 # Backup verification receipts
 
+## Phase 2 core milestone
+
+2026-10-06: docs/implementation/phase2-delivery.md records private Drive download/hash matching and independent recovery of checkpoint/pdf-windows-spikes with all foundation/design/application tests and health passing. The release-inclusive final archive identity and verified remote/restore evidence live in its manifest/checksum, ignored backups/receipts/hekayti-studio-phase2-delivery-<SHA>.json and Drive Manifests. Resolve v0.3.0-core/checkpoint/phase2-complete rather than relying on historical SHAs below.
+
 ## Latest completed design milestone
 
 Phase1 v0.2.0-product-design verification: docs/PHASE_1_DELIVERY.md. Stable03eeb884 package uploaded privately and downloaded SHA256 verified; independent restore passed both repository suites. Later receipt-inclusive completion archive identity is in its manifest and external delivery receipt. Records below remain historical foundation evidence, not live HEAD.

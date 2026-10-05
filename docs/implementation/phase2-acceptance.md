@@ -12,7 +12,7 @@ Reviewed 2026-10-06 on this Windows 11 x64 machine. Owner authorized Phase 2; th
 | F PDF | PASS | Packaged app generated two six-page proofs; twelve rendered pages visually inspected, all Noto fonts embedded, measured dimensions within stated 0.1mm tolerance; assets/feasibility/phase2/evidence.json |
 | G Windows | PASS | Clean production build, actual unsigned win-unpacked executable launched; React/preload/Node-disabled renderer, SQLite, fixtures and PDF smoke PASS |
 | H Security | PASS | Tracked/history credential/private-path scans, ignored local data, renderer boundary tests; no real customer/child data or paid AI SDK |
-| I Recovery | PASS (existing local foundation) | Foundation/design tests and health PASS; original stable history preserved. Final source+Git-bundle cloud verification/rehearsal must also be completed before delivery; exact external receipt avoids self-referential commit SHA |
+| I Recovery | PASS | 7a789763 source+Git-bundle archive uploaded privately to Drive, downloaded hash matched, fresh-folder restore and all 100 foundation + 329 design + 35 application checks/health passed. Original stable history preserved. Release-inclusive final cloud verification is recorded in an external delivery receipt, not a self-referential future commit SHA |
 
 Automated evidence: 35 application tests, 100 foundation assertions, 329 design/fixture assertions; seven browser-in-Electron UI workflows. Manual visual evidence is separately scoped above and never inferred from unit tests. Open/save tests mock native dialogs; they validate host file safety, not native picker appearance. File saving refuses overwrites, exports use new output directories, failed writes do not replace earlier exports.
 

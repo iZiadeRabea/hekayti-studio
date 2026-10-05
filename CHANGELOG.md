@@ -1,8 +1,10 @@
 # Changelog
 
-## Phase 2 feasibility verified - 2026-10-06
+## v0.3.0-core - 2026-10-06
 
 Owner-approved core: versioned runtime validation/migration of preserved synthetic fixtures, advisory deterministic Age Engine, approval hashes/transitive staleness, SQLite migration/CRUD/atomic rollback and safe portable assets. 35 application tests and strict compile passed. Added secure Electron/React lab, seven UI workflow checks, native Arabic editing review, actual packaged Windows smoke and two fully reviewed six-page Arabic/mixed PDFs. Fixed embedded font fallback and Arabic ink padding; saved synthetic acceptance evidence. Existing recovery/bootstrap/test infrastructure preserved and extended. No paid AI, private data or production editor.
+
+Verified independent private Drive source+Git-bundle download/hash and fresh-folder restore with all suites/health passing. Safely fast-forwarded feature/phase2-core to main; preserved old releases and slice checkpoint tags. Refresh portable continuity, publish release checkpoint and create a final clean-HEAD cloud recovery archive with external receipt. STOP after Phase 2.
 
 ## v0.2.0-product-design — 2026-10-05
 - Researched official CDC/WHO/UNICEF/AAP sources, including updated2026 AAP media guidance; separated evidence from editorial heuristics.

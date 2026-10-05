@@ -20,7 +20,7 @@ Backups and the source skill snapshots work without a Codex account. Service acc
 
 ## Phase1 design handoff
 
-Read docs/PHASE_1_INDEX.md and the architecture recommendation before choosing dependencies. No application setup step is authorized by running bootstrap: it restores foundation/skills only. Product toolchain selection/install begins after owner approval and Windows/Arabic feasibility spikes.
+Read docs/PHASE_1_INDEX.md for design rationale. Bootstrap restores foundation/skills only and does not install dependencies. Phase 2 later received owner approval; its actual selected toolchain and recovery commands follow below. Later product features still need separate approval.
 
 ## Approved Phase 2 prototype
 

@@ -4,7 +4,7 @@ Phase1 below = research/design, distinct from business Phase1 (owner tool) and b
 | Phase | Goal / deliverables | Dependencies | Checkpoint | Acceptance criteria |
 |---|---|---|---|---|
 | 1 Product intelligence | researched profiles, canonical contracts, paper-cut/localization/pipeline/QA specs, 3 synthetic fixtures, stack comparison | recovered foundation | checkpoint/product-design; v0.2.0-product-design | required docs complete, sources traced, heuristics labelled, tests/health/push/backup verified; no app built |
-| 2 Core contracts + feasibility | schema validation, pure-domain package, storage/asset/approval interfaces, mock provider; small RTL/print/installer spikes | owner approval of design and budget/hardware | checkpoint/core-project-architecture | boundary fixtures pass; no Electron import in core; fresh-directory snapshot restore; Arabic print/installer feasible |
+| 2 Core contracts + feasibility (verified 2026-10-06) | versioned Zod contracts, pure deterministic core, SQLite/assets/approval logic, provider contracts only; small secure RTL/PDF/portable-package lab | owner-approved Phase 2 | checkpoint/phase2-complete; v0.3.0-core | 35 app tests; native Arabic review; both six-page proofs reviewed; packaged Windows smoke; independent source/history recovery; docs/implementation/phase2-acceptance.md |
 | 3 Story Engine vertical slice | project/blueprint/age rules/category templates/manual editor, one short synthetic story | phase2 contracts/profiles | checkpoint/story-engine-v1 | A/B/C budgets/ref integrity, hard/soft gate distinction, no infant plot imposed |
 | 4 Arabic/localization | MSA/Egyptian glossary/edition/read-aloud approvals/RTL tests | canonical story | checkpoint/arabic-engine-v1 | native editor accepts modes; beats aligned, all glyph/bidi tests pass; English optional later |
 | 5 Characters/personalization | stock bibles, level0–3 optional modes, consent/private/redacted store | phase2, approved privacy policy | checkpoint/character-system-v1 | hero explicitly chosen; profile deletion/retention tested; level4 stays blocked until special gate |
@@ -19,4 +19,4 @@ Phases3–9 use small vertical slices: manual short story → imported art → s
 
 ## Next task after approval
 
-Phase2: validate blueprint contract with these 3 fixtures and run the smallest Windows/Arabic export/packaging feasibility probes. Confirm private-order backup boundaries before real data. Do not create the whole Story Engine/UI/database in this design session.
+Phase 2 core/feasibility is complete. STOP and await approval for Phase 3: one small manual/synthetic Story Engine vertical slice using existing canonical contracts and advisory Age Engine. No paid AI integration or full production UI is implicitly authorized. Confirm private-order backup/consent boundaries before any real data.
