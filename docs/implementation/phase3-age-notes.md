@@ -4,13 +4,13 @@ Implemented by the routed GPT-6.1 Sol Age worker, 2026-10-06, on `agent/phase3-a
 
 Public functions in `@hekayti/core/age`: `storyStructureFor(request)` and `reviewStoryAge(request, concept?, blueprint?)`. Numeric pages, cast, words, sentence and event ranges come from existing `ageGuidance` and its `age-profiles/0.1`; no second age engine is maintained. Structure/profile returns are detached from shared data. The structure also specifies repetition, vocabulary, dialogue, emotions, educational complexity, caregiver participation and flexible duration guidance.
 
-| Months | Narrative form | Units/event budget | Conflict | Mechanisms |
-| --- | --- | --- | --- | --- |
-| 0–11 | recognition | 3–5 recognition units; existing conventional events remain 0 | none | recognition, reveal, sound-play |
-| 12–23 | routine; plot optional | 1–3 familiar narrative events | supported-friction | routine, helping, discovery |
-| 24–35 | simple-causal | 2–4 narrative events | supported-friction | discovery, problem-solving, helping, building |
-| 36–59 | short-plot | 3–6 narrative events | bounded-problem | discovery, problem-solving, cooperation, journey, mystery, treasure-hunt, building, helping |
-| 60–95 | extended-plot | 5–8 narrative events | bounded-problem | same mechanisms as 36–59, with one main plot and a contained subproblem |
+| Months | Narrative form         | Units/event budget                                           | Conflict           | Mechanisms                                                                                  |
+| ------ | ---------------------- | ------------------------------------------------------------ | ------------------ | ------------------------------------------------------------------------------------------- |
+| 0–11   | recognition            | 3–5 recognition units; existing conventional events remain 0 | none               | recognition, reveal, sound-play                                                             |
+| 12–23  | routine; plot optional | 1–3 familiar narrative events                                | supported-friction | routine, helping, discovery                                                                 |
+| 24–35  | simple-causal          | 2–4 narrative events                                         | supported-friction | discovery, problem-solving, helping, building                                               |
+| 36–59  | short-plot             | 3–6 narrative events                                         | bounded-problem    | discovery, problem-solving, cooperation, journey, mystery, treasure-hunt, building, helping |
+| 60–95  | extended-plot          | 5–8 narrative events                                         | bounded-problem    | same mechanisms as 36–59, with one main plot and a contained subproblem                     |
 
 Mechanisms are editorial categories, not developmental capabilities. Infant accepted semantic actions are recognize/reveal/repeat/notice/settle; conventional solving/quest events produce high findings. Toddler solve/cooperate/return actions require revision or specific editorial review because they imply more than a familiar supported routine. For older bands, event counts exclude repeat and settle units; page subdivision never creates extra events. Distinct non-null semantic `actorId` values count active cast; unused character bibles do not inflate it. All semantic actors must resolve to declared character bibles.
 
