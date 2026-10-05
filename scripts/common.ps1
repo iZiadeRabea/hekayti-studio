@@ -73,7 +73,7 @@ function Test-Remote {
     param([string]$Remote = 'origin',[int]$TimeoutSeconds = 25)
     $psi = [Diagnostics.ProcessStartInfo]::new()
     $psi.FileName = (Get-Command git).Source
-    foreach ($a in @('-C',$script:ProjectRoot,'ls-remote',$Remote,'refs/heads/main','refs/tags/v*')) { $null=$psi.ArgumentList.Add($a) }
+    foreach ($a in @('-C',$script:ProjectRoot,'ls-remote',$Remote,'refs/heads/main','refs/tags/v*','refs/tags/checkpoint/*')) { $null=$psi.ArgumentList.Add($a) }
     $psi.RedirectStandardOutput=$true; $psi.RedirectStandardError=$true; $psi.UseShellExecute=$false
     $psi.Environment['GIT_TERMINAL_PROMPT']='0'
     $p=[Diagnostics.Process]::Start($psi)

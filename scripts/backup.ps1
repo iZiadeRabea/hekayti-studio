@@ -20,7 +20,7 @@ $stage="$script:ProjectRoot/backups/staging/$id"
 if(Test-Path -LiteralPath $stage) { throw 'Backup staging already exists; choose a new timestamp; no overwrite' }
 $null=New-Item -ItemType Directory -Path "$stage/project","$stage/git",$output -Force
 $sourceZip="$script:ProjectRoot/backups/staging/$id-source.zip"
-$null=Invoke-Git @('archive','--format=zip',"-o=$sourceZip",'HEAD')
+$null=Invoke-Git @('archive','--format=zip',"--output=$sourceZip",'HEAD')
 Test-ZipPaths $sourceZip
 [IO.Compression.ZipFile]::ExtractToDirectory($sourceZip,"$stage/project")
 $null=Invoke-Git @('bundle','create',"$stage/git/project.bundle",'--all')

@@ -38,6 +38,13 @@ try {
     $null=Invoke-Git @('commit','-m','synthetic baseline')
     $baseline=[string](Invoke-Git @('rev-parse','HEAD'))
     $null=Invoke-Git @('tag','v0.0.1')
+    $sourceArchive=Join-Path $sandbox 'source.zip'
+    $null=Invoke-Git @('archive','--format=zip',"--output=$sourceArchive",'HEAD')
+    Assert (Test-Path -LiteralPath $sourceArchive) 'real Git archive output option works'
+    Test-ZipPaths $sourceArchive
+    $archiveSource=Join-Path $sandbox 'archive-source'
+    [IO.Compression.ZipFile]::ExtractToDirectory($sourceArchive,$archiveSource)
+    Assert (Test-Path "$archiveSource/synthetic.txt") 'Git source archive can be extracted'
     Set-Content "$fixture/.env" 'LOCAL_ONLY_SYNTHETIC=fixture'
     Set-Content "$fixture/synthetic.txt" 'uncommitted work must survive'
     Must-Fail { Assert-Clean } 'dirty state blocks unsafe branch operations'
@@ -77,4 +84,3 @@ try {
     exit 0
 } catch { Write-Host "FAIL FOUNDATION TESTS: $_"; exit 1 }
 finally { $script:ProjectRoot=$originalRoot }
-

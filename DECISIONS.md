@@ -14,3 +14,4 @@
 
 For each new significant decision append date, choice, alternatives, reason, consequences and superseded decision if any. Technology, database, AI, image, print, video and private-data decisions remain open.
 
+2026-10-05 — D010: preserve the original v0.1.0-foundation/checkpoint tags and add v0.1.1-foundation for the archive-option repair and completed recovery verification. Alternative: move the initial tag. Reason: preserve published history and immutable checkpoints. Consequence: the latest verified foundation is v0.1.1-foundation; the project still started at the requested v0.1.0-foundation.

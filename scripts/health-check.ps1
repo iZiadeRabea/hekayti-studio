@@ -28,11 +28,28 @@ try {
     elseif(($origin -join '') -notmatch '^https://github\.com/[^/]+/hekayti-studio(\.git)?$|^git@github\.com:[^/]+/hekayti-studio(\.git)?$') { Report FAIL 'unexpected repository remote (review origin)' }
     else {
         Report PASS "origin: $origin"
-        if(-not $Offline) { $remote=Test-Remote; if($remote.Reachable) { Report PASS 'GitHub reachable' } else { Report WARNING "GitHub unavailable: $($remote.Reason)" } }
+        if(-not $Offline) {
+            $remote=Test-Remote
+            if($remote.Reachable) {
+                Report PASS 'GitHub reachable'
+                $head=@(Invoke-Git @('rev-parse','HEAD') -AllowFailure)
+                if($LASTEXITCODE -eq 0 -and $branch -eq 'main') {
+                    if($remote.Refs -match ("^"+[regex]::Escape([string]$head[0])+"\s+refs/heads/main$")) { Report PASS 'remote main matches local HEAD' }
+                    else { Report WARNING 'remote main differs from local HEAD; inspect/push before claiming GitHub backup' }
+                }
+            } else { Report WARNING "GitHub unavailable: $($remote.Reason)" }
+        }
     }
     $stable=Get-LatestStableTag; $checkpoint=Get-LatestCheckpoint
     if($stable -eq 'none') { Report WARNING 'stable tag not created yet' } else { Report PASS "stable version: $stable" }
     if($checkpoint -eq 'none') { Report WARNING 'checkpoint tag not created yet' } else { Report PASS "checkpoint: $checkpoint" }
+    if(-not $Offline -and $origin.Count -and $remote.Reachable) {
+        foreach($tag in @($stable,$checkpoint) | Where-Object { $_ -ne 'none' }) {
+            $object=[string](Invoke-Git @('rev-parse',"refs/tags/$tag"))
+            if($remote.Refs -match ("^"+$object+"\s+refs/tags/"+[regex]::Escape($tag)+"$")) { Report PASS "remote tag matches: $tag" }
+            else { Report WARNING "tag not verified on origin: $tag" }
+        }
+    }
 } catch { Report FAIL "Git/security: $_" }
 try {
     $config=Get-Content -Raw "$script:ProjectRoot/docs/backup-config.json" | ConvertFrom-Json
@@ -49,4 +66,3 @@ try {
 $result=if($fail) {'FAIL'} elseif($warn) {'WARNING'} else {'PASS'}
 Write-Host "$result HEALTH CHECK — failures=$fail warnings=$warn"
 if($fail) { exit 1 }; exit 0
-
