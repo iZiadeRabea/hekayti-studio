@@ -3,6 +3,8 @@
 | Checkpoint | Stable tag | Version | Meaning | Verification |
 |---|---|---|---|---|
 | checkpoint/project-foundation | v0.1.0-foundation | v0.1.0-foundation | Recovery infrastructure; no application | Initial verification recorded in docs/VERIFICATION.md |
+| checkpoint/project-foundation-verified | v0.1.1-foundation | v0.1.1-foundation | Corrected source archive option; original history preserved | 99 assertions; ZIP/bundle and offline restore verified |
+| checkpoint/project-foundation-complete | Latest semantic tag remains v0.1.1-foundation | v0.1.1-foundation | Completion receipts/context; no product development | GitHub + Drive readback; final archive identifies exact HEAD |
 
 Resolve exact SHAs from Git instead of embedding a commit's own future SHA:
 `git rev-parse checkpoint/project-foundation^{commit}`
@@ -16,3 +18,5 @@ Create named checkpoints with scripts/checkpoint.ps1. Commit the ledger before c
 - 2026-10-05 23:01:28 +03:00 — checkpoint/project-foundation; branch main; stable tag: v0.1.0-foundation. Resolve SHA from immutable Git tag. Tests/health passed before commit.
 
 - 2026-10-05 23:03:35 +03:00 — checkpoint/project-foundation-verified; branch main; stable tag: v0.1.1-foundation. Resolve SHA from immutable Git tag. Tests/health passed before commit.
+
+- 2026-10-05 23:08:26 +03:00 — checkpoint/project-foundation-complete; branch main; stable tag: not marked stable. Resolve SHA from immutable Git tag. Tests/health passed before commit.

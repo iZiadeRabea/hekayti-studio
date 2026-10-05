@@ -1,6 +1,6 @@
 # Hekayti Studio
 
-Version: v0.1.0-foundation. Status: infrastructure only; application development has not started.
+Version: v0.1.1-foundation (initial release v0.1.0-foundation preserved). Status: infrastructure only; application development has not started.
 
 Hekayti Studio will be an owner-operated creator studio for children's stories in Egypt, initially in simplified Modern Standard Arabic and Egyptian Arabic. Read [START_HERE.md](START_HERE.md) before changing anything.
 
@@ -23,4 +23,3 @@ pwsh -File tests/foundation.tests.ps1
 ```
 
 No application stack, database, website, UI, story/image/PDF/video generator or product dependency has been selected or implemented.
-

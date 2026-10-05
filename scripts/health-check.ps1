@@ -23,6 +23,7 @@ try {
     }
     $null=& git -C $script:ProjectRoot check-ignore --no-index .env.example assets/README.md
     if($LASTEXITCODE -eq 0) { Report FAIL 'example config or source assets wrongly ignored' } else { Report PASS 'private exclusions and source inclusion' }
+    $remote=@{Reachable=$false;Reason='Origin not checked';Refs=@()}
     $origin=@(Invoke-Git @('remote','get-url','origin') -AllowFailure)
     if($LASTEXITCODE -ne 0) { Report WARNING 'origin not configured' }
     elseif(($origin -join '') -notmatch '^https://github\.com/[^/]+/hekayti-studio(\.git)?$|^git@github\.com:[^/]+/hekayti-studio(\.git)?$') { Report FAIL 'unexpected repository remote (review origin)' }
