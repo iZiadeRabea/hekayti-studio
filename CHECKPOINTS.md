@@ -22,3 +22,5 @@ Create named checkpoints with scripts/checkpoint.ps1. Commit the ledger before c
 - 2026-10-05 23:08:26 +03:00 — checkpoint/project-foundation-complete; branch main; stable tag: not marked stable. Resolve SHA from immutable Git tag. Tests/health passed before commit.
 
 - 2026-10-05 23:38:59 +03:00 — checkpoint/product-design; branch main; stable tag: v0.2.0-product-design. Resolve SHA from immutable Git tag. Tests/health passed before commit.
+
+- 2026-10-05 23:46:53 +03:00 — checkpoint/product-design-complete; branch main; stable tag: not marked stable. Resolve SHA from immutable Git tag. Tests/health passed before commit.
