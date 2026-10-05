@@ -140,6 +140,7 @@ export const CharacterBibleSchema = z
     bibleVersion: Id,
     origin: z.literal("synthetic"),
     displayName: Text.min(1),
+    grammaticalGender: z.enum(["masculine", "feminine"]).optional(),
     species: Text.optional(),
     ageRange: Text.optional(),
     hair: Text.optional(),

@@ -45,4 +45,8 @@ Conflict zones: shared schema evolution, narrative action vocabulary, edition ID
 
 ## Handoffs and review decisions
 
+Wave 1 started concurrently from frozen-contract commit 2f304f3. Platform turn_context verification (UTC 2026-10-05): Story System session 01a10e1d-61f8-7401-868f-7fb95898c99e at 22:09:31; Age session 01a10e1d-8563-7a01-9987-f36bfa3d6fd6 at 22:09:40; Arabic session 01a10e1d-adbf-7022-81f6-4413af60a3d6 at 22:09:50. Each identifies gpt-6.1-sol and the root parent relationship. Branches agent/phase3-story-system, agent/phase3-age-development, agent/phase3-arabic-language have distinct worktrees; no shared writable files delegated concurrently.
+
 Pending. Every worker returns AGENT, MODEL, MISSION, STATUS, BRANCH/WORKTREE, FILES CREATED/MODIFIED, TESTS ADDED/RUN/RESULTS, DECISIONS, ASSUMPTIONS, PROPOSED SHARED CONTRACT CHANGES, RISKS, OPEN QUESTIONS, INTEGRATION NOTES. Only factual engineering summaries recorded here.
+
+Early language contract review: accepted optional CharacterBible.grammaticalGender (masculine/feminine), authored linguistic agreement metadata, never inferred from a name or treated as personal identity. Missing metadata uses neutral nominal phrasing and advisory human review. This additive optional field preserves existing fixtures. Language worker owns tests for explicit feminine agreement and missing metadata; Story worker may explicitly annotate fictional archetypes, not guess personalized profiles. No other interface change approved.
