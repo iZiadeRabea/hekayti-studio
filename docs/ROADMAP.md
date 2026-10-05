@@ -19,4 +19,4 @@ Phases3–9 use small vertical slices: manual short story → imported art → s
 
 ## Current status — 2026-10-06
 
-Phase 2 core/feasibility is stable at v0.3.0-core. Phase 3 synthetic Story Engine implementation and independent QA fixes are complete; package 0.4.0 release preparation and consolidated gates are authorized, final Astra release review pending. Existing later-phase roadmap above remains unchanged. No paid AI, later production features or full UI is implicitly authorized. Confirm private-order backup/consent boundaries before any real data.
+Phase 3 synthetic Story Engine v0.4.0-story-engine is approved by final Astra review after independent QA closure and consolidated regression/package gates. Mechanical release publication and verified recovery are authorized; stop afterward. Exact final identity belongs in the external receipt. Existing later-phase roadmap above remains unchanged and requires new owner approval. No paid AI, later production features or full UI is implicitly authorized. Confirm private-order backup/consent boundaries before any real data.

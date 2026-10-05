@@ -1,5 +1,7 @@
 # Phase 3 recovery evidence — in progress
 
+Final Astra release review APPROVED bce41c657c371cbb0cf6bd14ab12a21d71ce8948 after all preparation gates and independent QA closure. Release v0.4.0-story-engine/checkpoint/phase3-story-engine-complete publication and private verified source recovery are authorized. This tracked document precedes its own final commit/upload: exact final SHA, remote private/readbacks, archive hash/Drive ID/URL, downloaded hash and fresh restored tests/health are recorded in ignored `backups/receipts/hekayti-studio-phase3-final-*.json` and uploaded to private Drive Manifests. No premature cloud verification is asserted here; Wave 1 history below remains exact.
+
 This document records verified intermediate recovery, not Phase 3 release completion. Final release gates and exact final archive receipt will be recorded after Engineering and independent Red Team.
 
 ## Integration and release preparation

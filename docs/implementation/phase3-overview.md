@@ -1,6 +1,6 @@
 # Phase 3 integrated engineering slice
 
-Release preparation: workspace package versions 0.4.0; independent RT-001/RT-002 fixes confirmed closed. Final Astra stable release review pending. Original desktop product name, app ID, package output path and synthetic user-data location remain compatible with Phase 2; smoke runs use isolated storage.
+Release approved: workspace package versions 0.4.0; independent RT-001/RT-002 closed. Final Astra review accepts preparation bce41c6 for v0.4.0-story-engine. Publication/verified recovery are authorized; exact final identity is external. Original desktop product name, app ID, package output path and synthetic user-data location remain compatible with Phase 2; smoke runs use isolated storage.
 
 Synthetic owner-operated Story Creator composes the accepted Story, Age and Language modules. No paid provider, network generation, real child input, final editor, image or video generation is implemented. The fixed fictional name is ليلى; optional grammatical agreement is authored, never inferred. Objective description and success scenario are editable synthetic goals, with unsupported goals surfaced by advisory QA.
 

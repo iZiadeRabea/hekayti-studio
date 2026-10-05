@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.0-story-engine — 2026-10-06
+
+Final Astra release review accepted the synthetic Story Engine core, integrated Age/MSA/Egyptian drafting, versioned concept selection/blueprint/draft/QA/explicit approval, append-only SQLite v2/CAS/hash provenance and secure minimal creator. Independent RT-001/RT-002 closed. 100 foundation + 329 design assertions and 112 application tests/typecheck PASS; online health/security, production build, unsigned Windows x64 package, development/packaged restart/approval/staleness and legacy UI/export gates PASS. Mechanical main/release/checkpoint publication and verified private source recovery authorized; exact final delivery identity external. No paid AI/private child data/later phase or production literary/native certification.
+
 ## Phase 3 in progress — 2026-10-06
 
 0.4.0 preparation: independent Red Team RT-001/RT-002 closed after exact historical approval/report-draft binding and retained canonical character validation fixes. Added save/reopen/corruption-preservation regressions; independent focused confirmation 40/40 PASS. Workspace package versions prepared at 0.4.0 without dependency upgrades. Final Astra release decision remains pending; no stable release tag created.
@@ -41,3 +45,6 @@ Verified 35 application tests, native RTL editing, two fully reviewed embedded-f
 
 ### 2026-10-06 02:08:21 +03:00 — checkpoint/phase3-engine-integration
 Integrated accepted Engineering workflow under owner lean override; independent Red Team pending. Worker build/UI receipts retained; no final release or Drive backup.
+
+### 2026-10-06 02:33:38 +03:00 — checkpoint/phase3-story-engine-complete
+Final Astra approval; independent QA findings closed; synthetic Story Engine and development/packaged creator gates accepted. Exact GitHub/Drive recovery identity recorded in external final receipt; later phases remain gated.

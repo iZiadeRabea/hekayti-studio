@@ -1,5 +1,7 @@
 # Phase 3 engineering verification
 
+Final Astra review APPROVED preparation bce41c6 for release after independent RT closure and the documented 112-test/build/development+packaged gates. Required checkpoint/backup/fresh-restore suite results and exact final identity are recorded by the external final receipt. Historical PENDING notes below describe earlier preparation stages.
+
 Focused tests: `node --import tsx --test tests/app/story-workflow.test.ts tests/app/persistence.test.ts`. Full integration handoff: `npm run typecheck`, `npm test`, `npm run build`, `node scripts/phase3-ui-smoke.mjs`, `node scripts/ui-smoke.mjs`, `node scripts/desktop-smoke.mjs`.
 
 Pinned dependencies install via `npm ci --ignore-scripts`. For actual Electron UI smoke only, run `node node_modules/electron/install.js`; this installs the pinned runtime. No paid or network AI is used.
