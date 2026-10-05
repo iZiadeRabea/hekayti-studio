@@ -109,6 +109,7 @@ export const SyntheticPersonalizationSchema = z
     profileId: Id,
     level: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3)]),
     displayName: z.string().min(1).max(60).optional(),
+    grammaticalGender: z.enum(["masculine", "feminine"]).optional(),
     preferences: z.array(z.string().min(1).max(80)).max(6),
     heroMode: z.enum(["none", "supporting", "child-protagonist"]),
   })
@@ -118,6 +119,7 @@ export const SyntheticPersonalizationSchema = z
     if (
       p.level === 0 &&
       (p.displayName !== undefined ||
+        p.grammaticalGender !== undefined ||
         p.preferences.length ||
         p.heroMode !== "none")
     )
