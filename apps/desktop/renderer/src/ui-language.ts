@@ -1,3 +1,4 @@
+import type { StoryPlan } from "@hekayti/contracts/planner";
 export type UiLanguage = "ar" | "en";
 export const UI_LANGUAGE_KEY = "hekayti.uiLanguage";
 export const arabic = {
@@ -302,7 +303,20 @@ export const arabic = {
   Consequence: "النتيجة",
 } as const;
 export type UiKey = keyof typeof arabic;
+export const beatRoleArabic: Readonly<
+  Record<StoryPlan["beats"][number]["role"], string>
+> = {
+  OPENING: "البداية",
+  INCITING: "الحدث المحرّك",
+  ATTEMPT: "المحاولة",
+  TURN: "نقطة التحول",
+  RESOLUTION: "الحل",
+  ENDING: "النهاية",
+  RECOGNITION: "التعرّف",
+  REPEAT: "التكرار",
+};
 const enumArabic: Readonly<Record<string, string>> = {
+  ...beatRoleArabic,
   "human-literary": "المراجعة الأدبية البشرية",
   limitations: "حدود الفحص والمصادر",
   INTENT_STRUCTURE_MISMATCH: "توافق معنى الهدف وبنية القصة",
@@ -403,17 +417,10 @@ const enumArabic: Readonly<Record<string, string>> = {
   none: "دون اعتماد",
   mock: "تجريبي",
   opening: "البداية",
-  OPENING: "البداية",
-  INCITING: "الحدث المحرّك",
-  ATTEMPT: "المحاولة",
   TURNING: "نقطة التحول",
   DISCOVERY: "الاكتشاف",
   CLIMAX: "الذروة",
-  RESOLUTION: "الحل",
-  ENDING: "النهاية",
-  RECOGNITION: "التعرّف",
   ROUTINE: "تتابع بسيط",
-  TURN: "نقطة التحول",
   SENSORY: "تعرّف حسي",
   LIBRARY: "من المكتبة",
   EDITORIAL: "بناء تحريري",

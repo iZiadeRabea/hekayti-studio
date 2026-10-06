@@ -24,3 +24,9 @@ The smoke uses its own ignored synthetic data directory, imports the declared791
 The existing `ui-smoke`, `phase3-ui-smoke`, `phase4-ui-smoke`, `phase41-ui-smoke` and `phase42-ui-smoke` scripts explicitly choose English after launch/relaunch so their existing selectors remain meaningful. The dedicated localization smoke independently asserts the real fresh Arabic default and does not mask it. Their full historical/packaged regression execution remains for the single serial post-QA Ops gate.
 
 Independent integrated QA, consolidated validation, production package/recovery and release approval are pending. No main merge/tag/push/cloud action is authorized by this UI handoff. Authored/source/core narrative text intentionally remains its original language; this is UI localization, not automated story translation or human-quality certification.
+
+## Batched independent QA fix — L1
+
+Independent `P421-QA-06` found the infant beat role `REPEAT` displayed as a raw enum. Its Arabic presentation is now `التكرار`. All eight canonical beat roles are covered by a map typed against `StoryPlan`'s role union, so new structural roles cannot silently omit Arabic labels. Stored roles, English display and unknown authored-value fallback are unchanged.
+
+Focused fix verification: localization **8/8 PASS**; unchanged independent QA assertion **1/1 PASS** via `node --import tsx --test --test-name-pattern=P421-QA-06 tests/app/phase421-red-team.test.ts`. No full QA suite, build, package or cloud action was run during concurrent Engineering core fixes. The earlier actual Electron evidence remains the pre-fix localization receipt, not a claim that the new infant label was freshly packaged or visually reviewed. Integrated typecheck/QA closure remains with the shared handoff.

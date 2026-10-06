@@ -16,6 +16,7 @@ import {
   UI_LANGUAGE_KEY,
   label,
   text,
+  beatRoleArabic,
 } from "../../apps/desktop/renderer/src/ui-language";
 import type { WorkflowSnapshot } from "@hekayti/core/workflow";
 
@@ -107,6 +108,25 @@ test("Unknown labels remain exact data; translation changes display labels only"
   assert.equal(label("FreshConcept", "en"), "FreshConcept");
   assert.equal(label("FreshConcept", "ar"), "فكرة جديدة");
   assert.equal(text("Story language", "en"), "Story language");
+});
+test("All canonical beat roles have Arabic presentation labels, including infant REPEAT", () => {
+  assert.deepEqual(Object.keys(beatRoleArabic), [
+    "OPENING",
+    "INCITING",
+    "ATTEMPT",
+    "TURN",
+    "RESOLUTION",
+    "ENDING",
+    "RECOGNITION",
+    "REPEAT",
+  ]);
+  for (const [role, translated] of Object.entries(beatRoleArabic)) {
+    assert.notEqual(translated, role);
+    assert.equal(label(role, "ar"), translated);
+    assert.equal(label(role, "en"), role);
+  }
+  assert.equal(label("REPEAT", "ar"), "التكرار");
+  assert.equal(label("unknown-authored-role", "ar"), "unknown-authored-role");
 });
 test("Switch is bilingual and technical error diagnostics remain exact LTR text", () => {
   const html = withLanguage(null, () =>
