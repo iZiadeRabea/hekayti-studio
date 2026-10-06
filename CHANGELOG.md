@@ -1,5 +1,9 @@
 # Changelog
 
+## Phase4.2.2 consolidated QA fixes —2026-10-06 (not released)
+
+Initial independent0 BLOCKER/HIGH,4 MEDIUM addressed in one batch: bounded depicted/negated/named-actor cast context, edition/page locations retained on advisory findings, adventure obstacle/clue derived from actual activity, localized actual stale/CAS and register reasons (UI902e539e). Same independent QA expanded11/11 PASS verifies all four CLOSED,0 unresolved; engineering integrated69/typecheck and affected residual writer10 PASS. Consolidated gates/final approval pending. Historical assertions/fixtures/source hashes retained; no ownerDB/corpus/provider/release changes.
+
 ## Phase4.2.2 focused writer bridge —2026-10-06 (not released)
 
 Additive category-aware StoryPlan1.2/PlanQA1.2 and writer-response1.0/PlanPackage1.1 desktop dispatch; external AI writes prose fields only, app assembles canonical IDs/counts/source/manual provenance. Arabic package sections include allowed perpage cast, concrete literary guidance and independent Arabic authorship. Readonly actionable preview and import revalidate current accepted package/hash/Blueprint/CAS; legacy schemas/response/history retained. Synthetic42month sharing+adventure regression now follows a short visible cooperative route; category countercases and no-mutation failures tested. UI f1655eda integrated; independent QA/consolidated gates/final approval pending. No ownerDB/corpus/provider/release/cloud changes. Evidence/limits: docs/implementation/phase4.2.2-writer-bridge.md.

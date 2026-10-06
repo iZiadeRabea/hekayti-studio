@@ -75,24 +75,30 @@ export function composeCategoryPlan(
     b = p.characters[1]?.displayName ?? "a familiar partner";
   if (!infant && category === "adventure") {
     const start = "the first ground marker",
-      end = "the nearby basket destination";
+      end = social
+        ? "the nearby basket destination"
+        : "the nearby activity destination beside the familiar materials";
     p.title = social
       ? "The rolling route for two"
-      : "The little route to the basket";
+      : `The short route: ${p.title}`;
     p.goal.description += ` along a short route from ${start} to ${end}`;
-    p.openingState += `; two visible ground markers lead to ${end} inside ${p.setting.description}`;
+    p.openingState += `; two visible dry ground markers lead to ${end} inside ${p.setting.description}; familiar adult support remains nearby`;
     p.beats.forEach((beat, i) => {
       const t = p.quality.transitions[i]!;
       const context =
         i === 0
-          ? `The mini-mission starts at ${start}; both ground markers and the nearby basket are visible.`
+          ? `The mini-mission starts at ${start}; both ground markers and ${end} are visible.`
           : beat.beatId === p.resolutionBeatId
             ? `They reach ${end} along the two visible markers, using the agreed operation.`
             : beat.beatId === p.endingBeatId
               ? `They return along the same short ground route and rest beside ${start}.`
               : i === 1
-                ? `At the first marker, a folded play mat corner stops the rolling toy; the route waits while the game pauses.`
-                : `At the next ground marker, they flatten the mat corner together and point toward the nearby basket.`;
+                ? social
+                  ? `At the first marker, a folded play mat corner stops the rolling toy; the route waits while the game pauses.`
+                  : `At the first marker, the mini-mission pauses at this actual activity obstacle: ${p.quality.situation.initialFriction ?? beat.beforeState}.`
+                : social
+                  ? `At the next ground marker, they flatten the mat corner together and point toward the nearby basket.`
+                  : `At the next ground marker, the clue comes from the activity itself: ${t.informationChange}. The child uses this clue to continue toward ${end}.`;
       beat.summary += ` ${context}`;
       beat.afterState += `; ${context}`;
       beat.beforeState = i ? p.beats[i - 1]!.afterState : p.openingState;
@@ -104,14 +110,16 @@ export function composeCategoryPlan(
       t.consequence += `; ${context}`;
       beat.progress = t.consequence;
     });
-    p.quality.situation.resolutionMethod += `; follow the two ground markers to ${end} and return by the same short route`;
+    p.quality.situation.resolutionMethod += social
+      ? `; follow the two ground markers to ${end} and return by the same short route`
+      : `; complete this supported activity at ${end}, then return along the same two dry ground markers with empty hands while the adult keeps the materials in place`;
     const rt = p.quality.transitions.find(
       (t) => t.beatId === p.resolutionBeatId,
     )!;
     rt.resolutionMethod = p.quality.situation.resolutionMethod;
     p.beats.find((t) => t.beatId === p.resolutionBeatId)!.summary =
       p.quality.situation.resolutionMethod;
-    if (p.problem)
+    if (p.problem && social)
       p.problem.description +=
         "; a folded play mat corner interrupts the short route";
   } else if (!infant && category === "bedtime" && social) {

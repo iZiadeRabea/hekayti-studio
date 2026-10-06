@@ -537,6 +537,25 @@ test("writer strict bridge: canonical assembly, actionable failure diagnostics a
       x.editions[0]!.pages[0]!.narration =
         "She refused to share at first. A small ribbon fluttered beside the basket.";
       assert.notEqual(preview(x).status, "FAIL");
+      for (const narration of [
+        "No dragon appeared. A new hero arrived.",
+        "ظهر وحش مرسوم على الكرة ثم قفز وأخذ الكرة.",
+      ]) {
+        const positive = structuredClone(valid);
+        positive.editions[0]!.pages.at(-1)!.narration = narration;
+        assert.equal(
+          preview(positive).diagnostics[0]!.code,
+          "WRITER_CAST_DRIFT",
+        );
+      }
+      for (const narration of [
+        "لم يظهر وحش. تبادلت الطفلتان الكرة.",
+        "A monster appeared painted on the ball. The children took turns.",
+      ]) {
+        const harmless = structuredClone(valid);
+        harmless.editions[0]!.pages.at(-1)!.narration = narration;
+        assert.notEqual(preview(harmless).status, "FAIL");
+      }
     },
   );
   await t.test(

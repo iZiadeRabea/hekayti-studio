@@ -6,6 +6,7 @@ import {
   validate,
   type StoryDraft,
   type StoryBlueprint,
+  type QaFinding,
 } from "@hekayti/contracts";
 import { StoryDraftSchema } from "@hekayti/contracts/story";
 import {
@@ -78,6 +79,56 @@ function allowedSpeakers(
       .filter((id): id is string => id !== null),
   );
 }
+function explicitNewCast(text: string, castNames: string[]) {
+  const pattern =
+    /\b(?:a new (?:hero|protagonist|villain)|(?:dragon|monster|villain) (?:arrived|appeared|entered))\b|(?<!\p{L})(?:ظهر|وصل) (?:بطل جديد|وحش)/giu;
+  for (const match of text.matchAll(pattern)) {
+    // Qualify mentions separately: a negated depiction cannot hide a later
+    // positive arrival in the same page. This remains bounded lexical review.
+    const prefix = text.slice(Math.max(0, match.index - 45), match.index);
+    const suffix = text
+      .slice(match.index + match[0].length)
+      .split(/[.!?؟\n]/u)[0]!;
+    const negated =
+      /\b(?:no|not|without|never)\s*(?:a|any)?\s*$|(?:لم|ما|لن)\s*$/iu.test(
+        prefix,
+      );
+    const depicted =
+      /\b(?:picture|drawing|painting|image|print) of (?:a |the )?$|(?:رسم|صورة)\s*(?:لـ|ل)?\s*$/iu.test(
+        prefix,
+      ) ||
+      /^\s*(?:painted|drawn|printed|مرسوم|مطبوع|في صورة|في رسم)/iu.test(suffix);
+    let acts = false,
+      canonicalSubjectSeen = false;
+    const actions =
+      /\b(?:grabbed|took|jumped|spoke|chased|flew)\b|(?:[وف]?)(?:أخذت?|اخذت?|قفزت?|تكلمت?|طاردت?|خطفت?)/giu;
+    for (const action of suffix.matchAll(actions)) {
+      const before = suffix.slice(0, action.index).trimEnd(),
+        after = suffix.slice(action.index + action[0].length).trimStart();
+      const namedSubject = castNames.some(
+        (name) =>
+          (before.endsWith(name) &&
+            (before.length === name.length ||
+              !/[\p{L}\p{N}]/u.test(
+                before[before.length - name.length - 1]!,
+              ))) ||
+          (after.startsWith(name) &&
+            (after.length === name.length ||
+              !/[\p{L}\p{N}]/u.test(after[name.length]!))),
+      );
+      if (namedSubject) canonicalSubjectSeen = true;
+      // A named accepted actor's action is not the depiction's action. Later
+      // uncertain attribution stays with mandatory human REVIEW; explicit new
+      // arriving entities are still checked separately by the outer loop.
+      else if (!canonicalSubjectSeen) {
+        acts = true;
+        break;
+      }
+    }
+    if (!negated && (!depicted || acts)) return true;
+  }
+  return false;
+}
 function literaryReview(
   d: StoryDraft,
   pkg: PlanPackage,
@@ -115,8 +166,9 @@ function literaryReview(
           { mode: edition.mode, pageNumber: i + 1 },
         );
       if (
-        /\b(?:a new (?:hero|protagonist|villain)|(?:dragon|monster|villain) (?:arrived|appeared|entered))\b|ظهر (?:بطل جديد|وحش)|وصل (?:بطل جديد|وحش)/iu.test(
+        explicitNewCast(
           spoken,
+          pkg.plan.characters.map((c) => c.displayName),
         )
       )
         fail(
@@ -175,33 +227,42 @@ function canonicalFindings(
     reviewStoryBlueprint(r, c, assembled),
   );
   const hard = findings.filter((f) => ["high", "blocker"].includes(f.severity));
-  if (hard.length)
-    throw new WriterError(
-      hard.map((f) => {
-        const edition = d.editions.find((e) =>
-          f.location.startsWith(e.mode + "/"),
-        );
-        const pageIndex =
-          edition?.pages.findIndex(
-            (p) => f.location === `${edition.mode}/${p.pageId}`,
-          ) ?? -1;
-        return {
-          code:
-            "WRITER_CANONICAL_" +
-            f.category.toUpperCase().replace(/[^A-Z0-9]+/g, "_"),
-          message: `${f.message} ${f.suggestedAction}`,
-          ...(edition ? { mode: edition.mode } : {}),
-          ...(pageIndex >= 0 ? { pageNumber: pageIndex + 1 } : {}),
-        };
-      }),
+  const diagnostic = (f: QaFinding, prefix: string): WriterDiagnostic => {
+    const edition = d.editions.find(
+      (e) =>
+        f.location.startsWith(e.mode + "/") ||
+        f.location === e.languageVersionId ||
+        f.location === `blueprint.languageVersions.${e.mode}` ||
+        f.location.startsWith(`blueprint.languageVersions.${e.mode}.pages.`),
     );
+    let pageIndex =
+      edition?.pages.findIndex(
+        (p) => f.location === `${edition.mode}/${p.pageId}`,
+      ) ?? -1;
+    if (
+      edition &&
+      f.location.startsWith(`blueprint.languageVersions.${edition.mode}.pages.`)
+    ) {
+      const index = Number(
+        f.location.slice(
+          `blueprint.languageVersions.${edition.mode}.pages.`.length,
+        ),
+      );
+      if (Number.isInteger(index) && index >= 0 && index < edition.pages.length)
+        pageIndex = index;
+    }
+    return {
+      code: prefix + f.category.toUpperCase().replace(/[^A-Z0-9]+/g, "_"),
+      message: `${f.message} ${f.suggestedAction}`,
+      ...(edition ? { mode: edition.mode } : {}),
+      ...(pageIndex >= 0 ? { pageNumber: pageIndex + 1 } : {}),
+    };
+  };
+  if (hard.length)
+    throw new WriterError(hard.map((f) => diagnostic(f, "WRITER_CANONICAL_")));
   return findings
     .filter((f) => f.severity === "medium")
-    .map((f) => ({
-      code:
-        "WRITER_REVIEW_" + f.category.toUpperCase().replace(/[^A-Z0-9]+/g, "_"),
-      message: `${f.message} ${f.suggestedAction}`,
-    }));
+    .map((f) => diagnostic(f, "WRITER_REVIEW_"));
 }
 export function assembleWriterResponse(
   raw: string,

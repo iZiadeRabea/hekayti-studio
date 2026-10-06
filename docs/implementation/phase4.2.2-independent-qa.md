@@ -1,0 +1,31 @@
+# Phase4.2.2 independent QA — finding and closure evidence
+
+Reviewed clean feature HEAD `c0d944fbf441fe5ec038d3d609cc08732143a5ce` against stable `e34ea7edb411cc886ac910e3e723c6ed09e7e71a`. Source/service/renderer inspection and isolated synthetic tests only. No owner database, network/provider, release, build, full suite or recovery operation.
+
+Initial focused command (`phase422-writer-bridge`, `phase422-writer-ui`, `phase42-planner`, `phase421-quality`) passed **57/57**. Initial owned `tests/app/phase422-independent-qa.test.ts` covered six independent groups; four groups failed on the reviewed implementation, two passed. Original assertions were retained through the consolidated implementation/UI fix batch. Closure verification below supersedes the initial open finding count.
+
+## Consolidated fix verification
+
+Verified backend working-tree fixes over UI commit `902e539e03f6cc7470fc44d6f8212928c3b9d8b3`. Original independent assertions were retained, with narrow M1 clause-attribution and genuine new-cast controls added; M2 additionally checks all page semantic-review locations and the specific register explanation, and M3 verifies the actual objective friction appears in the mini-mission obstacle.
+
+- M2 CLOSED: register and semantic warnings retain edition/page; safe localized register explanation is specific.
+- M3 CLOSED: both floating and washing mini-missions reuse their actual untested/skipped activity obstacle, preserve cork/soap operations and adult support, and avoid the unrelated rolling toy/mat.
+- M4 CLOSED: actual `PLANNER_STALE` and `PLANNER_CONFLICT` codes give current-plan preparation guidance; localized UI also explains reload/copy/retry.
+- M1 CLOSED after narrow clause-attribution correction: original harmless depiction/negation cases and `ظهر وحش مرسوم على الكرة، ثم أخذت سلمى دورها وأعادت الكرة لنور.` PASS. Actions with an exact accepted cast name before/after the verb are distinguished from the drawing's action; later uncertain attribution retains mandatory human REVIEW. Five actual new-cast controls still produce `WRITER_CAST_DRIFT`, including negation/depiction followed by a separate genuine monster arrival. Engineering additionally retains explicit depicted-monster animation controls in the original writer bridge test.
+
+Expanded independent rerun: **11/11 PASS**, zero fail/skip. Current open count: **BLOCKER0/HIGH0/MEDIUM0/LOW0**. QA closure is satisfied for these four relevant findings; the expanded regressions retain the original assertions. Final consolidated gates and root release approval remain separate, pending checks. This closure covers the inspected fix working tree over UI commit902e539; the coordinated batch commit will establish its final source identity.
+
+## Findings
+
+Historical initial count: BLOCKER 0; HIGH 0; MEDIUM 4; LOW 0. All four are CLOSED as recorded above.
+
+- **M1 — harmless prose is hard-rejected as major cast drift.** `story-writer-bridge.ts:118` matches depicted/negated entities without context. Both `ظهر وحش مرسوم على الكرة...` (monster painted on the existing ball) and `No dragon appeared. The children shared the ball and took turns.` yield `WRITER_CAST_DRIFT`, `FAIL`, page12. The first is an allowed minor visual prop; the second asserts no added character. Add bounded negation/depiction handling or an honest REVIEW fallback for uncertain mentions, while retaining rejection of explicit arriving major cast. Independent positive controls retain `A new hero arrived.` and a real Arabic monster taking the ball.
+- **M2 — advisory diagnostics lose the actionable location.** `story-writer-bridge.ts:199–204` maps every medium canonical finding to only code/message. The deliberate MSA page2 register probe (`نور عايزة...`) returns `WRITER_REVIEW_LANGUAGE_REGISTER` without mode/pageNumber. Normal manual drafts also return repeated page semantic-review messages without locations; the renderer cannot tell the creator which page each item concerns. Use the same canonical location resolution for all relevant severities and a safe localized register-specific explanation.
+- **M3 — adventure is overfit to the sharing game's rolling obstacle.** `story-category-intent.ts:94` injects a folded play-mat corner stopping a rolling toy into every non-infant adventure. Independently reproduced float/cork/pebble and soap/wash/towel requests retain their own operation, but their second beat abruptly introduces the unrelated rolling toy and their next beat flattens its mat together. That obstacle does not cause or explain the requested float test or wash sequence. Compose the reachable mini-mission and obstacle from the objective's existing materials/actions. Keep the exact sharing owner regression's rolling route and reciprocal resolution intact.
+- **M4 — actual stale/CAS service failures become response-format advice.** `story-planner.ts:1237,1559,1569` throws `PLANNER_CONFLICT` / `PLANNER_STALE`. `WriterResponseFeedback.tsx:29–58` recognizes only `WRITER_STALE`, so real service failures tell the user to check the response format rather than reload/prepare the current package. Map the actual service codes to a safe localized current-plan instruction; do not expose raw exception messages.
+
+## Verified boundaries and limits
+
+Current-package service assembly, exact language/page coverage, canonical actor-only dialogue, app-owned IDs/counts/status/provenance and commit safety reuse remain intact in the inspected paths. Original57 includes reordered/missing/duplicate language/page cases, unknown/ambiguous/disallowed speakers, metadata rejection, source/CAS staleness, preview/failure immutability, Arabic counts and the actual retained legacy accepted-plan/package/hash fixture. Independent category/category-signature/story-needs tampering is rejected by `validatePlanQualitySource`; malformed JSON variants fail safely and dialogue-only narration retains the canonical schema's existing allowance.
+
+These deterministic checks do not establish complete semantic equivalence, natural Egyptian Arabic, literary quality, developmental/cultural quality or child appeal. No actual new ChatGPT/Gemini retrial was performed. Final consolidated/native/packaging/security/recovery gates remain separately pending. No shared schema or historical1.0/1.1/hash change is proposed by QA.
