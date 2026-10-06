@@ -16,6 +16,7 @@ import {
 await mkdir("temp/phase42-ui", { recursive: true });
 const packaged = process.argv.includes("--packaged"),
   ownerLive = process.argv.includes("--owner-live"),
+  writerLive = process.argv.includes("--writer-live"),
   data = await mkdtemp(resolve("temp/phase42-ui/run-")),
   gates = [],
   archive = join(data, "planner-creative.zip");
@@ -41,11 +42,8 @@ try {
   let page = await app.firstWindow();
   await page.getByTestId("ui-language-en").click();
   const button = (name) => page.getByRole("button", { name, exact: true });
-  const saved = () =>
-    page
-      .getByTestId("planner-status")
-      .filter({ hasText: "Planner change saved and validated." })
-      .waitFor();
+  const saved = (message = "Planner change saved and validated.") =>
+    page.getByTestId("planner-status").filter({ hasText: message }).waitFor();
   await button("Starter / Creative Library").click();
   await page
     .getByLabel(
@@ -63,13 +61,18 @@ try {
     .getByLabel("Story language", { exact: true })
     .selectOption("ar-EG");
   let ownerPlanning;
-  if (ownerLive) {
+  if (ownerLive || writerLive) {
     ownerPlanning = JSON.parse(
       await readFile(
         "examples/story-planner/quality-live-request.json",
         "utf8",
       ),
     );
+    if (writerLive) {
+      ownerPlanning.request.ageMonths = 42;
+      ownerPlanning.request.languageModes = ["ar-MSA-simple", "ar-EG"];
+      ownerPlanning.constraints = [];
+    }
     // Seed the exact synthetic fixture through the public desktop IPC: theme,
     // languageModes and profileId are not editable in the minimal creator form.
     // IDs are isolated so the default demo project is not overwritten.
@@ -92,7 +95,7 @@ try {
       .fill(ownerPlanning.selectedSetting);
     await page
       .getByLabel("Creator constraints for human review")
-      .fill(ownerPlanning.constraints[0]);
+      .fill(ownerPlanning.constraints[0] ?? "");
   } else await button("New Story").click();
   await page.getByTestId("workflow-state").waitFor();
   const projectId = await page.getByLabel("Reopen story").inputValue();
@@ -119,7 +122,7 @@ try {
   assert.equal(planner.plans.length, 1);
   assert.ok(planner.plans[0].provenance.sources.length > 0);
   let exactLiveResult;
-  if (ownerLive) {
+  if (ownerLive || writerLive) {
     const live = planner.plans[0],
       qa = validateStoryPlan(live);
     const expected = JSON.parse(
@@ -128,7 +131,10 @@ try {
         "utf8",
       ),
     ).after.plan;
-    assert.equal(live.schemaVersion, "story-plan/1.1");
+    assert.equal(
+      live.schemaVersion,
+      writerLive ? "story-plan/1.2" : "story-plan/1.1",
+    );
     assert.deepEqual(live.planning.request, ownerPlanning.request);
     for (const key of [
       "profile",
@@ -153,14 +159,30 @@ try {
       expected.provenance.selectedStoryFamilyId,
     );
     assert.equal(live.provenance.selectedPatternId, null);
-    assert.deepEqual(
-      live.beats.map((b) => b.summary),
-      expected.beats.map((b) => b.summary),
-    );
-    assert.equal(
-      live.quality.situation.resolutionMethod,
-      expected.quality.situation.resolutionMethod,
-    );
+    if (!writerLive)
+      assert.deepEqual(
+        live.beats.map((b) => b.summary),
+        expected.beats.map((b) => b.summary),
+      );
+    if (!writerLive)
+      assert.equal(
+        live.quality.situation.resolutionMethod,
+        expected.quality.situation.resolutionMethod,
+      );
+    if (writerLive) {
+      assert.equal(live.quality.categoryIntent.category, "adventure");
+      assert.equal(qa.signals.CategoryPresence, "REVIEW");
+      assert.match(live.beats.map((b) => b.summary).join(" "), /ground marker/);
+      assert.match(
+        live.beats.map((b) => b.summary).join(" "),
+        /folded play mat corner/,
+      );
+      assert.match(live.quality.situation.resolutionMethod, /destination/);
+      assert.match(
+        live.quality.situation.resolutionMethod,
+        /swap roller and catcher/,
+      );
+    }
     assert.ok(
       !qa.findings.some((f) => ["high", "blocker"].includes(f.severity)),
     );
@@ -219,7 +241,7 @@ try {
   await button("Accept Plan and build Blueprint").click();
   await saved();
   await button("Prepare manual writing package").click();
-  await saved();
+  await saved("Prompt prepared.");
   const copyTexts = {};
   for (const target of ["CHATGPT", "GEMINI", "GENERIC"]) {
     assert.equal(await button("Copy for " + target).isDisabled(), true);
@@ -231,13 +253,23 @@ try {
     await button("Copy for " + target).click();
     await page
       .getByTestId("planner-status")
-      .filter({ hasText: "Copy-ready package copied" })
+      .filter({
+        hasText:
+          target === "CHATGPT"
+            ? "ChatGPT prompt copied."
+            : target === "GEMINI"
+              ? "Gemini prompt copied."
+              : "Writer prompt copied.",
+      })
       .waitFor();
     copyTexts[target] = await app.evaluate(({ clipboard }) =>
       clipboard.readText(),
     );
-    assert.match(copyTexts[target], /FIXED STORY STRUCTURE/);
-    assert.match(copyTexts[target], /AI WRITING FREEDOM/);
+    assert.match(copyTexts[target], /ما يجب الحفاظ عليه|FIXED STORY STRUCTURE/);
+    assert.match(
+      copyTexts[target],
+      /ما يمكن للكاتب ابتكاره|AI WRITING FREEDOM/,
+    );
   }
   planner = must(
     await page.evaluate((id) => window.hekayti.plannerLoad(id), projectId),
@@ -272,7 +304,7 @@ try {
       };
     }),
   };
-  const response = {
+  let response = {
     schemaVersion: "plan-response/1.0",
     packageId: pkg.packageId,
     planRevisionId: plan.revisionId,
@@ -284,9 +316,168 @@ try {
     resolutionBeatId: plan.resolutionBeatId,
     draft,
   };
+  if (pkg.outputSchemaVersion === "writer-response/1.0") {
+    response = {
+      schemaVersion: "writer-response/1.0",
+      editions: plan.planning.request.languageModes.map((mode) => ({
+        mode,
+        pages: blueprint.pagePlan.map((_, i) => ({
+          pageNumber: i + 1,
+          narration:
+            mode === "ar-MSA-simple"
+              ? "مدت نور الكرة إلى سلمى. أخذت سلمى دورها ثم أعادت الكرة إلى نور."
+              : "نور مدت الكورة لسلمى. سلمى خدت دورها ورجعت الكورة لنور.",
+          dialogue: [],
+          altText: "طفلتان تتبادلان الكرة.",
+        })),
+      })),
+    };
+  }
+  if (writerLive) {
+    const original = {
+      planner,
+      workflow,
+      library: must(await page.evaluate(() => window.hekayti.libraryLoad())),
+    };
+    const preview = async (value) => {
+      await page
+        .getByLabel("Planner result JSON")
+        .fill(typeof value === "string" ? value : JSON.stringify(value));
+      await button("Validate response without saving").click();
+      await page.getByTestId("writer-response-feedback").waitFor();
+    };
+    const unchanged = async () => {
+      assert.deepEqual(
+        must(
+          await page.evaluate(
+            (id) => window.hekayti.plannerLoad(id),
+            projectId,
+          ),
+        ),
+        original.planner,
+      );
+      assert.deepEqual(
+        must(
+          await page.evaluate((id) => window.hekayti.loadStory(id), projectId),
+        ),
+        original.workflow,
+      );
+      assert.deepEqual(
+        must(await page.evaluate(() => window.hekayti.libraryLoad())),
+        original.library,
+      );
+    };
+    assert.equal(
+      await page.getByTestId("writer-prompt-preview").getAttribute("readonly"),
+      "",
+    );
+    const prompt = await page.getByTestId("writer-prompt-preview").inputValue();
+    for (const heading of [
+      "القصة المطلوبة",
+      "العمر",
+      "نوع القصة",
+      "هدف القصة",
+      "الشخصيات",
+      "المكان",
+      "تسلسل الأحداث",
+      "ما يجب الحفاظ عليه",
+      "ما يمكن للكاتب ابتكاره",
+      "قواعد اللغة",
+      "قواعد الجودة الأدبية",
+      "صيغة الرد المطلوبة",
+    ])
+      assert.ok(prompt.includes(heading));
+    await preview("{");
+    assert.match(
+      await page.getByTestId("writer-response-feedback").innerText(),
+      /Response JSON is invalid/,
+    );
+    await unchanged();
+    await button("Validate / Import planned prose").click();
+    await page.waitForFunction(
+      () =>
+        !document.querySelector('[aria-label="Planner result JSON"]').disabled,
+    );
+    await unchanged();
+    const bad = structuredClone(response);
+    bad.editions[0].pages[1].dialogue = [
+      { speaker: "unknown-fixture", text: "مرحبا" },
+    ];
+    await preview(bad);
+    let feedback = await page
+      .getByTestId("writer-response-feedback")
+      .innerText();
+    assert.match(feedback, /not a known story character/);
+    assert.match(feedback, /ar-MSA-simple/);
+    assert.match(feedback, /Page\s+2/);
+    assert.match(feedback, /unknown-fixture/);
+    await page.getByTestId("ui-language-ar").click();
+    const locationItem = page
+      .getByTestId("writer-response-feedback")
+      .locator("li")
+      .first();
+    await locationItem.locator("summary").click();
+    await locationItem.screenshot({
+      path: join(data, "arabic-writer-location-readable.png"),
+    });
+    await page
+      .getByTestId("writer-prompt-preview")
+      .screenshot({ path: join(data, "arabic-writer-prompt-readable.png") });
+    await page.getByTestId("ui-language-en").click();
+    await unchanged();
+    const register = structuredClone(response);
+    register.editions[0].pages[1].narration =
+      "نور عايزة تشارك الكرة. أخذت سلمى دورها وأعادت الكرة لنور.";
+    await preview(register);
+    assert.match(
+      await page.getByTestId("writer-response-feedback").innerText(),
+      /requested register/,
+    );
+    await unchanged();
+    response.editions.reverse();
+    response.editions.forEach((e) => e.pages.reverse());
+    await preview(response);
+    assert.match(
+      await page.getByTestId("writer-response-feedback").innerText(),
+      /Review the response before import|Response is ready/,
+    );
+    await unchanged();
+    await page.getByTestId("ui-language-ar").click();
+    assert.equal(
+      await page.getByLabel("لغة القصة", { exact: true }).inputValue(),
+      "ar-EG",
+    );
+    assert.equal(
+      await page.getByTestId("writer-prompt-preview").inputValue(),
+      prompt,
+    );
+    await page
+      .getByTestId("writer-response-feedback")
+      .screenshot({ path: join(data, "arabic-writer-preview.png") });
+    await page.getByTestId("ui-language-en").click();
+    gates.push(
+      "Writer readonly human prompt headings, malformed/unknown-speaker/register location diagnostics, zero state mutation after previews/failed import, reversed editions/pages, UI language independent of story language and prompt",
+    );
+  }
   await page.getByLabel("Planner result JSON").fill(JSON.stringify(response));
   await button("Validate / Import planned prose").click();
-  await saved();
+  await saved("Draft imported successfully.");
+  if (writerLive) {
+    const imported = must(
+      await page.evaluate((id) => window.hekayti.loadStory(id), projectId),
+    );
+    assert.deepEqual(
+      imported.drafts.at(-1).editions.map((e) => e.mode),
+      plan.planning.request.languageModes,
+    );
+    assert.ok(
+      imported.drafts
+        .at(-1)
+        .editions.every(
+          (e) => e.pages[0].pageId === blueprint.pagePlan[0].pageId,
+        ),
+    );
+  }
   await button("Run structured QA").click();
   await page.getByLabel("Acknowledge advisory limits").check();
   await button("Explicitly approve current text").click();
@@ -400,6 +591,7 @@ try {
     status: "PASS",
     packaged,
     ownerLive,
+    writerLive,
     exactLiveResult,
     data,
     projectId,

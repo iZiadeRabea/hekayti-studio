@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.4 writer bridge preparation —2026-10-06 (not released)
+
+Same independent QA all4 CLOSED/11PASS. One consolidated100/329/typecheck PASS, app300/301 initial with stale historical desktop-version assertion; same QA preserved legacy assertions and added current1.2 boundary, targeted1PASS. Build/unsigned0.5.4package/onlinehealth0warnings/historysecurity/dev+packaged writer/Arabic/history regressions PASS. Exact synthetic42 adventure+sharing: family2/nullpattern/A–Itrue,2medium+3low human cautions. Root compact approval/release/cloud readbacks/freshrestores PENDING. Evidence phase4.2.2-testing.md and phase4.2.2-release-packet.md. Stable e34ea7ed/v0.5.3 external receipt preserved; no ownerDB/corpus/provider calls. Earlier pending/approval entries below are historical.
+
 ## Phase4.2.2 consolidated QA fixes —2026-10-06 (not released)
 
 Initial independent0 BLOCKER/HIGH,4 MEDIUM addressed in one batch: bounded depicted/negated/named-actor cast context, edition/page locations retained on advisory findings, adventure obstacle/clue derived from actual activity, localized actual stale/CAS and register reasons (UI902e539e). Same independent QA expanded11/11 PASS verifies all four CLOSED,0 unresolved; engineering integrated69/typecheck and affected residual writer10 PASS. Consolidated gates/final approval pending. Historical assertions/fixtures/source hashes retained; no ownerDB/corpus/provider/release changes.

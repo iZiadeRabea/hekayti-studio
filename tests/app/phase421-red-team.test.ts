@@ -7,6 +7,7 @@ import { countWords } from "@hekayti/contracts";
 import {
   PlanningRequestSchema,
   QualityStoryPlanSchema,
+  WriterStoryPlanSchema,
   type PlanningRequest,
 } from "@hekayti/contracts/planner";
 import { LibraryStateSchema } from "@hekayti/contracts/library";
@@ -83,7 +84,10 @@ const blocks = (
       ["high", "blocker"].includes(f.severity) &&
       (!category || f.category === category),
   );
-function harness() {
+function harness(
+  qualityVersion:
+    "planner-quality/1.0" | "planner-quality/1.1" = "planner-quality/1.0",
+) {
   const repo = new SqliteProjectRepository(":memory:");
   repo.createProject(project());
   let n = 0;
@@ -97,13 +101,8 @@ function harness() {
     new MockStoryDraftProvider(),
     seam,
   );
-  // This is the fourth argument actually selected by apps/desktop/src/main.ts.
-  const planner = new StoryPlannerService(
-    repo,
-    workflow,
-    seam,
-    "planner-quality/1.0",
-  );
+  // Keep legacy quality1.0 explicit; current desktop dispatch is checked separately.
+  const planner = new StoryPlannerService(repo, workflow, seam, qualityVersion);
   importLibraryBatch(repo, records, 0, "independent-quality-corpus", "now");
   return { repo, workflow, planner };
 }
@@ -355,12 +354,13 @@ test("closure boundary: every canonical beat role has Arabic display text withou
   assert.equal(p.planning.request.primaryLanguageMode, "ar-EG");
 });
 
-test("independent owner A-I checks use the current service and exact 791-record snapshot", async () => {
+test("independent owner A-I checks preserve legacy quality1.0 and current desktop1.1 with exact 791-record snapshot", async () => {
   const main = readFileSync("apps/desktop/src/main.ts", "utf8");
   assert.match(
     main,
-    /new StoryPlannerService\([\s\S]{0,350}"planner-quality\/1\.0"/,
+    /new StoryPlannerService\([\s\S]{0,350}"planner-quality\/1\.1"/,
   );
+  // The original owner A-I quality1.0/StoryPlan1.1 assertions remain intact.
   const h = harness();
   try {
     const before = canonicalJson(h.repo.loadLibrary());
@@ -423,6 +423,48 @@ test("independent owner A-I checks use the current service and exact 791-record 
     assert.equal(blocks(plan), false);
   } finally {
     h.repo.close();
+  }
+  // Phase4.2.2 is additive: the desktop now composes StoryPlan1.2/category intent.
+  const current = harness("planner-quality/1.1");
+  try {
+    const p = planning(),
+      before = canonicalJson(current.repo.loadLibrary());
+    const w = current.workflow.create(p.request);
+    const s = await current.planner.plan(
+      p,
+      0,
+      w.recordVersion,
+      current.repo.loadLibrary().recordVersion,
+    );
+    const plan = WriterStoryPlanSchema.parse(s.plans.at(-1));
+    assert.equal(current.repo.loadLibrary().records.length, 791);
+    assert.equal(canonicalJson(current.repo.loadLibrary()), before);
+    assert.deepEqual(plan.planning.request, p.request);
+    assert.equal(plan.schemaVersion, "story-plan/1.2");
+    assert.equal(plan.quality.categoryIntent.category, "adventure");
+    assert.equal(
+      plan.quality.objectiveIntent.primaryIntent,
+      "SHARING_TURN_TAKING",
+    );
+    assert.equal(plan.provenance.selectedStoryFamilyId, "hekayti-family-2");
+    assert.equal(plan.provenance.selectedPatternId, null);
+    const resolution = plan.quality.transitions.find(
+      (t) => t.beatId === plan.resolutionBeatId,
+    )!;
+    assert.equal(new Set(resolution.participantIds).size, 2);
+    assert.match(
+      resolution.resolutionMethod!,
+      /swap.*each|each.*turn|each.*roll/,
+    );
+    assert.match(plan.beats.map((b) => b.summary).join(" "), /ground marker/);
+    assert.equal(
+      validateStoryPlan(plan).findings.some((f) =>
+        ["high", "blocker"].includes(f.severity),
+      ),
+      false,
+    );
+  } finally {
+    current.repo.close();
   }
 });
 

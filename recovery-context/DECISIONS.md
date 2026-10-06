@@ -1,5 +1,10 @@
 # Architecture / product decision log
 
+## Phase4.2.2 preparation —2026-10-06
+
+- D054: One consolidated100foundation/329design/typecheck/app300/301 invocation uncovered a historical desktop-version regex, not product failure. Same QA preserves legacy1.0/1.1 owner/hash assertions and adds explicit current1.1→StoryPlan1.2/adventure boundary; targeted1/1 PASS, no optional full repeat. Actual dev/packaged writer/Arabic/regression gates PASS. Workspace0.5.4 only; final root approval precedes main/tags/push/cloud. Mandatory recovery checks remain separate; final identity external.
+- D055: Prior HIGH implementation/QA contexts unavailable; one replacement HIGH each, existing MEDIUM UI/Ops reused, same QA for all closure. No model probe/ExtraHigh/other new agent; max2 concurrent workers plusroot. Synthetic42 owner/category structure and app-owned writer import are verified, not actual provider or human literary quality. Unchanged791 snapshot may be reused with original actual metadata, not a fresh export/version claim.
+
 ## Phase4.2.2 —2026-10-06
 
 - D053: Owner approves focused writer bridge: strict small writer-response1.0 plus app-owned canonical assembly/current-package validation, additive PlanPackage1.1 and StoryPlan1.2/PlanQA1.2 category-aware desktop dispatch. Alternative: ask external AI to supply UUIDs/counts/provenance or mutate old validation/hash semantics. Reason: usable manual prose with retained accepted-plan authority. Consequence: readonly PREVIEW is advisory, IMPORT reruns canonical safety/source/CAS; legacy1.0/1.1 response/history unchanged. Category intent composes concrete safe activity with objective, AgeEngine remains authority, human review remains mandatory. One HIGH replacement implementation because prior context unavailable, existing MEDIUM UI/Ops, one new independent HIGH QA after integration; root compact initial/final only. Final gate/approval required before release/cloud, no ownerDB/provider/corpus/later-phase work.

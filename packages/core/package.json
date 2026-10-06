@@ -1,6 +1,6 @@
 {
   "name": "@hekayti/core",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "private": true,
   "type": "module",
   "exports": {
@@ -15,7 +15,7 @@
     "./planner": "./src/story-planner.ts"
   },
   "dependencies": {
-    "@hekayti/contracts": "0.5.3",
+    "@hekayti/contracts": "0.5.4",
     "zod": "4.6.5"
   }
 }

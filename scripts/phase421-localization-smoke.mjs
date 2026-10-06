@@ -112,7 +112,7 @@ try {
       await page.evaluate((id) => window.hekayti.plannerLoad(id), id),
     ),
     plan = planner.plans.at(-1);
-  assert.equal(plan.schemaVersion, "story-plan/1.1");
+  assert.equal(plan.schemaVersion, "story-plan/1.2");
   assert.equal(
     plan.quality.objectiveIntent.primaryIntent,
     "SHARING_TURN_TAKING",
@@ -157,7 +157,7 @@ try {
     .getByTestId("story-planner")
     .screenshot({ path: join(data, "arabic-plan.png") });
   gates.push(
-    "Fresh Arabic default/RTL, Arabic creator labels, unchanged canonical age/language/category/variation/profile values and actual StoryPlan1.1 quality display",
+    "Fresh Arabic default/RTL, Arabic creator labels, unchanged canonical age/language/category/variation/profile values and actual StoryPlan1.2 quality display",
   );
   await page
     .getByLabel("راجعت الخطة وحدود المراجعة؛ وأوافق على تثبيت بنية القصة.")
@@ -178,11 +178,11 @@ try {
     .click();
   await page
     .getByTestId("planner-status")
-    .filter({ hasText: "تم نسخ البرومبت وهو جاهز للاستخدام" })
+    .filter({ hasText: "تم نسخ برومبت ChatGPT." })
     .waitFor();
   assert.match(
     await app.evaluate(({ clipboard }) => clipboard.readText()),
-    /FIXED STORY STRUCTURE/,
+    /ما يجب الحفاظ عليه/,
   );
   const retained = must(
     await page.evaluate((id) => window.hekayti.loadStory(id), id),
@@ -290,7 +290,7 @@ try {
     .getByTestId("story-planner")
     .screenshot({ path: join(data, "arabic-infant-repeat.png") });
   gates.push(
-    "Actual8-month StoryPlan1.1 REPEAT role displays Arabic التكرار while canonical role and simplified-MSA story language remain unchanged",
+    "Actual8-month StoryPlan1.2 REPEAT role displays Arabic التكرار while canonical role and simplified-MSA story language remain unchanged",
   );
   const evidence = {
     status: "PASS",

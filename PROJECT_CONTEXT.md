@@ -1,8 +1,6 @@
 # Permanent product context
 
-Current work (2026-10-06): owner-approved Phase4.2.2 focused writer bridge on feature/phase4.2.2-writer-bridge. Desktop new planner-quality1.1 dispatch adds category-aware StoryPlan1.2 and small writer-response1.0; legacy1.0/1.1/hash authority retained. Implementation/UI handoff in docs/implementation/phase4.2.2-writer-bridge.md; independent QA/final gate/approval pending. Previous Phase4.2.1 completed release authority below does not authorize releasing this patch. Stable e34ea7ed/v0.5.3/791/ownerDB preserved.
-
-Current milestone: Astra compact final review APPROVED FOR RELEASE Phase4.2.1 quality+ArabicUI exact05dd02ab3f337c61d4a9db34d62283ae93b60462. Same MEDIUM mechanical release/recovery authorized; actual completion requires external receipt. QA all4groups CLOSED,100/329/266/typecheck/build/dev+unsignedpackage/health/securityPASS. Stable96e64925/v0.5.2/checkpoint VERIFIED receipt preserved. Workspace0.5.3; unchanged791/source facts/ownerDB/dependencies; no API/research/Phase5.
+Current preparation (2026-10-06): Phase4.2.2 writer bridge/category+Arabic UI validated on feature/phase4.2.2-writer-bridge, workspace0.5.4. Same independent QA all4 CLOSED; single consolidated gate plus targeted version fixture correction and dev/packaged native smokes complete. Root final approval and external recovery PENDING. Stable e34ea7ed/v0.5.3/verified phase421 receipt/791/ownerDB preserved. See CURRENT_STATE.md and docs/implementation/phase4.2.2-release-packet.md. No provider/Phase5 work.
 
 ## Identity and market
 Project: Hekayti Studio. Initial market: Egypt only.
@@ -30,7 +28,7 @@ Phase 2: only after the workflow proves reliable and high quality, consider a cu
 ## Architecture principle
 Core logic is reusable without Electron. Phase 1 recommended Electron + React/TypeScript with local SQLite and asset-store adapters; Phase 2 implemented and tested that baseline through separate npm workspaces and scoped Arabic/print/Windows feasibility gates. Exact dependencies are pinned in package-lock.json and docs/implementation/phase2-overview.md. AI/image provider, final printer/font and real-data retention remain unselected. Phase 1 architecture specifications remain historical design rationale; implementation evidence takes precedence for actual runtime state.
 
-## Current authorization
+## Historical Phase4.2/4.2.1 architecture context
 
 Phase4.2.1 adds bounded explainable ObjectiveIntent, structural-field compatibility cohorts, concrete age-aware state/action/consequence situations, typed quality findings and explicit1.1 dispatch. Current desktop opts planner-quality/1.0; original1.0 integrations/histories/packages remain unchanged, including an actual retained v0.5.2 synthetic accepted-plan/package reload fixture. Arabic UI defaults independently of story language, with English switch and existing schema/enum values preserved. Human literary/native/cultural/developmental review and provider trials remain unvalidated.
 
