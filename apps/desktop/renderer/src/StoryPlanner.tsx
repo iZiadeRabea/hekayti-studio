@@ -4,9 +4,17 @@ import type { WorkflowSnapshot } from "@hekayti/core/workflow";
 import type {
   PlannerSnapshot,
   PlanningRequest,
+  WriterPreview,
 } from "@hekayti/contracts/planner";
 import type { LibraryRecord } from "@hekayti/contracts/library";
-import { validateStoryPlan } from "@hekayti/core/planner";
+import {
+  validateStoryPlan,
+  planGenerationInstructions,
+} from "@hekayti/core/planner";
+import {
+  WriterResponseFeedback,
+  WriterPromptPreview,
+} from "./WriterResponseFeedback";
 
 export function StoryPlanner({
   workflow,
@@ -39,6 +47,11 @@ export function StoryPlanner({
     [rating, setRating] = useState(3),
     [setting, setSetting] = useState(""),
     [constraints, setConstraints] = useState("");
+  const [writerFeedback, setWriterFeedback] = useState<{
+    preview: WriterPreview;
+    json: string;
+    packageId: string;
+  } | null>(null);
   useEffect(() => {
     let active = true;
     void window.hekayti.plannerLoad(workflow.projectId).then((r) => {
@@ -51,6 +64,7 @@ export function StoryPlanner({
       });
     setAck(false);
     setCopyReview(false);
+    setWriterFeedback(null);
     return () => {
       active = false;
     };
@@ -62,9 +76,60 @@ export function StoryPlanner({
     pkg = state?.packages
       .filter((p) => p.plan.revisionId === state.currentPlanRevisionId)
       .at(-1);
+  const writerPackage = pkg?.outputSchemaVersion === "writer-response/1.0";
+  let promptText = "";
+  if (pkg) {
+    try {
+      promptText = planGenerationInstructions(pkg, workflow, "GENERIC");
+    } catch {
+      /* A stale retained package must not crash or invent a current prompt. */
+    }
+  }
+  const currentFeedback =
+    writerFeedback?.json === raw && writerFeedback.packageId === pkg?.packageId
+      ? writerFeedback.preview
+      : null;
   async function command(extra: Record<string, unknown>) {
     setBusy(true);
     try {
+      if (extra.action === "IMPORT" && writerPackage && pkg) {
+        const checked = await window.hekayti.plannerCommand({
+          projectId: workflow.projectId,
+          expectedPlanner: state?.recordVersion ?? 0,
+          expectedWorkflow: workflow.recordVersion,
+          action: "PREVIEW",
+          packageId: pkg.packageId,
+          json: raw,
+        });
+        const preview = checked.ok
+          ? checked.value.preview
+          : {
+              status: "FAIL" as const,
+              diagnostics: [
+                { code: checked.error.code, message: checked.error.message },
+              ],
+              editions: [],
+            };
+        if (!preview) {
+          setWriterFeedback({
+            json: raw,
+            packageId: pkg.packageId,
+            preview: {
+              status: "FAIL",
+              diagnostics: [
+                {
+                  code: "WRITER_VALIDATION",
+                  message: "Missing validation preview",
+                },
+              ],
+              editions: [],
+            },
+          });
+          return;
+        }
+        setWriterFeedback({ preview, json: raw, packageId: pkg.packageId });
+        if (preview.status === "FAIL") return;
+      }
       const result = await window.hekayti.plannerCommand({
         projectId: workflow.projectId,
         expectedPlanner: state?.recordVersion ?? 0,
@@ -72,20 +137,72 @@ export function StoryPlanner({
         ...extra,
       });
       if (!result.ok) {
-        setStatus(`${result.error.code}: ${result.error.message}`);
+        if (["IMPORT", "PREVIEW"].includes(String(extra.action)) && pkg) {
+          setWriterFeedback({
+            json: raw,
+            packageId: pkg.packageId,
+            preview: {
+              status: "FAIL",
+              diagnostics: [
+                { code: result.error.code, message: result.error.message },
+              ],
+              editions: [],
+            },
+          });
+        } else setStatus(`${result.error.code}: ${result.error.message}`);
+        return;
+      }
+      if (extra.action === "PREVIEW") {
+        if (pkg)
+          setWriterFeedback({
+            json: raw,
+            packageId: pkg.packageId,
+            preview: result.value.preview ?? {
+              status: "FAIL",
+              diagnostics: [
+                {
+                  code: "WRITER_VALIDATION",
+                  message: "Missing validation preview",
+                },
+              ],
+              editions: [],
+            },
+          });
         return;
       }
       setState(result.value.planner);
       if (result.value.workflow) onWorkflow(result.value.workflow);
       setStatus(
-        extra.action === "COPY"
-          ? "Copy-ready package copied. Paste manually into the selected service."
-          : "Planner change saved and validated.",
+        extra.action === "PREPARE"
+          ? "Prompt prepared."
+          : extra.action === "IMPORT"
+            ? "Draft imported successfully."
+            : extra.action === "COPY"
+              ? extra.target === "CHATGPT"
+                ? "ChatGPT prompt copied."
+                : extra.target === "GEMINI"
+                  ? "Gemini prompt copied."
+                  : "Writer prompt copied."
+              : "Planner change saved and validated.",
       );
+      if (extra.action === "IMPORT" || extra.action === "PREPARE")
+        setWriterFeedback(null);
       setAck(false);
       setCopyReview(false);
     } catch {
-      setStatus("Connection failed; reload story.");
+      if (["IMPORT", "PREVIEW"].includes(String(extra.action)) && pkg) {
+        setWriterFeedback({
+          json: raw,
+          packageId: pkg.packageId,
+          preview: {
+            status: "FAIL",
+            diagnostics: [
+              { code: "WRITER_VALIDATION", message: "Connection failed" },
+            ],
+            editions: [],
+          },
+        });
+      } else setStatus("Connection failed; reload story.");
     } finally {
       setBusy(false);
     }
@@ -318,7 +435,7 @@ export function StoryPlanner({
               </li>
             ))}
           </ol>
-          {plan.schemaVersion === "story-plan/1.1" && (
+          {plan.schemaVersion !== "story-plan/1.0" && (
             <details data-testid="planner-quality" open>
               <summary>{t("Quality detail")}</summary>
               <dl>
@@ -326,6 +443,17 @@ export function StoryPlanner({
                   <dt>{t("Objective intent")}</dt>
                   <dd>{label(plan.quality.objectiveIntent.primaryIntent)}</dd>
                 </div>
+                {plan.schemaVersion === "story-plan/1.2" && (
+                  <div>
+                    <dt>{t("Category intent")}</dt>
+                    <dd>{label(plan.quality.categoryIntent.category)}</dd>
+                    <dd dir="auto">{plan.quality.categoryIntent.signature}</dd>
+                    <dt>{t("Story needs")}</dt>
+                    <dd dir="auto">
+                      {plan.quality.categoryIntent.storyNeeds.join(" · ")}
+                    </dd>
+                  </div>
+                )}
                 <div>
                   <dt>{t("Compatibility")}</dt>
                   <dd>{label(plan.quality.structuralCompatibility.level)}</dd>
@@ -435,6 +563,7 @@ export function StoryPlanner({
           </button>
           {pkg && (
             <>
+              <WriterPromptPreview text={promptText} />
               <label>
                 <input
                   type="checkbox"
@@ -462,16 +591,41 @@ export function StoryPlanner({
                 </button>
               ))}
               <label>
-                {t("Paste plan-response/1.0 JSON")}
+                {writerPackage ? (
+                  <>
+                    {t("Paste writer-response/1.0 JSON")}{" "}
+                    <bdi dir="ltr">writer-response/1.0</bdi>
+                  </>
+                ) : (
+                  t("Paste plan-response/1.0 JSON")
+                )}
                 <textarea
                   aria-label={t("Planner result JSON")}
                   dir="ltr"
                   rows={6}
                   value={raw}
                   maxLength={500000}
-                  onChange={(e) => setRaw(e.target.value)}
+                  disabled={busy}
+                  onChange={(e) => {
+                    setRaw(e.target.value);
+                    setWriterFeedback(null);
+                  }}
                 />
               </label>
+              {writerPackage && (
+                <button
+                  disabled={busy || !raw.trim()}
+                  onClick={() =>
+                    void command({
+                      action: "PREVIEW",
+                      packageId: pkg.packageId,
+                      json: raw,
+                    })
+                  }
+                >
+                  {t("Validate response without saving")}
+                </button>
+              )}
               <button
                 disabled={busy || !raw.trim()}
                 onClick={() =>
@@ -484,6 +638,9 @@ export function StoryPlanner({
               >
                 {t("Validate / Import planned prose")}
               </button>
+              {currentFeedback && (
+                <WriterResponseFeedback preview={currentFeedback} />
+              )}
               <p>
                 {t(
                   "Run current Story QA and human text approval below. Anchor validation cannot establish that arbitrary prose follows the plan; inspect every page and language edition.",

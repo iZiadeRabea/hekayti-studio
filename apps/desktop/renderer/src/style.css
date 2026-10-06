@@ -163,6 +163,11 @@ input,
 select {
   font-family: inherit;
 }
+[data-testid="writer-prompt-preview"] {
+  unicode-bidi: plaintext;
+  font-size: 16px;
+  line-height: 1.8;
+}
 .story-creator input:not([type="checkbox"]),
 .story-creator select {
   max-width: 100%;

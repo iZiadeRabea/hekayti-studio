@@ -2,6 +2,67 @@ import type { StoryPlan } from "@hekayti/contracts/planner";
 export type UiLanguage = "ar" | "en";
 export const UI_LANGUAGE_KEY = "hekayti.uiLanguage";
 export const arabic = {
+  "Prompt prepared.": "تم تجهيز البرومبت.",
+  "ChatGPT prompt copied.": "تم نسخ برومبت ChatGPT.",
+  "Gemini prompt copied.": "تم نسخ برومبت Gemini.",
+  "Writer prompt copied.": "تم نسخ برومبت الكتابة.",
+  "Draft imported successfully.": "تم استيراد المسودة بنجاح.",
+  "Writer prompt preview": "معاينة برومبت الكتابة",
+  "Review the prompt before copying. Nothing is sent automatically.":
+    "راجع البرومبت قبل نسخه. لا يُرسل أي شيء تلقائيًا.",
+  "Paste writer-response/1.0 JSON":
+    "الصق رد الكاتب البسيط بصيغة JSON المطلوبة:",
+  "Validate response without saving": "فحص الرد دون حفظ",
+  "Writer response review": "مراجعة رد الكاتب",
+  "Response is ready for import.": "الرد جاهز للاستيراد.",
+  "Review the response before import.": "راجع الملاحظات قبل استيراد الرد.",
+  "Response cannot be imported; existing data is unchanged.":
+    "لا يمكن استيراد الرد؛ البيانات الحالية لم تتغير.",
+  "No changes were saved by this preview.": "هذا الفحص لا يحفظ أي تغييرات.",
+  "Import diagnostics": "ملاحظات الاستيراد",
+  Page: "الصفحة",
+  "Story edition": "النسخة اللغوية",
+  Speaker: "المتحدث",
+  Pages: "عدد الصفحات",
+  Words: "عدد الكلمات",
+  "Technical code": "الكود التقني الأصلي",
+  "Check the response format and try again.":
+    "راجع صيغة الرد ثم حاول مرة أخرى.",
+  "Response JSON is invalid.":
+    "صيغة JSON غير سليمة. راجع الأقواس والفواصل ثم أعد الفحص.",
+  "Response fields do not match the required format.":
+    "حقول الرد لا تطابق الصيغة المطلوبة في البرومبت.",
+  "The response exceeds the supported size.": "حجم الرد أكبر من الحد المدعوم.",
+  "The response contains unsupported direction controls.":
+    "الرد يحتوي علامات اتجاه خفية غير مسموح بها؛ احذفها ثم أعد الفحص.",
+  "Story editions do not match the requested languages.":
+    "النسخ اللغوية لا تطابق لغات القصة المطلوبة.",
+  "Page count or numbering does not match the prompt.":
+    "عدد الصفحات أو ترقيمها لا يطابق البرومبت.",
+  "A required page is missing.": "إحدى الصفحات المطلوبة غير موجودة في الرد.",
+  "The speaker is not a known story character.":
+    "المتحدث ليس شخصية معروفة في القصة. استخدم مفتاح الشخصية أو اسمها المحدد.",
+  "The speaker name matches more than one character.":
+    "اسم المتحدث يطابق أكثر من شخصية. استخدم مفتاح الشخصية لتحديده بدقة.",
+  "This speaker is not allowed on this page.":
+    "هذا المتحدث غير مسموح به في هذه الصفحة. راجع الشخصيات المحددة لها في البرومبت.",
+  "The response conflicts with the requested objective.":
+    "ظهر تعارض مع هدف القصة المطلوب. راجع هذا المقطع قبل الاستيراد.",
+  "The response differs from the planned cast.":
+    "يوجد اختلاف عن شخصيات الخطة. راجع المقطع والشخصيات المحددة في البرومبت.",
+  "The response differs from the planned event sequence.":
+    "يوجد اختلاف عن تسلسل الأحداث المخطط. راجع الصفحة والخطة.",
+  "Character usage needs human review.": "استخدام الشخصيات يحتاج مراجعة بشرية.",
+  "Literary quality and objective delivery need human review.":
+    "الجودة الأدبية وتحقق الهدف يحتاجان مراجعة بشرية؛ الفحص الآلي ليس اعتمادًا للنص.",
+  "The plan or request changed; prepare a current prompt.":
+    "تغيرت الخطة أو الطلب؛ جهّز برومبتًا جديدًا قبل الاستيراد.",
+  "Canonical story validation failed; review this page.":
+    "لم تستوفِ الصفحة فحوص القصة الأساسية. راجعها قبل الاستيراد.",
+  "Human story review is required for this page.":
+    "هذه الصفحة تحتاج مراجعة بشرية للقصة.",
+  "Category intent": "المعنى القصصي لنوع القصة",
+  "Story needs": "ما يحتاجه هذا النوع من القصة",
   "Deterministic QA checks explicit structural fields, not the truth of arbitrary prose or child appeal.":
     "تراجع الفحوص الآلية حقول البناء المحددة؛ ولا تثبت جودة النص الحر أو جاذبيته للطفل.",
   "Concrete objective delivery needs editorial judgment even when exact objective anchors match.":
@@ -447,6 +508,7 @@ const enumArabic: Readonly<Record<string, string>> = {
   BeatProgression: "تقدّم الأحداث",
   SituationSpecificity: "وضوح الموقف",
   ResolutionSpecificity: "وضوح الحل",
+  CategoryPresence: "حضور نوع القصة",
   EGYPTIAN_ARAB_MUSLIM_FAMILY: arabic.EGYPTIAN_ARAB_MUSLIM_FAMILY,
   GENERAL_FAMILY: arabic.GENERAL_FAMILY,
 };
