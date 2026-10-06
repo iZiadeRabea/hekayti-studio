@@ -34,6 +34,7 @@ import {
   emptyLibrary,
   validateLibraryAppend,
   parseBridgeResponse,
+  validateGenerationEnvelope,
   type LibraryRepository,
 } from "@hekayti/core/library";
 import { storyStructureFor } from "@hekayti/core/age";
@@ -128,6 +129,51 @@ export class SqliteProjectRepository
         "manual_imports",
       ])
         this.db.prepare(`SELECT * FROM ${table} LIMIT 0`).all();
+      // Compatible v3 storage hardening: seal the entire frozen envelope separately.
+      // Backfill only when upgrading a genuinely unsealed database; never repair
+      // a missing seal in an already sealed database.
+      const packageSealApplicationId = 0x484b3401;
+      if (
+        !this.db
+          .prepare(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='generation_package_seals'",
+          )
+          .get()
+      )
+        this.transaction(() => {
+          if (
+            Number(
+              this.db.prepare("PRAGMA application_id").get()!.application_id,
+            ) === packageSealApplicationId
+          )
+            throw new AppError(
+              "BRIDGE_CORRUPT",
+              "Previously initialized package seals are missing; original data retained.",
+            );
+          this.db.exec(
+            "CREATE TABLE generation_package_seals(id TEXT PRIMARY KEY REFERENCES generation_packages(id),digest TEXT NOT NULL);",
+          );
+          for (const row of this.db
+            .prepare("SELECT id,payload FROM generation_packages")
+            .all()) {
+            const p = validateGenerationEnvelope(
+              JSON.parse(String(row.payload)),
+            );
+            if (p.packageId !== row.id)
+              throw new AppError(
+                "BRIDGE_CORRUPT",
+                "Unsealed package identity is invalid; original data retained.",
+              );
+            this.validatePackageSource(p);
+            this.db
+              .prepare("INSERT INTO generation_package_seals VALUES(?,?)")
+              .run(p.packageId, this.packageDigest(p));
+          }
+          this.db.exec(`PRAGMA application_id=${packageSealApplicationId}`);
+        });
+      this.db
+        .prepare("SELECT id,digest FROM generation_package_seals LIMIT 0")
+        .all();
       this.db.exec("PRAGMA journal_mode=WAL;");
     } catch (e) {
       this.db.close();
@@ -172,6 +218,11 @@ export class SqliteProjectRepository
       validateLibraryAppend(emptyLibrary(), state);
       for (const event of state.usage) {
         const workflow = this.loadWorkflow(event.projectId);
+        const record = state.records.find(
+          (r) =>
+            r.recordId === event.record.recordId &&
+            r.version === event.record.version,
+        )!;
         if (
           !workflow?.requests.some(
             (r) => r.revisionId === event.requestRevisionId,
@@ -191,7 +242,13 @@ export class SqliteProjectRepository
               workflow.reportLinks.some(
                 (l) =>
                   l.reportId === a.reportId &&
-                  l.requestRevisionId === event.requestRevisionId,
+                  l.requestRevisionId === event.requestRevisionId &&
+                  this.approvalUsesRecord(
+                    workflow,
+                    l.conceptId,
+                    l.requestRevisionId,
+                    record,
+                  ),
               ),
             ))
         )
@@ -256,6 +313,27 @@ export class SqliteProjectRepository
         recordVersion: expectedVersion + 1,
       });
       validateLibraryAppend(previous, next);
+      for (const record of next.records.slice(previous.records.length))
+        if (
+          record.version === 1 &&
+          record.payload.type === "APPROVED_STORY_REFERENCE"
+        ) {
+          const reference = record.payload,
+            workflow = this.loadWorkflow(reference.projectId);
+          const concept = workflow?.conceptSets
+            .flatMap((s) => s.concepts)
+            .find((c) => c.conceptId === workflow.current.conceptId);
+          if (
+            !workflow?.current.approvalId ||
+            workflow.current.approvalId !== reference.approvalId ||
+            workflow.current.reportId !== reference.reportId ||
+            canonicalJson(concept) !== canonicalJson(reference.concept)
+          )
+            throw new AppError(
+              "LIBRARY_APPROVAL_STALE",
+              "New approved references require the exact currently approved canonical story; reload before extracting.",
+            );
+        }
       if (
         this.db
           .prepare(
@@ -269,13 +347,54 @@ export class SqliteProjectRepository
     });
   }
   saveGenerationPackage(input: GenerationPackage) {
-    const p = validate(GenerationPackageSchema, input);
-    this.validatePackageSource(p);
-    this.immutableBridgeRow(
-      "generation_packages",
-      p.packageId,
-      p.request.projectId,
-      p,
+    this.transaction(() => {
+      const p = validateGenerationEnvelope(input);
+      this.validatePackageSource(p);
+      const old = this.loadGenerationPackage(p.packageId);
+      this.immutableBridgeRow(
+        "generation_packages",
+        p.packageId,
+        p.request.projectId,
+        p,
+      );
+      if (!old)
+        this.db
+          .prepare("INSERT INTO generation_package_seals VALUES(?,?)")
+          .run(p.packageId, this.packageDigest(p));
+    });
+  }
+  private packageDigest(p: GenerationPackage) {
+    return createHash("sha256").update(canonicalJson(p)).digest("hex");
+  }
+  private approvalUsesRecord(
+    workflow: WorkflowSnapshot,
+    conceptId: string,
+    requestRevisionId: string,
+    record: LibraryState["records"][number],
+  ) {
+    const concept = workflow.conceptSets
+      .flatMap((s) => s.concepts)
+      .find((c) => c.conceptId === conceptId);
+    if (!concept) return false;
+    if (
+      "concept" in record.payload &&
+      canonicalJson(record.payload.concept) === canonicalJson(concept)
+    )
+      return true;
+    // Context contributes only through the actual approved candidate's retained
+    // import/package, not through another candidate merely sharing its request.
+    const source = workflow.bridgeImports?.find(
+      (i) =>
+        i.requestRevisionId === requestRevisionId &&
+        i.candidates.some((c) => canonicalJson(c) === canonicalJson(concept)),
+    );
+    const pkg = source ? this.loadGenerationPackage(source.packageId) : null;
+    return Boolean(
+      pkg?.context.some(
+        (r) =>
+          r.recordId === record.recordId &&
+          canonicalJson(r.payload) === canonicalJson(record.payload),
+      ),
     );
   }
   private validatePackageSource(p: GenerationPackage) {
@@ -318,13 +437,15 @@ export class SqliteProjectRepository
       .get(id);
     if (!row) return null;
     try {
-      const p = validate(
-        GenerationPackageSchema,
-        JSON.parse(String(row.payload)),
-      );
+      const p = validateGenerationEnvelope(JSON.parse(String(row.payload)));
       if (p.packageId !== id || p.request.projectId !== row.project_id)
         throw new Error("identity");
       this.validatePackageSource(p);
+      const seal = this.db
+        .prepare("SELECT digest FROM generation_package_seals WHERE id=?")
+        .get(id);
+      if (!seal || seal.digest !== this.packageDigest(p))
+        throw new Error("frozen envelope digest");
       return p;
     } catch {
       throw new AppError(

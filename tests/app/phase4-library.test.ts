@@ -383,9 +383,37 @@ test("Phase4 use-now is atomic with idempotent usage and preserves creative mean
     .finally(() => h.repo.close());
 });
 test("Phase4 manual creative prose reaches QA/explicit approval without mock substitution", async () => {
-  const h = harness(),
-    { result } = importIdeas(h, true),
-    record = result.library.records[0]!;
+  const h = harness();
+  let library = h.library.seed();
+  const familyId = library.records[0]!.recordId;
+  for (const action of ["REVIEW", "APPROVE", "PROMOTE"] as const)
+    library = h.library.action(
+      familyId,
+      library.recordVersion,
+      `context-${action}`,
+      action,
+      "owner",
+    );
+  const family = latestLibraryRecords(library).find(
+    (r) => r.recordId === familyId,
+  )!;
+  const p = h.bridge.prepare(request().projectId, 0, {
+    strategy: "HYBRID",
+    variation: "FreshConcept",
+    candidateCount: 3,
+    selected: [{ recordId: familyId, version: family.version }],
+  });
+  const result = h.bridge.import(
+    p.packageId,
+    JSON.stringify(response(p, true)),
+    notes,
+    "import-1",
+    0,
+    library.recordVersion,
+  );
+  const record = result.library.records.find(
+    (r) => r.payload.type === "STORY_CONCEPT",
+  )!;
   let s = h.bridge.useNow(
     record.recordId,
     request().projectId,
@@ -456,6 +484,37 @@ test("Phase4 manual creative prose reaches QA/explicit approval without mock sub
     true,
   );
   assert.equal(workflowApprovalStatus(s), "approved");
+  const forged = structuredClone(s);
+  forged.conceptSets.at(-1)!.concepts[0]!.title = "Forged caller content";
+  assert.throws(
+    () =>
+      h.library.saveApproved(
+        forged,
+        "STORY_CONCEPT",
+        h.library.load().recordVersion,
+        "forged-extraction",
+        "owner",
+      ),
+    /canonical workflow/,
+  );
+  library = h.library.usage(
+    { recordId: record.recordId, version: record.version },
+    s.projectId,
+    s.current.requestRevisionId,
+    "APPROVED",
+    "candidate-approved",
+    h.library.load().recordVersion,
+  );
+  library = h.library.usage(
+    { recordId: familyId, version: family.version },
+    s.projectId,
+    s.current.requestRevisionId,
+    "APPROVED",
+    "context-approved",
+    library.recordVersion,
+  );
+  assert.equal(libraryStatistics(library, record.recordId).approvedCount, 1);
+  assert.equal(libraryStatistics(library, familyId).approvedCount, 1);
   const ref = h.library.saveApproved(
     s,
     "APPROVED_STORY_REFERENCE",
@@ -464,6 +523,46 @@ test("Phase4 manual creative prose reaches QA/explicit approval without mock sub
     "owner",
   );
   assert.equal(ref.records.at(-1)!.payload.type, "APPROVED_STORY_REFERENCE");
+  const approved = structuredClone(s),
+    before = h.library.load();
+  s = h.workflow.reviseRequest(s.projectId, s.recordVersion, {
+    ...request(),
+    revisionId: "after-approved-extraction",
+  });
+  assert.deepEqual(
+    h.library.load(),
+    before,
+    "Authentic saved historical references and metrics remain readable after revision.",
+  );
+  for (const type of [
+    "APPROVED_STORY_REFERENCE",
+    "STORY_CONCEPT",
+    "BUILDING_BLOCK",
+  ] as const)
+    assert.throws(
+      () =>
+        h.library.saveApproved(
+          approved,
+          type,
+          before.recordVersion,
+          `stale-${type}`,
+          "owner",
+          approved.conceptSets.at(-1)!.concepts[0]!.components[0]!.componentId,
+        ),
+      /currently approved/,
+    );
+  const historical = before.records.at(-1)!;
+  assert.throws(
+    () =>
+      h.library.create(
+        { ...historical, recordId: "stale-public-reference", version: 1 },
+        before.recordVersion,
+        "stale-public-create",
+        "owner",
+      ),
+    /currently approved/,
+  );
+  assert.deepEqual(h.library.load(), before);
   mock.repo.close();
   h.repo.close();
 });
@@ -769,5 +868,152 @@ test("Phase4 use-now rollback retains Inbox when request ownership changed; outc
     /another/,
   );
   assert.deepEqual(h.library.load(), library);
+  h.repo.close();
+});
+test("Phase4 package envelope rendering/save/reopen rejects tampered rules, creative intent, variation and generation without repairing data", () => {
+  mkdirSync("temp/app-tests", { recursive: true });
+  for (const field of [
+    "fixedRules",
+    "creativeFreedom",
+    "variation",
+    "generation",
+    "missing-seal",
+  ]) {
+    const path = join(
+        mkdtempSync("temp/app-tests/phase4-envelope-"),
+        "frozen.sqlite",
+      ),
+      h = harness(path),
+      p = prepare(h);
+    const tampered = structuredClone(p);
+    if (field === "fixedRules") tampered.fixedRules = ["Pretend approved"];
+    if (field === "creativeFreedom")
+      tampered.creativeFreedom = ["Ignore the fixed rules"];
+    if (field === "variation") tampered.variation = "CompletelyNew";
+    if (field === "generation") tampered.generation++;
+    if (
+      field === "fixedRules" ||
+      field === "creativeFreedom" ||
+      field === "variation"
+    ) {
+      assert.throws(
+        () => generationInstructions(tampered, "GENERIC"),
+        /canonical/,
+      );
+      assert.throws(() => h.repo.saveGenerationPackage(tampered), /canonical/);
+    }
+    h.repo.close();
+    const db = new DatabaseSync(path),
+      raw = JSON.stringify(tampered);
+    if (field === "missing-seal")
+      db.prepare("DELETE FROM generation_package_seals WHERE id=?").run(
+        p.packageId,
+      );
+    else
+      db.prepare("UPDATE generation_packages SET payload=? WHERE id=?").run(
+        raw,
+        p.packageId,
+      );
+    const retained = db
+      .prepare("SELECT payload FROM generation_packages WHERE id=?")
+      .get(p.packageId)!.payload;
+    db.close();
+    const reader = new SqliteProjectRepository(path);
+    assert.throws(() => reader.loadGenerationPackage(p.packageId), /retained/);
+    reader.close();
+    const check = new DatabaseSync(path);
+    assert.equal(
+      check
+        .prepare("SELECT payload FROM generation_packages WHERE id=?")
+        .get(p.packageId)!.payload,
+      retained,
+    );
+    check.close();
+  }
+});
+test("Phase4 unsealed v3 package hardening preserves frozen bytes; missing initialized seal table is never repaired", () => {
+  mkdirSync("temp/app-tests", { recursive: true });
+  const path = join(
+      mkdtempSync("temp/app-tests/phase4-seals-"),
+      "legacy.sqlite",
+    ),
+    h = harness(path),
+    p = prepare(h);
+  h.repo.close();
+  const db = new DatabaseSync(path),
+    original = db.prepare("SELECT payload FROM generation_packages").get()!
+      .payload;
+  db.exec("DROP TABLE generation_package_seals; PRAGMA application_id=0;");
+  db.close();
+  const migrated = new SqliteProjectRepository(path);
+  assert.equal(migrated.diagnostics().schemaVersion, 3);
+  assert.deepEqual(migrated.loadGenerationPackage(p.packageId), p);
+  migrated.close();
+  const corrupt = new DatabaseSync(path);
+  assert.equal(
+    corrupt.prepare("SELECT payload FROM generation_packages").get()!.payload,
+    original,
+  );
+  corrupt.exec("DROP TABLE generation_package_seals;");
+  corrupt.close();
+  assert.throws(() => new SqliteProjectRepository(path), /missing.*retained/);
+  const retained = new DatabaseSync(path);
+  assert.equal(
+    retained.prepare("SELECT payload FROM generation_packages").get()!.payload,
+    original,
+  );
+  assert.equal(
+    retained
+      .prepare(
+        "SELECT count(*) AS n FROM sqlite_master WHERE name='generation_package_seals'",
+      )
+      .get()!.n,
+    0,
+  );
+  retained.close();
+});
+test("Phase4 imported Unicode controls are rejected across all human-readable semantics without stripping normal Arabic marks", () => {
+  const h = harness(),
+    p = prepare(h),
+    base = response(p);
+  const changes = [
+    (x: typeof base) => (x.candidates[0]!.title += "\u202E"),
+    (x: typeof base) => (x.candidates[0]!.premise += "\u2066"),
+    (x: typeof base) => (x.candidates[0]!.setting["ar-EG"] += "\u200f"),
+    (x: typeof base) => (x.candidates[0]!.outline[0]!.focus.en += "\u202C"),
+    (x: typeof base) =>
+      (x.candidates[0]!.outline[0]!.detail["ar-MSA-simple"] += "\u061c"),
+    (x: typeof base) =>
+      (x.candidates[0]!.components[0]!.label["ar-EG"] += "\u2069"),
+    (x: typeof base) =>
+      (x.candidates[0]!.characters[0]!.displayName += "\u200e"),
+    (x: typeof base) =>
+      (x.candidates[0]!.outline[0]!.visibleFacts[0] += "\u202a"),
+  ];
+  for (const mutate of changes) {
+    const changed = structuredClone(base);
+    mutate(changed);
+    assert.throws(
+      () =>
+        h.bridge.import(
+          p.packageId,
+          JSON.stringify(changed),
+          notes,
+          "bidi-rejected",
+          0,
+          0,
+        ),
+      /bidi controls/,
+    );
+    assert.equal(h.library.load().records.length, 0);
+    assert.equal(h.repo.loadManualImport("bidi-rejected"), null);
+  }
+  base.candidates[0]!.setting["ar-MSA-simple"] += " بَيْتٌ ١٢ A-12";
+  assert.equal(
+    parseBridgeResponse(JSON.stringify(base), p).candidates[0]!.setting[
+      "ar-MSA-simple"
+    ],
+    base.candidates[0]!.setting["ar-MSA-simple"],
+  );
   h.repo.close();
 });
