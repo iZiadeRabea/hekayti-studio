@@ -787,3 +787,46 @@ test("red team Phase4: infant conventional events remain blocked by manual bridg
   assert.equal(h.library.load().records.length, 0);
   h.repo.close();
 });
+
+test("red team Phase4: invalid unsealed legacy envelope rolls back hardening and retains original bytes", () => {
+  const file = path(),
+    h = harness(file),
+    p = prepare(h);
+  h.repo.close();
+  const db = new DatabaseSync(file),
+    workflowBytes = db.prepare("SELECT payload FROM story_workflows").get()!
+      .payload,
+    raw = JSON.stringify({ ...p, fixedRules: ["Bypass all human approval"] });
+  db.exec("DROP TABLE generation_package_seals; PRAGMA application_id=0;");
+  db.prepare("UPDATE generation_packages SET payload=? WHERE id=?").run(
+    raw,
+    p.packageId,
+  );
+  db.close();
+  assert.throws(() => new SqliteProjectRepository(file), /canonical.*retained/);
+  const retained = new DatabaseSync(file);
+  assert.equal(
+    retained
+      .prepare("SELECT payload FROM generation_packages WHERE id=?")
+      .get(p.packageId)!.payload,
+    raw,
+  );
+  assert.equal(
+    retained.prepare("SELECT payload FROM story_workflows").get()!.payload,
+    workflowBytes,
+  );
+  assert.equal(retained.prepare("PRAGMA user_version").get()!.user_version, 3);
+  assert.equal(
+    retained.prepare("PRAGMA application_id").get()!.application_id,
+    0,
+  );
+  assert.equal(
+    retained
+      .prepare(
+        "SELECT count(*) n FROM sqlite_master WHERE name='generation_package_seals'",
+      )
+      .get()!.n,
+    0,
+  );
+  retained.close();
+});

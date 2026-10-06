@@ -2,9 +2,11 @@
 
 Date: 2026-10-06. Reviewed base `aac7de4ef74f7d73248a720cda76aa650c861002`, exclusive branch `agent/phase4-qa`, worktree `C:/Users/Ziad/Documents/Hekayti-Studio-Worktrees/phase4-qa`. This worker authored no Phase 4 implementation; existing verified Sol routing is reused. Scope follows [phase4-plan.md](phase4-plan.md) and its lean independent QA packet. No source fixes, new agents, external model calls, real personal data, publishing or recovery operations.
 
-Result: **changes required**. Four reproduced defects: one HIGH and three MEDIUM; no BLOCKER established. The owned tests retain desired-behavior assertions, so the initial focused run intentionally fails until the Engineering fix batch. Human approval and native-quality requirements must remain intact when fixing these boundaries.
+Initial result: **changes required**. Four reproduced defects: one HIGH and three MEDIUM; no BLOCKER established. Independent regression against Engineering fix `61971dfa074362bef175b2b4025a2a1c96428bb3` now closes all four findings: **84/84 focused tests PASS**, with the original desired-behavior assertions preserved. Historical reproductions/failures remain below. Actual human approval and native-quality requirements remain necessary.
 
 ## P4-RT-001 — HIGH — schema-valid frozen-package rule tampering survives reopen
+
+Status: CLOSED by reviewed Engineering fix, independently confirmed. Severity describes the original defect.
 
 Component: `packages/persistence/src/index.ts:281` (`validatePackageSource`), `packages/core/src/story-library.ts` package/instruction boundaries.
 
@@ -20,6 +22,8 @@ Recommended fix: validate the entire Hekayti-controlled package envelope against
 
 ## P4-RT-002 — MEDIUM — stale caller snapshot authorizes “currently approved” extraction
 
+Status: CLOSED by reviewed Engineering fix, independently confirmed. Severity describes the original defect.
+
 Component: `packages/core/src/story-library.ts:263` (`StoryLibraryService.saveApproved`).
 
 Reproduction: import/use/build/manual-draft/QA/explicitly approve a story; retain the returned approved snapshot; revise the canonical request so its approval becomes stale; call `saveApproved` with the old snapshot and `APPROVED_STORY_REFERENCE`. The library accepts a new GENERATED record. Executable test: `P4-RT-002: stale approved snapshots must not authorize extraction`.
@@ -33,6 +37,8 @@ Impact/bounds: a public portable service consumer can extract a record marked `a
 Recommended fix: use a canonical workflow loader at extraction time and require matching current request/concept/draft/report/approval and state version. Reject forged or stale caller pointers/content. Historical approved references already saved must remain readable after later changes; fix new extraction authority, not historical authenticity. Keep review/approval/promotion required for reusable records.
 
 ## P4-RT-003 — MEDIUM — approval statistics can count approval of another candidate
+
+Status: CLOSED by reviewed Engineering fix, independently confirmed. Severity describes the original defect.
 
 Component: `packages/persistence/src/index.ts:182`, APPROVED usage-source validation.
 
@@ -48,6 +54,8 @@ Recommended fix: distinguish imported candidate usage from generation-package co
 
 ## P4-RT-004 — MEDIUM — forbidden bidi controls enter localized concept semantics
 
+Status: CLOSED by reviewed Engineering fix, independently confirmed. Severity describes the original defect.
+
 Component: `packages/core/src/story-library.ts:721`, bridge response validation / Inbox import.
 
 Reproduction: append U+202E/U+202C plus synthetic text to candidate 1's MSA focal-object label, leave the other candidates valid, then import. The full import succeeds and persists the altered label in the Inbox. Executable test: `P4-RT-004: embedded bidi controls in imported localized semantics must be rejected`.
@@ -60,7 +68,7 @@ Impact/bounds: potentially misleading display/order in imported canonical labels
 
 Recommended fix: apply a consistent bidi-control check to imported human-readable semantic text (titles/premises/labels/details/character metadata/components/states where rendered or copied), not just finished prose. Reject atomically, retain the raw untrusted response as unsaved input, and provide bounded repair advice. Do not transliterate, drop Arabic marks or silently sanitize accepted semantic content.
 
-## Focused evidence
+## Initial focused evidence
 
 - `npm ci --ignore-scripts`: PASS; pinned dependencies installed, zero audit vulnerabilities reported.
 - New independent QA tests: **22 total, 18 PASS, 4 FAIL**, zero skips; failures are exactly P4-RT-001–004.
@@ -85,16 +93,33 @@ The four recommended fixes must not remove advisories, infer actual review from 
 
 Read canonical `temp/phase4-ui/run-rwz3Ak/evidence.json`: six offline functional gate groups PASS, including actual clipboard, malformed-response repair, explicit use, manual canonical approval, renderer isolation and restart/package reopen. Manually inspected `approved-manual-story.png` from that same run: paired MSA/Egyptian manual editions, imported concept cards, actual manual provenance, current approved status, native/semantic advisories and explicit acknowledgment are visible. This is manual **agent** inspection of a prior capture, not actual human/native certification or a new live UI execution. Long repeated advisories/exposed IDs remain a prototype usability limitation; no final visual acceptance is claimed.
 
-## Handoff
+## Independent fix confirmation — 2026-10-06
 
-STATUS: independent audit complete; one Engineering fix batch required for P4-RT-001–004 before final acceptance. No BLOCKER established; no Phase 4 release recommendation until these boundaries are addressed.
+Reviewed the exact source/tests/docs diff of `61971dfa074362bef175b2b4025a2a1c96428bb3` and cherry-picked only that fix into this clean QA worktree as local `484c690`. The original audit already existed as `6f1175d8`; it was not duplicated. Engineering authored the fixes; this worker changed only its owned QA test/report during confirmation.
 
-FILES: `tests/app/phase4-red-team.test.ts`, `docs/implementation/phase4-red-team.md` only. Synthetic databases reside in ignored `temp/phase4-red-team`.
+Closure evidence:
 
-TESTS/RESULT: focused 76/80 PASS with four intentionally preserved desired-behavior failures; final typecheck PASS; existing focused regression 58/58 PASS.
+- **P4-RT-001:** canonical fixed rules/creative intent/guidance are reconstructed at rendering/import/persistence boundaries; an independently stored SHA256 seal covers the entire persisted envelope. Fixed/creative rules, variation/generation changes and missing initialized seal rows now fail read; corruption checks retain original package payload bytes. Existing frozen context remains usable after later archival/revision. The seal detects consistency changes; it is not keyed authenticity against an attacker able to rewrite both package and seal.
+- **P4-RT-002:** extraction reloads exact canonical current workflow inside a transaction; stale and forged snapshots fail for reference/concept/building-block extraction. Direct new stale approved references also fail at repository save. Previously authenticated historical references remain readable after request invalidation; no old approval is restored.
+- **P4-RT-003:** candidate metrics require the exact approved concept; reusable context contributes only through the approved candidate's authentic retained import/package/context. The wrong-candidate reproduction is rejected, while both legitimate candidate and family context counts still pass. Usage retries and source history remain intact.
+- **P4-RT-004:** imported candidate strings are recursively inspected for the same prohibited controls as draft review. Labels, titles, setting, components, character metadata and visible facts reject atomically. Ordinary Arabic diacritics, numerals and mixed script remain unchanged in accepted input. No sanitization or mock replacement occurs.
 
-RISKS: package fixed-rule authenticity, extraction freshness, candidate-specific approval metrics and imported logical Unicode. Consumer compliance, native quality and final release/recovery remain separate.
+The three added Engineering boundary tests and expanded workflow extraction test cover valid unsealed-v3 hardening, missing initialized seal/table rejection, tamper retention, authentic historical references/context metrics and broad Unicode locations. Added one necessary independent countercase for the newly introduced legacy hardening failure path: invalid unsealed fixed rules abort construction, leave application_id at zero/user_version at three, roll back seal-table creation and preserve exact package/workflow payload bytes. This test passed. No existing QA assertion was weakened or removed.
 
-SHARED-CONTRACT PROPOSALS: no concrete shared contract edit proposed by QA. Engineering may need a narrow canonical-workflow read dependency for extraction and full package-envelope validation; request architectural approval only if the chosen fix changes an incompatible shared contract.
+Independent command: `node --import tsx --test tests/app/phase4-red-team.test.ts tests/app/phase4-library.test.ts tests/app/story-workflow.test.ts tests/app/phase3-red-team.test.ts tests/app/persistence.test.ts tests/app/boundaries.test.ts` — **84/84 PASS**, zero failures/skips/cancellations, observed TAP duration 7793.7839ms. Counts: 23 independent Phase 4 QA, 19 library, 13 workflow, 19 Phase 3 QA, eight persistence and two boundary tests. `npm run typecheck`: PASS. Exact old assertions P4-RT-001–004 now all pass. The existing actual v2→3 migration/Phase 3 approval-byte preservation test remains passing.
 
-INTEGRATION: cherry-pick only this owned audit commit; batch all four fixes while preserving the assertions. Then independently rerun the focused red-team/library/workflow/persistence checks once against the reviewed fix SHA. Lead owns final consolidated gates and continuity/release. No source/root docs were edited by this worker.
+Review found no weakening of explicit acknowledgment/current QA, library review/approval/promotion, source/metadata separation, legacy mock rules or imported creative semantics. No new GUI/native review, full suite, build, health or backup was performed; final consolidated gates remain the lead/Engineering release workflow.
+
+## Current handoff
+
+STATUS: independent audit and fix confirmation complete; P4-RT-001–004 CLOSED. Ready for final consolidated gates and lead acceptance; no outstanding reproduced defect from this audit.
+
+FILES: `tests/app/phase4-red-team.test.ts` adds one legacy failure-rollback countercase; `docs/implementation/phase4-red-team.md` records independent closure. Synthetic databases reside in ignored `temp/phase4-red-team`.
+
+TESTS/RESULT: current focused **84/84 PASS**, final typecheck PASS. Initial 76/80 failure evidence is retained above; all original QA assertions are preserved.
+
+RISKS: consumer compliance, actual human/native review and final release/recovery remain separate. SHA256 package seals detect consistency corruption, not privileged attacker forgery; genuine pre-seal packages receive validated transactional backfill. No production literary/clinical/factual certification is inferred.
+
+SHARED-CONTRACT PROPOSALS: none outstanding. Engineering added the existing canonical loadWorkflow read to the library repository port and internal compatible v3 seals; no canonical schema/API version changed.
+
+INTEGRATION: canonical root already has the original QA audit and Engineering fix. Cherry-pick only the final owned QA confirmation commit from this worktree; do not duplicate the original audit or local fix cherry-pick. Lead/Engineering own final consolidated gates and continuity/release. No source/root docs were edited by this worker.
