@@ -45,7 +45,11 @@ const reasons: Readonly<Record<string, UiKey>> = {
   WRITER_CAST_REVIEW: "Character usage needs human review.",
   WRITER_HUMAN_REVIEW:
     "Literary quality and objective delivery need human review.",
+  WRITER_REVIEW_LANGUAGE_REGISTER:
+    "This page may use wording from another language edition; review the requested register.",
   WRITER_STALE: "The plan or request changed; prepare a current prompt.",
+  PLANNER_STALE: "The plan or request changed; prepare a current prompt.",
+  PLANNER_CONFLICT: "The plan or request changed; prepare a current prompt.",
 };
 export function writerDiagnosticReason(code: string): UiKey {
   return (
@@ -86,6 +90,15 @@ export function WriterResponseFeedback({
           <li key={index}>
             <div>
               <p>{t(writerDiagnosticReason(diagnostic.code))}</p>
+              {["WRITER_STALE", "PLANNER_STALE", "PLANNER_CONFLICT"].includes(
+                diagnostic.code,
+              ) && (
+                <p>
+                  {t(
+                    "Reload the story and planner, then prepare and copy the current package before retrying import.",
+                  )}
+                </p>
+              )}
               <dl>
                 {diagnostic.mode && (
                   <div>

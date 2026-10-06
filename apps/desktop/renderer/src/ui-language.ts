@@ -57,10 +57,14 @@ export const arabic = {
     "الجودة الأدبية وتحقق الهدف يحتاجان مراجعة بشرية؛ الفحص الآلي ليس اعتمادًا للنص.",
   "The plan or request changed; prepare a current prompt.":
     "تغيرت الخطة أو الطلب؛ جهّز برومبتًا جديدًا قبل الاستيراد.",
+  "Reload the story and planner, then prepare and copy the current package before retrying import.":
+    "أعد تحميل القصة والمخطط، ثم جهّز الحزمة الحالية وانسخ برومبتها قبل إعادة محاولة الاستيراد.",
   "Canonical story validation failed; review this page.":
     "لم تستوفِ الصفحة فحوص القصة الأساسية. راجعها قبل الاستيراد.",
   "Human story review is required for this page.":
     "هذه الصفحة تحتاج مراجعة بشرية للقصة.",
+  "This page may use wording from another language edition; review the requested register.":
+    "قد تتضمن هذه الصفحة ألفاظًا من نسخة لغوية أخرى؛ راجع توافقها مع الفصحى المبسطة أو العامية المصرية المطلوبة لهذه النسخة.",
   "Category intent": "المعنى القصصي لنوع القصة",
   "Story needs": "ما يحتاجه هذا النوع من القصة",
   "Deterministic QA checks explicit structural fields, not the truth of arbitrary prose or child appeal.":

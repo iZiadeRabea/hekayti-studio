@@ -194,3 +194,75 @@ test("A stale or absent prompt preview requests preparation instead of showing i
   );
   assert.ok(!html.includes("<textarea"));
 });
+test("Actual stale and concurrent-update service failures explain reloading and preparing the current package", () => {
+  for (const code of ["PLANNER_STALE", "PLANNER_CONFLICT"]) {
+    assert.equal(
+      writerDiagnosticReason(code),
+      "The plan or request changed; prepare a current prompt.",
+    );
+    for (const language of ["ar", "en"] as const) {
+      const html = render(
+        {
+          status: "FAIL",
+          editions: [],
+          diagnostics: [{ code, message: "Error: private stack" }],
+        },
+        language,
+      );
+      assert.ok(
+        html.includes(
+          text(
+            "The plan or request changed; prepare a current prompt.",
+            language,
+          ),
+        ),
+      );
+      assert.ok(
+        html.includes(
+          text(
+            "Reload the story and planner, then prepare and copy the current package before retrying import.",
+            language,
+          ),
+        ),
+      );
+      assert.ok(html.includes(`dir="ltr">${code}`));
+      assert.ok(!html.includes("private stack"));
+      assert.ok(
+        !html.includes(
+          text("Check the response format and try again.", language),
+        ),
+      );
+    }
+  }
+});
+test("Register advisories explain the requested edition and preserve the precise page", () => {
+  const reason =
+    "This page may use wording from another language edition; review the requested register.";
+  assert.equal(
+    writerDiagnosticReason("WRITER_REVIEW_LANGUAGE_REGISTER"),
+    reason,
+  );
+  for (const language of ["ar", "en"] as const) {
+    const html = render(
+      {
+        status: "REVIEW",
+        editions: [],
+        diagnostics: [
+          {
+            code: "WRITER_REVIEW_LANGUAGE_REGISTER",
+            message: "raw stack",
+            mode: "ar-MSA-simple",
+            pageNumber: 2,
+          },
+        ],
+      },
+      language,
+    );
+    assert.ok(html.includes(text(reason, language)));
+    assert.ok(
+      html.includes('dir="ltr">ar-MSA-simple') && html.includes('dir="ltr">2'),
+    );
+    assert.ok(html.includes("WRITER_REVIEW_LANGUAGE_REGISTER"));
+    assert.ok(!html.includes("raw stack"));
+  }
+});
