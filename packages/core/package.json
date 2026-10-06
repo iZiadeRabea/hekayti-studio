@@ -12,7 +12,9 @@
     "./library": "./src/story-library.ts",
     "./creative": "./src/library-creative.ts",
     "./dna": "./src/story-dna.ts",
-    "./planner": "./src/story-planner.ts"
+    "./planner": "./src/story-planner.ts",
+    "./creator": "./src/simple-creator.ts",
+    "./illustration": "./src/illustration.ts"
   },
   "dependencies": {
     "@hekayti/contracts": "0.5.4",

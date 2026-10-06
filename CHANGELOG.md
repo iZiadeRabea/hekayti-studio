@@ -1,5 +1,9 @@
 # Changelog
 
+## Phase4.3 Simple Arabic creator / Reader / illustration descriptions —2026-10-06 (not released)
+
+Additive Simple orchestration, exact-semantics Arabic display and exact authored-input retention/search; immutable Reader/history/compatible compare and explicit canonical QA/review. Versioned local visual bible/style/reference/cover/12page prompt foundation with dependency/CAS staleness, sealed operational SQLite v4 separate from creative recovery. Focused backend10+UI12=22/22 PASS and typecheck PASS. Independent QA/consolidated/native visual/final approval pending. Old hashes/history and791 preserved; no ownerDB/provider/image/release/cloud. Reused HIGH/HIGH/MEDIUM only.
+
 ## v0.5.4-writer-bridge final compact approval —2026-10-06
 
 Astra APPROVED FOR RELEASE exact483d855a80e9739cf1617d824d989e7b67b7abfb. All4QA CLOSED; initial300/301+targeted version correction accepted honestly. Same MEDIUM safeFF/main privatepush/immutabletags/mandatory checkpoint/sourcebackup and separate unchanged791 Library rawreadback/freshrestores authorized. Actual completion belongs in ignored external receipt; no postbackup sourcecommit/tagmove/provider/newphase. Earlier preparation/pending entries below are historical.

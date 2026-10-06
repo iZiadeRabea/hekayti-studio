@@ -1514,6 +1514,12 @@ export class StoryPlannerService {
     raw: string,
     expectedPlanner: number,
     expectedWorkflow: number,
+    afterCommit?: (workflow: WorkflowSnapshot) => void,
+    prepareCommit?: (
+      draft: ReturnType<typeof StoryDraftSchema.parse>,
+      workflow: WorkflowSnapshot,
+      binding: { revisionId: string; hash: string },
+    ) => Promise<(workflow: WorkflowSnapshot) => void>,
   ) {
     const s = this.baseline(id, expectedPlanner),
       w = this.workflow.load(id);
@@ -1533,6 +1539,10 @@ export class StoryPlannerService {
       pkg.outputSchemaVersion === "writer-response/1.0"
         ? { draft: assembleWriterResponse(raw, pkg, w, this.seam.id) }
         : parsePlanResponse(raw, pkg, w);
+    const commitPrepared = await prepareCommit?.(result.draft, w, {
+      revisionId: p.revisionId,
+      hash: pkg.acceptance.planHash,
+    });
     return this.repo.transaction(() => {
       this.baseline(id, expectedPlanner);
       this.current(
@@ -1540,10 +1550,18 @@ export class StoryPlannerService {
         this.workflow.load(id)!,
         this.repo.loadLibrary(),
       );
-      return this.workflow.importDraft(id, expectedWorkflow, result.draft, {
-        revisionId: p.revisionId,
-        hash: pkg.acceptance.planHash,
-      });
+      const committed = this.workflow.importDraft(
+        id,
+        expectedWorkflow,
+        result.draft,
+        {
+          revisionId: p.revisionId,
+          hash: pkg.acceptance.planHash,
+        },
+      );
+      afterCommit?.(committed);
+      commitPrepared?.(committed);
+      return committed;
     });
   }
   async preview(

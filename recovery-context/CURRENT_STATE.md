@@ -1,5 +1,7 @@
 # Current state
 
+Phase4.3 approved implementation on feature/phase4.3-simple-creator from verified clean ad581cbc6cd5cefa05fdefb0148a94f81bb548fb / v0.5.4-writer-bridge. Simple Arabic/retained Reader/compare/local illustration prompt foundation are additive, no hidden approval or old history rewrite. Focused backend10+UI12=22/22 PASS; typecheck PASS. Independent QA, final consolidated gates and release approval PENDING. Existing791/ownerDB untouched; no provider/image/API/Phase5. Reused HIGH implementation/HIGH QA/MEDIUM UI+ops only, no new agents. See docs/implementation/phase4.3-backend.md. Earlier release statements below describe the preserved Phase4.2.2 milestone, not Phase4.3 authority.
+
 Phase4.2.2 APPROVED FOR RELEASE by Astra final compact review for exact clean preparation483d855a80e9739cf1617d824d989e7b67b7abfb. Same MEDIUM may safelyFFmain, run mandatory checkpoint/sourcebackup/freshrestore gates, create immutable0.5.4tags/privatepush and verify separate source/unchanged791 Library cloud recoveries. Actual final completion/identity requires external receipt; approval alone is not verification.
 
 - Current project version: v0.5.4-writer-bridge

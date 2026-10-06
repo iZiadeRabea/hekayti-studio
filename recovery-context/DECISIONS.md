@@ -1,5 +1,11 @@
 # Architecture / product decision log
 
+## Phase4.3 —2026-10-06 (implementation; release pending)
+
+- D056: Simple wraps existing request/planner/QA/writer/canonical workflow, separate CREATE→explicit ACCEPT→PREPARE. Alternative: parallel story engine/hidden approval. Arabic projects exact supported semantics; unknown old/custom detail is honest REVIEW and authored storage is not translated. Reader/history/compare are read-only, never revive approvals.
+- D057: Visual bible/style/page plan/prompts are sealed append-only operational SQLite v4, bound to actual draft/Blueprint/accepted plan/bible/style revisions/hashes. Character references precede cover/pages; synthetic appearances and unknown prose detail require review. No generic newstory/template, false-current prompt, operational creative-recovery data, image generation or book layout. Simple stars stay draft-review metadata; creative source scores/promotion remain explicit.
+- D058: Reuse existing HIGH implementation/HIGH independent QA/MEDIUM renderer+ops, no new agents/probes/ExtraHigh. Focused development, same independent QA after integration, one consolidated expensive gate near release. Root initial compact plan/final packet only; no main/tag/push/cloud before approval.
+
 ## Phase4.2.2 preparation —2026-10-06
 
 - D056: Astra final compact review APPROVED FOR RELEASE exact483d855a80e9739cf1617d824d989e7b67b7abfb; initial300/301+targeted corrected PASS explicitly accepted, all4QA CLOSED, honest2medium+3low human cautions and no actual provider claim. Same MEDIUM safeFF/privateGit/immutable0.5.4release+checkpoint and mandatory source/separate791 cloud readback/freshrestores authorized. Final identity/receipt external; no postbackup sourcecommit/tagmove. Root initial/final compact review only; stop after writer bridge.

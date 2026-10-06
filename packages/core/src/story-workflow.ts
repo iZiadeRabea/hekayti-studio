@@ -591,6 +591,7 @@ export function workflowFindings(s: WorkflowSnapshot, draftId: string) {
   );
 }
 export class StoryWorkflowService {
+  private readonly preparedQaSeals = new WeakMap<object, string>();
   constructor(
     private readonly repository: StoryWorkflowRepository,
     private readonly concepts: StoryConceptProvider,
@@ -907,6 +908,7 @@ export class StoryWorkflowService {
     expected: number,
     input: unknown,
     planBinding?: { revisionId: string; hash: string },
+    previewOnly = false,
   ) {
     const s = this.baseline(id, expected),
       next = structuredClone(s),
@@ -951,6 +953,66 @@ export class StoryWorkflowService {
     this.reset(next, "qa");
     next.drafts.push(d);
     next.current.draftId = d.draftId;
+    return previewOnly ? next : this.commit(s, next);
+  }
+  async prepareQaSnapshot(input: WorkflowSnapshot) {
+    const s = validate(WorkflowSnapshotSchema, input),
+      b = assembledBlueprint(s);
+    if (!s.current.draftId)
+      throw new AppError(
+        "WORKFLOW_DRAFT_REQUIRED",
+        "A canonical draft is required for QA.",
+      );
+    const sourceJson = canonicalJson(workflowHashInput(s));
+    const report = validate(StoryQaReportSchema, {
+      reportId: this.seam.id(),
+      sourceRevision: b.revisionId,
+      contentHash: await contentHash(workflowHashInput(s)),
+      findings: workflowFindings(s, s.current.draftId),
+      humanReviewRequired: true,
+      method: "deterministic-advisory",
+    });
+    const prepared = { report, sourceJson, draftId: s.current.draftId };
+    this.preparedQaSeals.set(prepared, canonicalJson(prepared));
+    return prepared;
+  }
+  recordPreparedQa(
+    id: string,
+    expected: number,
+    prepared: Awaited<ReturnType<StoryWorkflowService["prepareQaSnapshot"]>>,
+  ) {
+    if (this.preparedQaSeals.get(prepared) !== canonicalJson(prepared))
+      throw new AppError(
+        "WORKFLOW_QA_SOURCE",
+        "Use the exact internally prepared deterministic review.",
+      );
+    const s = this.baseline(id, expected),
+      next = structuredClone(s),
+      { request, concept } = this.sources(s);
+    if (
+      s.current.draftId !== prepared.draftId ||
+      canonicalJson(workflowHashInput(s)) !== prepared.sourceJson
+    )
+      throw new AppError(
+        "WORKFLOW_QA_STALE",
+        "QA belongs to a different canonical draft.",
+      );
+    next.reports.push(prepared.report);
+    next.reportLinks.push({
+      reportId: prepared.report.reportId,
+      draftId: prepared.draftId,
+      requestRevisionId: request.revisionId,
+      conceptId: concept.conceptId,
+    });
+    next.current.reportId = prepared.report.reportId;
+    next.current.approvalId = null;
+    return this.commit(s, next);
+  }
+  invalidateTextApproval(id: string, expected: number) {
+    const s = this.baseline(id, expected);
+    if (!s.current.approvalId) return s;
+    const next = structuredClone(s);
+    next.current.approvalId = null;
     return this.commit(s, next);
   }
   async qa(id: string, expected: number) {
@@ -983,6 +1045,7 @@ export class StoryWorkflowService {
     expected: number,
     reviewerAlias: string,
     advisoryAcknowledged: boolean,
+    commitBoundary?: (commit: () => WorkflowSnapshot) => WorkflowSnapshot,
   ) {
     const s = this.baseline(id, expected),
       next = structuredClone(s),
@@ -1016,6 +1079,8 @@ export class StoryWorkflowService {
       advisoryAcknowledged: true,
     });
     next.current.approvalId = approval.approvalId;
-    return this.commit(s, next);
+    return commitBoundary
+      ? commitBoundary(() => this.commit(s, next))
+      : this.commit(s, next);
   }
 }

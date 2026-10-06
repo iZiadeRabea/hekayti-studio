@@ -1,4 +1,17 @@
 import type { Project, StoryBlueprint, StoryRequest } from "@hekayti/contracts";
+import type { LanguageMode } from "@hekayti/contracts";
+import type {
+  SimpleDefaults,
+  SimpleCommand,
+  SimpleStoryList,
+  StoryReaderModel,
+  StoryCompareModel,
+} from "@hekayti/contracts/creator";
+import type {
+  IllustrationSnapshot,
+  IllustrationCommand,
+} from "@hekayti/contracts/illustration";
+import type { SimpleSession } from "@hekayti/core/creator";
 import type { WorkflowSnapshot } from "@hekayti/core/workflow";
 import type {
   PlannerSnapshot,
@@ -15,6 +28,41 @@ export type Result<T> =
   | { ok: true; value: T }
   | { ok: false; error: { code: string; message: string } };
 export interface DesktopApi {
+  simpleDefaults(): Promise<Result<SimpleDefaults>>;
+  simpleCommand(input: SimpleCommand): Promise<Result<SimpleSession>>;
+  simpleLoad(input: {
+    projectId: string;
+    mode?: LanguageMode;
+  }): Promise<Result<SimpleSession>>;
+  simpleList(input: {
+    query?: string;
+    offset?: number;
+    limit?: number;
+    mode?: LanguageMode;
+  }): Promise<Result<SimpleStoryList>>;
+  simpleReader(input: {
+    projectId: string;
+    draftId?: string;
+    mode: LanguageMode;
+  }): Promise<Result<StoryReaderModel>>;
+  simpleCompare(input: {
+    projectId: string;
+    leftDraftId: string;
+    rightDraftId: string;
+    mode: LanguageMode;
+  }): Promise<Result<StoryCompareModel>>;
+  simpleStarter(input: {
+    expectedLibrary: number;
+    publicCreativeReviewed: true;
+  }): Promise<Result<{ added: number; replayed: number }>>;
+  illustrationLoad(input: {
+    projectId: string;
+    mode?: LanguageMode;
+    planId?: string;
+  }): Promise<Result<IllustrationSnapshot>>;
+  illustrationCommand(
+    input: IllustrationCommand,
+  ): Promise<Result<IllustrationSnapshot & { text?: string }>>;
   plannerLoad(projectId: string): Promise<Result<PlannerSnapshot | null>>;
   plannerCommand(input: Record<string, unknown>): Promise<
     Result<{

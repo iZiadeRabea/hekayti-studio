@@ -7,7 +7,9 @@
     ".": "./src/index.ts",
     "./story": "./src/story-engine-schemas.ts",
     "./library": "./src/library.ts",
-    "./planner": "./src/story-planner.ts"
+    "./planner": "./src/story-planner.ts",
+    "./creator": "./src/creator.ts",
+    "./illustration": "./src/illustration.ts"
   },
   "dependencies": {
     "zod": "4.6.5"

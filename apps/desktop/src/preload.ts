@@ -1,6 +1,16 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { DesktopApi } from "./api";
 const api: DesktopApi = {
+  simpleDefaults: () => ipcRenderer.invoke("simple:defaults"),
+  simpleCommand: (input) => ipcRenderer.invoke("simple:command", input),
+  simpleLoad: (input) => ipcRenderer.invoke("simple:load", input),
+  simpleList: (input) => ipcRenderer.invoke("simple:list", input),
+  simpleReader: (input) => ipcRenderer.invoke("simple:reader", input),
+  simpleCompare: (input) => ipcRenderer.invoke("simple:compare", input),
+  simpleStarter: (input) => ipcRenderer.invoke("simple:starter", input),
+  illustrationLoad: (input) => ipcRenderer.invoke("illustration:load", input),
+  illustrationCommand: (input) =>
+    ipcRenderer.invoke("illustration:command", input),
   plannerLoad: (id) => ipcRenderer.invoke("planner:load", id),
   plannerCommand: (input) => ipcRenderer.invoke("planner:command", input),
   libraryPage: (input) => ipcRenderer.invoke("library:page", input),

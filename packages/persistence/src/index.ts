@@ -46,6 +46,10 @@ import {
 } from "@hekayti/contracts/library";
 import { latestLibraryRecords } from "@hekayti/core/library";
 import {
+  CreatorStateSchema,
+  type CreatorState,
+} from "@hekayti/contracts/illustration";
+import {
   PlannerSnapshotSchema,
   type PlannerSnapshot,
 } from "@hekayti/contracts/planner";
@@ -70,7 +74,7 @@ export class SqliteProjectRepository
       const version = Number(
         this.db.prepare("PRAGMA user_version").get()!.user_version,
       );
-      if (version > 3)
+      if (version > 4)
         throw new AppError(
           "DATABASE_VERSION",
           "Database is newer than this prototype; it was not downgraded.",
@@ -274,10 +278,224 @@ export class SqliteProjectRepository
           "PLANNER_CORRUPT",
           "Planner storage marker differs.",
         );
+      // Operational creator storage is separate from all creative recovery data.
+      // v4 is an additive boundary; never repair a missing initialized table.
+      if (version < 4)
+        this.transaction(() => {
+          this.db.exec(
+            "CREATE TABLE story_creator(project_id TEXT PRIMARY KEY REFERENCES projects(id),payload TEXT NOT NULL,version INTEGER NOT NULL,digest TEXT NOT NULL); PRAGMA user_version=4;",
+          );
+        });
+      this.db
+        .prepare(
+          "SELECT project_id,payload,version,digest FROM story_creator LIMIT 0",
+        )
+        .all();
     } catch (e) {
       this.db.close();
       throw e;
     }
+  }
+  loadCreator(projectId: string): CreatorState {
+    const row = this.db
+      .prepare("SELECT * FROM story_creator WHERE project_id=?")
+      .get(projectId);
+    if (!row)
+      return {
+        schemaVersion: "creator-state/1.0",
+        projectId,
+        recordVersion: 0,
+        inputs: [],
+        providerNotes: [],
+        reviews: [],
+        bibles: [],
+        styles: [],
+        plans: [],
+        prompts: [],
+      };
+    const state = validate(CreatorStateSchema, JSON.parse(String(row.payload)));
+    if (
+      state.projectId !== projectId ||
+      state.recordVersion !== Number(row.version) ||
+      createHash("sha256").update(canonicalJson(state)).digest("hex") !==
+        row.digest
+    )
+      throw new AppError(
+        "CREATOR_CORRUPT",
+        "Retained creator record differs from its seal.",
+      );
+    this.validateCreatorSource(state);
+    return state;
+  }
+  private validateCreatorSource(state: CreatorState) {
+    const w = this.loadWorkflow(state.projectId),
+      s = this.loadPlanner(state.projectId);
+    const fail = () => {
+      throw new AppError(
+        "CREATOR_SOURCE",
+        "Retained creator data differs from its exact canonical source.",
+      );
+    };
+    if (!w) fail();
+    for (const entry of state.inputs)
+      if (!w!.requests.some((r) => r.revisionId === entry.requestRevisionId))
+        fail();
+    const digest = (v: unknown) =>
+      createHash("sha256").update(canonicalJson(v)).digest("hex");
+    for (const note of state.providerNotes)
+      if (!w!.drafts.some((d) => d.draftId === note.draftId)) fail();
+    for (const review of state.reviews) {
+      if (
+        !w!.reportLinks.some(
+          (l) => l.reportId === review.reportId && l.draftId === review.draftId,
+        )
+      )
+        fail();
+      if (
+        review.choice === "LIKED" &&
+        !w!.approvals.some(
+          (a) => a.draftId === review.draftId && a.reportId === review.reportId,
+        )
+      )
+        fail();
+      if (
+        review.choice === "REJECTED" &&
+        !s?.feedback.some(
+          (f) =>
+            f.draftId === review.draftId &&
+            f.reportId === review.reportId &&
+            f.outcome === "REJECTED",
+        )
+      )
+        fail();
+    }
+    for (const plan of state.plans) {
+      const d = w!.drafts.find((d) => d.draftId === plan.draftId),
+        bp = w!.blueprints.find(
+          (b) => b.revisionId === plan.dependencies.storyRevision,
+        ),
+        p = s?.plans.find(
+          (p) => p.revisionId === plan.dependencies.planRevision,
+        ),
+        bible = state.bibles.find(
+          (b) => b.revisionId === plan.dependencies.bibleRevision,
+        ),
+        style = state.styles.find(
+          (s) => s.revisionId === plan.dependencies.styleRevision,
+        );
+      if (
+        !d ||
+        !bp ||
+        !p ||
+        !bible ||
+        !style ||
+        d.sourceRevision !== bp.revisionId ||
+        digest(d) !== plan.dependencies.draftHash ||
+        digest(bp) !== plan.dependencies.storyHash ||
+        digest(p) !== plan.dependencies.planHash ||
+        digest(bible) !== plan.dependencies.bibleHash ||
+        digest(style) !== plan.dependencies.styleHash ||
+        canonicalJson(bible) !== canonicalJson(plan.bible) ||
+        canonicalJson(style) !== canonicalJson(plan.style)
+      )
+        fail();
+      const edition = d!.editions.find((e) => e.mode === plan.mode);
+      if (
+        !edition ||
+        canonicalJson(plan.pages.map((p) => p.pageId)) !==
+          canonicalJson(bp!.pagePlan.map((p) => p.pageId)) ||
+        canonicalJson(plan.pages.map((p) => p.pageId)) !==
+          canonicalJson(edition.pages.map((p) => p.pageId))
+      )
+        fail();
+      for (const [i, page] of plan.pages.entries())
+        if (
+          page.pageNumber !== i + 1 ||
+          canonicalJson(page.beatRefs) !==
+            canonicalJson(bp!.pagePlan[i]!.beatIds) ||
+          page.characters.some(
+            (id) => !p!.characters.some((c) => c.characterId === id),
+          )
+        )
+          fail();
+    }
+    for (const prompt of state.prompts) {
+      const plan = state.plans.find((p) => p.planId === prompt.planId);
+      if (!plan || digest(plan) !== prompt.planHash) fail();
+      if (
+        prompt.kind === "CHARACTER_REFERENCE" &&
+        (!prompt.characterId ||
+          !plan!.bible.characters.some(
+            (c) => c.characterId === prompt.characterId,
+          ) ||
+          prompt.pageId ||
+          prompt.pageNumber)
+      )
+        fail();
+      if (
+        prompt.kind === "PAGE" &&
+        (!prompt.pageId ||
+          !plan!.pages.some(
+            (p) =>
+              p.pageId === prompt.pageId && p.pageNumber === prompt.pageNumber,
+          ) ||
+          prompt.characterId)
+      )
+        fail();
+      if (
+        prompt.kind === "COVER" &&
+        (prompt.pageId || prompt.pageNumber || prompt.characterId)
+      )
+        fail();
+    }
+  }
+  saveCreator(input: CreatorState, expectedVersion: number): CreatorState {
+    return this.transaction(() => {
+      const state = validate(CreatorStateSchema, input),
+        before = this.loadCreator(state.projectId);
+      if (
+        before.recordVersion !== expectedVersion ||
+        state.recordVersion !== expectedVersion
+      )
+        throw new AppError(
+          "CREATOR_CONFLICT",
+          "Reload creator before changing retained records.",
+        );
+      for (const key of [
+        "inputs",
+        "providerNotes",
+        "reviews",
+        "bibles",
+        "styles",
+        "plans",
+        "prompts",
+      ] as const)
+        if (
+          state[key].length < before[key].length ||
+          canonicalJson(state[key].slice(0, before[key].length)) !==
+            canonicalJson(before[key])
+        )
+          throw new AppError(
+            "CREATOR_IMMUTABLE",
+            "Creator history is append-only.",
+          );
+      const next = validate(CreatorStateSchema, {
+        ...state,
+        recordVersion: expectedVersion + 1,
+      });
+      this.validateCreatorSource(next);
+      this.db
+        .prepare(
+          "INSERT INTO story_creator VALUES(?,?,?,?) ON CONFLICT(project_id) DO UPDATE SET payload=excluded.payload,version=excluded.version,digest=excluded.digest",
+        )
+        .run(
+          next.projectId,
+          canonicalJson(next),
+          next.recordVersion,
+          createHash("sha256").update(canonicalJson(next)).digest("hex"),
+        );
+      return next;
+    });
   }
   transaction<T>(fn: () => T): T {
     const nested = this.transactionDepth > 0;

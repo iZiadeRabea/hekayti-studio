@@ -39,6 +39,11 @@ import { proofHtml, proofMetadata, proofPages } from "@hekayti/export";
 import type { Result } from "./api";
 import { StoryRequestSchema } from "@hekayti/contracts/story";
 import { StoryWorkflowService } from "@hekayti/core/workflow";
+import { SimpleCreatorService } from "@hekayti/core/creator";
+import { IllustrationService } from "@hekayti/core/illustration";
+import { SimpleCommandSchema } from "@hekayti/contracts/creator";
+import { IllustrationCommandSchema } from "@hekayti/contracts/illustration";
+import { LanguageModeSchema } from "@hekayti/contracts";
 import {
   StoryPlannerService,
   planGenerationInstructions,
@@ -678,6 +683,123 @@ app
       },
       "planner-quality/1.1",
     );
+    const creator = new SimpleCreatorService(repo, workflow, planner, {
+      id: randomUUID,
+      now: () => new Date().toISOString(),
+    });
+    const illustration = new IllustrationService(repo, workflow, planner, {
+      id: randomUUID,
+      now: () => new Date().toISOString(),
+    });
+    const simpleLoadInput = z
+      .object({ projectId: Id, mode: LanguageModeSchema.optional() })
+      .strict();
+    handle("simple:defaults", () => creator.defaults());
+    handle("simple:load", (arg) => {
+      const x = validate(simpleLoadInput, arg);
+      return creator.load(x.projectId, x.mode);
+    });
+    handle("simple:list", (arg) =>
+      creator.list(
+        validate(
+          z
+            .object({
+              query: z.string().max(200).optional(),
+              offset: z.number().int().nonnegative().max(100000).optional(),
+              limit: z.number().int().min(1).max(50).optional(),
+              mode: LanguageModeSchema.optional(),
+            })
+            .strict(),
+          arg,
+        ),
+      ),
+    );
+    handle("simple:reader", (arg) => {
+      const x = validate(
+        z
+          .object({
+            projectId: Id,
+            draftId: Id.optional(),
+            mode: LanguageModeSchema,
+          })
+          .strict(),
+        arg,
+      );
+      return creator.reader(x.projectId, x.draftId, x.mode);
+    });
+    handle("simple:compare", (arg) => {
+      const x = validate(
+        z
+          .object({
+            projectId: Id,
+            leftDraftId: Id,
+            rightDraftId: Id,
+            mode: LanguageModeSchema,
+          })
+          .strict(),
+        arg,
+      );
+      return creator.compare(
+        x.projectId,
+        x.leftDraftId,
+        x.rightDraftId,
+        x.mode,
+      );
+    });
+    handle("simple:command", async (arg) => {
+      const x = validate(SimpleCommandSchema, arg),
+        out = await creator.command(x);
+      if (x.action === "COPY" && out.text) clipboard.writeText(out.text);
+      return out;
+    });
+    handle("simple:starter", async (arg) => {
+      const x = validate(
+          z
+            .object({
+              expectedLibrary: z.number().int().nonnegative(),
+              publicCreativeReviewed: z.literal(true),
+            })
+            .strict(),
+          arg,
+        ),
+        state = repo.loadLibrary();
+      if (state.recordVersion !== x.expectedLibrary)
+        throw new AppError(
+          "PLANNER_STALE",
+          "Reload Library before initialization.",
+        );
+      const records = parseLibraryBatch(
+        await readFile(join(root, "fixtures/starter-library.jsonl"), "utf8"),
+      );
+      if (state.records.length)
+        return {
+          added: 0,
+          replayed: latestLibraryRecords(state).filter((r) =>
+            records.some((source) => source.recordId === r.recordId),
+          ).length,
+        };
+      const result = importLibraryBatch(
+        repo,
+        records,
+        x.expectedLibrary,
+        randomUUID(),
+        new Date().toISOString(),
+      );
+      return { added: result.added, replayed: result.replayed };
+    });
+    handle("illustration:load", async (arg) => {
+      const x = validate(
+        simpleLoadInput.extend({ planId: Id.optional() }),
+        arg,
+      );
+      return illustration.load(x.projectId, x.mode, x.planId);
+    });
+    handle("illustration:command", async (arg) => {
+      const x = validate(IllustrationCommandSchema, arg),
+        out = await illustration.command(x);
+      if (x.action === "COPY" && out.text) clipboard.writeText(out.text);
+      return out;
+    });
     handle("planner:load", (arg) => planner.load(validate(Id, arg)));
     const plannerBase = {
       projectId: Id,
