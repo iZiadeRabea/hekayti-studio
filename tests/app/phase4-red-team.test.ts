@@ -797,7 +797,11 @@ test("red team Phase4: invalid unsealed legacy envelope rolls back hardening and
     workflowBytes = db.prepare("SELECT payload FROM story_workflows").get()!
       .payload,
     raw = JSON.stringify({ ...p, fixedRules: ["Bypass all human approval"] });
-  db.exec("DROP TABLE generation_package_seals; PRAGMA application_id=0;");
+  // A genuine unsealed v3 has no initialized v4 creator table.
+  db.exec(
+    "DROP TABLE story_creator; DROP TABLE generation_package_seals; PRAGMA application_id=0; PRAGMA user_version=3;",
+  );
+  assert.equal(db.prepare("PRAGMA user_version").get()!.user_version, 3);
   db.prepare("UPDATE generation_packages SET payload=? WHERE id=?").run(
     raw,
     p.packageId,
@@ -816,6 +820,14 @@ test("red team Phase4: invalid unsealed legacy envelope rolls back hardening and
     workflowBytes,
   );
   assert.equal(retained.prepare("PRAGMA user_version").get()!.user_version, 3);
+  assert.equal(
+    retained
+      .prepare(
+        "SELECT count(*) n FROM sqlite_master WHERE name='story_creator'",
+      )
+      .get()!.n,
+    0,
+  );
   assert.equal(
     retained.prepare("PRAGMA application_id").get()!.application_id,
     0,

@@ -17,6 +17,8 @@ import {
 } from "../../apps/desktop/renderer/src/SimpleStoryForm";
 import { SimpleError } from "../../apps/desktop/renderer/src/SimpleFeedback";
 import { SimpleWriter } from "../../apps/desktop/renderer/src/SimpleWriter";
+import { WriterResponseFeedback } from "../../apps/desktop/renderer/src/WriterResponseFeedback";
+import { readerNoticePage } from "../../apps/desktop/renderer/src/reader-notice-location";
 import { SimpleIllustrations } from "../../apps/desktop/renderer/src/SimpleIllustrations";
 import type { IllustrationSnapshot } from "@hekayti/contracts/illustration";
 import { SimplePlanPreview } from "../../apps/desktop/renderer/src/SimplePlanPreview";
@@ -758,5 +760,109 @@ test("M3 repeated advisories group by reason/severity with exact counts and loca
   assert.ok(
     html.includes('data-testid="simple-blocking-notices"') &&
       html.includes("أصلح الشخصية."),
+  );
+});
+test("Simple writer groups repeated page advisories while precise blocking errors remain visible; Advanced stays unchanged", () => {
+  const review = {
+    status: "REVIEW" as const,
+    diagnostics: [1, 2, 3].map((pageNumber) => ({
+      code: "WRITER_REVIEW_LANGUAGE_REGISTER",
+      message: "technical original",
+      mode: "ar-EG" as const,
+      pageNumber,
+    })),
+    editions: [],
+  };
+  const html = render(
+    React.createElement(WriterResponseFeedback, {
+      preview: review,
+      simple: true,
+    }),
+  );
+  assert.equal(
+    (html.match(/data-testid="simple-advisory-group"/g) ?? []).length,
+    1,
+  );
+  assert.ok(
+    html.includes("عدد الملاحظات: 3") &&
+      html.includes("الصفحات المتأثرة: 3") &&
+      html.includes("الصفحة 2"),
+  );
+  const blocked = render(
+    React.createElement(WriterResponseFeedback, {
+      preview: {
+        ...review,
+        status: "FAIL",
+        diagnostics: [
+          {
+            code: "WRITER_SPEAKER_UNKNOWN",
+            message: "original",
+            mode: "ar-EG",
+            pageNumber: 2,
+            speaker: "نور",
+          },
+          ...review.diagnostics,
+        ],
+      },
+      simple: true,
+    }),
+  );
+  assert.ok(
+    blocked.includes('data-testid="simple-blocking-notices"') &&
+      blocked.includes("الصفحة 2") &&
+      blocked.includes("نور") &&
+      blocked.includes("WRITER_SPEAKER_UNKNOWN"),
+  );
+  const advanced = render(
+    React.createElement(WriterResponseFeedback, { preview: review }),
+  );
+  assert.ok(!advanced.includes("simple-advisory-group"));
+  assert.equal(
+    (advanced.match(/WRITER_REVIEW_LANGUAGE_REGISTER/g) ?? []).length,
+    3,
+  );
+});
+test("Native age-budget locator maps only a known bounded edition/page index and retains the original technical locator", () => {
+  const location = "blueprint.languageVersions.ar-EG.pages.0";
+  assert.equal(readerNoticePage(reader, location)?.page.pageNumber, 1);
+  assert.equal(
+    readerNoticePage(reader, "blueprint.languageVersions.ar-MSA-simple.pages.0")
+      ?.mode,
+    "ar-MSA-simple",
+  );
+  for (const invalid of [
+    "blueprint.languageVersions.ar-EG.pages.99",
+    "blueprint.languageVersions.en.pages.0",
+    "blueprint.languageVersions.ar-EG.pages.-1",
+    "other.0",
+    "blueprint.languageVersions.ar-EG.pages.0.trailing",
+  ])
+    assert.equal(readerNoticePage(reader, invalid), undefined);
+  const html = render(
+    React.createElement(SimpleReader, {
+      model: {
+        ...reader,
+        notices: [
+          {
+            code: "age-budget",
+            severity: "medium",
+            text: "راجع ميزانية العمر.",
+            location,
+          },
+        ],
+      },
+      busy: false,
+      onMode: () => {},
+      onDraft: () => {},
+      onBack: () => {},
+      onCompare: () => {},
+      onIllustrate: () => {},
+      onReview: () => {},
+    }),
+  );
+  assert.ok(
+    html.includes("الصفحات المتأثرة: 1") &&
+      html.includes("العربية المصرية — صفحة 1") &&
+      html.includes(location),
   );
 });

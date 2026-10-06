@@ -2,6 +2,8 @@
 
 ## Phase4.3 Simple Arabic creator / Reader / illustration descriptions —2026-10-06 (not released)
 
+Candidate0.6.0: same QA closed six findings/history heading/compact writer/bounded locator follow-ups. Consolidated foundation100/design329/typecheck PASS; app337/342 initially, old migration fixture maintenance affected51/51 PASS. Native dev/packaged Simple/Advanced/manual writer/Library/runtime evidence: phase4.3-testing.md. Final approval/cloud recovery PENDING. Older entries are historical; stable0.5.4 receipt preserved.
+
 Additive Simple orchestration, exact-semantics Arabic display and exact authored-input retention/search; immutable Reader/history/compatible compare and explicit canonical QA/review. Versioned local visual bible/style/reference/cover/12page prompt foundation with dependency/CAS staleness, sealed operational SQLite v4 separate from creative recovery. Focused backend10+UI12=22/22 PASS and typecheck PASS. Independent QA/consolidated/native visual/final approval pending. Old hashes/history and791 preserved; no ownerDB/provider/image/release/cloud. Reused HIGH/HIGH/MEDIUM only.
 
 ## v0.5.4-writer-bridge final compact approval —2026-10-06

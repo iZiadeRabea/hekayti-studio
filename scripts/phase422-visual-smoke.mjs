@@ -26,6 +26,7 @@ const app = await electron.launch({
 });
 try {
   const page = await app.firstWindow();
+  if (await page.getByTestId("creator-mode").getAttribute("data-mode") === "SIMPLE") await page.getByTestId("creator-mode-switch").click();
   await page.setViewportSize({ width: 1400, height: 900 });
   await page.getByTestId("ui-language-en").click();
   await page

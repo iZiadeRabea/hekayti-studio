@@ -2,6 +2,8 @@
 
 ## Phase4.3 —2026-10-06 (implementation; release pending)
 
+- D059: Native repeated Simple writer advisory UX and Reader index-locator mapping were fixed narrowly; Advanced assertions, precise original locations and visible HIGH/BLOCKER remain. Same QA verified UI18 plus bounded countercases. Retain honest initial app337/342 and targeted old-migration maintenance51/51, not a claimed whole-suite rerun.
+
 - D056: Simple wraps existing request/planner/QA/writer/canonical workflow, separate CREATE→explicit ACCEPT→PREPARE. Alternative: parallel story engine/hidden approval. Arabic projects exact supported semantics; unknown old/custom detail is honest REVIEW and authored storage is not translated. Reader/history/compare are read-only, never revive approvals.
 - D057: Visual bible/style/page plan/prompts are sealed append-only operational SQLite v4, bound to actual draft/Blueprint/accepted plan/bible/style revisions/hashes. Character references precede cover/pages; synthetic appearances and unknown prose detail require review. No generic newstory/template, false-current prompt, operational creative-recovery data, image generation or book layout. Simple stars stay draft-review metadata; creative source scores/promotion remain explicit.
 - D058: Reuse existing HIGH implementation/HIGH independent QA/MEDIUM renderer+ops, no new agents/probes/ExtraHigh. Focused development, same independent QA after integration, one consolidated expensive gate near release. Root initial compact plan/final packet only; no main/tag/push/cloud before approval.

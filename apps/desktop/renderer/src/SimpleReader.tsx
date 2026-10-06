@@ -6,6 +6,7 @@ import type {
 } from "@hekayti/contracts/creator";
 import { useCreatorUi } from "./creator-ui";
 import { PlanNotices } from "./SimplePlanPreview";
+import { readerNoticePage } from "./reader-notice-location";
 
 export function ReaderPageText({ page }: { page: ReaderPage }) {
   const { c } = useCreatorUi();
@@ -181,16 +182,11 @@ export function SimpleReader({
       </button>
       <PlanNotices
         notices={model.notices}
-        pageKey={(location) =>
-          model.pages.find((x) => location.split(/[/.]/).includes(x.pageId))
-            ?.pageId
-        }
+        pageKey={(location) => readerNoticePage(model, location)?.page.pageId}
         locate={(location) => {
-          const parts = location.split(/[/.]/);
-          const page = model.pages.find((x) => parts.includes(x.pageId));
-          const mode = parts.find((x) =>
-            ["ar-EG", "ar-MSA-simple", "en"].includes(x),
-          );
+          const found = readerNoticePage(model, location);
+          const page = found?.page,
+            mode = found?.mode;
           return page
             ? `${mode ? `${label(mode)} — ` : ""}${c("Page")} ${page.pageNumber}`
             : undefined;

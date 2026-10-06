@@ -40,6 +40,7 @@ const must = (r) => {
 let app = await launch();
 try {
   let page = await app.firstWindow();
+  await page.getByTestId("creator-mode-switch").click(); // Explicit Advanced regression scope.
   await page.getByTestId("ui-language-en").click();
   const button = (name) => page.getByRole("button", { name, exact: true });
   const saved = (message = "Planner change saved and validated.") =>

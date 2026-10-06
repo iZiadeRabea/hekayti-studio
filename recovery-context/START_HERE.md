@@ -2,7 +2,7 @@
 
 Current approved work: Phase4.3 feature/phase4.3-simple-creator, verified ad581cbc/v0.5.4 preserved. Read CURRENT_STATE.md and docs/implementation/phase4.3-backend.md first. Simple Arabic/Reader/illustration descriptions only; independent QA/final gates/release approval pending. Historical stop/release banners below are not current authority. No images/API/ownerDB/Phase5/release/cloud. Existing HIGH implementation/HIGH QA/MEDIUM UI+ops reused, no new agents.
 
-Current: Astra final compact review APPROVED FOR RELEASE exact483d855a80e9739cf1617d824d989e7b67b7abfb. Same MEDIUM safeFF/immutable0.5.4tags/privatepush and mandatory source/separate791 rawcloudhash/freshrestores authorized. Actual final identity/completion is external, not asserted by approval. Read CURRENT_STATE.md and docs/implementation/phase4.2.2-release-packet.md / phase4.2.2-testing.md. No postbackup sourcecommit/tagmove/later phase.
+Current: Phase4.3 candidate0.6.0 awaits final compact approval and external recovery. No main/tag/push/cloud before approval. See CURRENT_STATE.md and docs/implementation/phase4.3-release-packet.md / phase4.3-testing.md. Stable ad581cbc/v0.5.4 is verified by backups/receipts/hekayti-studio-phase422-final-ad581cbc.json. Earlier milestone descriptions below are historical, not current authority.
 
 Stable main e34ea7edb411cc886ac910e3e723c6ed09e7e71a/v0.5.3-planner-quality/checkpoint/phase4.2.1-planner-quality-complete is VERIFIED in ignored backups/receipts/hekayti-studio-phase421-final-e34ea7ed.json. Preserve old history/tags/backups and owner/runtime trial databases. Historical milestones are in CHANGELOG, not current pending banners.
 

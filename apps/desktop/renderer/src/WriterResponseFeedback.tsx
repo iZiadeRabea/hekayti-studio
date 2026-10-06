@@ -1,6 +1,7 @@
 import type { WriterPreview } from "@hekayti/contracts/planner";
 import { useUi } from "./UiLanguage";
 import type { UiKey } from "./ui-language";
+import { PlanNotices } from "./SimplePlanPreview";
 
 export function WriterPromptPreview({ text }: { text: string }) {
   const { t } = useUi();
@@ -87,55 +88,107 @@ export function WriterResponseFeedback({
         )}
       </p>
       <p>{t("No changes were saved by this preview.")}</p>
-      <ul aria-label={t("Import diagnostics")}>
-        {preview.diagnostics.map((diagnostic, index) => (
-          <li key={index}>
-            <div>
-              <p>{t(writerDiagnosticReason(diagnostic.code))}</p>
-              {["WRITER_STALE", "PLANNER_STALE", "PLANNER_CONFLICT"].includes(
+      {simple ? (
+        <PlanNotices
+          notices={preview.diagnostics.map((diagnostic) => ({
+            code: diagnostic.code,
+            severity:
+              preview.status !== "FAIL" ||
+              diagnostic.code.startsWith("WRITER_REVIEW_") ||
+              ["WRITER_HUMAN_REVIEW", "WRITER_CAST_REVIEW"].includes(
                 diagnostic.code,
-              ) && (
-                <p>
-                  {t(
-                    "Reload the story and planner, then prepare and copy the current package before retrying import.",
+              )
+                ? "medium"
+                : "high",
+            text:
+              t(writerDiagnosticReason(diagnostic.code)) +
+              (["WRITER_STALE", "PLANNER_STALE", "PLANNER_CONFLICT"].includes(
+                diagnostic.code,
+              )
+                ? ` ${t("Reload the story and planner, then prepare and copy the current package before retrying import.")}`
+                : ""),
+            location: JSON.stringify({
+              mode: diagnostic.mode,
+              pageNumber: diagnostic.pageNumber,
+              speaker: diagnostic.speaker,
+            }),
+          }))}
+          locate={(location) => {
+            const d = JSON.parse(
+              location,
+            ) as WriterPreview["diagnostics"][number];
+            return (
+              [
+                d.mode ? label(d.mode) : "",
+                d.pageNumber !== undefined
+                  ? `${t("Page")} ${d.pageNumber}`
+                  : "",
+                d.speaker ? `${t("Speaker")}: ${d.speaker}` : "",
+              ]
+                .filter(Boolean)
+                .join(" — ") || undefined
+            );
+          }}
+          pageKey={(location) => {
+            const d = JSON.parse(
+              location,
+            ) as WriterPreview["diagnostics"][number];
+            return d.pageNumber !== undefined
+              ? String(d.pageNumber)
+              : undefined;
+          }}
+        />
+      ) : (
+        <ul aria-label={t("Import diagnostics")}>
+          {preview.diagnostics.map((diagnostic, index) => (
+            <li key={index}>
+              <div>
+                <p>{t(writerDiagnosticReason(diagnostic.code))}</p>
+                {["WRITER_STALE", "PLANNER_STALE", "PLANNER_CONFLICT"].includes(
+                  diagnostic.code,
+                ) && (
+                  <p>
+                    {t(
+                      "Reload the story and planner, then prepare and copy the current package before retrying import.",
+                    )}
+                  </p>
+                )}
+                <dl>
+                  {diagnostic.mode && (
+                    <div>
+                      <dt>{t("Story edition")}</dt>
+                      <dd>
+                        {label(diagnostic.mode)}{" "}
+                        {!simple && <bdi dir="ltr">{diagnostic.mode}</bdi>}
+                      </dd>
+                    </div>
                   )}
-                </p>
-              )}
-              <dl>
-                {diagnostic.mode && (
-                  <div>
-                    <dt>{t("Story edition")}</dt>
-                    <dd>
-                      {label(diagnostic.mode)}{" "}
-                      {!simple && <bdi dir="ltr">{diagnostic.mode}</bdi>}
-                    </dd>
-                  </div>
-                )}
-                {diagnostic.pageNumber !== undefined && (
-                  <div>
-                    <dt>{t("Page")}</dt>
-                    <dd>
-                      <bdi dir="ltr">{diagnostic.pageNumber}</bdi>
-                    </dd>
-                  </div>
-                )}
-                {diagnostic.speaker && (
-                  <div>
-                    <dt>{t("Speaker")}</dt>
-                    <dd>
-                      <bdi dir="auto">{diagnostic.speaker}</bdi>
-                    </dd>
-                  </div>
-                )}
-              </dl>
-              <details>
-                <summary>{t("Technical code")}</summary>
-                <code dir="ltr">{diagnostic.code}</code>
-              </details>
-            </div>
-          </li>
-        ))}
-      </ul>
+                  {diagnostic.pageNumber !== undefined && (
+                    <div>
+                      <dt>{t("Page")}</dt>
+                      <dd>
+                        <bdi dir="ltr">{diagnostic.pageNumber}</bdi>
+                      </dd>
+                    </div>
+                  )}
+                  {diagnostic.speaker && (
+                    <div>
+                      <dt>{t("Speaker")}</dt>
+                      <dd>
+                        <bdi dir="auto">{diagnostic.speaker}</bdi>
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+                <details>
+                  <summary>{t("Technical code")}</summary>
+                  <code dir="ltr">{diagnostic.code}</code>
+                </details>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
       <ul>
         {preview.editions.map((edition) => (
           <li key={edition.mode}>

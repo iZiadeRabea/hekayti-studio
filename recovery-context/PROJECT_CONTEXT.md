@@ -2,7 +2,7 @@
 
 Current approved scope (2026-10-06): Phase4.3 Simple default/Advanced retained, deterministic Arabic semantic display, exact-input persistence/search, immutable Reader/history/compare, explicit QA/review, local illustration descriptions only. Stable ad581cbc/v0.5.4 preserved. Existing AgeEngine/canonical stories remain authority. Prior no-illustration stop superseded only for this prompt foundation. No image/booklayout/API/Phase5 or release/cloud before final approval.
 
-Current preparation (2026-10-06): Phase4.2.2 writer bridge/category+Arabic UI validated on feature/phase4.2.2-writer-bridge, workspace0.5.4. Same independent QA all4 CLOSED; single consolidated gate plus targeted version fixture correction and dev/packaged native smokes complete. Astra APPROVED FOR RELEASE exact483d855a80e9739cf1617d824d989e7b67b7abfb; actual final source/Library recovery completion requires external receipt. Stable e34ea7ed/v0.5.3/verified phase421 receipt/791/ownerDB preserved. See CURRENT_STATE.md and docs/implementation/phase4.2.2-release-packet.md. No provider/Phase5 work.
+Current preparation: Phase4.3 candidate0.6.0 with same QA closure, one consolidated gate plus targeted migration maintenance and native dev/packaged evidence. Final approval/source/Library recovery remain pending. Stable ad581cbc/v0.5.4 and its external receipt/791/ownerDB preserved. See CURRENT_STATE.md and docs/implementation/phase4.3-release-packet.md. No provider/image/Phase5 work.
 
 ## Identity and market
 Project: Hekayti Studio. Initial market: Egypt only.

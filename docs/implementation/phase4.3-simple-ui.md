@@ -1,5 +1,7 @@
 # Phase 4.3 Simple UI focused handoff
 
+Final pre-release update: latest same-QA UI18/18 plus seven bounded locator countercases PASS; dev/packaged native flow and explicit copy/review supplement PASS17 screenshots each. See phase4.3-testing.md/release-packet.md. Earlier focused counts/pending statements below are historical stages, not current validation status. Final release approval/external recovery remain pending.
+
 Routine UI work uses the reused GPT-6.1 Sol MEDIUM worker. Backend/contracts/persistence are owned by the existing HIGH implementation worker; renderer code does not recreate plan composition or import authority.
 
 Implemented: persisted Simple default with unchanged Advanced app available; compact Arabic form with exact authored strings; deterministic human preview and explicit acceptance; separate manual writer prepare/copy/preview/import; Reader edition/draft selection and actual same-language comparison; explicit review outcome/notes/rating; grouped localized QA with visible high/blocker findings; guided empty Library initialization; illustration reference/cover/page prompts, retained plans, current-story text, fresh visual-bible/style revisions and stale-copy protection. No images, paid calls or consumer-service automation.

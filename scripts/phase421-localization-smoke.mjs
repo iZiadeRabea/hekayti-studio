@@ -28,6 +28,7 @@ const must = (r) => {
 let app = await launch();
 try {
   let page = await app.firstWindow();
+  await page.getByTestId("creator-mode-switch").click(); // Advanced Arabic regression; Phase43 separately proves fresh Simple default.
   await page.setViewportSize({ width: 1400, height: 900 });
   assert.deepEqual(
     await page.evaluate(() => [

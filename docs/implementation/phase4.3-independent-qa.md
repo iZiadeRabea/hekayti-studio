@@ -9,7 +9,8 @@ full suite, build, or visual acceptance.
 
 **All six findings closed in the bounded code/regression review; zero
 unresolved relevant findings.** Verified UI `1d88530` plus historical-heading
-follow-up `b34eb3b`, and the backend owner batch awaiting consolidated commit.
+follow-up `b34eb3b`, and the backend owner batch subsequently committed as
+`c52922d`.
 This is not native visual or release acceptance.
 
 - Original independent 12 + fixed UI 15: **27/27 PASS**, zero skips/failures.
@@ -46,6 +47,73 @@ node --import tsx --test tests/app/phase43-simple-ui.test.ts
 
 Native H3 history/current-PREPARE interaction remains scheduled in the separate
 MEDIUM visual gate. No real provider retrial or publication-quality claim.
+
+### Consolidated-gate historical SQLite fixture maintenance
+
+The release gate's five historical app failures were diagnosed from
+`temp/phase43-validation/consolidated-test.log`: synthetic v1/v2 fixtures
+lowered `user_version` while retaining the new initialized v4 `story_creator`
+table; supposed unsealed v3 fixtures never lowered their current v4 version.
+These were invalid historical preconditions/stale current-version assertions,
+not evidence of a production migration failure. No production code changed.
+
+Only `persistence.test.ts`, `phase4-library.test.ts` and
+`phase4-red-team.test.ts` were maintained. Genuine v1/v2 preconditions now
+contain exactly their original tables and no later index/planner/seal/creator
+extensions. Genuine unsealed v3 has no v4 creator table. Successful upgrades
+assert version 4, the exact creator-table columns and empty additive storage.
+Raw original project/Blueprint/edition/character/workflow rows, workflow
+approval bytes and frozen package envelopes must remain byte-equivalent;
+existing semantic assertions were retained. Invalid v3 package hardening must
+still roll back to version 3 with no seal/creator table and retain corrupted
+input unchanged. A new initialized-v4 missing-table probe verifies fail-closed
+reopen, no repair/downgrade and unchanged Blueprint bytes.
+
+Affected files only: **51/51 PASS**, zero failures/skips (6.46 seconds).
+
+```text
+node --import tsx --test tests/app/persistence.test.ts tests/app/phase4-library.test.ts tests/app/phase4-red-team.test.ts
+```
+
+No consolidated suite repeat by this reviewer. Other release and native gates
+remain the operations owner's responsibility.
+
+### Native-discovered Simple Writer grouping follow-up
+
+The native owner reported an excessively long Writer preview advisory list
+(Plan/Reader were already grouped). The MEDIUM renderer follow-up now opts
+Simple Writer into shared reason/severity grouping, retaining occurrence and
+distinct affected-page counts plus exact edition/page/speaker/code locations.
+FAIL non-advisory diagnostics remain visibly blocking. Default Advanced
+feedback remains the original per-diagnostic rendering; no import validation,
+CAS, severity authority or approval behavior changes.
+
+Independent targeted verification of current Simple UI plus legacy Writer UI:
+**27/27 PASS**, zero failures/skips (0.76 seconds). The new grouping assertion
+and existing Arabic/error/unknown-data/stale/register location checks all pass.
+Code inspection confirms Simple explicitly opts in. Native compactness and
+the rest of the smoke remain with the MEDIUM owner, not certified by SSR here.
+
+```text
+node --import tsx --test tests/app/phase43-simple-ui.test.ts tests/app/phase422-writer-ui.test.ts
+```
+
+### Native-discovered age-budget page-count follow-up
+
+Native QA found canonical index locators such as
+`blueprint.languageVersions.ar-EG.pages.0` counted as zero affected pages.
+The MEDIUM fix maps only the exact known Blueprint edition/page-index form,
+checks safe integer, current Reader bounds and available edition, and resolves
+the actual retained Reader page. Existing exact page-ID locators still work;
+arbitrary numeric path segments are not treated as page numbers. Original
+technical locators remain retained in detail.
+
+Scoped independent UI run: **18/18 PASS**, zero failures/skips (0.49 seconds).
+Seven additional direct countercases pass: unsafe integer, decimal/suffix,
+NaN, out-of-bounds index, unavailable edition and arbitrary numeric path
+reject; existing exact page-ID lookup remains valid. No production edits by
+this reviewer and no broad/full suite repeat. Page-count mapping is closed;
+native rendering/retry remains with the MEDIUM operations owner.
 
 ## Initial status and tests (retained evidence)
 

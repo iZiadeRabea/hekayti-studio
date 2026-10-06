@@ -1,6 +1,6 @@
 {
   "name": "@hekayti/core",
-  "version": "0.5.4",
+  "version": "0.6.0",
   "private": true,
   "type": "module",
   "exports": {
@@ -17,7 +17,7 @@
     "./illustration": "./src/illustration.ts"
   },
   "dependencies": {
-    "@hekayti/contracts": "0.5.4",
+    "@hekayti/contracts": "0.6.0",
     "zod": "4.6.5"
   }
 }

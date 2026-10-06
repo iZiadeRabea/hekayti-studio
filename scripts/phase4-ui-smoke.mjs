@@ -25,6 +25,7 @@ const must = (result) => {
 };
 try {
   let page = await desktop.firstWindow();
+  await page.getByTestId("creator-mode-switch").click(); // Explicit Advanced regression scope.
   await page.getByTestId("ui-language-en").click();
   await page
     .getByRole("button", { name: "Story Creator", exact: true })

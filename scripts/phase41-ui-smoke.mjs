@@ -22,6 +22,7 @@ const must = (r) => {
 };
 try {
   let page = await app.firstWindow();
+  await page.getByTestId("creator-mode-switch").click(); // Explicit Advanced regression scope.
   await page.getByTestId("ui-language-en").click();
   await page
     .getByRole("button", { name: "Starter / Creative Library", exact: true })
@@ -115,6 +116,7 @@ try {
   await app.close();
   app = await launch(restoredData);
   page = await app.firstWindow();
+  if (await page.getByTestId("creator-mode").getAttribute("data-mode") === "SIMPLE") await page.getByTestId("creator-mode-switch").click();
   await page.getByTestId("ui-language-en").click();
   await page
     .getByRole("button", { name: "Starter / Creative Library", exact: true })

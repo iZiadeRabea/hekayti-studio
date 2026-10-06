@@ -1,1 +1,1 @@
-{"name":"@hekayti/export","version":"0.5.4","private":true,"type":"module","exports":"./src/index.ts","dependencies":{"@hekayti/contracts":"0.5.4","@hekayti/core":"0.5.4"}}
+{"name":"@hekayti/export","version":"0.6.0","private":true,"type":"module","exports":"./src/index.ts","dependencies":{"@hekayti/contracts":"0.6.0","@hekayti/core":"0.6.0"}}

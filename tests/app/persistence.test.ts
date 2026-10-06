@@ -31,17 +31,34 @@ test("nested project+blueprint unit of work rolls back all rows on failure", () 
   r.close();
 });
 const dir = () => mkdtempSync("temp/app-tests/run-");
-test("actual version-1 migration preserves all legacy rows and is transactional", () => {
+test("actual version-1 to current v4 migration preserves legacy row bytes and is transactional", () => {
   const path = join(dir(), "v1.sqlite"),
     original = new SqliteProjectRepository(path);
   original.createProject(project());
   original.saveBlueprint(fixture());
   original.close();
   const db = new DatabaseSync(path);
-  db.exec("DROP TABLE manual_imports; DROP TABLE generation_packages; DROP TABLE story_library; DROP TABLE story_workflows; PRAGMA user_version=1");
+  const legacyTables = ["projects", "blueprints", "editions", "characters"];
+  const legacyRows = legacyTables.map((table) =>
+    db.prepare(`SELECT * FROM ${table}`).all(),
+  );
+  // Reconstruct real v1, not a current-v4 database with only its pragma lowered.
+  db.exec(
+    "DROP TABLE story_creator; DROP TABLE story_planners; DROP TABLE story_planner_meta; DROP TABLE library_index; DROP TABLE library_index_meta; DROP TABLE generation_package_seals; DROP TABLE manual_imports; DROP TABLE generation_packages; DROP TABLE story_library; DROP TABLE story_workflows; PRAGMA application_id=0; PRAGMA user_version=1",
+  );
+  assert.deepEqual(
+    db
+      .prepare(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name",
+      )
+      .all()
+      .map((row) => row.name),
+    [...legacyTables].sort(),
+  );
+  assert.equal(db.prepare("PRAGMA user_version").get()!.user_version, 1);
   db.close();
   const migrated = new SqliteProjectRepository(path);
-  assert.equal(migrated.diagnostics().schemaVersion, 3);
+  assert.equal(migrated.diagnostics().schemaVersion, 4);
   assert.deepEqual(migrated.loadProject(project().projectId), project());
   assert.deepEqual(migrated.loadBlueprint(fixture().revisionId), fixture());
   assert.deepEqual(
@@ -49,6 +66,26 @@ test("actual version-1 migration preserves all legacy rows and is transactional"
     fixture().languageVersions[0],
   );
   migrated.close();
+  const current = new DatabaseSync(path);
+  assert.deepEqual(
+    legacyTables.map((table) =>
+      current.prepare(`SELECT * FROM ${table}`).all(),
+    ),
+    legacyRows,
+  );
+  assert.deepEqual(
+    current
+      .prepare("PRAGMA table_info(story_creator)")
+      .all()
+      .map((row) => row.name),
+    ["project_id", "payload", "version", "digest"],
+  );
+  assert.equal(
+    current.prepare("SELECT count(*) n FROM story_creator").get()!.n,
+    0,
+  );
+  assert.equal(current.prepare("PRAGMA user_version").get()!.user_version, 4);
+  current.close();
   const broken = join(dir(), "broken-v1.sqlite"),
     corrupt = new DatabaseSync(broken);
   corrupt.exec(
@@ -66,12 +103,20 @@ test("actual version-1 migration preserves all legacy rows and is transactional"
       .get()!.n,
     0,
   );
+  assert.equal(
+    retained
+      .prepare(
+        "SELECT count(*) n FROM sqlite_master WHERE name='story_creator'",
+      )
+      .get()!.n,
+    0,
+  );
   retained.close();
 });
 test("SQLite migration, CRUD, all synthetic fixture roundtrips, reopen persistence", () => {
   const path = join(dir(), "demo.sqlite");
   let r = new SqliteProjectRepository(path);
-  assert.equal(r.diagnostics().schemaVersion, 3);
+  assert.equal(r.diagnostics().schemaVersion, 4);
   r.createProject(project());
   for (const name of names) {
     const b = fixture(name);
@@ -97,6 +142,35 @@ test("SQLite migration, CRUD, all synthetic fixture roundtrips, reopen persisten
     fixture().languageVersions[0]!.pages[0]!.narration,
   );
   r.close();
+});
+
+test("initialized v4 creator storage is never silently repaired or downgraded", () => {
+  const path = join(dir(), "missing-v4-creator.sqlite"),
+    repository = new SqliteProjectRepository(path);
+  repository.createProject(project());
+  repository.saveBlueprint(fixture());
+  repository.close();
+  const db = new DatabaseSync(path),
+    before = db.prepare("SELECT payload FROM blueprints").get()!.payload;
+  assert.equal(db.prepare("PRAGMA user_version").get()!.user_version, 4);
+  db.exec("DROP TABLE story_creator");
+  db.close();
+  assert.throws(() => new SqliteProjectRepository(path), /story_creator/);
+  const retained = new DatabaseSync(path);
+  assert.equal(retained.prepare("PRAGMA user_version").get()!.user_version, 4);
+  assert.equal(
+    retained.prepare("SELECT payload FROM blueprints").get()!.payload,
+    before,
+  );
+  assert.equal(
+    retained
+      .prepare(
+        "SELECT count(*) n FROM sqlite_master WHERE name='story_creator'",
+      )
+      .get()!.n,
+    0,
+  );
+  retained.close();
 });
 test("edition and character metadata services preserve multilingual data", () => {
   const r = new SqliteProjectRepository(":memory:");
