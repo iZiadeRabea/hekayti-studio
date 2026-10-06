@@ -2,14 +2,14 @@
 
 Phase4.2.2 APPROVED FOR RELEASE by Astra final compact review for exact clean preparation483d855a80e9739cf1617d824d989e7b67b7abfb. Same MEDIUM may safelyFFmain, run mandatory checkpoint/sourcebackup/freshrestore gates, create immutable0.5.4tags/privatepush and verify separate source/unchanged791 Library cloud recoveries. Actual final completion/identity requires external receipt; approval alone is not verification.
 
-- Current project version: v0.5.3-planner-quality
+- Current project version: v0.5.4-writer-bridge
 - Current workspace version: 0.5.4
-- Current branch at milestone: feature/phase4.2.2-writer-bridge
-- Latest stable checkpoint: checkpoint/phase4.2.1-planner-quality-complete
-- Latest stable tag: v0.5.3-planner-quality
-- Last successful tests: 2026-10-06 — single pre-release gate plus targeted stale fixture correction; mandatory release/recovery proof recorded externally
+- Current branch at milestone: main
+- Latest stable checkpoint: checkpoint/phase4.2.2-writer-bridge-complete
+- Latest stable tag: v0.5.4-writer-bridge
+- Last successful tests: 2026-10-06 18:37:10 +03:00 — foundation, design and available application suites passed; visual/packaging gates recorded separately
 
-Stable safety anchor: main e34ea7edb411cc886ac910e3e723c6ed09e7e71a, v0.5.3-planner-quality, checkpoint/phase4.2.1-planner-quality-complete; verified external receipt backups/receipts/hekayti-studio-phase421-final-e34ea7ed.json. Local/remote main remain unchanged. Older approval/pending entries in CHANGELOG are historical, not current release authority.
+Preserved prior stable safety anchor: main e34ea7edb411cc886ac910e3e723c6ed09e7e71a, v0.5.3-planner-quality, checkpoint/phase4.2.1-planner-quality-complete; verified external receipt backups/receipts/hekayti-studio-phase421-final-e34ea7ed.json. Local/remote main were confirmed at that exact baseline before approved safe integration; actual new release identity belongs to the external receipt. Older approval/pending entries in CHANGELOG are historical, not current release authority.
 
 Same independent QA: all4 MEDIUM groups CLOSED,11/11 PASS,0 unresolved. Single consolidated gate:100foundation/329design/typecheck PASS, app300/301 with one stale historical desktop-version assertion; same QA preserved legacy1.0/1.1 semantics/hashes and added current1.1→StoryPlan1.2 boundary, targeted affected test1/1 PASS. No optional whole-suite repeat. Production build/unsigned0.5.4Windows package/onlinehealth0warnings/historysecurity and actual dev+packaged regressions PASS. Details: docs/implementation/phase4.2.2-testing.md and phase4.2.2-release-packet.md.
 
