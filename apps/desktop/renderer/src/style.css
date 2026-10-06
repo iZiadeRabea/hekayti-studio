@@ -31,6 +31,7 @@ nav {
   background: #edf4f4;
 }
 button {
+  font-family: inherit;
   padding: 10px 14px;
   border: 1px solid #617d82;
   border-radius: 5px;
@@ -99,6 +100,8 @@ ul {
   list-style: none;
 }
 bdi {
+  unicode-bidi: isolate;
+  overflow-wrap: anywhere;
   font-size: 12px;
   color: #4a666b;
 }
@@ -140,4 +143,38 @@ bdi {
 }
 .concept-card dd {
   margin: 0;
+}
+.ui-language-switch {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-block-end: 12px;
+}
+.ui-language-switch button + button {
+  margin-inline-start: 0;
+}
+pre[dir="ltr"],
+textarea[dir="ltr"] {
+  text-align: left;
+  unicode-bidi: isolate;
+}
+input,
+select {
+  font-family: inherit;
+}
+.story-creator input:not([type="checkbox"]),
+.story-creator select {
+  max-width: 100%;
+}
+[data-testid="story-planner"] dl {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+[data-testid="story-planner"] dl dd {
+  margin-inline-start: 0;
+  overflow-wrap: anywhere;
 }

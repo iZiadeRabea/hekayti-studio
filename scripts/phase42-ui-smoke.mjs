@@ -37,6 +37,7 @@ const must = (r) => {
 let app = await launch();
 try {
   let page = await app.firstWindow();
+  await page.getByTestId("ui-language-en").click();
   const button = (name) => page.getByRole("button", { name, exact: true });
   const saved = () =>
     page
@@ -251,6 +252,7 @@ try {
   await app.close();
   app = await launch();
   page = await app.firstWindow();
+  await page.getByTestId("ui-language-en").click();
   await button("Story Creator").click();
   await page.getByLabel("Reopen story").selectOption(projectId);
   await page

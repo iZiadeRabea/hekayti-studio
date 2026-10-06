@@ -1,3 +1,4 @@
+import { useUi, UiStatus, UiFinding } from "./UiLanguage";
 import { useEffect, useState } from "react";
 import type { Project, StoryRequest } from "@hekayti/contracts";
 import {
@@ -8,6 +9,7 @@ import type { DesktopApi, Result } from "../../src/api";
 import { StoryPlanner } from "./StoryPlanner";
 
 export function StoryCreator() {
+  const { t, label } = useUi();
   const [snapshot, setSnapshot] = useState<WorkflowSnapshot | null>(null),
     [projects, setProjects] = useState<Project[]>([]),
     [status, setStatus] = useState(
@@ -128,23 +130,21 @@ export function StoryCreator() {
     );
   return (
     <section className="story-creator">
-      <h2>New Story — synthetic creator</h2>
+      <h2>{t("New Story — synthetic creator")}</h2>
       <p>
-        No real child details. Personalization uses the fixed invented example
-        ليلى; grammatical agreement is authored explicitly. Plan before prose
-        with acknowledged Library inspiration and manual AI copy/paste. The
-        separate Create more concepts button retains the deterministic mock
-        path.
+        {t(
+          "No real child details. Personalization uses the fixed invented example ليلى; grammatical agreement is authored explicitly. Plan before prose with acknowledged Library inspiration and manual AI copy/paste. The separate Create more concepts button retains the deterministic mock path.",
+        )}
       </p>
       <p role="status" data-testid="story-status">
-        {status}
+        <UiStatus raw={status} />
       </p>
       <fieldset disabled={busy}>
-        <legend>Synthetic request</legend>
+        <legend>{t("Synthetic request")}</legend>
         <label>
-          Age in months (0–95)
+          {t("Age in months (0–95)")}
           <input
-            aria-label="Story age months"
+            aria-label={t("Story age months")}
             type="number"
             min="0"
             max="95"
@@ -153,20 +153,20 @@ export function StoryCreator() {
           />
         </label>
         <label>
-          Primary language
+          {t("Primary language")}
           <select
-            aria-label="Story language"
+            aria-label={t("Story language")}
             value={mode}
             onChange={(e) => setMode(e.target.value as typeof mode)}
           >
-            <option value="ar-MSA-simple">Simplified MSA</option>
-            <option value="ar-EG">Egyptian Arabic</option>
+            <option value="ar-MSA-simple">{t("Simplified MSA")}</option>
+            <option value="ar-EG">{t("Egyptian Arabic")}</option>
           </select>
         </label>
         <label>
-          Category
+          {t("Category")}
           <select
-            aria-label="Story category"
+            aria-label={t("Story category")}
             value={category}
             onChange={(e) => setCategory(e.target.value as typeof category)}
           >
@@ -179,14 +179,16 @@ export function StoryCreator() {
               "bedtime",
               "early-learning",
             ].map((x) => (
-              <option key={x}>{x}</option>
+              <option key={x} value={x}>
+                {label(x)}
+              </option>
             ))}
           </select>
         </label>
         <label>
-          Objective
+          {t("Objective")}
           <select
-            aria-label="Story objective"
+            aria-label={t("Story objective")}
             value={objective}
             onChange={(e) => setObjective(e.target.value as typeof objective)}
           >
@@ -197,62 +199,68 @@ export function StoryCreator() {
               "emotional",
               "entertainment",
             ].map((x) => (
-              <option key={x}>{x}</option>
+              <option key={x} value={x}>
+                {label(x)}
+              </option>
             ))}
           </select>
         </label>
         <label>
-          Synthetic objective description
+          {t("Synthetic objective description")}
           <input
-            aria-label="Objective description"
+            aria-label={t("Objective description")}
             maxLength={500}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </label>
         <label>
-          Synthetic success scenario
+          {t("Synthetic success scenario")}
           <input
-            aria-label="Objective success scenario"
+            aria-label={t("Objective success scenario")}
             maxLength={500}
             value={success}
             onChange={(e) => setSuccess(e.target.value)}
           />
         </label>
         <label>
-          Personalization
+          {t("Personalization")}
           <select
-            aria-label="Synthetic personalization"
+            aria-label={t("Synthetic personalization")}
             value={level}
             onChange={(e) => setLevel(Number(e.target.value) as typeof level)}
           >
-            <option value="0">0 — generic</option>
-            <option value="1">1 — invented name</option>
-            <option value="2">2 — invented name and ball preference</option>
-            <option value="3">3 — explicit fictional protagonist</option>
+            <option value="0">{t("0 — generic")}</option>
+            <option value="1">{t("1 — invented name")}</option>
+            <option value="2">
+              {t("2 — invented name and ball preference")}
+            </option>
+            <option value="3">{t("3 — explicit fictional protagonist")}</option>
           </select>
         </label>
         <label>
-          Authored grammatical agreement
+          {t("Authored grammatical agreement")}
           <select
-            aria-label="Grammatical agreement"
+            aria-label={t("Grammatical agreement")}
             value={grammar}
             onChange={(e) => setGrammar(e.target.value)}
           >
-            <option value="unknown">Unknown — human review</option>
-            <option value="feminine">Feminine</option>
-            <option value="masculine">Masculine</option>
+            <option value="unknown">{t("Unknown — human review")}</option>
+            <option value="feminine">{t("Feminine")}</option>
+            <option value="masculine">{t("Masculine")}</option>
           </select>
         </label>
         <label>
-          Future source preference
+          {t("Future source preference")}
           <select
-            aria-label="Source preference"
+            aria-label={t("Source preference")}
             value={strategy}
             onChange={(e) => setStrategy(e.target.value as typeof strategy)}
           >
             {["manual", "curated", "ai", "hybrid"].map((x) => (
-              <option key={x}>{x}</option>
+              <option key={x} value={x}>
+                {label(x)}
+              </option>
             ))}
           </select>
         </label>
@@ -265,7 +273,7 @@ export function StoryCreator() {
             void perform(() => window.hekayti.newStory(r));
           }}
         >
-          New Story
+          {t("New Story")}
         </button>
         <button
           disabled={!snapshot}
@@ -280,19 +288,19 @@ export function StoryCreator() {
             )
           }
         >
-          Save changed request
+          {t("Save changed request")}
         </button>
         <label>
-          Reopen persisted story
+          {t("Reopen persisted story")}
           <select
-            aria-label="Reopen story"
+            aria-label={t("Reopen story")}
             value={snapshot?.projectId ?? ""}
             onChange={(e) => {
               if (e.target.value)
                 void perform(() => window.hekayti.loadStory(e.target.value));
             }}
           >
-            <option value="">Choose project</option>
+            <option value="">{t("Choose project")}</option>
             {projects
               .filter((p) => !p.projectId.startsWith("phase2-"))
               .map((p) => (
@@ -306,19 +314,21 @@ export function StoryCreator() {
       {snapshot && (
         <>
           <p data-testid="workflow-state">
-            Version {snapshot.recordVersion} · request{" "}
-            {snapshot.current.requestRevisionId} · approval{" "}
-            {workflowApprovalStatus(snapshot)} · historical approvals{" "}
-            {snapshot.approvals.length}
+            {t("Version")} {snapshot.recordVersion} {t("· request")}{" "}
+            <bdi dir="ltr">{snapshot.current.requestRevisionId}</bdi>{" "}
+            {t("· approval")} {label(workflowApprovalStatus(snapshot))}{" "}
+            {t("· historical approvals")} {snapshot.approvals.length}
           </p>
           <p>
-            Actual provider: {set?.concepts[0]?.provenance.kind ?? "mock"}.
-            Blank blueprint editions remain immutable placeholders; drafted
-            editions below have separate IDs.
+            {t("Actual provider:")}{" "}
+            {label(set?.concepts[0]?.provenance.kind ?? "mock")}
+            {t(
+              ". Blank blueprint editions remain immutable placeholders; drafted editions below have separate IDs.",
+            )}
           </p>
           <StoryPlanner workflow={snapshot} onWorkflow={setSnapshot} />
           <button disabled={busy} onClick={() => action("create-more")}>
-            Create more concepts
+            {t("Create more concepts")}
           </button>
           <div className="concept-grid">
             {set?.concepts.map((c) => (
@@ -332,14 +342,14 @@ export function StoryCreator() {
                     Setting: c.setting[mode],
                     Character:
                       c.characters.map((x) => x.displayName).join(", ") ||
-                      "Focal object",
+                      t("Focal object"),
                     Challenge: c.coreChallenge,
                     Resolution: c.resolutionDirection,
                     "Age fit": c.ageFitSummary,
                   }).map(([k, v]) => (
                     <div key={k}>
-                      <dt>{k}</dt>
-                      <dd>{v}</dd>
+                      <dt>{label(k)}</dt>
+                      <dd dir="auto">{k === "Type" ? label(v) : v}</dd>
                     </div>
                   ))}
                 </dl>
@@ -348,8 +358,8 @@ export function StoryCreator() {
                   onClick={() => action("select", { conceptId: c.conceptId })}
                 >
                   {snapshot.current.conceptId === c.conceptId
-                    ? "Selected — replace derivatives"
-                    : "Select / replace concept"}
+                    ? t("Selected — replace derivatives")
+                    : t("Select / replace concept")}
                 </button>
               </article>
             ))}
@@ -358,7 +368,7 @@ export function StoryCreator() {
             disabled={busy || !snapshot.current.conceptId}
             onClick={() => action("build")}
           >
-            Build blueprint
+            {t("Build blueprint")}
           </button>
           {snapshot.blueprints
             .filter(
@@ -366,7 +376,10 @@ export function StoryCreator() {
             )
             .map((b) => (
               <details key={b.revisionId} open>
-                <summary>Current canonical blueprint · {b.revisionId}</summary>
+                <summary>
+                  {t("Current canonical blueprint ·")}{" "}
+                  <bdi dir="ltr">{b.revisionId}</bdi>
+                </summary>
                 <p>
                   {b.workingTitle} · {b.objective.description}
                 </p>
@@ -377,11 +390,11 @@ export function StoryCreator() {
                     </li>
                   ))}
                 </ol>
-                <p>Page plan</p>
+                <p>{t("Page plan")}</p>
                 <ol>
                   {b.pagePlan.map((p) => (
                     <li key={p.pageId}>
-                      <bdi>{p.pageId}</bdi> · {p.beatIds.join(", ")}
+                      <bdi dir="ltr">{p.pageId}</bdi> · {p.beatIds.join(", ")}
                     </li>
                   ))}
                 </ol>
@@ -391,19 +404,20 @@ export function StoryCreator() {
             disabled={busy || !snapshot.current.blueprintRevisionId}
             onClick={() => action("draft")}
           >
-            Draft language editions
+            {t("Draft language editions")}
           </button>
           <button
             disabled={busy || !snapshot.current.draftId}
             onClick={() => action("qa")}
           >
-            Run structured QA
+            {t("Run structured QA")}
           </button>
           {draft?.editions.map((e) => (
             <details key={e.languageVersionId} open>
               <summary>
-                {e.mode} · edition {e.languageVersionId} · source{" "}
-                {e.sourceRevision}
+                {label(e.mode)} {t("· edition")}{" "}
+                <bdi dir="ltr">{e.languageVersionId}</bdi> {t("· source")}{" "}
+                <bdi dir="ltr">{e.sourceRevision}</bdi>
               </summary>
               <div
                 dir={e.mode === "en" ? "ltr" : "rtl"}
@@ -411,43 +425,45 @@ export function StoryCreator() {
               >
                 {e.pages.map((p) => (
                   <p key={p.pageId}>
-                    <bdi>{p.pageId}</bdi>: {p.narration}{" "}
+                    <bdi dir="ltr">{p.pageId}</bdi>: {p.narration}{" "}
                     {p.dialogue.map((d) => d.text).join(" ")}
                   </p>
                 ))}
               </div>
             </details>
           ))}
-          <h3>Advisory findings</h3>
+          <h3>{t("Advisory findings")}</h3>
           {qa ? (
             <>
               <p>
-                QA {qa.reportId} · hash <bdi>{qa.contentHash}</bdi>
+                {t("QA")} <bdi dir="ltr">{qa.reportId}</bdi> {t("· hash")}{" "}
+                <bdi dir="ltr">{qa.contentHash}</bdi>
               </p>
               <ul>
                 {qa.findings.map((f) => (
                   <li key={f.findingId}>
-                    {f.severity}: {f.message} {f.suggestedAction}
+                    <UiFinding finding={f} />
                   </li>
                 ))}
               </ul>
             </>
           ) : (
             <p>
-              Current QA required. Previous reviews and approvals remain in
-              history.
+              {t(
+                "Current QA required. Previous reviews and approvals remain in history.",
+              )}
             </p>
           )}
           <label>
             <input
               type="checkbox"
-              aria-label="Acknowledge advisory limits"
+              aria-label={t("Acknowledge advisory limits")}
               checked={acknowledged}
               onChange={(e) => setAcknowledged(e.target.checked)}
             />
-            I have read the current draft and findings; deterministic QA does
-            not certify literary, factual, native language or developmental
-            quality.
+            {t(
+              "I have read the current draft and findings; deterministic QA does not certify literary, factual, native language or developmental quality.",
+            )}
           </label>
           <button
             disabled={
@@ -465,18 +481,18 @@ export function StoryCreator() {
               })
             }
           >
-            Explicitly approve current text
+            {t("Explicitly approve current text")}
           </button>
           <details>
-            <summary>Validated workflow history</summary>
+            <summary>{t("Validated workflow history")}</summary>
             <pre dir="ltr">{JSON.stringify(snapshot, null, 2)}</pre>
           </details>
         </>
       )}
       <p>
-        Workflow artifacts persist in SQLite. Existing Open/Save JSON controls
-        are legacy blueprint-only fixture tools and do not export these workflow
-        histories.
+        {t(
+          "Workflow artifacts persist in SQLite. Existing Open/Save JSON controls are legacy blueprint-only fixture tools and do not export these workflow histories.",
+        )}
       </p>
     </section>
   );

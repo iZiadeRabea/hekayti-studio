@@ -1,3 +1,4 @@
+import { useUi, UiStatus } from "./UiLanguage";
 import React, { useEffect, useState } from "react";
 import type { Project } from "@hekayti/contracts";
 import type { WorkflowSnapshot } from "@hekayti/core/workflow";
@@ -14,6 +15,7 @@ import {
 import type { Result } from "../../src/api";
 
 export function StoryLibrary() {
+  const { t, label } = useUi();
   const [state, setState] = useState<LibraryState | null>(null),
     [projects, setProjects] = useState<Project[]>([]),
     [story, setStory] = useState<WorkflowSnapshot | null>(null),
@@ -182,26 +184,26 @@ export function StoryLibrary() {
   );
   return (
     <section data-testid="phase4-library">
-      <h2>Reusable Library · Inbox · Manual AI Bridge</h2>
+      <h2>{t("Reusable Library · Inbox · Manual AI Bridge")}</h2>
       <p>
-        No API keys or automated service calls. Use fictional synthetic content
-        only. Imported text is untrusted data, not instructions, facts, approval
-        or verified provider identity.
+        {t(
+          "No API keys or automated service calls. Use fictional synthetic content only. Imported text is untrusted data, not instructions, facts, approval or verified provider identity.",
+        )}
       </p>
       <p role="status" data-testid="library-status">
-        {status}
+        <UiStatus raw={status} />
       </p>
-      <button onClick={() => void reload()}>Reload Library</button>
+      <button onClick={() => void reload()}>{t("Reload Library")}</button>
       <button
         onClick={async () => {
           const s = await unwrap(window.hekayti.librarySeed());
           if (s) setState(s);
         }}
       >
-        Add synthetic starter
+        {t("Add synthetic starter")}
       </button>
       <label>
-        Human reviewer alias
+        {t("Human reviewer alias")}
         <input
           aria-label="Library reviewer"
           value={reviewer}
@@ -210,13 +212,13 @@ export function StoryLibrary() {
         />
       </label>
       <label>
-        Current story
+        {t("Current story")}
         <select
           aria-label="Bridge current story"
           value={projectId}
           onChange={(e) => void selectProject(e.target.value)}
         >
-          <option value="">Choose saved story request</option>
+          <option value="">{t("Choose saved story request")}</option>
           {projects.map((p) => (
             <option key={p.projectId} value={p.projectId}>
               {p.title} · {p.projectId}
@@ -239,7 +241,7 @@ export function StoryLibrary() {
       {view !== "Bridge" && (
         <>
           <fieldset>
-            <legend>Filter records</legend>
+            <legend>{t("Filter records")}</legend>
             {[
               {
                 key: "type",
@@ -297,7 +299,7 @@ export function StoryLibrary() {
               },
             ].map((f) => (
               <label key={f.key}>
-                {f.key}
+                {label(f.key)}
                 <select
                   aria-label={`Library filter ${f.key}`}
                   value={filters[f.key] ?? ""}
@@ -305,15 +307,17 @@ export function StoryLibrary() {
                     setFilters({ ...filters, [f.key]: e.target.value })
                   }
                 >
-                  <option value="">All</option>
+                  <option value="">{t("All")}</option>
                   {f.values.map((v) => (
-                    <option key={v}>{v}</option>
+                    <option key={v} value={v}>
+                      {label(v)}
+                    </option>
                   ))}
                 </select>
               </label>
             ))}
             <label>
-              Theme
+              {t("Theme")}
               <input
                 aria-label="Library theme filter"
                 value={filters.theme ?? ""}
@@ -324,8 +328,10 @@ export function StoryLibrary() {
             </label>
           </fieldset>
           <p data-testid="library-count">
-            {displayed.length} records. Archived records are retained; there is
-            no hard delete.
+            {displayed.length}{" "}
+            {t(
+              "records. Archived records are retained; there is no hard delete.",
+            )}
           </p>
           <ul>
             {displayed.slice(0, 100).map((r) => (
@@ -351,7 +357,7 @@ export function StoryLibrary() {
                         )
                       }
                     />
-                    Include frozen context in next package
+                    {t("Include frozen context in next package")}
                   </label>
                 )}
               </li>
@@ -404,7 +410,7 @@ export function StoryLibrary() {
               )}
               <fieldset>
                 <legend>
-                  Human editorial scores (1–5, opinion not science)
+                  {t("Human editorial scores (1–5, opinion not science)")}
                 </legend>
                 {[
                   "StoryQuality",
@@ -429,9 +435,9 @@ export function StoryLibrary() {
                   </label>
                 ))}
                 <label>
-                  Editorial note
+                  {t("Editorial note")}
                   <input
-                    aria-label="Editorial note"
+                    aria-label={t("Editorial note")}
                     value={editorial}
                     maxLength={2000}
                     onChange={(e) => setEditorial(e.target.value)}
@@ -449,13 +455,14 @@ export function StoryLibrary() {
                     })
                   }
                 >
-                  Record editorial scores
+                  {t("Record editorial scores")}
                 </button>
               </fieldset>
               <fieldset>
                 <legend>
-                  Create structural story family — human-authored, not complete
-                  content
+                  {t(
+                    "Create structural story family — human-authored, not complete content",
+                  )}
                 </legend>
                 {Object.entries(familyFields).map(([key, value]) => (
                   <label key={key}>
@@ -488,13 +495,13 @@ export function StoryLibrary() {
                 </button>
               </fieldset>
               <label>
-                Family for this variant
+                {t("Family for this variant")}
                 <select
                   aria-label="Variant family"
                   value={familyId}
                   onChange={(e) => setFamilyId(e.target.value)}
                 >
-                  <option value="">Choose structural family</option>
+                  <option value="">{t("Choose structural family")}</option>
                   {families.map((f) => (
                     <option key={f.recordId} value={f.recordId}>
                       {f.title}
@@ -520,11 +527,11 @@ export function StoryLibrary() {
                     });
                 }}
               >
-                Link next numbered variant
+                {t("Link next numbered variant")}
               </button>
               {selected.payload.type === "STORY_FAMILY" && (
                 <div>
-                  <h4>Related variants</h4>
+                  <h4>{t("Related variants")}</h4>
                   {latest
                     .filter((r) => r.family?.recordId === selected.recordId)
                     .map((r) => (
@@ -556,7 +563,7 @@ export function StoryLibrary() {
                         })
                       }
                     >
-                      Log {outcome.toLowerCase()} usage outcome
+                      {t("Log")} {outcome.toLowerCase()} {t("usage outcome")}
                     </button>
                   ))}
                 </div>
@@ -564,7 +571,7 @@ export function StoryLibrary() {
             </article>
           )}
           <fieldset>
-            <legend>Save human-authored idea seed</legend>
+            <legend>{t("Save human-authored idea seed")}</legend>
             <textarea
               aria-label="Idea seed"
               value={seedText}
@@ -618,12 +625,14 @@ export function StoryLibrary() {
                 if (s) setState(s);
               }}
             >
-              Save seed to Inbox
+              {t("Save seed to Inbox")}
             </button>
           </fieldset>
           {story?.current.approvalId && (
             <fieldset>
-              <legend>Explicit extraction from currently approved story</legend>
+              <legend>
+                {t("Explicit extraction from currently approved story")}
+              </legend>
               {["STORY_CONCEPT", "APPROVED_STORY_REFERENCE"].map((type) => (
                 <button
                   key={type}
@@ -642,7 +651,7 @@ export function StoryLibrary() {
                     if (s) setState(s);
                   }}
                 >
-                  Save {type}
+                  {t("Save")} {type}
                 </button>
               ))}
               {story.conceptSets
@@ -667,7 +676,7 @@ export function StoryLibrary() {
                       if (s) setState(s);
                     }}
                   >
-                    Save authored {c.kind} block
+                    {t("Save authored")} {c.kind} {t("block")}
                   </button>
                 ))}
             </fieldset>
@@ -677,7 +686,7 @@ export function StoryLibrary() {
       {view === "Bridge" && (
         <>
           <label>
-            Reopen retained package ID
+            {t("Reopen retained package ID")}
             <input
               aria-label="Reopen bridge package"
               value={reopenPackage}
@@ -698,22 +707,24 @@ export function StoryLibrary() {
               }
             }}
           >
-            Reopen frozen package
+            {t("Reopen frozen package")}
           </button>
           <label>
-            Source strategy
+            {t("Source strategy")}
             <select
               aria-label="Bridge source strategy"
               value={strategy}
               onChange={(e) => setStrategy(e.target.value as typeof strategy)}
             >
               {["HYBRID", "CURATED", "AI_LED"].map((x) => (
-                <option key={x}>{x}</option>
+                <option key={x} value={x}>
+                  {label(x)}
+                </option>
               ))}
             </select>
           </label>
           <label>
-            Variation
+            {t("Variation")}
             <select
               aria-label="Bridge variation"
               value={variation}
@@ -725,12 +736,14 @@ export function StoryLibrary() {
                 "FreshConcept",
                 "CompletelyNew",
               ].map((x) => (
-                <option key={x}>{x}</option>
+                <option key={x} value={x}>
+                  {label(x)}
+                </option>
               ))}
             </select>
           </label>
           <label>
-            Candidates
+            {t("Candidates")}
             <input
               aria-label="Bridge candidate count"
               type="number"
@@ -741,12 +754,15 @@ export function StoryLibrary() {
             />
           </label>
           <p>
-            {chosen.length} promoted library records selected; context is frozen
-            when package is created.
+            {chosen.length}{" "}
+            {t(
+              "promoted library records selected; context is frozen when package is created.",
+            )}
           </p>
           <label>
-            Context record IDs (comma-separated, max30; browse paged starter
-            separately)
+            {t(
+              "Context record IDs (comma-separated, max30; browse paged starter separately)",
+            )}
             <input
               aria-label="Context record IDs"
               value={chosen.join(",")}
@@ -766,8 +782,9 @@ export function StoryLibrary() {
               checked={culturalAcknowledged}
               onChange={(e) => setCulturalAcknowledged(e.target.checked)}
             />
-            Explicitly acknowledge selected non-default/religious source flags;
-            this is not qualified cultural/religious clearance.
+            {t(
+              "Explicitly acknowledge selected non-default/religious source flags; this is not qualified cultural/religious clearance.",
+            )}
           </label>
           <button
             disabled={!story}
@@ -810,10 +827,10 @@ export function StoryLibrary() {
               }
             }}
           >
-            Prepare immutable package
+            {t("Prepare immutable package")}
           </button>
           <label>
-            Consumer target
+            {t("Consumer target")}
             <select
               aria-label="Bridge consumer target"
               value={target}
@@ -835,7 +852,9 @@ export function StoryLibrary() {
               }}
             >
               {["CHATGPT", "GEMINI", "GENERIC"].map((x) => (
-                <option key={x}>{x}</option>
+                <option key={x} value={x}>
+                  {label(x)}
+                </option>
               ))}
             </select>
           </label>
@@ -857,21 +876,24 @@ export function StoryLibrary() {
               checked={reviewed}
               onChange={(e) => setReviewed(e.target.checked)}
             />
-            I reviewed this package; all content is fictional/synthetic and safe
-            to copy externally.
+            {t(
+              "I reviewed this package; all content is fictional/synthetic and safe to copy externally.",
+            )}
           </label>
           <button
             disabled={!instructions || !reviewed}
             onClick={() => void copy(instructions)}
           >
-            Copy package instructions
+            {t("Copy package instructions")}
           </button>
           <fieldset>
             <legend>
-              Operator source notes — not verified provider/model identity
+              {t(
+                "Operator source notes — not verified provider/model identity",
+              )}
             </legend>
             <label>
-              Source type
+              {t("Source type")}
               <select
                 aria-label="Import source type"
                 value={sourceType}
@@ -880,33 +902,37 @@ export function StoryLibrary() {
                 }
               >
                 {["HYBRID", "AI", "CURATED", "HUMAN"].map((x) => (
-                  <option key={x}>{x}</option>
+                  <option key={x} value={x}>
+                    {label(x)}
+                  </option>
                 ))}
               </select>
             </label>
             <label>
-              Source provider
+              {t("Source provider")}
               <select
                 aria-label="Import source provider"
                 value={provider}
                 onChange={(e) => setProvider(e.target.value as typeof provider)}
               >
                 {["CHATGPT", "GEMINI", "OTHER", "MANUAL"].map((x) => (
-                  <option key={x}>{x}</option>
+                  <option key={x} value={x}>
+                    {label(x)}
+                  </option>
                 ))}
               </select>
             </label>
             <label>
-              Provider note
+              {t("Provider note")}
               <input
-                aria-label="Provider note"
+                aria-label={t("Provider note")}
                 value={providerNote}
                 maxLength={2000}
                 onChange={(e) => setProviderNote(e.target.value)}
               />
             </label>
             <label>
-              Model note (optional, unknown is fine)
+              {t("Model note (optional, unknown is fine)")}
               <input
                 aria-label="Model note"
                 value={modelNote}
@@ -954,7 +980,7 @@ export function StoryLibrary() {
               }
             }}
           >
-            Validate and import to Inbox
+            {t("Validate and import to Inbox")}
           </button>
           {repair && (
             <>
@@ -965,13 +991,15 @@ export function StoryLibrary() {
                 rows={5}
               />
               <button disabled={!reviewed} onClick={() => void copy(repair)}>
-                Copy repair instructions
+                {t("Copy repair instructions")}
               </button>
             </>
           )}
           <fieldset>
             <legend>
-              Manual draft handoff (after USE_NOW and canonical Blueprint build)
+              {t(
+                "Manual draft handoff (after USE_NOW and canonical Blueprint build)",
+              )}
             </legend>
             <button
               disabled={!story?.current.blueprintRevisionId}
@@ -985,7 +1013,7 @@ export function StoryLibrary() {
                 }
               }}
             >
-              Prepare manual draft instructions
+              {t("Prepare manual draft instructions")}
             </button>
             <textarea
               aria-label="Manual draft instructions"
@@ -997,7 +1025,7 @@ export function StoryLibrary() {
               disabled={!draftText || !reviewed}
               onClick={() => void copy(draftText)}
             >
-              Copy manual draft instructions
+              {t("Copy manual draft instructions")}
             </button>
             <textarea
               aria-label="Paste manual draft JSON"
@@ -1025,7 +1053,7 @@ export function StoryLibrary() {
                 }
               }}
             >
-              Validate and import manual draft
+              {t("Validate and import manual draft")}
             </button>
           </fieldset>
         </>

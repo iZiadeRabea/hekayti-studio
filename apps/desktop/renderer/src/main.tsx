@@ -1,3 +1,9 @@
+import {
+  useUi,
+  UiStatus,
+  UiLanguageProvider,
+  UiLanguageSwitch,
+} from "./UiLanguage";
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "@fontsource/noto-sans-arabic/400.css";
@@ -15,6 +21,7 @@ declare global {
   }
 }
 function App() {
+  const { t, label } = useUi();
   const [projects, setProjects] = useState<Project[]>([]);
   const [blueprint, setBlueprint] = useState<StoryBlueprint | null>(null);
   const [status, setStatus] = useState(
@@ -41,10 +48,15 @@ function App() {
   return (
     <>
       <header>
-        <h1>حكايتي - مختبر المرحلة الثانية</h1>
-        <p>بيانات اصطناعية فقط. هذه واجهة تجارب وليست محرّر الكتاب النهائي.</p>
+        <UiLanguageSwitch />
+        <h1>{t("Hekayti Studio — synthetic creator lab")}</h1>
+        <p>
+          {t(
+            "Synthetic data only; this is a creator prototype, not the final book editor.",
+          )}
+        </p>
       </header>
-      <nav aria-label="Prototype sections">
+      <nav aria-label={t("Prototype sections")}>
         {[
           "Projects",
           "Story Creator",
@@ -56,7 +68,7 @@ function App() {
           "Settings / Diagnostics",
         ].map((x) => (
           <button key={x} aria-pressed={tab === x} onClick={() => setTab(x)}>
-            {x}
+            {label(x)}
           </button>
         ))}
       </nav>
@@ -65,11 +77,11 @@ function App() {
         {tab === "Library / Inbox / Bridge" && <StoryLibrary />}
         {tab === "Starter / Creative Library" && <StarterLibrary />}
         <p role="status" className="status" dir="auto">
-          {status}
+          <UiStatus raw={status} />
         </p>
         {tab === "Projects" && (
           <section>
-            <h2>المشروعات الاصطناعية</h2>
+            <h2>{t("Synthetic projects")}</h2>
             <button
               onClick={async () => {
                 await unwrap(window.hekayti.seedSynthetic());
@@ -77,7 +89,7 @@ function App() {
                 setStatus("Synthetic fixtures ready");
               }}
             >
-              New Synthetic Projects
+              {t("New Synthetic Projects")}
             </button>
             <button
               onClick={async () => {
@@ -92,7 +104,7 @@ function App() {
                 }
               }}
             >
-              Open synthetic JSON safely
+              {t("Open synthetic JSON safely")}
             </button>
             <ul>
               {projects
@@ -112,7 +124,7 @@ function App() {
                         }
                       }}
                     >
-                      Inspect
+                      {t("Inspect")}
                     </button>
                     <button
                       onClick={async () => {
@@ -132,7 +144,7 @@ function App() {
                         }
                       }}
                     >
-                      Save synthetic title edit
+                      {t("Save synthetic title edit")}
                     </button>
                     <button
                       onClick={async () => {
@@ -142,7 +154,7 @@ function App() {
                         if (path) setStatus("New snapshot saved: " + path);
                       }}
                     >
-                      Save new JSON snapshot
+                      {t("Save new JSON snapshot")}
                     </button>
                   </li>
                 ))}
@@ -151,10 +163,11 @@ function App() {
         )}
         {tab === "RTL Test" && (
           <section>
-            <h2>العربية واتجاه القراءة</h2>
+            <h2>{t("Arabic reading direction")}</h2>
             <p>
-              جرّب التحديد والكتابة والأسطر الجديدة. النصوص هنا مؤقتة؛ لا تُحفظ
-              تلقائيًا.
+              {t(
+                "Try selecting, typing and new lines. These samples are temporary and are not saved automatically.",
+              )}
             </p>
             {[
               ["MSA", rtlSamples.msa, "rtl", "ar"],
@@ -181,7 +194,7 @@ function App() {
         )}
         {tab === "Core Data Inspector" && (
           <section>
-            <h2>العقود والعمر والموافقات</h2>
+            <h2>{t("Contracts, age and approvals")}</h2>
             {blueprint ? (
               <>
                 <p>{blueprint.workingTitle}</p>
@@ -197,15 +210,15 @@ function App() {
                   )}
                 </pre>
                 <details>
-                  <summary>Validated canonical blueprint</summary>
+                  <summary>{t("Validated canonical blueprint")}</summary>
                   <pre dir="ltr">{JSON.stringify(blueprint, null, 2)}</pre>
                 </details>
               </>
             ) : (
-              <p>اختر Inspect من قائمة المشروعات.</p>
+              <p>{t("Choose Inspect from the projects list.")}</p>
             )}
             <button onClick={() => setStale(true)}>
-              Simulate approved text edit
+              {t("Simulate approved text edit")}
             </button>
             <pre dir="ltr">
               {JSON.stringify(
@@ -230,15 +243,20 @@ function App() {
                 2,
               )}
             </pre>
-            <p>المحاكاة توضح بطلان الاعتماد ولا تمنح موافقة حقيقية.</p>
+            <p>
+              {t(
+                "Simulation shows approval invalidation and grants no real approval.",
+              )}
+            </p>
           </section>
         )}
         {tab === "Export Test" && (
           <section>
-            <h2>تجربة PDF اصطناعية</h2>
+            <h2>{t("Synthetic PDF test")}</h2>
             <p>
-              ٢٠٠ مم مقاس القطع؛ الطباعة تضيف ٣ مم نزيف لكل جانب. ليست PDF/X أو
-              موافقة مطبعة.
+              {t(
+                "200 mm trim with 3 mm print bleed on each side. Not PDF/X or printer approval.",
+              )}
             </p>
             <button
               onClick={async () => {
@@ -247,27 +265,31 @@ function App() {
                 if (value) setStatus(JSON.stringify(value));
               }}
             >
-              Generate PRINT + DIGITAL proof
+              {t("Generate PRINT + DIGITAL proof")}
             </button>
           </section>
         )}
         {tab === "Settings / Diagnostics" && (
           <section>
-            <h2>التشخيص المحلي</h2>
+            <h2>{t("Local diagnostics")}</h2>
             <button
               onClick={async () => {
                 const value = await unwrap(window.hekayti.diagnostics());
                 if (value) setDiagnostics(value);
               }}
             >
-              Refresh diagnostics
+              {t("Refresh diagnostics")}
             </button>
             <pre dir="ltr">{JSON.stringify(diagnostics, null, 2)}</pre>
-            <p>لا مفاتيح API، ولا إرسال تشخيصات إلى خدمة سحابية.</p>
+            <p>{t("No API keys or cloud diagnostics transmission.")}</p>
           </section>
         )}
       </main>
     </>
   );
 }
-createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(
+  <UiLanguageProvider>
+    <App />
+  </UiLanguageProvider>,
+);

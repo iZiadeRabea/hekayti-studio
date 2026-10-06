@@ -1,3 +1,4 @@
+import { useUi, UiStatus, UiFinding } from "./UiLanguage";
 import { useEffect, useState } from "react";
 import type { WorkflowSnapshot } from "@hekayti/core/workflow";
 import type {
@@ -14,6 +15,7 @@ export function StoryPlanner({
   workflow: WorkflowSnapshot;
   onWorkflow: (w: WorkflowSnapshot) => void;
 }) {
+  const { t, label } = useUi();
   const [state, setState] = useState<PlannerSnapshot | null>(null),
     [families, setFamilies] = useState<LibraryRecord[]>([]),
     [variation, setVariation] =
@@ -147,17 +149,17 @@ export function StoryPlanner({
     });
   }
   return (
-    <section aria-label="Story Planner">
-      <h3>Story Planner — before prose</h3>
+    <section aria-label={t("Story Planner")} data-testid="story-planner">
+      <h3>{t("Story Planner — before prose")}</h3>
       <p role="status" data-testid="planner-status">
-        {status}
+        <UiStatus raw={status} />
       </p>
       <fieldset disabled={busy}>
-        <legend>Planning choices</legend>
+        <legend>{t("Planning choices")}</legend>
         <label>
-          Variation
+          {t("Variation")}
           <select
-            aria-label="Planner variation"
+            aria-label={t("Planner variation")}
             value={variation}
             onChange={(e) => setVariation(e.target.value as typeof variation)}
           >
@@ -167,38 +169,42 @@ export function StoryPlanner({
               "FreshConcept",
               "CompletelyNew",
             ].map((x) => (
-              <option key={x}>{x}</option>
+              <option key={x} value={x}>
+                {label(x)}
+              </option>
             ))}
           </select>
         </label>
         <label>
-          Family
+          {t("Family")}
           <select
-            aria-label="Planner family"
+            aria-label={t("Planner family")}
             value={family}
             onChange={(e) => setFamily(e.target.value)}
           >
-            <option value="">Automatic structural selection</option>
+            <option value="">{t("Automatic structural selection")}</option>
             {families.map((f) => (
               <option key={f.recordId} value={f.recordId}>
-                {f.title} · {f.status} ·{" "}
+                {f.title} · {label(f.status)} ·{" "}
                 {f.creative?.culture.fit ?? "unscreened"}
               </option>
             ))}
           </select>
         </label>
         <label>
-          Cultural profile
+          {t("Cultural profile")}
           <select
             value={profile}
             onChange={(e) => setProfile(e.target.value as typeof profile)}
           >
-            <option>EGYPTIAN_ARAB_MUSLIM_FAMILY</option>
-            <option>GENERAL_FAMILY</option>
+            <option value="EGYPTIAN_ARAB_MUSLIM_FAMILY">
+              {t("EGYPTIAN_ARAB_MUSLIM_FAMILY")}
+            </option>
+            <option value="GENERAL_FAMILY">{t("GENERAL_FAMILY")}</option>
           </select>
         </label>
         <label>
-          Optional fictional setting
+          {t("Optional fictional setting")}
           <input
             value={setting}
             maxLength={500}
@@ -206,7 +212,7 @@ export function StoryPlanner({
           />
         </label>
         <label>
-          Creator constraints for human review
+          {t("Creator constraints for human review")}
           <input
             value={constraints}
             maxLength={1500}
@@ -219,7 +225,9 @@ export function StoryPlanner({
             checked={inspiration}
             onChange={(e) => setInspiration(e.target.checked)}
           />
-          I reviewed provisional Library inspiration; this does not promote it.
+          {t(
+            "I reviewed provisional Library inspiration; this does not promote it.",
+          )}
         </label>
         <label>
           <input
@@ -227,7 +235,7 @@ export function StoryPlanner({
             checked={adaptation}
             onChange={(e) => setAdaptation(e.target.checked)}
           />
-          I acknowledge cultural/age/Arabic adaptation needs.
+          {t("I acknowledge cultural/age/Arabic adaptation needs.")}
         </label>
         <label>
           <input
@@ -235,7 +243,9 @@ export function StoryPlanner({
             checked={sensitive}
             onChange={(e) => setSensitive(e.target.checked)}
           />
-          Explicitly include sensitive/not-default inspiration for review.
+          {t(
+            "Explicitly include sensitive/not-default inspiration for review.",
+          )}
         </label>
         <label>
           <input
@@ -243,11 +253,12 @@ export function StoryPlanner({
             checked={religious}
             onChange={(e) => setReligious(e.target.checked)}
           />
-          Explicitly consider religious material; qualified accuracy review
-          remains required.
+          {t(
+            "Explicitly consider religious material; qualified accuracy review remains required.",
+          )}
         </label>
         <button onClick={() => void planStory()}>
-          Plan Story / regenerate with choices
+          {t("Plan Story / regenerate with choices")}
         </button>
         <button
           onClick={() => {
@@ -263,35 +274,128 @@ export function StoryPlanner({
               });
           }}
         >
-          Reload planner / family choices
+          {t("Reload planner / family choices")}
         </button>
       </fieldset>
       {plan && (
         <>
           <p>
-            {plan.title} · {plan.guidance.narrativeForm} ·{" "}
-            {plan.provenance.sourceMode}
+            <span dir="auto">{plan.title}</span> ·{" "}
+            {label(plan.guidance.narrativeForm)} ·{" "}
+            {label(plan.provenance.sourceMode)}
           </p>
-          <p>Goal: {plan.goal.description}</p>
           <p>
-            Problem:{" "}
-            {plan.problem?.description ??
-              "Sensory recognition; no conventional conflict"}
+            {t("Goal:")} <span dir="auto">{plan.goal.description}</span>
           </p>
+          <p>
+            {t("Problem:")}{" "}
+            <span dir="auto">
+              {plan.problem?.description ??
+                t("Sensory recognition; no conventional conflict")}
+            </span>
+          </p>
+          <p>
+            {t("Setting")}: <span dir="auto">{plan.setting.description}</span>
+          </p>
+          <details>
+            <summary>{t("Characters")}</summary>
+            <ul>
+              {plan.characters.map((character) => (
+                <li key={character.characterId}>
+                  <span dir="auto">{character.displayName}</span>{" "}
+                  <bdi dir="ltr">{character.characterId}</bdi>
+                  <p dir="auto">{character.consistencyNotes}</p>
+                </li>
+              ))}
+            </ul>
+          </details>
           <ol>
             {plan.beats.map((b) => (
               <li key={b.beatId}>
-                {b.role}: {b.summary} · cause {b.causes.join(", ") || "opening"}
+                {label(b.role)}: <span dir="auto">{b.summary}</span>{" "}
+                {t("· cause")}{" "}
+                <bdi dir="ltr">{b.causes.join(", ") || label("opening")}</bdi>
               </li>
             ))}
           </ol>
+          {plan.schemaVersion === "story-plan/1.1" && (
+            <details data-testid="planner-quality" open>
+              <summary>{t("Quality detail")}</summary>
+              <dl>
+                <div>
+                  <dt>{t("Objective intent")}</dt>
+                  <dd>{label(plan.quality.objectiveIntent.primaryIntent)}</dd>
+                </div>
+                <div>
+                  <dt>{t("Compatibility")}</dt>
+                  <dd>{label(plan.quality.structuralCompatibility.level)}</dd>
+                </div>
+                <div>
+                  <dt>{t("Situation")}</dt>
+                  <dd dir="auto">{plan.quality.situation.focus}</dd>
+                </div>
+                <div>
+                  <dt>{t("Initial friction")}</dt>
+                  <dd dir="auto">{plan.quality.situation.initialFriction}</dd>
+                </div>
+                <div>
+                  <dt>{t("Resolution method")}</dt>
+                  <dd dir="auto">{plan.quality.situation.resolutionMethod}</dd>
+                </div>
+              </dl>
+              <ol>
+                {plan.quality.transitions.map((transition) => (
+                  <li key={transition.beatId}>
+                    <bdi dir="ltr">{transition.beatId}</bdi>
+                    <dl>
+                      <div>
+                        <dt>{t("Active participants")}</dt>
+                        <dd>
+                          <bdi dir="ltr">
+                            {transition.participantIds.join(", ")}
+                          </bdi>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>{t("Strategy")}</dt>
+                        <dd dir="auto">{transition.strategy}</dd>
+                      </div>
+                      <div>
+                        <dt>{t("Information change")}</dt>
+                        <dd dir="auto">{transition.informationChange}</dd>
+                      </div>
+                      <div>
+                        <dt>{t("Relationship change")}</dt>
+                        <dd dir="auto">{transition.relationshipChange}</dd>
+                      </div>
+                      <div>
+                        <dt>{t("Consequence")}</dt>
+                        <dd dir="auto">{transition.consequence}</dd>
+                      </div>
+                      <div>
+                        <dt>{t("Resolution method")}</dt>
+                        <dd dir="auto">{transition.resolutionMethod}</dd>
+                      </div>
+                    </dl>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          )}
           <details>
-            <summary>Logic QA and source provenance</summary>
-            <p>{JSON.stringify(qa?.signals)}</p>
+            <summary>{t("Logic QA and source provenance")}</summary>
+            <dl aria-label={t("Story plan signals")}>
+              {Object.entries(qa?.signals ?? {}).map(([key, value]) => (
+                <div key={key}>
+                  <dt>{label(key)}</dt>
+                  <dd>{label(String(value))}</dd>
+                </div>
+              ))}
+            </dl>
             <ul>
               {qa?.findings.map((f) => (
                 <li key={f.findingId}>
-                  {f.severity}: {f.message}
+                  <UiFinding finding={f} />
                 </li>
               ))}
             </ul>
@@ -303,7 +407,9 @@ export function StoryPlanner({
               checked={ack}
               onChange={(e) => setAck(e.target.checked)}
             />
-            I reviewed this plan and advisory limits; accept fixed structure.
+            {t(
+              "I reviewed this plan and advisory limits; accept fixed structure.",
+            )}
           </label>
           <button
             disabled={
@@ -319,13 +425,13 @@ export function StoryPlanner({
               })
             }
           >
-            Accept Plan and build Blueprint
+            {t("Accept Plan and build Blueprint")}
           </button>
           <button
             disabled={busy || !state?.currentAcceptanceId}
             onClick={() => void command({ action: "PREPARE" })}
           >
-            Prepare manual writing package
+            {t("Prepare manual writing package")}
           </button>
           {pkg && (
             <>
@@ -335,8 +441,9 @@ export function StoryPlanner({
                   checked={copyReview}
                   onChange={(e) => setCopyReview(e.target.checked)}
                 />
-                I reviewed the whole package for synthetic-only external
-                copying.
+                {t(
+                  "I reviewed the whole package for synthetic-only external copying.",
+                )}
               </label>
               {(["CHATGPT", "GEMINI", "GENERIC"] as const).map((target) => (
                 <button
@@ -351,13 +458,14 @@ export function StoryPlanner({
                     })
                   }
                 >
-                  Copy for {target}
+                  {t("Copy for")} <bdi dir="ltr">{target}</bdi>
                 </button>
               ))}
               <label>
-                Paste plan-response/1.0 JSON
+                {t("Paste plan-response/1.0 JSON")}
                 <textarea
-                  aria-label="Planner result JSON"
+                  aria-label={t("Planner result JSON")}
+                  dir="ltr"
                   rows={6}
                   value={raw}
                   maxLength={500000}
@@ -374,19 +482,19 @@ export function StoryPlanner({
                   })
                 }
               >
-                Validate / Import planned prose
+                {t("Validate / Import planned prose")}
               </button>
               <p>
-                Run current Story QA and human text approval below. Anchor
-                validation cannot establish that arbitrary prose follows the
-                plan; inspect every page and language edition.
+                {t(
+                  "Run current Story QA and human text approval below. Anchor validation cannot establish that arbitrary prose follows the plan; inspect every page and language edition.",
+                )}
               </p>
             </>
           )}
           <fieldset disabled={busy || !workflow.current.reportId}>
-            <legend>Actual human review feedback</legend>
+            <legend>{t("Actual human review feedback")}</legend>
             <label>
-              Review notes
+              {t("Review notes")}
               <input
                 value={notes}
                 maxLength={1500}
@@ -394,7 +502,7 @@ export function StoryPlanner({
               />
             </label>
             <label>
-              Story quality (1–5)
+              {t("Story quality (1–5)")}
               <input
                 type="number"
                 min={1}
@@ -404,7 +512,9 @@ export function StoryPlanner({
               />
             </label>
             <p>
-              Submitting records your actual review of the current draft and QA.
+              {t(
+                "Submitting records your actual review of the current draft and QA.",
+              )}
             </p>
             {(["APPROVED", "EDITED", "REJECTED"] as const).map((outcome) => (
               <button
@@ -417,7 +527,7 @@ export function StoryPlanner({
                 }
                 onClick={() => void feedback(outcome)}
               >
-                Record {outcome}
+                {t("Record")} {label(outcome)}
               </button>
             ))}
           </fieldset>

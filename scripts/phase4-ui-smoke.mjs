@@ -25,6 +25,7 @@ const must = (result) => {
 };
 try {
   let page = await desktop.firstWindow();
+  await page.getByTestId("ui-language-en").click();
   await page
     .getByRole("button", { name: "Story Creator", exact: true })
     .click();
@@ -288,6 +289,7 @@ try {
   await desktop.close();
   desktop = await launch();
   page = await desktop.firstWindow();
+  await page.getByTestId("ui-language-en").click();
   await page
     .getByRole("button", { name: "Library / Inbox / Bridge", exact: true })
     .click();

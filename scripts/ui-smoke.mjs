@@ -12,8 +12,9 @@ const desktop = await electron.launch({
 });
 try {
   const page = await desktop.firstWindow();
+  await page.getByTestId("ui-language-en").click();
   await page
-    .getByRole("heading", { name: "حكايتي - مختبر المرحلة الثانية" })
+    .getByRole("heading", { name: "Hekayti Studio — synthetic creator lab" })
     .waitFor();
   assert.equal(await page.evaluate(() => typeof window.require), "undefined");
   await page.getByRole("button", { name: "RTL Test", exact: true }).click();

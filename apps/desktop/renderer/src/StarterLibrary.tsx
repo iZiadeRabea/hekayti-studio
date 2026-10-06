@@ -1,8 +1,10 @@
+import { useUi, UiStatus } from "./UiLanguage";
 import React, { useEffect, useState } from "react";
 import type { LibraryRecord } from "@hekayti/contracts/library";
 import type { Result } from "../../src/api";
 import { storyDnaAdvisories } from "@hekayti/core/dna";
 export function StarterLibrary() {
+  const { t, label } = useUi();
   const [page, setPage] = useState<{
       recordVersion: number;
       total: number;
@@ -65,12 +67,11 @@ export function StarterLibrary() {
   };
   return (
     <section aria-label="Starter and creative Library">
-      <h2>Starter / Creative Library</h2>
+      <h2>{t("Starter / Creative Library")}</h2>
       <p>
-        Source → Metadata → Summary → DNA → Pattern → Family → Age → Culture →
-        Candidate → Validation → Import. Ideas are not approved stories. Missing
-        DNA stays UNKNOWN; original abstracts and extractive observations are
-        distinguished.
+        {t(
+          "Source → Metadata → Summary → DNA → Pattern → Family → Age → Culture → Candidate → Validation → Import. Ideas are not approved stories. Missing DNA stays UNKNOWN; original abstracts and extractive observations are distinguished.",
+        )}
       </p>
       <label>
         <input
@@ -78,25 +79,27 @@ export function StarterLibrary() {
           checked={reviewed}
           onChange={(e) => setReviewed(e.target.checked)}
         />
-        I reviewed public/synthetic creative text; no private child/customer
-        information.
+        {t(
+          "I reviewed public/synthetic creative text; no private child/customer information.",
+        )}
       </label>
       <label>
-        Starter target cultural profile
+        {t("Starter target cultural profile")}
         <select
-          aria-label="Starter target cultural profile"
+          aria-label={t("Starter target cultural profile")}
           value={profile}
           onChange={(e) => setProfile(e.target.value as typeof profile)}
         >
-          <option>EGYPTIAN_ARAB_MUSLIM_FAMILY</option>
-          <option>GENERAL_FAMILY</option>
+          <option value="EGYPTIAN_ARAB_MUSLIM_FAMILY">
+            {t("EGYPTIAN_ARAB_MUSLIM_FAMILY")}
+          </option>
+          <option value="GENERAL_FAMILY">{t("GENERAL_FAMILY")}</option>
         </select>
       </label>
       <p>
-        Both profiles retain conservative provisional source flags; selecting a
-        profile never certifies religious accuracy or clears sensitivity.
-        Reimporting the same identity under a different profile is an explicit
-        conflict, not an overwrite.
+        {t(
+          "Both profiles retain conservative provisional source flags; selecting a profile never certifies religious accuracy or clears sensitivity. Reimporting the same identity under a different profile is an explicit conflict, not an overwrite.",
+        )}
       </p>
       <div>
         <button
@@ -117,7 +120,7 @@ export function StarterLibrary() {
             }
           }}
         >
-          Import traceable starter
+          {t("Import traceable starter")}
         </button>
         <button
           disabled={!reviewed}
@@ -134,7 +137,7 @@ export function StarterLibrary() {
             }
           }}
         >
-          Import JSON / JSONL batch
+          {t("Import JSON / JSONL batch")}
         </button>
         <button
           disabled={!reviewed}
@@ -148,7 +151,7 @@ export function StarterLibrary() {
               );
           }}
         >
-          Export creative ZIP
+          {t("Export creative ZIP")}
         </button>
         <button
           onClick={async () => {
@@ -161,7 +164,7 @@ export function StarterLibrary() {
             }
           }}
         >
-          Preview creative restore
+          {t("Preview creative restore")}
         </button>
       </div>
       {preview && (
@@ -182,16 +185,18 @@ export function StarterLibrary() {
             )}
           </pre>
           <label>
-            All exact identity conflicts
+            {t("All exact identity conflicts")}
             <select
               value={choice}
               onChange={(e) => setChoice(e.target.value as typeof choice)}
             >
               <option value="KEEP_EXISTING">
-                Keep existing; explicitly skip conflicting archive records
+                {t(
+                  "Keep existing; explicitly skip conflicting archive records",
+                )}
               </option>
               <option value="COPY_WITH_NEW_IDS">
-                Copy archive conflicts under deterministic new IDs
+                {t("Copy archive conflicts under deterministic new IDs")}
               </option>
             </select>
           </label>
@@ -215,13 +220,13 @@ export function StarterLibrary() {
               }
             }}
           >
-            Confirm creative restore
+            {t("Confirm creative restore")}
           </button>
         </section>
       )}
       <div>
         <label>
-          Search title
+          {t("Search title")}
           <input
             value={filters.search ?? ""}
             onChange={(e) => filter("search", e.target.value)}
@@ -267,15 +272,17 @@ export function StarterLibrary() {
           ] as [string, string[]][]
         ).map(([name, options]) => (
           <label key={name}>
-            {name}
+            {label(name)}
             <select
               aria-label={`Paged ${name}`}
               value={filters[name] ?? ""}
               onChange={(e) => filter(name, e.target.value)}
             >
-              <option value="">All / unknown</option>
+              <option value="">{t("All / unknown")}</option>
               {options.map((x) => (
-                <option key={x}>{x}</option>
+                <option key={x} value={x}>
+                  {label(x)}
+                </option>
               ))}
             </select>
           </label>
@@ -291,7 +298,7 @@ export function StarterLibrary() {
           "plotDepth",
         ].map((name) => (
           <label key={name}>
-            {name}
+            {label(name)}
             <input
               aria-label={`Paged ${name}`}
               value={filters[name] ?? ""}
@@ -301,20 +308,20 @@ export function StarterLibrary() {
         ))}
       </div>
       <p data-testid="paged-library-count">
-        {page.total} matches; page {Math.floor(page.offset / 30) + 1}; at most30
-        rows rendered.
+        {page.total} {t("matches; page")} {Math.floor(page.offset / 30) + 1}
+        {t("; at most30 rows rendered.")}
       </p>
       <button
         disabled={offset === 0}
         onClick={() => setOffset(Math.max(0, offset - 30))}
       >
-        Previous creative page
+        {t("Previous creative page")}
       </button>
       <button
         disabled={offset + 30 >= page.total}
         onClick={() => setOffset(offset + 30)}
       >
-        Next creative page
+        {t("Next creative page")}
       </button>
       <ul>
         {page.records.map((r) => (
@@ -329,7 +336,8 @@ export function StarterLibrary() {
         <section aria-label="Creative record details">
           <h3>{selected.title}</h3>
           <p>
-            Record ID: <code>{selected.recordId}</code>; family:{" "}
+            {t("Record ID:")} <code>{selected.recordId}</code>
+            {t("; family:")}{" "}
             {selected.family?.recordId ??
               "Unassigned / insufficient structural evidence"}
           </p>
@@ -339,10 +347,11 @@ export function StarterLibrary() {
               : "Structured creative content"}
           </p>
           <p>
-            Source:{" "}
-            {selected.creative?.source?.extractionMethod ?? "Unspecified"};
-            culture: {selected.creative?.source?.sourceCulture ?? "Unknown"}.
-            Provisional, not native/religious/rights certification.
+            {t("Source:")}{" "}
+            {selected.creative?.source?.extractionMethod ?? "Unspecified"}
+            {t("; culture:")}{" "}
+            {selected.creative?.source?.sourceCulture ?? "Unknown"}
+            {t(". Provisional, not native/religious/rights certification.")}
           </p>
           {(["SAVE", "REVIEW", "APPROVE", "PROMOTE", "ARCHIVE"] as const).map(
             (action) => (
@@ -371,7 +380,7 @@ export function StarterLibrary() {
                   }
                 }}
               >
-                {action} creative record
+                {action} {t("creative record")}
               </button>
             ),
           )}
@@ -380,7 +389,8 @@ export function StarterLibrary() {
               href={selected.creative.source.itemUrl}
               onClick={(e) => e.preventDefault()}
             >
-              Source locator (copy manually): {selected.creative.source.itemUrl}
+              {t("Source locator (copy manually):")}{" "}
+              {selected.creative.source.itemUrl}
             </a>
           )}
           <pre>
@@ -398,14 +408,14 @@ export function StarterLibrary() {
             )}
           </pre>
           <p>
-            Explicit review/approval/promotion is separate from
-            cultural/rights/source screening. Use existing Library / Inbox /
-            Bridge for human actions and selected Hybrid context.
+            {t(
+              "Explicit review/approval/promotion is separate from cultural/rights/source screening. Use existing Library / Inbox / Bridge for human actions and selected Hybrid context.",
+            )}
           </p>
         </section>
       )}
       <p role="status" data-testid="creative-library-status">
-        {status}
+        <UiStatus raw={status} />
       </p>
     </section>
   );

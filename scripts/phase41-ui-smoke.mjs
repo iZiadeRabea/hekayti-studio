@@ -22,6 +22,7 @@ const must = (r) => {
 };
 try {
   let page = await app.firstWindow();
+  await page.getByTestId("ui-language-en").click();
   await page
     .getByRole("button", { name: "Starter / Creative Library", exact: true })
     .click();
@@ -114,6 +115,7 @@ try {
   await app.close();
   app = await launch(restoredData);
   page = await app.firstWindow();
+  await page.getByTestId("ui-language-en").click();
   await page
     .getByRole("button", { name: "Starter / Creative Library", exact: true })
     .click();
@@ -162,6 +164,7 @@ try {
   await app.close();
   app = await launch(restoredData);
   page = await app.firstWindow();
+  await page.getByTestId("ui-language-en").click();
   await page
     .getByRole("button", { name: "Starter / Creative Library", exact: true })
     .click();

@@ -21,6 +21,7 @@ let desktop = await launch(),
   approved;
 try {
   const page = await desktop.firstWindow();
+  await page.getByTestId("ui-language-en").click();
   await page
     .getByRole("button", { name: "Story Creator", exact: true })
     .click();
@@ -105,6 +106,7 @@ try {
   await desktop.close();
   desktop = await launch();
   const reopened = await desktop.firstWindow();
+  await reopened.getByTestId("ui-language-en").click();
   await reopened
     .getByRole("button", { name: "Story Creator", exact: true })
     .click();
