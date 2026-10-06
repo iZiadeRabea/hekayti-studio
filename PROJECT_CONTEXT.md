@@ -1,6 +1,6 @@
 # Permanent product context
 
-Current milestone: Phase4.2 Story Planner/manual trial readiness, workspace0.5.2. Final compact Astra architecture review APPROVED FOR RELEASE for e81db3a6fd2c944bc43b827339277667de117907 after four QA groups CLOSED and consolidated regression/build/health/security/dev+unsigned package PASS. Same serial Sol MEDIUM Ops authorized for checkpoint/private Git/source+791-row creative Library cloud verification; final immutable SHA/receipt/download-hash/fresh restores external, not implied by source. Approved plan docs/implementation/phase4.2-plan.md; phase4.2-testing.md/release-packet.md. Stable Phase4.1 history/verified recovery retained. No Phase5 authorization.
+Current milestone: owner-approved Phase4.2.1 focused planner quality plus Arabic-first interface; workspace0.5.2, independent QA/final approval pending. Stable Phase4.2 release96e64925d9556981808f00ed323941c2e61ce2dd/v0.5.2-story-planner/checkpoint verified in ignored phase42-final-96e64925 receipt. Approved compact plan docs/implementation/phase4.2.1-plan.md; no current release operations or Phase5. Existing791 source facts and owner/runtime databases preserved; no new dependencies/providers/research.
 
 ## Identity and market
 Project: Hekayti Studio. Initial market: Egypt only.
@@ -29,6 +29,10 @@ Phase 2: only after the workflow proves reliable and high quality, consider a cu
 Core logic is reusable without Electron. Phase 1 recommended Electron + React/TypeScript with local SQLite and asset-store adapters; Phase 2 implemented and tested that baseline through separate npm workspaces and scoped Arabic/print/Windows feasibility gates. Exact dependencies are pinned in package-lock.json and docs/implementation/phase2-overview.md. AI/image provider, final printer/font and real-data retention remain unselected. Phase 1 architecture specifications remain historical design rationale; implementation evidence takes precedence for actual runtime state.
 
 ## Current authorization
+
+Phase4.2.1 adds bounded explainable ObjectiveIntent, structural-field compatibility cohorts, concrete age-aware state/action/consequence situations, typed quality findings and explicit1.1 dispatch. Current desktop opts planner-quality/1.0; original1.0 integrations/histories/packages remain unchanged, including an actual retained v0.5.2 synthetic accepted-plan/package reload fixture. Arabic UI defaults independently of story language, with English switch and existing schema/enum values preserved. Human literary/native/cultural/developmental review and provider trials remain unvalidated.
+
+“Objective semantics influence structural planning before prose generation.” “Structural validity alone is insufficient; Story Plans require concrete age-appropriate progression toward the requested objective.”
 
 Owner authorizes Phase4.2 Story Planner: existing request/age/library → explicit plan/causal QA → frozen manual prose package → canonical import/QA/human approval → real feedback. Planning precedes prose; structured editorial learning is not AI model fine-tuning. Existing791 GENERATED starter rows remain provisional, READY0; explicit reviewed inspiration is separate from promotion. Default EGYPTIAN_ARAB_MUSLIM_FAMILY and GENERAL_FAMILY retain separate sensitivity/religious opt-ins. Source facts/unknowns and human-review limits remain honest.
 

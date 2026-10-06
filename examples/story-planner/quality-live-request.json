@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "planning-request/1.0",
+  "planningRevisionId": "quality-planning-1",
+  "request": {
+    "schemaVersion": "story-request/1.0",
+    "requestId": "quality-request",
+    "revisionId": "quality-request-1",
+    "projectId": "demo-product-design",
+    "storyId": "quality-story",
+    "ageMonths": 48,
+    "languageModes": ["ar-EG"],
+    "primaryLanguageMode": "ar-EG",
+    "primaryCategory": "adventure",
+    "objective": {
+      "kind": "behavioral",
+      "description": "Learn to share and take turns with others",
+      "successScenario": "The child shares a toy and takes turns with a friend"
+    },
+    "theme": "A playground game",
+    "readingMode": "adult-read",
+    "personalization": {
+      "origin": "synthetic",
+      "profileId": "synthetic",
+      "level": 0,
+      "preferences": [],
+      "heroMode": "none"
+    },
+    "sourceStrategy": "hybrid",
+    "trustedFacts": [],
+    "outputIntents": ["print", "digital"]
+  },
+  "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+  "variation": "FreshConcept",
+  "generation": 0,
+  "selectedFamily": null,
+  "selectedCharacter": null,
+  "selectedSetting": "A familiar Egyptian neighborhood playground",
+  "constraints": [
+    "Warm, playful and simple for a 4-year-old. No scary elements. Natural Egyptian setting and behavior."
+  ],
+  "inspirationReviewed": true,
+  "adaptationAcknowledged": true,
+  "sensitiveOptIn": false,
+  "religiousOptIn": false
+}

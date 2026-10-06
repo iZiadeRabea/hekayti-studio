@@ -103,7 +103,7 @@ const PlanBeatSchema = z
     progress: text,
   })
   .strict();
-export const StoryPlanSchema = z
+export const LegacyStoryPlanSchema = z
   .object({
     schemaVersion: z.literal("story-plan/1.0"),
     planId: Id,
@@ -171,8 +171,91 @@ export const StoryPlanSchema = z
       .strict(),
   })
   .strict();
+export const ObjectiveIntentSchema = z
+  .object({
+    schemaVersion: z.literal("objective-intent/1.0"),
+    primaryIntent: z.enum([
+      "SHARING_TURN_TAKING",
+      "COOPERATION_HELPING",
+      "EMOTIONAL_REGULATION",
+      "ROUTINE_HABIT",
+      "LEARNING_DISCOVERY",
+      "CONNECTION_REPAIR",
+      "GENERAL_BEHAVIORAL",
+      "GENERAL_EDUCATIONAL",
+      "GENERAL_EMOTIONAL",
+      "GENERAL_ENTERTAINMENT",
+    ]),
+    evidence: z
+      .array(
+        z
+          .object({
+            field: z.enum(["kind", "description", "successScenario"]),
+            matched: text,
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(10),
+    socialMechanisms: z.array(text).max(5),
+    storyNeeds: z.array(text).max(8),
+    limited: z.boolean(),
+  })
+  .strict();
+export type ObjectiveIntent = z.infer<typeof ObjectiveIntentSchema>;
+export const StructuralCompatibilitySchema = z
+  .object({
+    level: z.enum(["STRONG", "ACCEPTABLE", "REVIEW", "MISMATCH"]),
+    evidence: z
+      .array(z.object({ field: text, matched: text }).strict())
+      .max(30),
+    reasons: z.array(text).min(1).max(10),
+  })
+  .strict();
+export type StructuralCompatibility = z.infer<
+  typeof StructuralCompatibilitySchema
+>;
+export const PlannerQualitySchema = z
+  .object({
+    schemaVersion: z.literal("planner-quality/1.0"),
+    objectiveIntent: ObjectiveIntentSchema,
+    structuralCompatibility: StructuralCompatibilitySchema,
+    situation: z
+      .object({
+        focus: text,
+        initialFriction: text.nullable(),
+        resolutionMethod: text,
+        basis: z.literal("EDITORIAL_SITUATION_NOT_SOURCE_FACT"),
+      })
+      .strict(),
+    transitions: z
+      .array(
+        z
+          .object({
+            beatId: Id,
+            participantIds: z.array(Id).max(20),
+            strategy: text,
+            informationChange: text,
+            relationshipChange: text,
+            consequence: text,
+            resolutionMethod: text.nullable(),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(200),
+  })
+  .strict();
+export const QualityStoryPlanSchema = LegacyStoryPlanSchema.extend({
+  schemaVersion: z.literal("story-plan/1.1"),
+  quality: PlannerQualitySchema,
+});
+export const StoryPlanSchema = z.union([
+  LegacyStoryPlanSchema,
+  QualityStoryPlanSchema,
+]);
 export type StoryPlan = z.infer<typeof StoryPlanSchema>;
-export const PlanQaSchema = z
+export const LegacyPlanQaSchema = z
   .object({
     schemaVersion: z.literal("plan-qa/1.0"),
     planRevisionId: Id,
@@ -196,6 +279,18 @@ export const PlanQaSchema = z
     humanReviewRequired: z.literal(true),
   })
   .strict();
+const qualitySignal = z.enum(["STRONG", "ACCEPTABLE", "REVIEW", "FAIL"]);
+export const QualityPlanQaSchema = LegacyPlanQaSchema.extend({
+  schemaVersion: z.literal("plan-qa/1.1"),
+  signals: LegacyPlanQaSchema.shape.signals.extend({
+    ObjectiveIntentFit: qualitySignal,
+    StructuralCompatibility: qualitySignal,
+    BeatProgression: qualitySignal,
+    SituationSpecificity: qualitySignal,
+    ResolutionSpecificity: qualitySignal,
+  }),
+});
+export const PlanQaSchema = z.union([LegacyPlanQaSchema, QualityPlanQaSchema]);
 export type PlanQa = z.infer<typeof PlanQaSchema>;
 export const PlanAcceptanceSchema = z
   .object({

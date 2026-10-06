@@ -669,10 +669,15 @@ app
       }
       return workflow.importDraft(x.projectId, x.expectedVersion, input);
     });
-    const planner = new StoryPlannerService(repo, workflow, {
-      id: randomUUID,
-      now: () => new Date().toISOString(),
-    });
+    const planner = new StoryPlannerService(
+      repo,
+      workflow,
+      {
+        id: randomUUID,
+        now: () => new Date().toISOString(),
+      },
+      "planner-quality/1.0",
+    );
     handle("planner:load", (arg) => planner.load(validate(Id, arg)));
     const plannerBase = {
       projectId: Id,

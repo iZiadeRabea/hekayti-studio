@@ -1,5 +1,17 @@
 # Story Plan validation
 
+## Versioned quality checks
+
+“Structural validity alone is insufficient; Story Plans require concrete age-appropriate progression toward the requested objective.” `story-plan/1.0` retains original validation/`plan-qa/1.0`; new quality plans explicitly use1.1. The strict union forbids adding quality to an old1.0 payload or omitting it from1.1. No historical acceptance/package/hash is rewritten.
+
+Quality1.1 adds evidence/location-bearing NON_PROGRESSING_BEATS, GENERIC_BEAT_DESCRIPTION, OBJECTIVE_RESTATEMENT, WEAK_RESOLUTION_MECHANISM, SOCIAL_INTENT_CAST_MISMATCH and INTENT_STRUCTURE_MISMATCH. Inactive/undeclared social resolution participants, contradictory intent evidence, explicit source mismatch and unchanged causal progression are HIGH. Known placeholders/excessive request copying/weak HOW and limited GENERAL/source coverage are MEDIUM review advisories. Opening establishment, quiet closure and intentional infant/toddler repetition do not require forced conventional change. Same action labels may progress when concrete strategy/information/relationship/consequence changes; action-word diversity alone is not certification.
+
+ObjectiveIntentFit, StructuralCompatibility, BeatProgression, SituationSpecificity and ResolutionSpecificity are qualitative STRONG/ACCEPTABLE/REVIEW/FAIL categories. Persistence separately binds new intent/compatibility to retained source fields and rejects fabricated re-sealed evidence without repair. Heuristics catch explicit fields and known patterns, not the truth of arbitrary free prose, subtle semantic mismatch or literary quality. Source791 remains unmodified GENERATED/READY0; cultural opt-ins and actual canonical human-review feedback remain separate authority.
+
+Focused command: `node --import tsx --test tests/app/phase421-quality.test.ts tests/app/phase42-planner.test.ts tests/app/phase42-red-team.test.ts tests/app/phase421-localization.test.ts`. Exact live corrected raw artifact and actual v0.5.2 golden fixture are tracked; independent QA/consolidated full release gates remain pending. Actual ChatGPT/Gemini prose/native Arabic/cultural/developmental/child appeal still needs manual review.
+
+## Retained structural/manual checks
+
 `validateStoryPlan` returns severity/category/location/message/suggestedAction and STRONG / ACCEPTABLE / REVIEW / FAIL signals. These are explainable internal editorial signals, not measurements of literary quality.
 
 Deterministic checks cover typed goal/protagonist or recognition subject, canonical Age Engine guidance, age actions/cast/units, contiguous unique ordered beats, declared/introduced actors, before/after state links, explicit location transitions, backward-only cause/setup references, set-up resource tokens, original problem/goal identity, repeated attempt progression and resolution-linked ending. Infant recognition deliberately has no conventional conflict. Missing fields fail the strict shape contract before logic QA.

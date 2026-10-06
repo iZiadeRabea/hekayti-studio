@@ -2,10 +2,16 @@
 
 - Current project version: v0.5.2-story-planner
 - Current workspace version: 0.5.2; final release checkpoint will update stable fields below
-- Current branch at milestone: main
+- Current branch at milestone: feature/phase4.2.1-planner-quality
 - Latest stable checkpoint: checkpoint/phase4.2-story-planner-complete
 - Latest stable tag: v0.5.2-story-planner
 - Last successful tests: 2026-10-06 10:07:41 +03:00 — foundation, design and available application suites passed; visual/packaging gates recorded separately
+
+Phase4.2.1 current work: focused quality/localization implementation ready for one same independent QA, not released. Exact synthetic owner request reproduced first on unchanged791: legacy discovery/structure-pattern-14198870, copied objective/Approach placeholders, no old high QA finding. Corrected desktop-selected StoryPlan1.1 detects SHARING_TURN_TAKING, cooperative synthetic family hekayti-family-2/pattern null (honest sparse evidence), ACKNOWLEDGED_PROVISIONAL, two active participants, explicit role-swap/reciprocal success and no high quality findings. Raw before/after/full transitions/gates: examples/story-planner/quality-live-regression.json. Bounded intent/structure checks remain editorial heuristics, not final prose/native/child-appeal certification.
+
+Focused58/58 PASS (12 quality,23 unchanged Phase4.2 planner,16 unchanged prior independent QA,7 localization); typecheck PASS. Actual retained v0.5.2 synthetic accepted plan/manual package/approved workflow/feedback hashes and reload unchanged, including after new1.1 plan append. Arabic-first/English-switch/RTL/accept/package/clipboard/restart localized1.1 UI tested in isolated synthetic storage; UI evidence docs/implementation/phase4.2.1-localization.md. Engineering did not run full suite/build/package/health/Drive; MEDIUM UI worker performed one focused build/smoke. Same independent QA/final consolidated gates/final root approval remain pending. Same Sol HIGH implementation, existing MEDIUM UI/Ops, Extra High unused; no new worker or owner runtime DB use.
+
+Stable96e64925d9556981808f00ed323941c2e61ce2dd/main/v0.5.2-story-planner/checkpoint/phase4.2-story-planner-complete and final VERIFIED ignored backups/receipts/hekayti-studio-phase42-final-96e64925.json remain unchanged safety anchor. No new stable tag/checkpoint/main integration/push/cloud backup authority.
 
 Phase4.1 starter Library/StoryDNA final Astra architecture review APPROVED scoped preparation4fd7f084aae9105ec6e110d7020634f9daea2cd8. Independent QA all four findings CLOSED;100foundation/329design/189app/typecheck/build/onlinehealth/historysecurity/dev+unsigned packaged UI PASS. Mechanical v0.5.1-starter-library / checkpoint/phase4.1-starter-library-complete and both verified source+creative Drive recoveries authorized. Exact final Git/cloud/readback/restore identity is external: ignored backups/receipts/hekayti-studio-phase41-final-<releaseSHA8>.json and private Drive Manifests; do not infer cloud verification from this source file. HYBRID BY DEFAULT, no API dependency; no later features/private data/provider login authorized.
 

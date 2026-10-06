@@ -1,5 +1,9 @@
 # Changelog
 
+## Phase4.2.1 focused planner quality + Arabic-first UI — 2026-10-06 (not released)
+
+Bounded versioned objective intents/evidence, actual structural-field compatibility and compatible regeneration, concrete age-aware situations/meaningful progression/reciprocal HOW, active social participants and quality findings. Current desktop opts StoryPlan1.1/PlanQA1.1; accepted1.0 histories/packages/hashes retain explicit legacy validation/public integration boundary with actual retained v0.5.2 golden reload assurance. Existing manual package/import/approval/feedback authority and791 source facts unchanged. Exact live A–I local regression PASS;58 focused tests/typecheck PASS. Arabic-first/English-switch independent of story language, RTL/technical-ID wrapping, scoped isolated UI/restart/clipboard PASS. No provider/native/literary/child-appeal claim. Independent QA/consolidated expensive gates/final approval/release pending; prior stable96e64925 preserved.
+
 ## v0.5.2-story-planner final architecture acceptance — 2026-10-06
 
 Astra APPROVED FOR RELEASE scoped clean e81db3a6fd2c944bc43b827339277667de117907 after independent four-group closure and consolidated100foundation/329design/228app/typecheck/build/onlinehealth/historysecurity/dev+unsigned package PASS. Same serial Sol MEDIUM Ops authorized for mechanical immutable checkpoint/private Git readback/ONE source and separate791-row Library Drive download/hash/fresh restores; external final receipt proves actual completion. Mandatory release/recovery checks retained, no post-backup source commit/tag move. Human literary/native/cultural/child-appeal/provider quality remains manual; no API/later phase.

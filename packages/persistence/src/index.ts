@@ -54,6 +54,7 @@ import {
   validatePlannerAppend,
   validateStoryPlan,
   planToConcept,
+  validatePlanQualitySource,
 } from "@hekayti/core/planner";
 
 export class SqliteProjectRepository
@@ -967,6 +968,7 @@ export class SqliteProjectRepository
         JSON.parse(String(libraryRow!.payload)),
       );
       for (const p of s.plans) {
+        validatePlanQualitySource(p, library.records);
         if (
           !w.requests.some(
             (r) => canonicalJson(r) === canonicalJson(p.planning.request),

@@ -1,0 +1,1061 @@
+{
+  "schemaVersion": "quality-live-regression/1.0",
+  "notice": "Exact owner-provided synthetic request; deterministic local engineering reproduction. No provider output, operational/human approval or literary/native/child-appeal certification.",
+  "corpus": {
+    "records": 791,
+    "ready": 0,
+    "mutated": false
+  },
+  "planning": {
+    "schemaVersion": "planning-request/1.0",
+    "planningRevisionId": "quality-planning-1",
+    "request": {
+      "schemaVersion": "story-request/1.0",
+      "requestId": "quality-request",
+      "revisionId": "quality-request-1",
+      "projectId": "demo-product-design",
+      "storyId": "quality-story",
+      "ageMonths": 48,
+      "languageModes": [
+        "ar-EG"
+      ],
+      "primaryLanguageMode": "ar-EG",
+      "primaryCategory": "adventure",
+      "objective": {
+        "kind": "behavioral",
+        "description": "Learn to share and take turns with others",
+        "successScenario": "The child shares a toy and takes turns with a friend"
+      },
+      "theme": "A playground game",
+      "readingMode": "adult-read",
+      "personalization": {
+        "origin": "synthetic",
+        "profileId": "synthetic",
+        "level": 0,
+        "preferences": [],
+        "heroMode": "none"
+      },
+      "sourceStrategy": "hybrid",
+      "trustedFacts": [],
+      "outputIntents": [
+        "print",
+        "digital"
+      ]
+    },
+    "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+    "variation": "FreshConcept",
+    "generation": 0,
+    "selectedFamily": null,
+    "selectedCharacter": null,
+    "selectedSetting": "A familiar Egyptian neighborhood playground",
+    "constraints": [
+      "Warm, playful and simple for a 4-year-old. No scary elements. Natural Egyptian setting and behavior."
+    ],
+    "inspirationReviewed": true,
+    "adaptationAcknowledged": true,
+    "sensitiveOptIn": false,
+    "religiousOptIn": false
+  },
+  "before": {
+    "boundary": "Stable Phase4.2 legacy1.0 composer",
+    "plan": {
+      "schemaVersion": "story-plan/1.0",
+      "planId": "quality-live-plan",
+      "revisionId": "quality-live-plan-1",
+      "planning": {
+        "schemaVersion": "planning-request/1.0",
+        "planningRevisionId": "quality-planning-1",
+        "request": {
+          "schemaVersion": "story-request/1.0",
+          "requestId": "quality-request",
+          "revisionId": "quality-request-1",
+          "projectId": "demo-product-design",
+          "storyId": "quality-story",
+          "ageMonths": 48,
+          "languageModes": [
+            "ar-EG"
+          ],
+          "primaryLanguageMode": "ar-EG",
+          "primaryCategory": "adventure",
+          "objective": {
+            "kind": "behavioral",
+            "description": "Learn to share and take turns with others",
+            "successScenario": "The child shares a toy and takes turns with a friend"
+          },
+          "theme": "A playground game",
+          "readingMode": "adult-read",
+          "personalization": {
+            "origin": "synthetic",
+            "profileId": "synthetic",
+            "level": 0,
+            "preferences": [],
+            "heroMode": "none"
+          },
+          "sourceStrategy": "hybrid",
+          "trustedFacts": [],
+          "outputIntents": [
+            "print",
+            "digital"
+          ]
+        },
+        "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+        "variation": "FreshConcept",
+        "generation": 0,
+        "selectedFamily": null,
+        "selectedCharacter": null,
+        "selectedSetting": "A familiar Egyptian neighborhood playground",
+        "constraints": [
+          "Warm, playful and simple for a 4-year-old. No scary elements. Natural Egyptian setting and behavior."
+        ],
+        "inspirationReviewed": true,
+        "adaptationAcknowledged": true,
+        "sensitiveOptIn": false,
+        "religiousOptIn": false
+      },
+      "title": "Learn to share and take turns with others — discovery",
+      "protagonistId": "quality-live-plan-1-actor-0",
+      "recognitionSubject": null,
+      "goal": {
+        "goalId": "quality-live-plan-1-goal",
+        "description": "Practice Learn to share and take turns with others; visible success: The child shares a toy and takes turns with a friend"
+      },
+      "need": "Try a supported alternative rather than repeat the ineffective approach",
+      "setting": {
+        "locationId": "quality-live-plan-1-place",
+        "description": "A familiar Egyptian neighborhood playground"
+      },
+      "openingState": "goal is introduced; familiar materials and support are available",
+      "problem": {
+        "problemId": "quality-live-plan-1-problem",
+        "description": "The first approach does not yet achieve The child shares a toy and takes turns with a friend; a safe discovery approach is needed"
+      },
+      "stakes": "The familiar activity is not complete yet; reassurance and adult support remain available",
+      "incitingBeatId": "quality-live-plan-1-beat-2",
+      "turningBeatId": "quality-live-plan-1-beat-3",
+      "climaxBeatId": "quality-live-plan-1-beat-4",
+      "discovery": "A visible discovery approach enables the requested success",
+      "characters": [
+        {
+          "characterId": "quality-live-plan-1-actor-0",
+          "bibleVersion": "quality-live-plan-1-bible-0",
+          "origin": "synthetic",
+          "displayName": "نور",
+          "species": "human",
+          "clothing": "simple everyday clothes",
+          "approvedReferenceImages": [],
+          "consistencyNotes": "Fictional character; stable identity across pages."
+        },
+        {
+          "characterId": "quality-live-plan-1-actor-1",
+          "bibleVersion": "quality-live-plan-1-bible-1",
+          "origin": "synthetic",
+          "displayName": "سلمى",
+          "species": "human",
+          "clothing": "simple everyday clothes",
+          "approvedReferenceImages": [],
+          "consistencyNotes": "Fictional character; stable identity across pages."
+        }
+      ],
+      "beats": [
+        {
+          "beatId": "quality-live-plan-1-beat-1",
+          "sequence": 1,
+          "role": "OPENING",
+          "action": "notice",
+          "actorId": "quality-live-plan-1-actor-0",
+          "locationId": "quality-live-plan-1-place",
+          "fromLocationId": null,
+          "beforeState": "goal is introduced; familiar materials and support are available",
+          "afterState": "state-1: visible step completed",
+          "summary": "Introduce Practice Learn to share and take turns with others; visible success: The child shares a toy and takes turns with a friend at A familiar Egyptian neighborhood playground",
+          "emotion": "curious",
+          "causes": [],
+          "setupRefs": [],
+          "introduces": [
+            "quality-live-plan-1-actor-0",
+            "quality-live-plan-1-actor-1"
+          ],
+          "requires": [],
+          "establishes": [
+            "quality-live-plan-1-setup"
+          ],
+          "addressesProblemId": null,
+          "achievesGoalId": null,
+          "progress": "Goal, support and materials established"
+        },
+        {
+          "beatId": "quality-live-plan-1-beat-2",
+          "sequence": 2,
+          "role": "INCITING",
+          "action": "try",
+          "actorId": "quality-live-plan-1-actor-1",
+          "locationId": "quality-live-plan-1-place",
+          "fromLocationId": null,
+          "beforeState": "state-1: visible step completed",
+          "afterState": "state-2: visible step completed",
+          "summary": "Approach 1: try; discovery; use the next visible clue; step 1",
+          "emotion": "curious",
+          "causes": [
+            "quality-live-plan-1-beat-1"
+          ],
+          "setupRefs": [],
+          "introduces": [],
+          "requires": [],
+          "establishes": [],
+          "addressesProblemId": "quality-live-plan-1-problem",
+          "achievesGoalId": null,
+          "progress": "Approach 1: try; discovery; use the next visible clue; step 1"
+        },
+        {
+          "beatId": "quality-live-plan-1-beat-3",
+          "sequence": 3,
+          "role": "TURN",
+          "action": "compare",
+          "actorId": "quality-live-plan-1-actor-0",
+          "locationId": "quality-live-plan-1-place",
+          "fromLocationId": null,
+          "beforeState": "state-2: visible step completed",
+          "afterState": "state-3: visible step completed",
+          "summary": "Approach 2: compare; discovery; use the next visible clue; step 2",
+          "emotion": "curious",
+          "causes": [
+            "quality-live-plan-1-beat-2"
+          ],
+          "setupRefs": [],
+          "introduces": [],
+          "requires": [],
+          "establishes": [],
+          "addressesProblemId": "quality-live-plan-1-problem",
+          "achievesGoalId": null,
+          "progress": "Approach 2: compare; discovery; use the next visible clue; step 2"
+        },
+        {
+          "beatId": "quality-live-plan-1-beat-4",
+          "sequence": 4,
+          "role": "RESOLUTION",
+          "action": "discover",
+          "actorId": "quality-live-plan-1-actor-1",
+          "locationId": "quality-live-plan-1-place",
+          "fromLocationId": null,
+          "beforeState": "state-3: visible step completed",
+          "afterState": "state-4: goal achieved",
+          "summary": "discovery enables The child shares a toy and takes turns with a friend",
+          "emotion": "curious",
+          "causes": [
+            "quality-live-plan-1-beat-3"
+          ],
+          "setupRefs": [
+            "quality-live-plan-1-beat-1"
+          ],
+          "introduces": [],
+          "requires": [
+            "quality-live-plan-1-setup"
+          ],
+          "establishes": [],
+          "addressesProblemId": "quality-live-plan-1-problem",
+          "achievesGoalId": "quality-live-plan-1-goal",
+          "progress": "Visible achievement: The child shares a toy and takes turns with a friend"
+        },
+        {
+          "beatId": "quality-live-plan-1-beat-5",
+          "sequence": 5,
+          "role": "ENDING",
+          "action": "settle",
+          "actorId": "quality-live-plan-1-actor-0",
+          "locationId": "quality-live-plan-1-place",
+          "fromLocationId": null,
+          "beforeState": "state-4: goal achieved",
+          "afterState": "state-5: visible step completed",
+          "summary": "Reassured closure of the same shared experience",
+          "emotion": "reassured",
+          "causes": [
+            "quality-live-plan-1-beat-4"
+          ],
+          "setupRefs": [],
+          "introduces": [],
+          "requires": [],
+          "establishes": [],
+          "addressesProblemId": "quality-live-plan-1-problem",
+          "achievesGoalId": null,
+          "progress": "Reassured closure of the same shared experience"
+        }
+      ],
+      "resolutionBeatId": "quality-live-plan-1-beat-4",
+      "endingBeatId": "quality-live-plan-1-beat-5",
+      "emotionalArc": "Shared curiosity → supported change → reassurance",
+      "guidance": {
+        "ageBandId": "36-59m",
+        "authority": "editorial-D/H",
+        "narrativeForm": "short-plot",
+        "conventionalPlot": true,
+        "beatRange": [
+          3,
+          6
+        ],
+        "activeCharacterRange": [
+          2,
+          4
+        ],
+        "pageRange": [
+          12,
+          20
+        ],
+        "wordsPerPage": [
+          8,
+          25
+        ],
+        "sentenceWords": [
+          4,
+          12
+        ],
+        "allowedMechanisms": [
+          "discovery",
+          "problem-solving",
+          "cooperation",
+          "journey",
+          "mystery",
+          "treasure-hunt",
+          "building",
+          "helping"
+        ],
+        "conflict": "bounded-problem",
+        "repetition": "Moderate",
+        "vocabulary": "Explain one unfamiliar word in context",
+        "dialogue": "Brief dialogue plus narration",
+        "emotionalComplexity": "Friendship and supported problem solving",
+        "adventure": "Bounded reassuring adventure",
+        "educationalComplexity": "Choices/comparison/cooperation",
+        "parentParticipation": "Optional prediction/feeling question, not quiz. Reassuring, unhurried. Caregiver cues are optional and separate from child narration.",
+        "durationGuidance": "Read at the child's pace, pause for response and stop freely. Use actual read-aloud review; there is no universal minutes-per-year rule or guaranteed attention duration.",
+        "warnings": [
+          "All numeric budgets are provisional editorial advice, not medical certainty or guaranteed outcomes."
+        ]
+      },
+      "languageGuidance": [
+        "Planning metadata may be English; write child-facing prose independently in each requested register.",
+        "ar-MSA-simple: natural simplified Modern Standard Arabic; age-appropriate concrete clauses.",
+        "ar-EG: idiomatic Egyptian children's Arabic; never word-replacement from MSA.",
+        "Native linguistic review required; no bidi control characters."
+      ],
+      "provenance": {
+        "selectedStoryFamilyId": "structure-pattern-14198870",
+        "selectedPatternId": "pattern-14198870",
+        "sourceDnaIds": [
+          "structure-pattern-14198870"
+        ],
+        "sources": [
+          {
+            "ref": {
+              "recordId": "structure-pattern-14198870",
+              "version": 1
+            },
+            "digest": "dd490ef863b9dee660138248c855b6f85efa66222beca547e7bb2f90c5f77792",
+            "lifecycle": "GENERATED",
+            "fit": "NEEDS_ADAPTATION",
+            "provisional": true
+          }
+        ],
+        "derivedBlocks": [
+          {
+            "blockId": "derived-e3e0c6f1-0",
+            "kind": "mechanism",
+            "value": "dream-reality-reversal",
+            "source": {
+              "recordId": "structure-pattern-14198870",
+              "version": 1
+            },
+            "sourceField": "payload.structure.mechanism",
+            "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+          },
+          {
+            "blockId": "derived-df6a9ccc-1",
+            "kind": "conflict",
+            "value": "imagined-opportunity",
+            "source": {
+              "recordId": "structure-pattern-14198870",
+              "version": 1
+            },
+            "sourceField": "payload.structure.conflictPattern",
+            "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+          },
+          {
+            "blockId": "derived-71d52ad4-2",
+            "kind": "attempt",
+            "value": "{\"attemptSequence\":\"bargain→wake→lower-demand\",\"conflictCategory\":\"imagined-opportunity\",\"goalCategory\":\"gain-resource\",\"mechanism\":\"dream-reality-reversal\",\"resolutionCategory\":\"opportunity-vanishes\",\"turn\":\"payment-is-imaginary\"}",
+            "source": {
+              "recordId": "structure-pattern-14198870",
+              "version": 1
+            },
+            "sourceField": "payload.structure.narrativePattern",
+            "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+          },
+          {
+            "blockId": "derived-d8bca11c-3",
+            "kind": "resolution",
+            "value": "opportunity-vanishes",
+            "source": {
+              "recordId": "structure-pattern-14198870",
+              "version": 1
+            },
+            "sourceField": "payload.structure.resolutionPattern",
+            "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+          },
+          {
+            "blockId": "derived-ab0860ec-4",
+            "kind": "emotion",
+            "value": "Not established by structural classification; human adaptation required.",
+            "source": {
+              "recordId": "structure-pattern-14198870",
+              "version": 1
+            },
+            "sourceField": "payload.structure.emotionalArc",
+            "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+          }
+        ],
+        "sourceMode": "ACKNOWLEDGED_PROVISIONAL",
+        "mechanism": "discovery",
+        "patternVector": {
+          "goalCategory": "gain-resource",
+          "conflictCategory": "imagined-opportunity",
+          "mechanism": "dream-reality-reversal",
+          "attemptSequence": "bargain→wake→lower-demand",
+          "turn": "payment-is-imaginary",
+          "resolutionCategory": "opportunity-vanishes"
+        },
+        "selectionSignals": [
+          "Reusable structural family",
+          "Complete structural vector; not theme-only grouping",
+          "Requested cultural profile",
+          "Adaptation explicitly acknowledged",
+          "Explicitly reviewed provisional inspiration; no promotion implied",
+          "Actual operational approval/rejection history only",
+          "Prefer less-used structure"
+        ],
+        "limitations": [
+          "Derived plan is an editorial adaptation, not an account of source events.",
+          "Objective delivery and literary quality require human review.",
+          "Creator constraints are recorded verbatim for human review and manual writing; no automatic free-text compliance certification."
+        ]
+      }
+    },
+    "qa": {
+      "schemaVersion": "plan-qa/1.0",
+      "planRevisionId": "quality-live-plan-1",
+      "findings": [
+        {
+          "findingId": "plan-1",
+          "severity": "low",
+          "category": "human-literary",
+          "location": "plan",
+          "message": "Deterministic QA checks explicit structural fields, not the truth of arbitrary prose or child appeal.",
+          "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+        },
+        {
+          "findingId": "plan-2",
+          "severity": "medium",
+          "category": "objective",
+          "location": "goal",
+          "message": "Concrete objective delivery needs editorial judgment even when exact objective anchors match.",
+          "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+        },
+        {
+          "findingId": "plan-3",
+          "severity": "low",
+          "category": "limitations",
+          "location": "provenance",
+          "message": "Derived plan is an editorial adaptation, not an account of source events.",
+          "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+        },
+        {
+          "findingId": "plan-4",
+          "severity": "low",
+          "category": "limitations",
+          "location": "provenance",
+          "message": "Objective delivery and literary quality require human review.",
+          "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+        },
+        {
+          "findingId": "plan-5",
+          "severity": "low",
+          "category": "limitations",
+          "location": "provenance",
+          "message": "Creator constraints are recorded verbatim for human review and manual writing; no automatic free-text compliance certification.",
+          "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+        }
+      ],
+      "signals": {
+        "AgeFit": "ACCEPTABLE",
+        "CausalCoherence": "STRONG",
+        "ObjectiveAlignment": "REVIEW",
+        "CulturalFit": "REVIEW",
+        "StructuralCompleteness": "STRONG",
+        "VariationCompliance": "ACCEPTABLE"
+      },
+      "method": "DETERMINISTIC_EDITORIAL_ADVISORY",
+      "humanReviewRequired": true
+    },
+    "hash": "9b930b40955cbeb187cf3ed21344a98ef776c3ed4575fe3780fe6cd562443f4d"
+  },
+  "after": {
+    "boundary": "Current desktop planner-quality/1.0 opt-in / StoryPlan1.1",
+    "plan": {
+      "schemaVersion": "story-plan/1.1",
+      "planId": "quality-live-plan",
+      "revisionId": "quality-live-plan-1",
+      "planning": {
+        "schemaVersion": "planning-request/1.0",
+        "planningRevisionId": "quality-planning-1",
+        "request": {
+          "schemaVersion": "story-request/1.0",
+          "requestId": "quality-request",
+          "revisionId": "quality-request-1",
+          "projectId": "demo-product-design",
+          "storyId": "quality-story",
+          "ageMonths": 48,
+          "languageModes": [
+            "ar-EG"
+          ],
+          "primaryLanguageMode": "ar-EG",
+          "primaryCategory": "adventure",
+          "objective": {
+            "kind": "behavioral",
+            "description": "Learn to share and take turns with others",
+            "successScenario": "The child shares a toy and takes turns with a friend"
+          },
+          "theme": "A playground game",
+          "readingMode": "adult-read",
+          "personalization": {
+            "origin": "synthetic",
+            "profileId": "synthetic",
+            "level": 0,
+            "preferences": [],
+            "heroMode": "none"
+          },
+          "sourceStrategy": "hybrid",
+          "trustedFacts": [],
+          "outputIntents": [
+            "print",
+            "digital"
+          ]
+        },
+        "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+        "variation": "FreshConcept",
+        "generation": 0,
+        "selectedFamily": null,
+        "selectedCharacter": null,
+        "selectedSetting": "A familiar Egyptian neighborhood playground",
+        "constraints": [
+          "Warm, playful and simple for a 4-year-old. No scary elements. Natural Egyptian setting and behavior."
+        ],
+        "inspirationReviewed": true,
+        "adaptationAcknowledged": true,
+        "sensitiveOptIn": false,
+        "religiousOptIn": false
+      },
+      "title": "A rolling game for two",
+      "protagonistId": "quality-live-plan-1-actor-0",
+      "recognitionSubject": null,
+      "goal": {
+        "goalId": "quality-live-plan-1-goal",
+        "description": "Give both children a clear turn with the soft ball and keep their game moving"
+      },
+      "need": "Change the ineffective first strategy using a visible cue and supported action",
+      "setting": {
+        "locationId": "quality-live-plan-1-place",
+        "description": "A familiar Egyptian neighborhood playground"
+      },
+      "openingState": "نور has the soft ball; سلمى stands beside the marked play space",
+      "problem": {
+        "problemId": "quality-live-plan-1-problem",
+        "description": "نور holds the soft ball; سلمى is waiting without a turn"
+      },
+      "stakes": "The familiar play or task remains incomplete; comfort and support stay available",
+      "incitingBeatId": "quality-live-plan-1-beat-2",
+      "turningBeatId": "quality-live-plan-1-beat-3",
+      "climaxBeatId": "quality-live-plan-1-beat-4",
+      "discovery": "Both children have tested the rule",
+      "characters": [
+        {
+          "characterId": "quality-live-plan-1-actor-0",
+          "bibleVersion": "quality-live-plan-1-bible-0",
+          "origin": "synthetic",
+          "displayName": "نور",
+          "species": "human",
+          "clothing": "simple everyday clothes",
+          "approvedReferenceImages": [],
+          "consistencyNotes": "Fictional character; stable identity across pages."
+        },
+        {
+          "characterId": "quality-live-plan-1-actor-1",
+          "bibleVersion": "quality-live-plan-1-bible-1",
+          "origin": "synthetic",
+          "displayName": "سلمى",
+          "species": "human",
+          "clothing": "simple everyday clothes",
+          "approvedReferenceImages": [],
+          "consistencyNotes": "Fictional character; stable identity across pages."
+        }
+      ],
+      "beats": [
+        {
+          "beatId": "quality-live-plan-1-beat-1",
+          "sequence": 1,
+          "role": "OPENING",
+          "action": "notice",
+          "actorId": "quality-live-plan-1-actor-0",
+          "locationId": "quality-live-plan-1-place",
+          "fromLocationId": null,
+          "beforeState": "نور has the soft ball; سلمى stands beside the marked play space",
+          "afterState": "One child holds the ball or toy while the friend waits",
+          "summary": "نور holds the soft ball at A familiar Egyptian neighborhood playground; سلمى waits beside the marked play space",
+          "emotion": "curious",
+          "causes": [],
+          "setupRefs": [],
+          "introduces": [
+            "quality-live-plan-1-actor-0",
+            "quality-live-plan-1-actor-1"
+          ],
+          "requires": [],
+          "establishes": [
+            "quality-live-plan-1-setup"
+          ],
+          "addressesProblemId": null,
+          "achievesGoalId": null,
+          "progress": "The game has only one active player"
+        },
+        {
+          "beatId": "quality-live-plan-1-beat-2",
+          "sequence": 2,
+          "role": "INCITING",
+          "action": "try",
+          "actorId": "quality-live-plan-1-actor-1",
+          "locationId": "quality-live-plan-1-place",
+          "fromLocationId": null,
+          "beforeState": "One child holds the ball or toy while the friend waits",
+          "afterState": "The friend has not completed a turn and the game has paused",
+          "summary": "نور keeps rolling the soft ball alone; سلمى reaches to join and the game stops",
+          "emotion": "curious",
+          "causes": [
+            "quality-live-plan-1-beat-1"
+          ],
+          "setupRefs": [],
+          "introduces": [],
+          "requires": [],
+          "establishes": [],
+          "addressesProblemId": "quality-live-plan-1-problem",
+          "achievesGoalId": null,
+          "progress": "The interrupted game cannot continue together"
+        },
+        {
+          "beatId": "quality-live-plan-1-beat-3",
+          "sequence": 3,
+          "role": "TURN",
+          "action": "cooperate",
+          "actorId": "quality-live-plan-1-actor-0",
+          "locationId": "quality-live-plan-1-place",
+          "fromLocationId": null,
+          "beforeState": "The friend has not completed a turn and the game has paused",
+          "afterState": "Both children can see whose turn comes next",
+          "summary": "نور and سلمى mark roller and catcher places; they agree to swap places after each roll",
+          "emotion": "curious",
+          "causes": [
+            "quality-live-plan-1-beat-2"
+          ],
+          "setupRefs": [],
+          "introduces": [],
+          "requires": [],
+          "establishes": [],
+          "addressesProblemId": "quality-live-plan-1-problem",
+          "achievesGoalId": null,
+          "progress": "The friend can predict a complete turn"
+        },
+        {
+          "beatId": "quality-live-plan-1-beat-4",
+          "sequence": 4,
+          "role": "RESOLUTION",
+          "action": "cooperate",
+          "actorId": "quality-live-plan-1-actor-1",
+          "locationId": "quality-live-plan-1-place",
+          "fromLocationId": null,
+          "beforeState": "Both children can see whose turn comes next",
+          "afterState": "Each child has completed a turn and returned the ball or toy to the partner",
+          "summary": "Roll the soft ball to a partner, swap roller and catcher roles after each roll, and let each child lead one roll",
+          "emotion": "curious",
+          "causes": [
+            "quality-live-plan-1-beat-3"
+          ],
+          "setupRefs": [
+            "quality-live-plan-1-beat-1"
+          ],
+          "introduces": [],
+          "requires": [
+            "quality-live-plan-1-setup"
+          ],
+          "establishes": [],
+          "addressesProblemId": "quality-live-plan-1-problem",
+          "achievesGoalId": "quality-live-plan-1-goal",
+          "progress": "The game works because neither turn is skipped"
+        },
+        {
+          "beatId": "quality-live-plan-1-beat-5",
+          "sequence": 5,
+          "role": "ENDING",
+          "action": "settle",
+          "actorId": "quality-live-plan-1-actor-0",
+          "locationId": "quality-live-plan-1-place",
+          "fromLocationId": null,
+          "beforeState": "Each child has completed a turn and returned the ball or toy to the partner",
+          "afterState": "The children continue a shared game with the same turn rule",
+          "summary": "نور and سلمى begin another gentle round, passing the soft ball when the agreed signal comes",
+          "emotion": "reassured",
+          "causes": [
+            "quality-live-plan-1-beat-4"
+          ],
+          "setupRefs": [],
+          "introduces": [],
+          "requires": [],
+          "establishes": [],
+          "addressesProblemId": "quality-live-plan-1-problem",
+          "achievesGoalId": null,
+          "progress": "They keep playing together without a new dispute"
+        }
+      ],
+      "resolutionBeatId": "quality-live-plan-1-beat-4",
+      "endingBeatId": "quality-live-plan-1-beat-5",
+      "emotionalArc": "Shared curiosity → supported change → reassurance",
+      "guidance": {
+        "ageBandId": "36-59m",
+        "authority": "editorial-D/H",
+        "narrativeForm": "short-plot",
+        "conventionalPlot": true,
+        "beatRange": [
+          3,
+          6
+        ],
+        "activeCharacterRange": [
+          2,
+          4
+        ],
+        "pageRange": [
+          12,
+          20
+        ],
+        "wordsPerPage": [
+          8,
+          25
+        ],
+        "sentenceWords": [
+          4,
+          12
+        ],
+        "allowedMechanisms": [
+          "discovery",
+          "problem-solving",
+          "cooperation",
+          "journey",
+          "mystery",
+          "treasure-hunt",
+          "building",
+          "helping"
+        ],
+        "conflict": "bounded-problem",
+        "repetition": "Moderate",
+        "vocabulary": "Explain one unfamiliar word in context",
+        "dialogue": "Brief dialogue plus narration",
+        "emotionalComplexity": "Friendship and supported problem solving",
+        "adventure": "Bounded reassuring adventure",
+        "educationalComplexity": "Choices/comparison/cooperation",
+        "parentParticipation": "Optional prediction/feeling question, not quiz. Reassuring, unhurried. Caregiver cues are optional and separate from child narration.",
+        "durationGuidance": "Read at the child's pace, pause for response and stop freely. Use actual read-aloud review; there is no universal minutes-per-year rule or guaranteed attention duration.",
+        "warnings": [
+          "All numeric budgets are provisional editorial advice, not medical certainty or guaranteed outcomes."
+        ]
+      },
+      "languageGuidance": [
+        "Planning metadata may be English; write child-facing prose independently in each requested register.",
+        "ar-MSA-simple: natural simplified Modern Standard Arabic; age-appropriate concrete clauses.",
+        "ar-EG: idiomatic Egyptian children's Arabic; never word-replacement from MSA.",
+        "Native linguistic review required; no bidi control characters."
+      ],
+      "provenance": {
+        "selectedStoryFamilyId": "hekayti-family-2",
+        "selectedPatternId": null,
+        "sourceDnaIds": [],
+        "sources": [
+          {
+            "ref": {
+              "recordId": "hekayti-family-2",
+              "version": 1
+            },
+            "digest": "b1b03ca47542e414bf848b4904892b716daee82ca26bdb2ecbc0c252b6a9ac13",
+            "lifecycle": "GENERATED",
+            "fit": "NEEDS_ADAPTATION",
+            "provisional": true
+          }
+        ],
+        "derivedBlocks": [
+          {
+            "blockId": "derived-8878b18b-0",
+            "kind": "mechanism",
+            "value": "cooperation-and-reciprocity",
+            "source": {
+              "recordId": "hekayti-family-2",
+              "version": 1
+            },
+            "sourceField": "payload.structure.mechanism",
+            "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+          },
+          {
+            "blockId": "derived-31de3f4e-1",
+            "kind": "conflict",
+            "value": "A character encounters a bounded challenge; source detail is not a template mandate.",
+            "source": {
+              "recordId": "hekayti-family-2",
+              "version": 1
+            },
+            "sourceField": "payload.structure.conflictPattern",
+            "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+          },
+          {
+            "blockId": "derived-37e89546-2",
+            "kind": "attempt",
+            "value": "cooperation-and-reciprocity",
+            "source": {
+              "recordId": "hekayti-family-2",
+              "version": 1
+            },
+            "sourceField": "payload.structure.narrativePattern",
+            "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+          },
+          {
+            "blockId": "derived-41eba776-3",
+            "kind": "resolution",
+            "value": "Rework the source outcome as a safe, understandable creative resolution.",
+            "source": {
+              "recordId": "hekayti-family-2",
+              "version": 1
+            },
+            "sourceField": "payload.structure.resolutionPattern",
+            "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+          },
+          {
+            "blockId": "derived-d1e4151a-4",
+            "kind": "emotion",
+            "value": "Notice a difficulty → consider an action → reflect on the outcome",
+            "source": {
+              "recordId": "hekayti-family-2",
+              "version": 1
+            },
+            "sourceField": "payload.structure.emotionalArc",
+            "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+          }
+        ],
+        "sourceMode": "ACKNOWLEDGED_PROVISIONAL",
+        "mechanism": "cooperation",
+        "patternVector": null,
+        "selectionSignals": [
+          "Reusable structural family",
+          "Requested cultural profile",
+          "Adaptation explicitly acknowledged",
+          "Explicitly reviewed provisional inspiration; no promotion implied",
+          "Actual operational approval/rejection history only",
+          "Prefer less-used structure",
+          "Objective intent SHARING_TURN_TAKING: STRONG; Explicit SHARING_TURN_TAKING signals in mechanism, attempt; editorial adaptation still needs review.",
+          "Detected intent: SHARING_TURN_TAKING; evidence: description:take turns; successScenario:shares a toy",
+          "Structural compatibility: STRONG; Explicit SHARING_TURN_TAKING signals in mechanism, attempt; editorial adaptation still needs review."
+        ],
+        "limitations": [
+          "Derived plan is an editorial adaptation, not an account of source events.",
+          "Objective delivery and literary quality require human review.",
+          "Creator constraints are recorded verbatim for human review and manual writing; no automatic free-text compliance certification."
+        ]
+      },
+      "quality": {
+        "schemaVersion": "planner-quality/1.0",
+        "objectiveIntent": {
+          "schemaVersion": "objective-intent/1.0",
+          "primaryIntent": "SHARING_TURN_TAKING",
+          "evidence": [
+            {
+              "field": "description",
+              "matched": "take turns"
+            },
+            {
+              "field": "successScenario",
+              "matched": "shares a toy"
+            }
+          ],
+          "socialMechanisms": [
+            "reciprocity",
+            "exchange",
+            "turn-taking"
+          ],
+          "storyNeeds": [
+            "two active participants where age permits",
+            "shared object or activity",
+            "visible reciprocal success"
+          ],
+          "limited": false
+        },
+        "structuralCompatibility": {
+          "level": "STRONG",
+          "evidence": [
+            {
+              "field": "payload.structure.mechanism",
+              "matched": "cooperat"
+            },
+            {
+              "field": "payload.structure.narrativePattern",
+              "matched": "cooperat"
+            }
+          ],
+          "reasons": [
+            "Explicit SHARING_TURN_TAKING signals in mechanism, attempt; editorial adaptation still needs review."
+          ]
+        },
+        "situation": {
+          "focus": "soft ball",
+          "initialFriction": "نور holds the soft ball; سلمى is waiting without a turn",
+          "resolutionMethod": "Roll the soft ball to a partner, swap roller and catcher roles after each roll, and let each child lead one roll",
+          "basis": "EDITORIAL_SITUATION_NOT_SOURCE_FACT"
+        },
+        "transitions": [
+          {
+            "beatId": "quality-live-plan-1-beat-1",
+            "participantIds": [
+              "quality-live-plan-1-actor-0",
+              "quality-live-plan-1-actor-1"
+            ],
+            "strategy": "notice the waiting partner",
+            "informationChange": "The friend wants a place in the game",
+            "relationshipChange": "One child is excluded from play",
+            "consequence": "The game has only one active player",
+            "resolutionMethod": null
+          },
+          {
+            "beatId": "quality-live-plan-1-beat-2",
+            "participantIds": [
+              "quality-live-plan-1-actor-0",
+              "quality-live-plan-1-actor-1"
+            ],
+            "strategy": "play alone without yielding the object",
+            "informationChange": "A peek or reach is not a real turn",
+            "relationshipChange": "Both children notice the unfair interruption",
+            "consequence": "The interrupted game cannot continue together",
+            "resolutionMethod": null
+          },
+          {
+            "beatId": "quality-live-plan-1-beat-3",
+            "participantIds": [
+              "quality-live-plan-1-actor-0",
+              "quality-live-plan-1-actor-1"
+            ],
+            "strategy": "assign complementary roles and agree to swap",
+            "informationChange": "A visible rule tells both children when the next turn begins",
+            "relationshipChange": "Both children agree to the same rule",
+            "consequence": "The friend can predict a complete turn",
+            "resolutionMethod": null
+          },
+          {
+            "beatId": "quality-live-plan-1-beat-4",
+            "participantIds": [
+              "quality-live-plan-1-actor-0",
+              "quality-live-plan-1-actor-1"
+            ],
+            "strategy": "perform the agreed reciprocal exchange",
+            "informationChange": "Both children have tested the rule",
+            "relationshipChange": "Both children are included and trust the next turn",
+            "consequence": "The game works because neither turn is skipped",
+            "resolutionMethod": "Roll the soft ball to a partner, swap roller and catcher roles after each roll, and let each child lead one roll"
+          },
+          {
+            "beatId": "quality-live-plan-1-beat-5",
+            "participantIds": [
+              "quality-live-plan-1-actor-0",
+              "quality-live-plan-1-actor-1"
+            ],
+            "strategy": "repeat the successful reciprocal rule",
+            "informationChange": "The next round uses the known signal",
+            "relationshipChange": "Their shared rule sustains play",
+            "consequence": "They keep playing together without a new dispute",
+            "resolutionMethod": null
+          }
+        ]
+      }
+    },
+    "qa": {
+      "schemaVersion": "plan-qa/1.1",
+      "planRevisionId": "quality-live-plan-1",
+      "findings": [
+        {
+          "findingId": "plan-1",
+          "severity": "low",
+          "category": "human-literary",
+          "location": "plan",
+          "message": "Deterministic QA checks explicit structural fields, not the truth of arbitrary prose or child appeal.",
+          "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+        },
+        {
+          "findingId": "plan-2",
+          "severity": "medium",
+          "category": "objective",
+          "location": "goal",
+          "message": "Concrete objective delivery needs editorial judgment even when exact objective anchors match.",
+          "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+        },
+        {
+          "findingId": "plan-3",
+          "severity": "low",
+          "category": "limitations",
+          "location": "provenance",
+          "message": "Derived plan is an editorial adaptation, not an account of source events.",
+          "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+        },
+        {
+          "findingId": "plan-4",
+          "severity": "low",
+          "category": "limitations",
+          "location": "provenance",
+          "message": "Objective delivery and literary quality require human review.",
+          "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+        },
+        {
+          "findingId": "plan-5",
+          "severity": "low",
+          "category": "limitations",
+          "location": "provenance",
+          "message": "Creator constraints are recorded verbatim for human review and manual writing; no automatic free-text compliance certification.",
+          "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+        }
+      ],
+      "signals": {
+        "AgeFit": "ACCEPTABLE",
+        "CausalCoherence": "STRONG",
+        "ObjectiveAlignment": "REVIEW",
+        "CulturalFit": "REVIEW",
+        "StructuralCompleteness": "STRONG",
+        "VariationCompliance": "ACCEPTABLE",
+        "ObjectiveIntentFit": "ACCEPTABLE",
+        "StructuralCompatibility": "STRONG",
+        "BeatProgression": "ACCEPTABLE",
+        "SituationSpecificity": "ACCEPTABLE",
+        "ResolutionSpecificity": "ACCEPTABLE"
+      },
+      "method": "DETERMINISTIC_EDITORIAL_ADVISORY",
+      "humanReviewRequired": true
+    },
+    "hash": "e88d1b113d6f92012e3add8d596aae29dbec87a07dac5122eb7170753a1a1769"
+  },
+  "gates": {
+    "A": true,
+    "B": true,
+    "C": true,
+    "D": true,
+    "E": true,
+    "F": true,
+    "G": true,
+    "H": true,
+    "I": true
+  },
+  "providerCalls": 0
+}

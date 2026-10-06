@@ -32,6 +32,43 @@ import {
 import { canonicalJson, contentHash } from "./index";
 import { storyStructureFor } from "./story-age";
 import {
+  detectObjectiveIntent,
+  objectiveStructureCompatibility,
+  compatibilityPriority,
+} from "./story-objective-intent";
+import { composeConcretePlan, qualityFindings } from "./story-planner-quality";
+export {
+  detectObjectiveIntent,
+  objectiveStructureCompatibility,
+} from "./story-objective-intent";
+export function validatePlanQualitySource(
+  plan: StoryPlan,
+  records: LibraryRecord[],
+) {
+  if (plan.schemaVersion !== "story-plan/1.1") return;
+  const sources = plan.provenance.sources.map((s) =>
+    records.find(
+      (r) => r.recordId === s.ref.recordId && r.version === s.ref.version,
+    ),
+  );
+  if (
+    sources.some((r) => !r) ||
+    canonicalJson(plan.quality.objectiveIntent) !==
+      canonicalJson(detectObjectiveIntent(plan.planning.request.objective)) ||
+    canonicalJson(plan.quality.structuralCompatibility) !==
+      canonicalJson(
+        objectiveStructureCompatibility(
+          plan.quality.objectiveIntent,
+          sources as LibraryRecord[],
+        ),
+      )
+  )
+    throw new AppError(
+      "PLANNER_QUALITY_SOURCE",
+      "Quality intent/compatibility differs from exact retained source evidence.",
+    );
+}
+import {
   latestLibraryRecords,
   libraryStatisticsByRecord,
   StoryLibraryService,
@@ -141,11 +178,13 @@ export function rankPlanningCandidates(
   input: PlanningRequest,
   state: LibraryState,
   feedback: PlanFeedback[] = [],
+  mode: "quality" | "legacy" = "legacy",
 ) {
   const p = validate(PlanningRequestSchema, input),
     g = storyStructureFor(p.request),
     latest = latestLibraryRecords(validate(LibraryStateSchema, state)),
-    stats = libraryStatisticsByRecord(state);
+    stats = libraryStatisticsByRecord(state),
+    intent = detectObjectiveIntent(p.request.objective);
   const selected = latest.find(
     (r) => r.recordId === p.selectedFamily?.recordId,
   );
@@ -249,7 +288,19 @@ export function rankPlanningCandidates(
         ["FreshConcept", "CompletelyNew"].includes(p.variation)
       )
         add(-80, "Avoid selected structural pattern when alternatives exist");
-      return { record: r, score, reasons };
+      const family = planningFamily(r, latest);
+      const compatibility = objectiveStructureCompatibility(intent, [
+        r,
+        ...(family && family !== r ? [family] : []),
+      ]);
+      if (mode === "quality")
+        add(
+          { STRONG: 120, ACCEPTABLE: 60, REVIEW: 0, MISMATCH: -120 }[
+            compatibility.level
+          ],
+          `Objective intent ${intent.primaryIntent}: ${compatibility.level}; ${compatibility.reasons[0]}`,
+        );
+      return { record: r, score, reasons, compatibility };
     })
     .filter(
       (x) =>
@@ -259,6 +310,14 @@ export function rankPlanningCandidates(
     );
   if (selected && ["SimilarVersion", "NewVariant"].includes(p.variation))
     rows = rows.filter((x) => x.record.recordId === selected.recordId);
+  else if (mode === "quality" && !intent.limited) {
+    // Regeneration/variation may explore other compatible structures, never an
+    // arbitrary top-three mismatch just to make a superficially new concept.
+    const compatible = rows.filter(
+      (x) => compatibilityPriority(x.compatibility) >= 2,
+    );
+    rows = compatible;
+  }
   if (["FreshConcept", "CompletelyNew"].includes(p.variation)) {
     const alternatives = rows.filter(
       (x) =>
@@ -276,7 +335,12 @@ export function rankPlanningCandidates(
   }
   return rows.sort(
     (a, b) =>
-      b.score - a.score || a.record.recordId.localeCompare(b.record.recordId),
+      (mode === "quality"
+        ? compatibilityPriority(b.compatibility) -
+          compatibilityPriority(a.compatibility)
+        : 0) ||
+      b.score - a.score ||
+      a.record.recordId.localeCompare(b.record.recordId),
   );
 }
 function adaptedMechanism(
@@ -303,16 +367,25 @@ function adaptedMechanism(
     g.allowedMechanisms[seed % g.allowedMechanisms.length]!
   );
 }
-export async function composeStoryPlan(
+async function composeBasePlan(
   input: PlanningRequest,
   state: LibraryState,
   ids: { planId: string; revisionId: string },
   feedback: PlanFeedback[] = [],
+  mode: "quality" | "legacy" = "quality",
 ): Promise<StoryPlan> {
   const p = validate(PlanningRequestSchema, input),
     r = p.request,
     g = storyStructureFor(r),
-    rank = rankPlanningCandidates(p, state, feedback);
+    ranked = rankPlanningCandidates(p, state, feedback, mode),
+    rank =
+      mode === "quality" && ranked.length
+        ? ranked.filter(
+            (x) =>
+              compatibilityPriority(x.compatibility) ===
+              compatibilityPriority(ranked[0]!.compatibility),
+          )
+        : ranked;
   if (
     ["SimilarVersion", "NewVariant"].includes(p.variation) &&
     !p.selectedFamily
@@ -321,7 +394,13 @@ export async function composeStoryPlan(
       "PLANNER_FAMILY",
       "SimilarVersion/NewVariant require an explicit family choice.",
     );
-  const top = rank[p.generation % Math.min(3, Math.max(1, rank.length))],
+  const top =
+      rank[
+        p.generation %
+          (mode === "legacy"
+            ? Math.min(3, Math.max(1, rank.length))
+            : Math.max(1, rank.length))
+      ],
     source = top?.record,
     d = source?.creative?.dna,
     pattern = d?.pattern;
@@ -665,6 +744,44 @@ export async function composeStoryPlan(
   });
 }
 
+// Explicit old generator boundary: immutable trial/accepted1.0 bytes are never
+// upgraded implicitly. Current live planning composes only version1.1.
+export function composeLegacyStoryPlan(
+  input: PlanningRequest,
+  state: LibraryState,
+  ids: { planId: string; revisionId: string },
+  feedback: PlanFeedback[] = [],
+) {
+  return composeBasePlan(input, state, ids, feedback, "legacy");
+}
+export const composeStoryPlan = composeLegacyStoryPlan;
+export const rankQualityCandidates = (
+  input: PlanningRequest,
+  state: LibraryState,
+  feedback: PlanFeedback[] = [],
+) => rankPlanningCandidates(input, state, feedback, "quality");
+export async function composeQualityStoryPlan(
+  input: PlanningRequest,
+  state: LibraryState,
+  ids: { planId: string; revisionId: string },
+  feedback: PlanFeedback[] = [],
+) {
+  const base = await composeBasePlan(input, state, ids, feedback);
+  const contributing = base.provenance.sources.map((s) =>
+    state.records.find(
+      (r) => r.recordId === s.ref.recordId && r.version === s.ref.version,
+    )!,
+  );
+  return composeConcretePlan(
+    base,
+    detectObjectiveIntent(input.request.objective),
+    objectiveStructureCompatibility(
+      detectObjectiveIntent(input.request.objective),
+      contributing,
+    ),
+  );
+}
+
 export function validateStoryPlan(input: StoryPlan) {
   const p = validate(StoryPlanSchema, input),
     g = storyStructureFor(p.planning.request),
@@ -884,7 +1001,11 @@ export function validateStoryPlan(input: StoryPlan) {
       "climaxBeatId",
       "Climax precedes its inciting experience or turn.",
     );
-  const blockers = findings.length;
+  if (p.schemaVersion === "story-plan/1.1")
+    findings.push(...qualityFindings(p));
+  const blockers = findings.filter((f) =>
+    ["high", "blocker"].includes(f.severity),
+  ).length;
   add(
     "human-literary",
     "plan",
@@ -902,7 +1023,8 @@ export function validateStoryPlan(input: StoryPlan) {
   const fails = (groups: string[]) =>
     findings.some((f) => f.severity === "high" && groups.includes(f.category));
   return validate(PlanQaSchema, {
-    schemaVersion: "plan-qa/1.0",
+    schemaVersion:
+      p.schemaVersion === "story-plan/1.1" ? "plan-qa/1.1" : "plan-qa/1.0",
     planRevisionId: p.revisionId,
     findings,
     signals: {
@@ -928,6 +1050,37 @@ export function validateStoryPlan(input: StoryPlan) {
       )
         ? "REVIEW"
         : "ACCEPTABLE",
+      ...(p.schemaVersion === "story-plan/1.1"
+        ? {
+            ObjectiveIntentFit: fails([
+              "SOCIAL_INTENT_CAST_MISMATCH",
+              "INTENT_STRUCTURE_MISMATCH",
+            ])
+              ? "FAIL"
+              : p.quality.objectiveIntent.limited
+                ? "REVIEW"
+                : "ACCEPTABLE",
+            StructuralCompatibility:
+              p.quality.structuralCompatibility.level === "MISMATCH"
+                ? "FAIL"
+                : p.quality.structuralCompatibility.level,
+            BeatProgression: fails(["NON_PROGRESSING_BEATS"])
+              ? "FAIL"
+              : "ACCEPTABLE",
+            SituationSpecificity: findings.some((f) =>
+              ["GENERIC_BEAT_DESCRIPTION", "OBJECTIVE_RESTATEMENT"].includes(
+                f.category,
+              ),
+            )
+              ? "REVIEW"
+              : "ACCEPTABLE",
+            ResolutionSpecificity: findings.some(
+              (f) => f.category === "WEAK_RESOLUTION_MECHANISM",
+            )
+              ? "REVIEW"
+              : "ACCEPTABLE",
+          }
+        : {}),
     },
     method: "DETERMINISTIC_EDITORIAL_ADVISORY",
     humanReviewRequired: true,
@@ -1022,6 +1175,7 @@ export class StoryPlannerService {
     private repo: PlannerRepository,
     private workflow: StoryWorkflowService,
     private seam: { id(): string; now(): string },
+    private qualityVersion?: "planner-quality/1.0",
   ) {}
   load(id: string) {
     return this.repo.loadPlanner(id) ?? emptyPlanner(id);
@@ -1081,7 +1235,9 @@ export class StoryPlannerService {
         "PLANNER_STALE",
         "Reload the canonical request and Library.",
       );
-    const plan = await composeStoryPlan(
+    const plan = await (
+      this.qualityVersion ? composeQualityStoryPlan : composeStoryPlan
+    )(
       p,
       library,
       { planId: this.seam.id(), revisionId: this.seam.id() },

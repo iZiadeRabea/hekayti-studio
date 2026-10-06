@@ -4,7 +4,7 @@ import { z } from "zod";
 import { contentHash, canonicalJson } from "@hekayti/core";
 import { parseLibraryBatch } from "@hekayti/core/creative";
 import {
-  composeStoryPlan,
+  composeLegacyStoryPlan,
   validateStoryPlan,
   rankPlanningCandidates,
   planToConcept,
@@ -50,11 +50,13 @@ for (const input of trialRequests) {
     const f = rankPlanningCandidates(
       { ...p, variation: "FreshConcept" },
       library,
+      [],
+      "legacy",
     ).find((r) => r.record.payload.type === "STORY_FAMILY")!.record;
     p.selectedFamily = { recordId: f.recordId, version: f.version };
   }
   const planning = PlanningRequestSchema.parse(p),
-    plan = await composeStoryPlan(planning, library, {
+    plan = await composeLegacyStoryPlan(planning, library, {
       planId: `${id}-plan`,
       revisionId: `${id}-plan-r1`,
     }),
