@@ -142,7 +142,7 @@ for (const [id, title, url, culture, author, era, pattern] of specs) {
           items.push({
             title: h[i + 1].title,
             locator: `Tale ${roman[1]}`,
-            body: h[i + 1].body,
+            body: paragraphs(h[i + 1].body).join("\n"),
             anchor: roman[1],
           });
       }
@@ -231,10 +231,7 @@ for (const [id, titles, url] of [
   ],
 ]) {
   const rawSource = await readFile(`${cache}/${id}.txt`, "utf8");
-  const source = rawSource.replace(
-      /\r\n/g,
-      "\n",
-    ),
+  const source = rawSource.replace(/\r\n/g, "\n"),
     start = source.indexOf(
       titles[0],
       source.indexOf(titles[0]) + titles[0].length,

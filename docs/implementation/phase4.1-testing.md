@@ -1,5 +1,11 @@
 # Phase4.1 focused verification — not release acceptance
 
+## Consolidated independent-QA fix batch
+
+QA commit1a0a436f0d57425daa8ec69ba98fa4630a6924a3 integrated mechanically; independent assertions/report untouched. Engineering addresses all four findings: retained historic attestation/counts and separately preserved later local review; restore operation identity includes decision plan; conflicting kept family/derived dependencies rejected atomically; all40 Nigerian cached narrative bodies parsed to text before observation/DNA extraction. No refetch or new summary invention. Corpus remains791/765sourced/121original/644extractive/25richDNA/20patterns/22mapped. Only40 Nigeria JSONL rows changed;751 rows unchanged, all40 extracted-body digests reverified with cached sections. Evidence temp/phase41-qa-fix/corpus-grounding.log.
+
+New countercases cover non-null historical hash/repeated portability/local revision attribution, later COPY + reordered-plan replay, derived-parent semantic conflict, and markup-free observations across the full corpus. Final batch: independent non-benchmark QA assertions12/12 PASS unchanged (1184.6367ms); Engineering + existing focused84/84 PASS (8403.7332ms); typecheck PASS. Receipts temp/phase41-qa-fix/{red-team,focused,typecheck,corpus-grounding}.log. Independent QA confirmation remains PENDING (Engineering passing assertions is not independent closure). No full regression/build/health/benchmark/Drive/push/tag ran in this fix batch. Earlier80-test/UI/benchmark implementation receipts below predate this batch; final actual UI/release gates remain separate.
+
 Final implementation focused run:80/80 PASS (17 new Phase4.1 +63 existing Phase4/workflow/persistence), duration8039.4523ms; typecheck PASS. Exact logs temp/phase41-handoff/focused-tests.log and typecheck.log. Dotted safe-checkpoint regression included; unchanged independent Phase4 QA assertions retained. No full historical suite run here.
 
 Latest current-code UI receipt: temp/phase41-ui/source-zOCXXB/evidence.json and starter-dna.png; empty restore/restart temp/phase41-ui/restore-GiEC6y. All seven gate groups PASS. Bundle and UI logs temp/phase41-handoff/ui-bundle.log and ui-smoke.log. Earlier UI receipt below is historical same-scope verification.

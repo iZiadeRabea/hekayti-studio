@@ -280,6 +280,18 @@ export function restoreCreativeArchive(
           );
         copy.add(r.family.recordId);
       }
+    // A kept conflicting dependency is a DIFFERENT creative identity despite
+    // resolving structurally by ID/version. Do not silently relink incoming
+    // ADD variants or derived records to that target's meaning.
+    for (const r of bundle.records)
+      if (input.choices[r.recordId] !== "KEEP_EXISTING") {
+        for (const ref of [r.family, r.derivedFrom])
+          if (ref && input.choices[ref.recordId] === "KEEP_EXISTING")
+            throw new AppError(
+              "CREATIVE_DEPENDENCY",
+              `Incoming ${r.recordId} depends on conflicting kept ${ref.recordId}; copy the dependency or explicitly defer this import.`,
+            );
+      }
     const suffix = `-restored-${preview.digest.slice(0, 10)}`,
       newId = (id: string) => id.slice(0, 120 - suffix.length) + suffix;
     const remap = new Map<string, string>();
@@ -315,7 +327,7 @@ export function restoreCreativeArchive(
       repo,
       records,
       input.expectedVersion,
-      `restore-${preview.digest}`,
+      `restore-${hash(canonicalJson({ digest: preview.digest, choices: input.choices }))}`,
       timestamp,
     );
     return {

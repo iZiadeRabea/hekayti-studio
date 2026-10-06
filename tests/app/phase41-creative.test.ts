@@ -60,6 +60,164 @@ const seed = (id = "creative-one"): LibraryRecord => ({
   editorialNote: null,
   origin: { transport: "human-authored", importId: null, packageId: null },
 });
+test("historical non-null approval hash, counts and later local review survive portability without authority", () => {
+  const prior = {
+    originalType: "APPROVED_STORY_REFERENCE",
+    originalStatus: "PROMOTED_TO_LIBRARY",
+    originalVersion: 9,
+    approvalHash: "a".repeat(64),
+    authority: "HISTORICAL_ONLY_NOT_CURRENT_APPROVAL" as const,
+  };
+  const r = {
+    ...seed(),
+    creative: {
+      schemaVersion: "creative-metadata/1.0" as const,
+      source: null,
+      culture: screenCulture("Source", "Ordinary fictional scene"),
+      historicalAttribution: prior,
+      usageSummary: {
+        timesUsed: 7,
+        approvedCount: 2,
+        rejectedCount: 1,
+        variantsCreated: 3,
+      },
+    },
+  };
+  const first = new SqliteProjectRepository(":memory:"),
+    second = new SqliteProjectRepository(":memory:"),
+    third = new SqliteProjectRepository(":memory:");
+  importLibraryBatch(first, [r], 0, "history", "now");
+  let bytes = createCreativeArchive(first, true),
+    p = previewCreativeRestore(second, bytes);
+  restoreCreativeArchive(second, bytes, { ...p, choices: {} }, "now");
+  const service = new StoryLibraryService(second, {
+    id: () => "unused",
+    now: () => "now",
+  });
+  for (const action of ["REVIEW", "APPROVE", "PROMOTE"] as const)
+    service.action(
+      r.recordId,
+      second.loadLibrary().recordVersion,
+      `local-${action}`,
+      action,
+      "owner",
+    );
+  const projected = readCreativeArchive(createCreativeArchive(second, true))
+    .bundle.records[0]!;
+  assert.deepEqual(projected.creative!.historicalAttribution, prior);
+  assert.equal(
+    projected.creative!.latestLocalAttribution!.originalStatus,
+    "PROMOTED_TO_LIBRARY",
+  );
+  assert.equal(projected.creative!.latestLocalAttribution!.originalVersion, 4);
+  assert.deepEqual(projected.creative!.usageSummary, r.creative.usageSummary);
+  bytes = createCreativeArchive(second, true);
+  p = previewCreativeRestore(third, bytes);
+  restoreCreativeArchive(third, bytes, { ...p, choices: {} }, "now");
+  const again = readCreativeArchive(createCreativeArchive(third, true)).bundle
+    .records[0]!;
+  assert.deepEqual(again.creative, projected.creative);
+  assert.equal(third.loadLibrary().records[0]!.status, "GENERATED");
+  assert.deepEqual(third.loadLibrary().usage, []);
+  first.close();
+  second.close();
+  third.close();
+});
+test("restore operation identities include canonical choices and replay later COPY without duplicate audits", () => {
+  const source = new SqliteProjectRepository(":memory:"),
+    target = new SqliteProjectRepository(":memory:");
+  importLibraryBatch(
+    source,
+    [seed("one"), seed("two"), seed("three")],
+    0,
+    "source",
+    "now",
+  );
+  importLibraryBatch(
+    target,
+    [
+      { ...seed("one"), title: "Old one" },
+      { ...seed("three"), title: "Old three" },
+    ],
+    0,
+    "target",
+    "now",
+  );
+  const bytes = createCreativeArchive(source, true);
+  const restore = (
+    choices: Record<string, "KEEP_EXISTING" | "COPY_WITH_NEW_IDS">,
+  ) => {
+    const p = previewCreativeRestore(target, bytes);
+    return restoreCreativeArchive(target, bytes, { ...p, choices }, "now");
+  };
+  assert.equal(
+    restore({ one: "KEEP_EXISTING", three: "KEEP_EXISTING" }).added,
+    1,
+  );
+  assert.equal(
+    restore({ one: "COPY_WITH_NEW_IDS", three: "COPY_WITH_NEW_IDS" }).added,
+    2,
+  );
+  const before = target.loadLibrary();
+  assert.equal(
+    restore({ three: "COPY_WITH_NEW_IDS", one: "COPY_WITH_NEW_IDS" }).added,
+    0,
+  );
+  assert.deepEqual(target.loadLibrary(), before);
+  source.close();
+  target.close();
+});
+test("kept conflicting derived lineage rejects atomically, not just structural family refs", () => {
+  const source = new SqliteProjectRepository(":memory:"),
+    target = new SqliteProjectRepository(":memory:"),
+    parent = seed("parent"),
+    child = {
+      ...seed("child"),
+      derivedFrom: { recordId: "parent", version: 1 },
+    };
+  importLibraryBatch(source, [parent, child], 0, "source", "now");
+  importLibraryBatch(
+    target,
+    [{ ...parent, title: "Different meaning" }],
+    0,
+    "target",
+    "now",
+  );
+  const bytes = createCreativeArchive(source, true),
+    p = previewCreativeRestore(target, bytes),
+    before = target.loadLibrary();
+  assert.throws(
+    () =>
+      restoreCreativeArchive(
+        target,
+        bytes,
+        { ...p, choices: { parent: "KEEP_EXISTING" } },
+        "now",
+      ),
+    /depends on conflicting kept/,
+  );
+  assert.deepEqual(target.loadLibrary(), before);
+  source.close();
+  target.close();
+});
+test("all corpus seed and DNA observations are decoded narrative text, not HTML tags", () => {
+  const rows = parseLibraryBatch(
+    readFileSync("examples/starter-library/starter-library.jsonl", "utf8"),
+  );
+  for (const r of rows) {
+    const values = [
+      r.payload.type === "IDEA_SEED" ? r.payload.idea : "",
+      r.creative?.source?.evidence ?? "",
+      ...Object.values(r.creative?.dna?.fields ?? {}).map((f) => f.value ?? ""),
+    ];
+    for (const value of values)
+      assert.doesNotMatch(value, /<\/?[a-z][^>]*>/i, r.recordId);
+  }
+  assert.equal(
+    rows.filter((r) => r.creative?.source?.collectionId === "nigeria").length,
+    40,
+  );
+});
 test("cultural acknowledgment is enforced at portable generation and persisted-envelope boundaries", () => {
   const repo = new SqliteProjectRepository(":memory:"),
     r = {

@@ -112,6 +112,21 @@ export const CreativeMetadataSchema = z
       })
       .strict()
       .nullable(),
+    // A post-restore local review is a separate historical attestation, never
+    // a replacement for the retained original source review or current approval.
+    latestLocalAttribution: z
+      .object({
+        originalType: text,
+        originalStatus: text,
+        originalVersion: z.number().int().positive(),
+        approvalHash: z
+          .string()
+          .regex(/^[a-f0-9]{64}$/)
+          .nullable(),
+        authority: z.literal("HISTORICAL_ONLY_NOT_CURRENT_APPROVAL"),
+      })
+      .strict()
+      .optional(),
     usageSummary: z
       .object({
         timesUsed: z.number().int().nonnegative(),

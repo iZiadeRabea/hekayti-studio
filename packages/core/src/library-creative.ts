@@ -286,14 +286,41 @@ export function projectCreativeLibrary(
         screenCulture(r.title, JSON.stringify(creativePayload)),
       ...(r.creative?.dna ? { dna: r.creative.dna } : {}),
       schemaVersion: "creative-metadata/1.0",
-      historicalAttribution: {
+      historicalAttribution: r.creative?.historicalAttribution ?? {
         originalType: payload.type,
         originalStatus: r.status,
         originalVersion: r.version,
         approvalHash,
         authority: "HISTORICAL_ONLY_NOT_CURRENT_APPROVAL",
       },
-      usageSummary: statistics.get(r.recordId)!,
+      ...(r.creative?.historicalAttribution && r.version > 1
+        ? {
+            latestLocalAttribution: {
+              originalType: payload.type,
+              originalStatus: r.status,
+              originalVersion: r.version,
+              approvalHash,
+              authority: "HISTORICAL_ONLY_NOT_CURRENT_APPROVAL" as const,
+            },
+          }
+        : r.creative?.latestLocalAttribution
+          ? { latestLocalAttribution: r.creative.latestLocalAttribution }
+          : {}),
+      // Portable counts are attribution, never recreated operational events.
+      // Add only this database's genuine outcomes; re-export does not mutate
+      // the stored imported baseline. Structural counts use max, not sum:
+      // restored family relationships are already represented by the baseline.
+      usageSummary: Object.fromEntries(
+        Object.entries(statistics.get(r.recordId)!).map(([key, value]) => [
+          key,
+          key === "variantsCreated"
+            ? Math.max(r.creative?.usageSummary?.variantsCreated ?? 0, value)
+            : value +
+              (r.creative?.usageSummary?.[
+                key as "timesUsed" | "approvedCount" | "rejectedCount"
+              ] ?? 0),
+        ]),
+      ) as NonNullable<CreativeMetadata["usageSummary"]>,
     };
     return validate(LibraryRecordSchema, {
       schemaVersion: "library-record/1.0",
