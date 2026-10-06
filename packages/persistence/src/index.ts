@@ -456,6 +456,7 @@ export class SqliteProjectRepository
               "LIBRARY_APPROVAL_STALE",
               "New approved references require the exact currently approved canonical story; reload before extracting.",
             );
+          this.validateCurrentPlannerSource(workflow);
         }
       if (
         this.db

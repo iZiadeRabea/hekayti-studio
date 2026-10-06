@@ -35,6 +35,7 @@ import {
 
 export interface LibraryRepository {
   loadWorkflow(projectId: string): WorkflowSnapshot | null;
+  validateCurrentPlannerSource?(workflow: WorkflowSnapshot): void;
   loadLibrary(): LibraryState;
   saveLibrary(state: LibraryState, expectedVersion: number): LibraryState;
   saveGenerationPackage(value: GenerationPackage): void;
@@ -304,6 +305,19 @@ export class StoryLibraryService {
           "LIBRARY_APPROVAL_STALE",
           "Extraction requires the exact currently approved canonical workflow; reload before continuing.",
         );
+      // Historical approvals remain immutable, but do not grant fresh extraction
+      // authority after the accepted planner or any contributing source changes.
+      if (
+        canonical.plannerImports?.some(
+          (s) => s.concept.conceptId === canonical.current.conceptId,
+        ) &&
+        !this.repo.validateCurrentPlannerSource
+      )
+        throw new AppError(
+          "LIBRARY_APPROVAL_STALE",
+          "Planner extraction requires current source validation.",
+        );
+      this.repo.validateCurrentPlannerSource?.(canonical);
       return this.extractApproved(
         canonical,
         type,

@@ -71,6 +71,19 @@ const eligible = (r: LibraryRecord, p: PlanningRequest) => {
     return false;
   return true;
 };
+// Membership is an exact structural lineage, not a theme-based inference. A
+// member may contribute only with its current, explicitly eligible family.
+function planningFamily(record: LibraryRecord, latest: LibraryRecord[]) {
+  if (record.payload.type === "STORY_FAMILY") return record;
+  return record.family
+    ? (latest.find(
+        (r) =>
+          r.recordId === record.family!.recordId &&
+          r.version === record.family!.version &&
+          r.payload.type === "STORY_FAMILY",
+      ) ?? null)
+    : null;
+}
 export function derivePlanningBlocks(record: LibraryRecord): DerivedBlock[] {
   const rows: {
     kind: DerivedBlock["kind"];
@@ -149,7 +162,10 @@ export function rankPlanningCandidates(
     );
   const selectedPattern = selected?.creative?.dna?.pattern?.patternId;
   let rows = latest
-    .filter((r) => eligible(r, p))
+    .filter((r) => {
+      const family = planningFamily(r, latest);
+      return eligible(r, p) && (!r.family || (!!family && eligible(family, p)));
+    })
     .map((r) => {
       const reasons: string[] = [],
         d = r.creative?.dna,
@@ -247,10 +263,14 @@ export function rankPlanningCandidates(
     const alternatives = rows.filter(
       (x) =>
         x.record.recordId !== selected?.recordId &&
+        (!selected ||
+          planningFamily(x.record, latest)?.recordId !== selected.recordId) &&
         (!selectedPattern ||
           x.record.creative?.dna?.pattern?.patternId !== selectedPattern) &&
         (p.variation !== "CompletelyNew" ||
-          !stats.get(x.record.recordId)?.timesUsed),
+          (!stats.get(x.record.recordId)?.timesUsed &&
+            !stats.get(planningFamily(x.record, latest)?.recordId ?? "")
+              ?.timesUsed)),
     );
     if (alternatives.length) rows = alternatives;
   }
@@ -305,8 +325,18 @@ export async function composeStoryPlan(
     source = top?.record,
     d = source?.creative?.dna,
     pattern = d?.pattern;
+  const latest = latestLibraryRecords(state),
+    familyRecord = source ? planningFamily(source, latest) : null,
+    contributingSources = source
+      ? [
+          source,
+          ...(familyRecord && familyRecord !== source ? [familyRecord] : []),
+        ]
+      : [];
   const family =
-    source?.payload.type === "STORY_FAMILY" ? source.payload.structure : null;
+    familyRecord?.payload.type === "STORY_FAMILY"
+      ? familyRecord.payload.structure
+      : null;
   const structural = pattern
     ? canonicalJson({
         goalCategory: pattern.goalCategory,
@@ -541,7 +571,17 @@ export async function composeStoryPlan(
     ["FreshConcept", "CompletelyNew"].includes(p.variation) &&
     source &&
     (source.recordId === p.selectedFamily?.recordId ||
-      state.usage.some((u) => u.record.recordId === source.recordId))
+      (!!p.selectedFamily &&
+        familyRecord?.recordId === p.selectedFamily.recordId) ||
+      (!!pattern &&
+        latest.some(
+          (r) =>
+            r.recordId === p.selectedFamily?.recordId &&
+            r.creative?.dna?.pattern?.patternId === pattern.patternId,
+        )) ||
+      state.usage.some((u) =>
+        contributingSources.some((r) => u.record.recordId === r.recordId),
+      ))
   )
     limitations.push(
       "No unused alternative among eligible structures; reuse is disclosed and requires creator review.",
@@ -588,27 +628,24 @@ export async function composeStoryPlan(
       "Native linguistic review required; no bidi control characters.",
     ],
     provenance: {
-      selectedStoryFamilyId:
-        source?.payload.type === "STORY_FAMILY"
-          ? source.recordId
-          : (source?.family?.recordId ?? null),
+      selectedStoryFamilyId: familyRecord?.recordId ?? null,
       selectedPatternId: pattern?.patternId ?? null,
-      sourceDnaIds: d && source ? [source.recordId] : [],
-      sources: source
-        ? [
-            {
-              ref: ref(source),
-              digest: await contentHash(source),
-              lifecycle: source.status,
-              fit: source.creative?.culture.fit ?? "UNSCREENED",
-              provisional: source.status !== "PROMOTED_TO_LIBRARY",
-            },
-          ]
-        : [],
-      derivedBlocks: source ? derivePlanningBlocks(source) : [],
+      sourceDnaIds: contributingSources
+        .filter((r) => r.creative?.dna)
+        .map((r) => r.recordId),
+      sources: await Promise.all(
+        contributingSources.map(async (record) => ({
+          ref: ref(record),
+          digest: await contentHash(record),
+          lifecycle: record.status,
+          fit: record.creative?.culture.fit ?? "UNSCREENED",
+          provisional: record.status !== "PROMOTED_TO_LIBRARY",
+        })),
+      ),
+      derivedBlocks: contributingSources.flatMap(derivePlanningBlocks),
       sourceMode: !source
         ? "EDITORIAL_FALLBACK"
-        : source.status === "PROMOTED_TO_LIBRARY"
+        : contributingSources.every((r) => r.status === "PROMOTED_TO_LIBRARY")
           ? "PROMOTED_LIBRARY"
           : "ACKNOWLEDGED_PROVISIONAL",
       mechanism,
@@ -727,8 +764,10 @@ export function validateStoryPlan(input: StoryPlan) {
     if (i && b.beforeState !== p.beats[i - 1]!.afterState)
       add("state", b.beatId, "Contradictory state chain.");
     if (
-      b.locationId !== p.setting.locationId &&
-      (!i || b.fromLocationId !== p.beats[i - 1]!.locationId)
+      (!i && b.locationId !== p.setting.locationId) ||
+      (i > 0 &&
+        b.locationId !== p.beats[i - 1]!.locationId &&
+        b.fromLocationId !== p.beats[i - 1]!.locationId)
     )
       add(
         "location",
@@ -784,10 +823,14 @@ export function validateStoryPlan(input: StoryPlan) {
     );
   if (
     p.problem &&
+    // A supported toddler routine may introduce and relieve a minor friction in
+    // one beat. Longer causal forms must actually address it before resolution.
+    g.narrativeForm !== "routine" &&
     !p.beats.some(
       (b) =>
         b.addressesProblemId === p.problem!.problemId &&
-        b.beatId !== p.resolutionBeatId,
+        !!resolution &&
+        b.sequence < resolution.sequence,
     )
   )
     add("problem", "beats", "Original problem disappears before resolution.");
@@ -808,8 +851,39 @@ export function validateStoryPlan(input: StoryPlan) {
     ["turningBeatId", p.turningBeatId],
     ["climaxBeatId", p.climaxBeatId],
   ] as const)
-    if (id && !map.has(id))
-      add("ordering", key, "Structural anchor references a missing beat.");
+    if (id) {
+      const anchor = map.get(id);
+      if (!anchor)
+        add("ordering", key, "Structural anchor references a missing beat.");
+      else if (
+        !resolution ||
+        anchor.role === "ENDING" ||
+        anchor.sequence > resolution.sequence ||
+        (key === "incitingBeatId" &&
+          g.narrativeForm !== "routine" &&
+          anchor.sequence === resolution.sequence)
+      )
+        add(
+          "ordering",
+          key,
+          "Structural anchor occurs after its causal purpose or resolution.",
+        );
+    }
+  const inciting = p.incitingBeatId ? map.get(p.incitingBeatId) : null,
+    turning = p.turningBeatId ? map.get(p.turningBeatId) : null,
+    climax = p.climaxBeatId ? map.get(p.climaxBeatId) : null;
+  if (inciting && turning && turning.sequence < inciting.sequence)
+    add("ordering", "turningBeatId", "Turn precedes the inciting experience.");
+  if (
+    climax &&
+    (turning ?? inciting) &&
+    climax.sequence < (turning ?? inciting)!.sequence
+  )
+    add(
+      "ordering",
+      "climaxBeatId",
+      "Climax precedes its inciting experience or turn.",
+    );
   const blockers = findings.length;
   add(
     "human-literary",

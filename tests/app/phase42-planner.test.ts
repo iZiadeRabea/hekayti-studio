@@ -100,7 +100,11 @@ const seed = parseLibraryBatch(
     "utf8",
   ),
 );
-function harness(path = ":memory:", all = false) {
+function harness(
+  path = ":memory:",
+  all = false,
+  records = all ? seed : seed.filter((r) => r.payload.type === "STORY_FAMILY"),
+) {
   const repo = new SqliteProjectRepository(path);
   repo.createProject(project());
   let n = 0;
@@ -115,13 +119,7 @@ function harness(path = ":memory:", all = false) {
       seam,
     ),
     planner = new StoryPlannerService(repo, workflow, seam);
-  importLibraryBatch(
-    repo,
-    all ? seed : seed.filter((r) => r.payload.type === "STORY_FAMILY"),
-    0,
-    "fixture",
-    "now",
-  );
+  importLibraryBatch(repo, records, 0, "fixture", "now");
   return { repo, workflow, planner, seam };
 }
 function prose(w: WorkflowSnapshot) {
@@ -946,6 +944,176 @@ test("source change prevents fresh QA/approval; actual family variant creation s
   );
   h.repo.close();
 });
+test("member lineage freezes the eligible family revision and family edits invalidate live authority", async () => {
+  const family = seed.find((r) => r.recordId === "structure-pattern-981b90da")!,
+    member = seed.find((r) => r.recordId === "source-aesop-2")!,
+    h = harness(":memory:", false, [family, member]);
+  try {
+    const p = planning();
+    p.generation = 1;
+    const data = await accepted(h, p);
+    assert.deepEqual(
+      data.pkg.plan.provenance.sources.map((s) => s.ref),
+      [
+        { recordId: member.recordId, version: member.version },
+        { recordId: family.recordId, version: family.version },
+      ],
+    );
+    const before = h.repo.loadPlanner(data.w.projectId)!;
+    new StoryLibraryService(h.repo, h.seam).action(
+      family.recordId,
+      h.repo.loadLibrary().recordVersion,
+      "family-edit",
+      "SCORE",
+      "fixture-reviewer",
+      {
+        scores: { StoryQuality: 4 },
+        editorialNote: "Synthetic family revision",
+      },
+    );
+    assert.throws(() => h.repo.validateCurrentPlannerSource(data.w), /changed/);
+    await assert.rejects(
+      () =>
+        h.planner.prepare(
+          data.w.projectId,
+          data.s.recordVersion,
+          data.w.recordVersion,
+        ),
+      /changed/,
+    );
+    assert.deepEqual(h.repo.loadPlanner(data.w.projectId), before);
+    const candidates = rankPlanningCandidates(p, h.repo.loadLibrary());
+    assert.ok(
+      !candidates.some((c) => c.record.recordId === member.recordId),
+      "Member with an obsolete exact family revision must not silently rebind lineage",
+    );
+  } finally {
+    h.repo.close();
+  }
+});
+
+test("member inspiration cannot bypass its contributing family's cultural opt-in", () => {
+  const family = structuredClone(
+      seed.find((r) => r.recordId === "structure-pattern-981b90da")!,
+    ),
+    member = seed.find((r) => r.recordId === "source-aesop-2")!;
+  family.creative!.culture.fit = "SENSITIVE_REVIEW";
+  const h = harness(":memory:", false, [family, member]);
+  try {
+    const p = planning();
+    assert.equal(rankPlanningCandidates(p, h.repo.loadLibrary()).length, 0);
+    p.sensitiveOptIn = true;
+    assert.equal(rankPlanningCandidates(p, h.repo.loadLibrary()).length, 2);
+  } finally {
+    h.repo.close();
+  }
+});
+
+test("stale planner extraction fails through service and direct persistence without rewriting historical reference", async () => {
+  const h = harness(),
+    data = await accepted(h);
+  try {
+    let w = await h.planner.import(
+      data.w.projectId,
+      data.pkg.packageId,
+      JSON.stringify(response(data)),
+      data.s.recordVersion,
+      data.w.recordVersion,
+    );
+    w = await h.workflow.qa(w.projectId, w.recordVersion);
+    w = await h.workflow.approve(
+      w.projectId,
+      w.recordVersion,
+      "fixture-reviewer",
+      true,
+    );
+    const service = new StoryLibraryService(h.repo, h.seam),
+      saved = service.saveApproved(
+        w,
+        "APPROVED_STORY_REFERENCE",
+        h.repo.loadLibrary().recordVersion,
+        "valid-extract",
+        "fixture-reviewer",
+      ),
+      historical = saved.records.at(-1)!;
+    service.action(
+      data.pkg.plan.provenance.sources[0]!.ref.recordId,
+      saved.recordVersion,
+      "source-score",
+      "SCORE",
+      "fixture-reviewer",
+      {
+        scores: { StoryQuality: 4 },
+        editorialNote: "Synthetic source revision",
+      },
+    );
+    const before = h.repo.loadLibrary(),
+      frozenWorkflow = h.workflow.load(w.projectId)!;
+    const sourceValidator = h.repo.validateCurrentPlannerSource;
+    Object.defineProperty(h.repo, "validateCurrentPlannerSource", {
+      value: undefined,
+      configurable: true,
+    });
+    assert.throws(
+      () =>
+        service.saveApproved(
+          frozenWorkflow,
+          "APPROVED_STORY_REFERENCE",
+          before.recordVersion,
+          "missing-validator",
+          "fixture-reviewer",
+        ),
+      /current source validation/,
+    );
+    Object.defineProperty(h.repo, "validateCurrentPlannerSource", {
+      value: sourceValidator,
+      configurable: true,
+    });
+    for (const kind of [
+      "STORY_CONCEPT",
+      "APPROVED_STORY_REFERENCE",
+      "BUILDING_BLOCK",
+    ] as const)
+      assert.throws(
+        () =>
+          service.saveApproved(
+            frozenWorkflow,
+            kind,
+            before.recordVersion,
+            `invalid-${kind}`,
+            "fixture-reviewer",
+          ),
+        /changed/,
+      );
+    const forged = structuredClone(historical);
+    forged.recordId = "new-reference-from-stale-plan";
+    const next = structuredClone(before);
+    next.records.push(forged);
+    next.events.push({
+      eventId: "direct-stale-create",
+      recordId: forged.recordId,
+      version: 1,
+      action: "CREATE",
+      reviewerAlias: "fixture-reviewer",
+      timestamp: "now",
+    });
+    assert.throws(
+      () => h.repo.saveLibrary(next, before.recordVersion),
+      /changed/,
+    );
+    assert.deepEqual(h.repo.loadLibrary(), before);
+    assert.deepEqual(
+      h.repo
+        .loadLibrary()
+        .records.find((r) => r.recordId === historical.recordId),
+      historical,
+    );
+    assert.deepEqual(h.workflow.load(w.projectId), frozenWorkflow);
+  } finally {
+    h.repo.close();
+  }
+});
+
 test("storage extension cannot silently rebuild missing planner tables", async () => {
   mkdirSync("temp/phase42-tests", { recursive: true });
   const path = join(
