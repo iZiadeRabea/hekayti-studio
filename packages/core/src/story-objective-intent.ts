@@ -15,7 +15,7 @@ const rules: [ObjectiveIntent["primaryIntent"], RegExp, string[], string[]][] =
   [
     [
       "SHARING_TURN_TAKING",
-      /\b(?:shar(?:e|es|ing) (?:a |the )?(?:toy|ball|game|object)|tak(?:e|es|ing) turns?|turn[- ]taking|alternat(?:e|ing) turns?)\b|مشارك|تبادل الأدوار|تبادل الادوار|يتناوب|نتناوب/,
+      /\b(?:shar(?:e|es|ing) (?:a |the )?(?:toy|ball|game|object)|tak(?:e|es|ing) turns?|turn[- ]taking|alternat(?:e|ing) turns?)\b|(?:مشاركة|يشارك|نشارك|شارك)\s+(?:في\s+)?(?:ال)?(?:لعبة|كرة|ألعاب|العاب|شيء)|تبادل الأدوار|تبادل الادوار|يتناوب|نتناوب/,
       ["reciprocity", "exchange", "turn-taking"],
       [
         "two active participants where age permits",
@@ -61,28 +61,77 @@ const rules: [ObjectiveIntent["primaryIntent"], RegExp, string[], string[]][] =
 export function detectObjectiveIntent(
   objective: StoryRequest["objective"],
 ): ObjectiveIntent {
+  // Bounded local polarity, not a general language parser. Keep numeric/object
+  // evidence intact; suppress only a match preceded by a nearby explicit denial.
+  const denied = (text: string, index: number) =>
+    /(?:\b(?:not|never|without|avoid|avoiding|cannot|can't|don't|doesn't|isn't|no)|(?:^|\s)(?:لا|ليس|بدون|دون|لن|عدم))\s+(?:[\p{L}]+\s+){0,4}$/u.test(
+      text
+        .slice(0, index)
+        .split(/[.;!?،؛]/u)
+        .at(-1) ?? "",
+    );
+  const candidates: {
+    primaryIntent: ObjectiveIntent["primaryIntent"];
+    evidence: ObjectiveIntent["evidence"];
+    socialMechanisms: string[];
+    storyNeeds: string[];
+  }[] = [];
   for (const [primaryIntent, rule, socialMechanisms, storyNeeds] of rules) {
     if (
       primaryIntent === "LEARNING_DISCOVERY" &&
       objective.kind !== "educational"
     )
       continue;
+    let hasDenial = false;
     const evidence = (["description", "successScenario"] as const).flatMap(
       (field) => {
-        const match = normalize(objective[field]).match(rule);
-        return match ? [{ field, matched: match[0] }] : [];
+        const text = normalize(objective[field]);
+        const matches = [...text.matchAll(new RegExp(rule.source, "gu"))];
+        const positive = matches.filter((match) => {
+          if (!denied(text, match.index)) return true;
+          hasDenial = true;
+          return false;
+        });
+        // Retain the original first evidence per field for unchanged positives.
+        return positive[0] ? [{ field, matched: positive[0][0] }] : [];
       },
     );
-    if (evidence.length)
-      return ObjectiveIntentSchema.parse({
-        schemaVersion: "objective-intent/1.0",
+    // Contradictory positive/negative wording for the same operation is outside
+    // this small classifier. Do not turn it into a confident positive objective.
+    if (evidence.length && !hasDenial)
+      candidates.push({
         primaryIntent,
         evidence,
         socialMechanisms,
         storyNeeds,
-        limited: false,
       });
   }
+  const successes = candidates.filter((c) =>
+    c.evidence.some((e) => e.field === "successScenario"),
+  );
+  const kindIntent =
+    objective.kind === "educational"
+      ? "LEARNING_DISCOVERY"
+      : objective.kind === "emotional"
+        ? "EMOTIONAL_REGULATION"
+        : null;
+  // The observable positive success operation outranks incidental description
+  // words; kind resolves supported emotional/educational competing evidence.
+  const selected =
+    successes.find((c) => c.primaryIntent === kindIntent) ??
+    (successes.length === 1 ? successes[0] : undefined) ??
+    (successes.length === 0
+      ? candidates.find((c) => c.primaryIntent === kindIntent)
+      : undefined) ??
+    (successes.length === 0 && candidates.length === 1
+      ? candidates[0]
+      : undefined);
+  if (selected)
+    return ObjectiveIntentSchema.parse({
+      schemaVersion: "objective-intent/1.0",
+      ...selected,
+      limited: false,
+    });
   const primaryIntent =
     objective.kind === "educational"
       ? "GENERAL_EDUCATIONAL"

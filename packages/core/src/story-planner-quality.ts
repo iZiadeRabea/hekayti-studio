@@ -912,6 +912,15 @@ const normalized = (s: string) =>
     .toLowerCase()
     .replace(/[\s\p{P}]+/gu, " ")
     .trim();
+// Remove enumerated attempt labels, not substantive quantities (e.g. two
+// counted blocks). A counter alone is not new strategy/information/consequence.
+const progressionText = (s: string) =>
+  normalized(
+    s.replace(
+      /\b(?:attempt|approach|step|try)\s*#?\s*[0-9٠-٩]+\b|(?:المحاولة|محاولة|الخطوة|خطوة)\s*[0-9٠-٩]+/giu,
+      "",
+    ),
+  );
 export function qualityFindings(p: QualityPlan): QaFinding[] {
   const result: QaFinding[] = [],
     add = (
@@ -985,6 +994,13 @@ export function qualityFindings(p: QualityPlan): QaFinding[] {
     const t = map.get(b.beatId),
       prev = i ? p.beats[i - 1] : null,
       old = prev ? map.get(prev.beatId) : null;
+    if (t && new Set(t.participantIds).size !== t.participantIds.length)
+      add(
+        "SOCIAL_INTENT_CAST_MISMATCH",
+        b.beatId,
+        "Active participants must be distinct; repeated IDs are not additional actors.",
+        "high",
+      );
     for (const id of t?.participantIds ?? []) {
       if (
         !introduced.has(id) ||
@@ -1015,16 +1031,19 @@ export function qualityFindings(p: QualityPlan): QaFinding[] {
       g.conventionalPlot &&
       b.role !== "ENDING" &&
       b.role !== "OPENING" &&
-      (b.beforeState === b.afterState ||
+      (progressionText(b.beforeState) === progressionText(b.afterState) ||
         (prev &&
           t &&
           old &&
           ((b.action === prev.action &&
-            normalized(b.summary) === normalized(prev.summary)) ||
-            (t.strategy === old.strategy &&
-              t.informationChange === old.informationChange &&
-              t.relationshipChange === old.relationshipChange &&
-              t.consequence === old.consequence))))
+            progressionText(b.summary) === progressionText(prev.summary)) ||
+            (progressionText(t.strategy) === progressionText(old.strategy) &&
+              progressionText(t.informationChange) ===
+                progressionText(old.informationChange) &&
+              progressionText(t.relationshipChange) ===
+                progressionText(old.relationshipChange) &&
+              progressionText(t.consequence) ===
+                progressionText(old.consequence)))))
     )
       add(
         "NON_PROGRESSING_BEATS",
@@ -1038,7 +1057,7 @@ export function qualityFindings(p: QualityPlan): QaFinding[] {
     g.narrativeForm !== "recognition" &&
     g.activeCharacterRange[1] >= 2 &&
     (active.size < 2 ||
-      (map.get(p.resolutionBeatId)?.participantIds.length ?? 0) < 2)
+      new Set(map.get(p.resolutionBeatId)?.participantIds ?? []).size < 2)
   )
     add(
       "SOCIAL_INTENT_CAST_MISMATCH",
