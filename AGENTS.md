@@ -1,5 +1,7 @@
 # Hekayti Studio agent entrypoint
 
+Phase 4 owner authorization supersedes historical Phase 3 stop wording only within docs/implementation/phase4-plan.md. HYBRID BY DEFAULT; offline manual ChatGPT/Gemini/generic bridge, no API dependency. Sole verified GPT-6.1 Sol Engineering implementation then independent Sol QA, Astra final review. Routine compatible implementation/continuity updates delegated; no extra agents or paid/private/photo/image/video/site work. Focused tests during edits; one consolidated expensive gate after QA fixes. No main/stable publication/Drive until final approval. Phase 3 exact verified final receipt is recorded in phase4-overview.md.
+
 BEFORE MAKING ANY PROJECT CHANGES, read START_HERE.md, PROJECT_CONTEXT.md, CURRENT_STATE.md, DECISIONS.md and SKILLS.md. Follow CONTRIBUTING_AI.md and SECURITY.md. Inspect Git status.
 
 Foundation v0.1.0-foundation contains infrastructure only; Phase 2 v0.3.0-core is complete. Owner now authorizes Phase 3 Story Engine core and explicitly requires Astra leadership with GPT-6.1 Sol implementation workers. Read docs/implementation/phase3-agent-execution.md and your focused ownership packet. No paid AI, real child data, final UI or later production feature. Never mistake fixture/unit checks for visual/production acceptance.

@@ -22,10 +22,25 @@ import {
   type WorkflowSnapshot,
   type StoryWorkflowRepository,
 } from "@hekayti/core/workflow";
+import {
+  LibraryStateSchema,
+  GenerationPackageSchema,
+  ManualImportSchema,
+  type LibraryState,
+  type GenerationPackage,
+  type ManualImport,
+} from "@hekayti/contracts/library";
+import {
+  emptyLibrary,
+  validateLibraryAppend,
+  parseBridgeResponse,
+  type LibraryRepository,
+} from "@hekayti/core/library";
+import { storyStructureFor } from "@hekayti/core/age";
 export { LocalAssetStore, writeNewFile } from "./assets";
 
 export class SqliteProjectRepository
-  implements ProjectRepository, StoryWorkflowRepository
+  implements ProjectRepository, StoryWorkflowRepository, LibraryRepository
 {
   private readonly db: DatabaseSync;
   private transactionDepth = 0;
@@ -37,7 +52,7 @@ export class SqliteProjectRepository
       const version = Number(
         this.db.prepare("PRAGMA user_version").get()!.user_version,
       );
-      if (version > 2)
+      if (version > 3)
         throw new AppError(
           "DATABASE_VERSION",
           "Database is newer than this prototype; it was not downgraded.",
@@ -98,6 +113,21 @@ export class SqliteProjectRepository
           "SELECT project_id,payload,version FROM story_workflows LIMIT 0",
         )
         .all();
+      if (version <= 2)
+        this.transaction(() => {
+          this.db.exec(
+            "CREATE TABLE story_library(id TEXT PRIMARY KEY CHECK(id='library'),payload TEXT NOT NULL,version INTEGER NOT NULL); CREATE TABLE generation_packages(id TEXT PRIMARY KEY,project_id TEXT NOT NULL REFERENCES projects(id),payload TEXT NOT NULL); CREATE TABLE manual_imports(id TEXT PRIMARY KEY,package_id TEXT NOT NULL REFERENCES generation_packages(id),payload TEXT NOT NULL); PRAGMA user_version=3;",
+          );
+          this.db
+            .prepare("INSERT INTO story_library VALUES('library',?,0)")
+            .run(canonicalJson(emptyLibrary()));
+        });
+      for (const table of [
+        "story_library",
+        "generation_packages",
+        "manual_imports",
+      ])
+        this.db.prepare(`SELECT * FROM ${table} LIMIT 0`).all();
       this.db.exec("PRAGMA journal_mode=WAL;");
     } catch (e) {
       this.db.close();
@@ -127,6 +157,242 @@ export class SqliteProjectRepository
       this.transactionDepth--;
     }
   }
+  loadLibrary(): LibraryState {
+    try {
+      const row = this.db
+        .prepare("SELECT payload,version FROM story_library WHERE id='library'")
+        .get();
+      if (!row) throw new Error("missing");
+      const state = validate(
+        LibraryStateSchema,
+        JSON.parse(String(row.payload)),
+      );
+      if (state.recordVersion !== Number(row.version))
+        throw new Error("version");
+      validateLibraryAppend(emptyLibrary(), state);
+      for (const event of state.usage) {
+        const workflow = this.loadWorkflow(event.projectId);
+        if (
+          !workflow?.requests.some(
+            (r) => r.revisionId === event.requestRevisionId,
+          )
+        )
+          throw new Error("usage request");
+        if (
+          event.outcome === "APPROVED" &&
+          (!state.usage.some(
+            (e) =>
+              e.outcome === "USED" &&
+              e.record.recordId === event.record.recordId &&
+              e.projectId === event.projectId &&
+              e.requestRevisionId === event.requestRevisionId,
+          ) ||
+            !workflow.approvals.some((a) =>
+              workflow.reportLinks.some(
+                (l) =>
+                  l.reportId === a.reportId &&
+                  l.requestRevisionId === event.requestRevisionId,
+              ),
+            ))
+        )
+          throw new Error("approved usage source");
+      }
+      for (const r of state.records) {
+        if (r.origin.transport === "manual-paste") {
+          const source = r.origin.importId
+            ? this.loadManualImport(r.origin.importId)
+            : null;
+          if (
+            !source ||
+            source.packageId !== r.origin.packageId ||
+            !source.recordIds.includes(r.recordId) ||
+            r.payload.type !== "STORY_CONCEPT" ||
+            canonicalJson(
+              source.candidates[source.recordIds.indexOf(r.recordId)],
+            ) !== canonicalJson(r.payload.concept) ||
+            canonicalJson(source.metadata) !== canonicalJson(r.metadata)
+          )
+            throw new Error("import source");
+        }
+        if (r.payload.type === "APPROVED_STORY_REFERENCE") {
+          const workflow = this.loadWorkflow(r.payload.projectId);
+          const reference = r.payload;
+          const a = workflow?.approvals.find(
+              (a) => a.approval.approvalId === reference.approvalId,
+            ),
+            link = workflow?.reportLinks.find(
+              (l) => l.reportId === reference.reportId,
+            );
+          if (
+            !a ||
+            a.reportId !== reference.reportId ||
+            a.approval.hash !== reference.contentHash ||
+            !workflow?.conceptSets.some((set) =>
+              set.concepts.some(
+                (c) =>
+                  c.conceptId === link?.conceptId &&
+                  canonicalJson(c) === canonicalJson(reference.concept),
+              ),
+            )
+          )
+            throw new Error("approval source");
+        }
+      }
+      return state;
+    } catch {
+      throw new AppError(
+        "LIBRARY_CORRUPT",
+        "Stored library failed validation; original data retained.",
+      );
+    }
+  }
+  saveLibrary(input: LibraryState, expectedVersion: number): LibraryState {
+    return this.transaction(() => {
+      const previous = this.loadLibrary();
+      if (previous.recordVersion !== expectedVersion)
+        throw new AppError("LIBRARY_CONFLICT", "Library changed; reload.");
+      const next = validate(LibraryStateSchema, {
+        ...input,
+        recordVersion: expectedVersion + 1,
+      });
+      validateLibraryAppend(previous, next);
+      if (
+        this.db
+          .prepare(
+            "UPDATE story_library SET payload=?,version=? WHERE id='library' AND version=?",
+          )
+          .run(canonicalJson(next), next.recordVersion, expectedVersion)
+          .changes !== 1
+      )
+        throw new AppError("LIBRARY_CONFLICT", "Library changed; reload.");
+      return this.loadLibrary();
+    });
+  }
+  saveGenerationPackage(input: GenerationPackage) {
+    const p = validate(GenerationPackageSchema, input);
+    this.validatePackageSource(p);
+    this.immutableBridgeRow(
+      "generation_packages",
+      p.packageId,
+      p.request.projectId,
+      p,
+    );
+  }
+  private validatePackageSource(p: GenerationPackage) {
+    const row = this.db
+      .prepare("SELECT payload FROM story_workflows WHERE project_id=?")
+      .get(p.request.projectId);
+    if (
+      !row ||
+      !JSON.parse(String(row.payload)).requests.some(
+        (r: unknown) => canonicalJson(r) === canonicalJson(p.request),
+      ) ||
+      canonicalJson(p.guidance) !== canonicalJson(storyStructureFor(p.request))
+    )
+      throw new AppError(
+        "BRIDGE_SOURCE",
+        "Package request/guidance must match retained canonical source.",
+      );
+    const libraryRow = this.db
+      .prepare("SELECT payload FROM story_library WHERE id='library'")
+      .get();
+    const state = validate(
+      LibraryStateSchema,
+      JSON.parse(String(libraryRow!.payload)),
+    );
+    if (
+      p.context.some(
+        (r) =>
+          r.status !== "PROMOTED_TO_LIBRARY" ||
+          !state.records.some((x) => canonicalJson(x) === canonicalJson(r)),
+      )
+    )
+      throw new AppError(
+        "BRIDGE_SOURCE",
+        "Frozen context must match exact retained promoted records.",
+      );
+  }
+  loadGenerationPackage(id: string): GenerationPackage | null {
+    const row = this.db
+      .prepare("SELECT payload,project_id FROM generation_packages WHERE id=?")
+      .get(id);
+    if (!row) return null;
+    try {
+      const p = validate(
+        GenerationPackageSchema,
+        JSON.parse(String(row.payload)),
+      );
+      if (p.packageId !== id || p.request.projectId !== row.project_id)
+        throw new Error("identity");
+      this.validatePackageSource(p);
+      return p;
+    } catch {
+      throw new AppError(
+        "BRIDGE_CORRUPT",
+        "Frozen package failed validation; original retained.",
+      );
+    }
+  }
+  saveManualImport(input: ManualImport) {
+    const i = validate(ManualImportSchema, input),
+      p = this.loadGenerationPackage(i.packageId);
+    if (!p || p.request.revisionId !== i.requestRevisionId)
+      throw new AppError("BRIDGE_SOURCE", "Package request missing.");
+    parseBridgeResponse(
+      canonicalJson({
+        schemaVersion: "bridge-response/1.0",
+        packageId: i.packageId,
+        requestRevisionId: i.requestRevisionId,
+        candidates: i.candidates,
+      }),
+      p,
+    );
+    this.immutableBridgeRow("manual_imports", i.importId, i.packageId, i);
+  }
+  loadManualImport(id: string): ManualImport | null {
+    const row = this.db
+      .prepare("SELECT payload,package_id FROM manual_imports WHERE id=?")
+      .get(id);
+    if (!row) return null;
+    try {
+      const i = validate(ManualImportSchema, JSON.parse(String(row.payload)));
+      const p = this.loadGenerationPackage(i.packageId);
+      if (i.importId !== id || i.packageId !== row.package_id || !p)
+        throw new Error("identity");
+      parseBridgeResponse(
+        canonicalJson({
+          schemaVersion: "bridge-response/1.0",
+          packageId: i.packageId,
+          requestRevisionId: i.requestRevisionId,
+          candidates: i.candidates,
+        }),
+        p!,
+      );
+      return i;
+    } catch {
+      throw new AppError(
+        "BRIDGE_CORRUPT",
+        "Import failed validation; original retained.",
+      );
+    }
+  }
+  private immutableBridgeRow(
+    table: "generation_packages" | "manual_imports",
+    id: string,
+    parent: string,
+    value: unknown,
+  ) {
+    const payload = canonicalJson(value),
+      old = this.db.prepare(`SELECT payload FROM ${table} WHERE id=?`).get(id);
+    if (old && old.payload !== payload)
+      throw new AppError(
+        "BRIDGE_IMMUTABLE",
+        "Frozen package/import cannot be overwritten.",
+      );
+    this.db
+      .prepare(`INSERT INTO ${table} VALUES(?,?,?) ON CONFLICT(id) DO NOTHING`)
+      .run(id, parent, payload);
+  }
   loadWorkflow(id: string): WorkflowSnapshot | null {
     const row = this.db
       .prepare("SELECT payload,version FROM story_workflows WHERE project_id=?")
@@ -140,6 +406,12 @@ export class SqliteProjectRepository
       if (value.projectId !== id || value.recordVersion !== Number(row.version))
         throw new Error("identity");
       this.validateWorkflowHashes(value);
+      for (const imported of value.bridgeImports ?? [])
+        if (
+          canonicalJson(this.loadManualImport(imported.importId)) !==
+          canonicalJson(imported)
+        )
+          throw new Error("canonical manual import");
       for (const b of value.blueprints)
         if (
           canonicalJson(this.loadBlueprint(b.revisionId)) !== canonicalJson(b)
@@ -239,6 +511,15 @@ export class SqliteProjectRepository
           "Story changed or is missing; reload before continuing.",
         );
       validateWorkflowAppend(previous, s);
+      for (const imported of s.bridgeImports ?? [])
+        if (
+          canonicalJson(this.loadManualImport(imported.importId)) !==
+          canonicalJson(imported)
+        )
+          throw new AppError(
+            "BRIDGE_SOURCE",
+            "Workflow import must match retained manual import source.",
+          );
       this.validateWorkflowHashes(s);
       for (const b of s.blueprints) this.saveBlueprint(b);
       for (const d of s.drafts) for (const e of d.editions) this.saveEdition(e);

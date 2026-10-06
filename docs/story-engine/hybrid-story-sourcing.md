@@ -1,0 +1,9 @@
+# Hybrid story sourcing
+
+HYBRID is the default. CURATED stays close to explicitly selected promoted family/template context. AI_LED permits greater creative freedom within the same age/language/safety constraints. These modes guide a manually copied generation package; there is no production API dependency and no claim a consumer service obeys the instructions.
+
+FIXED BY HEKAYTI: exact request/revision/objective/type, supported month-band mechanisms/cast/beat limits, Arabic modes, optional synthetic personalization and hero role, caregiver/video safety, continuity/actors, trusted fact references, strict output version/schema and actual manual transport provenance. OPEN FOR AI CREATIVITY: title/premise, fictional situations/settings/characters, visible causal events, supported challenge/resolution/emotional surfaces and the chosen SimilarVersion/NewVariant/FreshConcept/CompletelyNew intent.
+
+A generation-package/1.0 freezes request, current guidance, selected record revisions, strategy, variation, candidate count (3–5), rules and creative freedom. Later library feedback/archive does not rewrite packages. Context must be currently promoted when first selected. Request source preference and package strategy remain explicitly separate recorded inputs; package strategy controls this manual generation run.
+
+Canonical concept fields are reused: primaryCategory is story type, mechanism is story mechanism, characters/mainCharacterId are the main/supporting cast. Full localized beat/state/fact outline is required to carry creative meaning into the existing Blueprint. Imported manual concepts opt into generic structural/advisory evaluation; finite mock-only vocabulary and mock duplicate policy remain unchanged for legacy workflows. Unsupported creative drafting never silently falls back to mock prose.

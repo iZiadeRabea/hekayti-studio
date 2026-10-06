@@ -1,5 +1,9 @@
 # Changelog
 
+## Phase 4 implementation — 2026-10-06 (not released)
+
+HYBRID-default persistent reusable Library/Inbox, structural families/variants, explicit lifecycle/editorial opinion/usage, immutable manual ChatGPT/Gemini/generic packages and strict atomic pasted-concept import. Additive SQLite v3 and workflow/1.1 preserve Phase 3 history; general imported meaning uses existing Blueprint plus structured manual draft/QA/explicit approval without mock substitution. Minimal secure Library/Bridge UI, synthetic starter, focused tests and QA packet. Independent QA/full final gates/stable release pending; no API/provider/production-quality claim. Corrected continuity to the actually verified Phase 3 final Git/Drive receipt, retaining Wave1 history.
+
 ## v0.4.0-story-engine — 2026-10-06
 
 Final Astra release review accepted the synthetic Story Engine core, integrated Age/MSA/Egyptian drafting, versioned concept selection/blueprint/draft/QA/explicit approval, append-only SQLite v2/CAS/hash provenance and secure minimal creator. Independent RT-001/RT-002 closed. 100 foundation + 329 design assertions and 112 application tests/typecheck PASS; online health/security, production build, unsigned Windows x64 package, development/packaged restart/approval/staleness and legacy UI/export gates PASS. Mechanical main/release/checkpoint publication and verified private source recovery authorized; exact final delivery identity external. No paid AI/private child data/later phase or production literary/native certification.

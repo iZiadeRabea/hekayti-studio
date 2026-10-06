@@ -38,10 +38,10 @@ test("actual version-1 migration preserves all legacy rows and is transactional"
   original.saveBlueprint(fixture());
   original.close();
   const db = new DatabaseSync(path);
-  db.exec("DROP TABLE story_workflows; PRAGMA user_version=1");
+  db.exec("DROP TABLE manual_imports; DROP TABLE generation_packages; DROP TABLE story_library; DROP TABLE story_workflows; PRAGMA user_version=1");
   db.close();
   const migrated = new SqliteProjectRepository(path);
-  assert.equal(migrated.diagnostics().schemaVersion, 2);
+  assert.equal(migrated.diagnostics().schemaVersion, 3);
   assert.deepEqual(migrated.loadProject(project().projectId), project());
   assert.deepEqual(migrated.loadBlueprint(fixture().revisionId), fixture());
   assert.deepEqual(
@@ -71,7 +71,7 @@ test("actual version-1 migration preserves all legacy rows and is transactional"
 test("SQLite migration, CRUD, all synthetic fixture roundtrips, reopen persistence", () => {
   const path = join(dir(), "demo.sqlite");
   let r = new SqliteProjectRepository(path);
-  assert.equal(r.diagnostics().schemaVersion, 2);
+  assert.equal(r.diagnostics().schemaVersion, 3);
   r.createProject(project());
   for (const name of names) {
     const b = fixture(name);

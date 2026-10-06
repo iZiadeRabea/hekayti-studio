@@ -1,5 +1,7 @@
 # Start here — new AI session
 
+Current owner authorization: Phase 4 reusable hybrid Library/Inbox/manual AI bridge, HYBRID BY DEFAULT with no API dependency. Read docs/implementation/phase4-plan.md and phase4-overview.md for approved scope/gates. This supersedes historical stop boundaries only for that scope; no extra agents, private data or paid AI. Focused iteration then independent QA; final expensive gate/release/recovery remains separate.
+
 BEFORE MAKING ANY PROJECT CHANGES, READ:
 
 1. START_HERE.md

@@ -1,5 +1,12 @@
 # Architecture / product decision log
 
+## Phase 4 — 2026-10-06
+
+- D033: Owner authorizes reusable Library/Inbox/manual bridge, HYBRID BY DEFAULT with CURATED/AI-led choices and no API dependency. Alternative: API/provider lock-in or purely curated mock production. Reason: owner-operated creative sourcing without credentials/automation; same frozen request/context/output schema for ChatGPT/Gemini/generic, no provider identity/quality proof from notes.
+- D034: Additive strict library/state/package/import schemas and SQLite v3, lifecycle/feedback/usage append-only with CAS and atomic idempotent imports/use-now. Alternative: mutable approved flags/automatic AI promotion. Reason: human curation, independent Inbox and correct historical relationships. Structural families are not whole books; similarity intent is allowed.
+- D035: Workflow/1.1 opt-in manual sources reuse canonical concepts/Blueprint/edition/QA/approval. Alternative: globally loosen workflow/1.0 or replace creative meaning with stock mock prose. Reason: preserve old history/provenance/hashes and real imported semantics. Unsupported deterministic drafting fails; structured manual prose has unverified native/semantic advisories requiring explicit acknowledgment, not fabricated quality certification.
+- D036: Verified Sol route reused for sole implementation, then independent Sol QA; owner lean override delegates compatible additions/root continuity, with one final Astra review. No redundant probes/full historical suites per edit. Final regression/health/security/verified recovery remains required before separate stable release authority. Phase 3 final release/recovery verified at 58d4c52d; exact receipt in phase4-overview.md.
+
 ## Phase 3 shared decisions — 2026-10-06
 
 - D031: Independent Sol Red Team found historical approval draft/report cross-linking and omitted canonical character validation; both were fixed in one Engineering batch and independently confirmed closed. Existing workflow/report links and character keys suffice; shared contracts remain frozen. Original desktop product name/app ID/output path and synthetic user-data path stay compatible; packaged checks use isolated storage.

@@ -632,6 +632,7 @@ export function reviewStoryLanguage(
   concept: StoryConcept,
   blueprint: StoryBlueprint,
   editions: readonly LanguageEdition[],
+  manualCreative = false,
 ): QaFinding[] {
   const findings: QaFinding[] = [];
   const add = (
@@ -650,7 +651,8 @@ export function reviewStoryLanguage(
       suggestedAction,
     });
   try {
-    assertSources(request, concept, blueprint);
+    if (!manualCreative) assertSources(request, concept, blueprint);
+    else validate(BlueprintSchema, blueprint);
   } catch (error) {
     add(
       "blocker",
@@ -724,7 +726,9 @@ export function reviewStoryLanguage(
         "Edition page IDs/order differ from the canonical page plan.",
         "Restore exact page coverage and order.",
       );
-    const expected = edition(request, concept, blueprint, mode, "qa-reference");
+    const expected = manualCreative
+      ? null
+      : edition(request, concept, blueprint, mode, "qa-reference");
     for (const p of e.pages) {
       const location = `${mode}/${p.pageId}`;
       const plan = blueprint.pagePlan.find((page) => page.pageId === p.pageId);
@@ -775,7 +779,7 @@ export function reviewStoryLanguage(
             "Review attribution against the canonical page actors.",
           );
       }
-      if (plan)
+      if (plan && !manualCreative)
         for (const id of plan.beatIds) {
           const beat = concept.outline.find((b) => b.beatId === id)!;
           if (
@@ -811,15 +815,18 @@ export function reviewStoryLanguage(
             );
         }
       if (
+        manualCreative ||
         p.narration !==
-          expected.pages.find((page) => page.pageId === p.pageId)?.narration ||
+          expected?.pages.find((page) => page.pageId === p.pageId)?.narration ||
         p.dialogue.length
       )
         add(
           "medium",
           "language-semantic-review",
           location,
-          "Prose differs from the deterministic semantic draft; event/emotion/quantity equivalence is unverified.",
+          manualCreative
+            ? "Manual prose has no deterministic semantic reference; event/emotion/quantity equivalence is unverified."
+            : "Prose differs from the deterministic semantic draft; event/emotion/quantity equivalence is unverified.",
           "Review the complete page against its referenced canonical beats; do not treat lexical lint as equivalence.",
         );
       const stripped = spoken.normalize("NFD").replace(/\p{M}/gu, ""); // comparison only; never changes returned text

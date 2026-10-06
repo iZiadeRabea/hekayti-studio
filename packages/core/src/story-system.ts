@@ -406,6 +406,7 @@ export function evaluateConcepts(
   request: StoryRequest,
   structure: StoryStructureProfile,
   set: ConceptSet,
+  manualCreative = false,
 ): ConceptEvaluation[] {
   check(request, structure);
   validate(ConceptSetSchema, set);
@@ -426,7 +427,7 @@ export function evaluateConcepts(
       findings.push(
         finding(
           1,
-          "high",
+          manualCreative ? "medium" : "high",
           "diversity",
           c.conceptId,
           "Near-duplicate actions, mechanism, challenge and resolution.",
@@ -515,7 +516,9 @@ export function evaluateConcepts(
         "medium",
         "objective",
         c.conceptId,
-        "Mock components preserve the requested objective but cannot establish that an arbitrary objective is delivered by these actions.",
+        manualCreative
+          ? "Imported concepts preserve the requested objective, but its delivery by these actions remains human-reviewed."
+          : "Mock components preserve the requested objective but cannot establish that an arbitrary objective is delivered by these actions.",
         "Human reviewer must verify the concrete success scenario, or revise the request.",
       ),
     );
@@ -535,6 +538,7 @@ export function evaluateConcepts(
         ),
       );
     if (
+      !manualCreative &&
       c.outline.some(
         (b, i) =>
           b.afterState !== `${b.focus.en}: ${outcomes[b.action]}` ||
@@ -616,20 +620,26 @@ export function buildStoryBlueprint(
   structure: StoryStructureProfile,
   concept: StoryConcept,
   revisionId: string,
+  manualCreative = false,
 ): StoryBlueprint {
   check(request, structure);
   ownership(request, concept);
-  const evaluation = evaluateConcepts(request, structure, {
-    schemaVersion: "concept-set/1.0",
-    conceptSetId: "selection-check",
-    requestId: request.requestId,
-    requestRevisionId: request.revisionId,
-    generation: 0,
-    concepts: [
-      concept,
-      { ...concept, conceptId: id(concept.conceptId, "check") },
-    ],
-  })[0]!;
+  const evaluation = evaluateConcepts(
+    request,
+    structure,
+    {
+      schemaVersion: "concept-set/1.0",
+      conceptSetId: "selection-check",
+      requestId: request.requestId,
+      requestRevisionId: request.revisionId,
+      generation: 0,
+      concepts: [
+        concept,
+        { ...concept, conceptId: id(concept.conceptId, "check") },
+      ],
+    },
+    manualCreative,
+  )[0]!;
   if (
     evaluation.findings.some(
       (f) => f.severity === "blocker" || f.severity === "high",

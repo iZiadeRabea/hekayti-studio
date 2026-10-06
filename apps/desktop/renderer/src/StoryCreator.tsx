@@ -21,7 +21,7 @@ export function StoryCreator() {
     [level, setLevel] = useState<0 | 1 | 2 | 3>(0),
     [grammar, setGrammar] = useState("unknown"),
     [strategy, setStrategy] =
-      useState<StoryRequest["sourceStrategy"]>("curated"),
+      useState<StoryRequest["sourceStrategy"]>("hybrid"),
     [acknowledged, setAcknowledged] = useState(false);
   const [description, setDescription] = useState("Warm supported exploration"),
     [success, setSuccess] = useState("Notice and reconnect");

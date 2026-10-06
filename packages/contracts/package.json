@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./story": "./src/story-engine-schemas.ts"
+    "./story": "./src/story-engine-schemas.ts",
+    "./library": "./src/library.ts"
   },
   "dependencies": {
     "zod": "4.6.5"

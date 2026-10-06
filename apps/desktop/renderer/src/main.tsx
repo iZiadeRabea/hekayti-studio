@@ -7,6 +7,7 @@ import { rtlSamples } from "@hekayti/export";
 import type { Project, StoryBlueprint } from "@hekayti/contracts";
 import type { DesktopApi, Result } from "../../src/api";
 import { StoryCreator } from "./StoryCreator";
+import { StoryLibrary } from "./StoryLibrary";
 declare global {
   interface Window {
     hekayti: DesktopApi;
@@ -46,6 +47,7 @@ function App() {
         {[
           "Projects",
           "Story Creator",
+          "Library / Inbox / Bridge",
           "RTL Test",
           "Core Data Inspector",
           "Export Test",
@@ -58,6 +60,7 @@ function App() {
       </nav>
       <main>
         {tab === "Story Creator" && <StoryCreator />}
+        {tab === "Library / Inbox / Bridge" && <StoryLibrary />}
         <p role="status" className="status" dir="auto">
           {status}
         </p>

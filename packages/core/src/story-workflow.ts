@@ -24,6 +24,25 @@ import {
   reviewStoryBlueprint,
 } from "./story-system";
 import { reviewStoryLanguage } from "./story-language";
+import { ManualImportSchema } from "@hekayti/contracts/library";
+
+export const manualBridgeProvenance = Object.freeze({
+  kind: "manual" as const,
+  providerId: "manual-paste",
+  version: "manual-bridge/1.0",
+  deterministic: false,
+});
+const manual = (
+  s: { schemaVersion: string },
+  p: {
+    kind: string;
+    providerId: string;
+    version: string;
+    deterministic: boolean;
+  },
+) =>
+  s.schemaVersion === "workflow/1.1" &&
+  canonicalJson(p) === canonicalJson(manualBridgeProvenance);
 
 const nullableId = Id.nullable();
 const ApprovalRecordSchema = z
@@ -36,7 +55,8 @@ const ApprovalRecordSchema = z
   .strict();
 export const WorkflowSnapshotSchema = z
   .object({
-    schemaVersion: z.literal("workflow/1.0"),
+    schemaVersion: z.enum(["workflow/1.0", "workflow/1.1"]),
+    bridgeImports: z.array(ManualImportSchema).max(1000).optional(),
     projectId: Id,
     storyId: Id,
     recordVersion: z.number().int().nonnegative(),
@@ -80,6 +100,23 @@ export const WorkflowSnapshotSchema = z
   .strict()
   .superRefine((s, c) => {
     const fail = (message: string) => c.addIssue({ code: "custom", message });
+    if (s.schemaVersion === "workflow/1.0" && s.bridgeImports !== undefined)
+      fail("Legacy workflow cannot contain manual imports.");
+    if (s.schemaVersion === "workflow/1.1" && !s.bridgeImports?.length)
+      fail("Manual workflow requires import history.");
+    for (const imported of s.bridgeImports ?? []) {
+      if (!s.requests.some((r) => r.revisionId === imported.requestRevisionId))
+        fail("Import request missing.");
+      for (const candidate of imported.candidates)
+        if (
+          !s.conceptSets.some((set) =>
+            set.concepts.some(
+              (x) => canonicalJson(x) === canonicalJson(candidate),
+            ),
+          )
+        )
+          fail("Import candidate history differs.");
+    }
     const unique = (ids: string[]) => {
       if (new Set(ids).size !== ids.length)
         fail("Duplicate workflow artifact identity.");
@@ -107,7 +144,16 @@ export const WorkflowSnapshotSchema = z
     for (const set of s.conceptSets) {
       const r = s.requests.find((x) => x.revisionId === set.requestRevisionId);
       if (!r || r.requestId !== set.requestId) fail("Concept request missing.");
-      if (set.concepts.some((x) => x.provenance.kind !== "mock"))
+      if (
+        set.concepts.some(
+          (x) =>
+            x.provenance.kind !== "mock" &&
+            (!manual(s, x.provenance) ||
+              !s.bridgeImports?.some((i) =>
+                i.candidates.some((c) => canonicalJson(c) === canonicalJson(x)),
+              )),
+        )
+      )
         fail("Only actual mock provenance is enabled.");
       if (r) {
         if (
@@ -125,7 +171,12 @@ export const WorkflowSnapshotSchema = z
         try {
           const structure = storyStructureFor(r);
           if (
-            evaluateConcepts(r, structure, set)
+            evaluateConcepts(
+              r,
+              structure,
+              set,
+              set.concepts.every((x) => manual(s, x.provenance)),
+            )
               .flatMap((x) => x.findings)
               .concat(set.concepts.flatMap((x) => reviewStoryAge(r, x)))
               .some((x) => x.severity === "high" || x.severity === "blocker")
@@ -173,7 +224,7 @@ export const WorkflowSnapshotSchema = z
         !b ||
         s.blueprintLinks.find((x) => x.revisionId === b.revisionId)
           ?.conceptId !== d.conceptId ||
-        d.provenance.kind !== "mock"
+        (d.provenance.kind !== "mock" && !manual(s, d.provenance))
       ) {
         fail("Draft source mismatch.");
         continue;
@@ -187,7 +238,13 @@ export const WorkflowSnapshotSchema = z
           r = s.requests.find((x) => x.revisionId === link.requestRevisionId)!,
           concept = concepts.find((x) => x.conceptId === d.conceptId)!;
         if (
-          reviewStoryLanguage(r, concept, assembled, d.editions)
+          reviewStoryLanguage(
+            r,
+            concept,
+            assembled,
+            d.editions,
+            manual(s, d.provenance),
+          )
             .concat(
               reviewStoryAge(r, concept, assembled),
               reviewStoryBlueprint(r, concept, assembled),
@@ -330,6 +387,23 @@ export function validateWorkflowAppend(
     previous.storyId !== next.storyId
   )
     throw new AppError("WORKFLOW_OWNER", "Workflow ownership cannot change.");
+  if (
+    previous.schemaVersion === "workflow/1.1" &&
+    next.schemaVersion !== "workflow/1.1"
+  )
+    throw new AppError(
+      "WORKFLOW_VERSION",
+      "Manual history cannot be downgraded.",
+    );
+  if (
+    canonicalJson(
+      (next.bridgeImports ?? []).slice(0, previous.bridgeImports?.length ?? 0),
+    ) !== canonicalJson(previous.bridgeImports ?? [])
+  )
+    throw new AppError(
+      "WORKFLOW_IMMUTABLE",
+      "Manual import history is immutable.",
+    );
   for (const key of historyKeys)
     if (
       next[key].length < previous[key].length ||
@@ -423,12 +497,21 @@ export function workflowFindings(s: WorkflowSnapshot, draftId: string) {
     languageVersions: d.editions,
   });
   const groups = {
-    concept: evaluateConcepts(request, storyStructureFor(request), set).find(
-      (x) => x.conceptId === concept.conceptId,
-    )!.findings,
+    concept: evaluateConcepts(
+      request,
+      storyStructureFor(request),
+      set,
+      set.concepts.every((x) => manual(s, x.provenance)),
+    ).find((x) => x.conceptId === concept.conceptId)!.findings,
     age: reviewStoryAge(request, concept, assembled),
     story: reviewStoryBlueprint(request, concept, assembled),
-    language: reviewStoryLanguage(request, concept, assembled, d.editions),
+    language: reviewStoryLanguage(
+      request,
+      concept,
+      assembled,
+      d.editions,
+      manual(s, d.provenance),
+    ),
   };
   return Object.entries(groups).flatMap(([group, items]) =>
     items.map((x, i) => ({
@@ -598,6 +681,7 @@ export class StoryWorkflowService {
       storyStructureFor(request),
       concept,
       this.seam.id(),
+      manual(s, concept.provenance),
     );
     this.requireSafe(
       reviewStoryAge(request, concept, b).concat(
@@ -627,6 +711,11 @@ export class StoryWorkflowService {
       throw new AppError(
         "WORKFLOW_BLUEPRINT_REQUIRED",
         "Build the current blueprint first.",
+      );
+    if (manual(s, concept.provenance))
+      throw new AppError(
+        "MANUAL_DRAFT_REQUIRED",
+        "Imported creative concepts require structured manual drafting. Export the current draft handoff; no mock substitution is performed.",
       );
     const draftId = this.seam.id(),
       provenance = structuredClone(this.drafts.provenance);
@@ -671,6 +760,72 @@ export class StoryWorkflowService {
         "WORKFLOW_QA_BLOCKED",
         "Provider or canonical artifact failed a blocking semantic review.",
       );
+  }
+  importConcepts(id: string, expected: number, input: unknown) {
+    const s = this.baseline(id, expected),
+      next = structuredClone(s),
+      imported = validate(ManualImportSchema, input),
+      r = s.requests.at(-1)!;
+    if (
+      imported.requestRevisionId !== r.revisionId ||
+      imported.candidates.some(
+        (c) =>
+          c.requestId !== r.requestId ||
+          c.requestRevisionId !== r.revisionId ||
+          canonicalJson(c.provenance) !== canonicalJson(manualBridgeProvenance),
+      )
+    )
+      throw new AppError(
+        "BRIDGE_STALE",
+        "Import belongs to a different request or transport.",
+      );
+    const set = validate(ConceptSetSchema, {
+      schemaVersion: "concept-set/1.0",
+      conceptSetId: this.seam.id(),
+      requestId: r.requestId,
+      requestRevisionId: r.revisionId,
+      generation: s.conceptSets.length,
+      concepts: imported.candidates,
+    });
+    next.schemaVersion = "workflow/1.1";
+    next.bridgeImports = [...(s.bridgeImports ?? []), imported];
+    next.conceptSets.push(set);
+    next.current.conceptSetId = set.conceptSetId;
+    this.reset(next, "concept");
+    return this.commit(s, next);
+  }
+  importDraft(id: string, expected: number, input: unknown) {
+    const s = this.baseline(id, expected),
+      next = structuredClone(s),
+      d = validate(StoryDraftSchema, input),
+      { request, concept } = this.sources(s),
+      b = s.blueprints.find(
+        (x) => x.revisionId === s.current.blueprintRevisionId,
+      );
+    if (
+      !b ||
+      !manual(s, d.provenance) ||
+      d.sourceRevision !== b.revisionId ||
+      d.conceptId !== concept.conceptId
+    )
+      throw new AppError(
+        "MANUAL_DRAFT_SOURCE",
+        "Manual draft must bind the exact current blueprint/concept and manual-paste provenance.",
+      );
+    const assembled = validate(BlueprintSchema, {
+      ...b,
+      languageVersions: d.editions,
+    });
+    this.requireSafe(
+      reviewStoryLanguage(request, concept, assembled, d.editions, true).concat(
+        reviewStoryAge(request, concept, assembled),
+        reviewStoryBlueprint(request, concept, assembled),
+      ),
+    );
+    this.reset(next, "qa");
+    next.drafts.push(d);
+    next.current.draftId = d.draftId;
+    return this.commit(s, next);
   }
   async qa(id: string, expected: number) {
     const s = this.baseline(id, expected),

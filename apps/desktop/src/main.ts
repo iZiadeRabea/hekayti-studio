@@ -6,6 +6,7 @@ import {
   ipcMain,
   dialog,
   session,
+  clipboard,
 } from "electron";
 import { join, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -29,6 +30,21 @@ import { StoryRequestSchema } from "@hekayti/contracts/story";
 import { StoryWorkflowService } from "@hekayti/core/workflow";
 import { MockStoryConceptProvider } from "@hekayti/core/story";
 import { MockStoryDraftProvider } from "@hekayti/core/language";
+import {
+  LibraryRecordSchema,
+  LibraryRefSchema,
+  EditorialScoresSchema,
+  ConsumerTargetSchema,
+  VariationSchema,
+  OperatorMetadataSchema,
+} from "@hekayti/contracts/library";
+import {
+  StoryLibraryService,
+  ManualBridgeService,
+  generationInstructions,
+  manualDraftInstructions,
+  repairInstructions,
+} from "@hekayti/core/library";
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -201,6 +217,12 @@ app
       new MockStoryDraftProvider(),
       { id: () => randomUUID(), now: () => new Date().toISOString() },
     );
+    const seam = {
+        id: () => randomUUID(),
+        now: () => new Date().toISOString(),
+      },
+      library = new StoryLibraryService(repo, seam),
+      bridge = new ManualBridgeService(repo, workflow, seam);
     await seed();
     protocol.handle("hekayti", (request) => {
       const url = new URL(request.url);
@@ -229,6 +251,285 @@ app
     win.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
     win.webContents.on("will-navigate", (event) => event.preventDefault());
     handle("projects:list", () => repo.listProjects());
+    handle("library:load", () => library.load());
+    handle("bridge:load", (arg) =>
+      repo.loadGenerationPackage(validate(Id, arg)),
+    );
+    handle("bridge:copy", (arg) => {
+      const x = validate(
+        z.discriminatedUnion("kind", [
+          z
+            .object({
+              kind: z.literal("package"),
+              packageId: Id,
+              target: ConsumerTargetSchema,
+              syntheticReviewed: z.literal(true),
+            })
+            .strict(),
+          z
+            .object({
+              kind: z.literal("draft"),
+              projectId: Id,
+              syntheticReviewed: z.literal(true),
+            })
+            .strict(),
+          z
+            .object({
+              kind: z.literal("repair"),
+              packageId: Id,
+              error: z.string().max(3000),
+              syntheticReviewed: z.literal(true),
+            })
+            .strict(),
+        ]),
+        arg,
+      );
+      let text: string;
+      if (x.kind === "draft") {
+        const s = workflow.load(x.projectId);
+        if (!s) throw new AppError("WORKFLOW_MISSING", "Story missing.");
+        text = manualDraftInstructions(s);
+      } else {
+        const p = repo.loadGenerationPackage(x.packageId);
+        if (!p) throw new AppError("BRIDGE_PACKAGE", "Package missing.");
+        text =
+          x.kind === "package"
+            ? generationInstructions(p, x.target)
+            : repairInstructions(p, x.error);
+      }
+      clipboard.writeText(text);
+      return true;
+    });
+    handle("library:seed", () => library.seed());
+    const libraryBase = {
+      expectedVersion: z.number().int().nonnegative(),
+      eventId: Id,
+      reviewerAlias: z.string().trim().min(1).max(80),
+    };
+    const libraryCommand = z.discriminatedUnion("action", [
+      z
+        .object({
+          ...libraryBase,
+          action: z.literal("CREATE"),
+          record: LibraryRecordSchema,
+        })
+        .strict(),
+      ...(["SAVE", "REVIEW", "APPROVE", "PROMOTE", "ARCHIVE"] as const).map(
+        (action) =>
+          z
+            .object({ ...libraryBase, action: z.literal(action), recordId: Id })
+            .strict(),
+      ),
+      z
+        .object({
+          ...libraryBase,
+          action: z.literal("SCORE"),
+          recordId: Id,
+          scores: EditorialScoresSchema,
+          editorialNote: z.string().trim().min(1).max(2000),
+        })
+        .strict(),
+      z
+        .object({
+          ...libraryBase,
+          action: z.literal("LINK_VARIANT"),
+          recordId: Id,
+          family: LibraryRefSchema,
+          variantId: Id,
+          variantNumber: z.number().int().positive(),
+        })
+        .strict(),
+      z
+        .object({
+          ...libraryBase,
+          action: z.literal("CREATE_STORY_FAMILY"),
+          recordId: Id,
+          structure: z
+            .object({
+              narrativePattern: z.string().min(1).max(2000),
+              mechanism: z.string().min(1).max(2000),
+              conflictPattern: z.string().min(1).max(2000),
+              resolutionPattern: z.string().min(1).max(2000),
+              emotionalArc: z.string().min(1).max(2000),
+              reusableConstraints: z.array(z.string().min(1).max(2000)).max(30),
+            })
+            .strict(),
+        })
+        .strict(),
+      z
+        .object({
+          ...libraryBase,
+          action: z.literal("EXTRACT_APPROVED"),
+          projectId: Id,
+          type: z.enum([
+            "STORY_CONCEPT",
+            "APPROVED_STORY_REFERENCE",
+            "BUILDING_BLOCK",
+          ]),
+          componentId: Id.optional(),
+        })
+        .strict(),
+      z
+        .object({
+          ...libraryBase,
+          action: z.literal("LOG_OUTCOME"),
+          record: LibraryRefSchema,
+          projectId: Id,
+          requestRevisionId: Id,
+          outcome: z.enum(["APPROVED", "REJECTED"]),
+        })
+        .strict(),
+    ]);
+    handle("library:command", (arg) => {
+      const x = validate(libraryCommand, arg);
+      if (x.action === "CREATE")
+        return library.create(
+          x.record,
+          x.expectedVersion,
+          x.eventId,
+          x.reviewerAlias,
+        );
+      if (x.action === "CREATE_STORY_FAMILY")
+        return library.createFamily(
+          x.recordId,
+          x.structure,
+          x.expectedVersion,
+          x.eventId,
+          x.reviewerAlias,
+        );
+      if (x.action === "EXTRACT_APPROVED") {
+        const s = workflow.load(x.projectId);
+        if (!s) throw new AppError("WORKFLOW_MISSING", "Story missing.");
+        return library.saveApproved(
+          s,
+          x.type,
+          x.expectedVersion,
+          x.eventId,
+          x.reviewerAlias,
+          x.componentId,
+        );
+      }
+      if (x.action === "LOG_OUTCOME")
+        return library.usage(
+          x.record,
+          x.projectId,
+          x.requestRevisionId,
+          x.outcome,
+          x.eventId,
+          x.expectedVersion,
+        );
+      return library.action(
+        x.recordId,
+        x.expectedVersion,
+        x.eventId,
+        x.action,
+        x.reviewerAlias,
+        x.action === "SCORE"
+          ? { scores: x.scores, editorialNote: x.editorialNote }
+          : x.action === "LINK_VARIANT"
+            ? {
+                family: x.family,
+                variantId: x.variantId,
+                variantNumber: x.variantNumber,
+              }
+            : {},
+      );
+    });
+    handle("bridge:prepare", (arg) => {
+      const x = validate(
+        z
+          .object({
+            projectId: Id,
+            expectedWorkflow: z.number().int().nonnegative(),
+            strategy: z.enum(["HYBRID", "CURATED", "AI_LED"]),
+            variation: VariationSchema,
+            candidateCount: z.number().int().min(3).max(5),
+            selected: z.array(LibraryRefSchema).max(30),
+          })
+          .strict(),
+        arg,
+      );
+      return bridge.prepare(x.projectId, x.expectedWorkflow, x);
+    });
+    handle("bridge:text", (arg) => {
+      const x = validate(
+          z.object({ packageId: Id, target: ConsumerTargetSchema }).strict(),
+          arg,
+        ),
+        p = repo.loadGenerationPackage(x.packageId);
+      if (!p) throw new AppError("BRIDGE_PACKAGE", "Package missing.");
+      return generationInstructions(p, x.target);
+    });
+    handle("bridge:import", (arg) => {
+      const x = validate(
+        z
+          .object({
+            packageId: Id,
+            json: z.string().min(1).max(500000),
+            metadata: OperatorMetadataSchema,
+            importId: Id,
+            expectedWorkflow: z.number().int().nonnegative(),
+            expectedLibrary: z.number().int().nonnegative(),
+          })
+          .strict(),
+        arg,
+      );
+      return bridge.import(
+        x.packageId,
+        x.json,
+        x.metadata,
+        x.importId,
+        x.expectedWorkflow,
+        x.expectedLibrary,
+      );
+    });
+    handle("bridge:use", (arg) => {
+      const x = validate(
+        z
+          .object({
+            recordId: Id,
+            projectId: Id,
+            expectedWorkflow: z.number().int().nonnegative(),
+            expectedLibrary: z.number().int().nonnegative(),
+            eventId: Id,
+          })
+          .strict(),
+        arg,
+      );
+      return bridge.useNow(
+        x.recordId,
+        x.projectId,
+        x.expectedWorkflow,
+        x.expectedLibrary,
+        x.eventId,
+      );
+    });
+    handle("bridge:draft-text", (arg) => {
+      const s = workflow.load(validate(Id, arg));
+      if (!s) throw new AppError("WORKFLOW_MISSING", "Story missing.");
+      return manualDraftInstructions(s);
+    });
+    handle("bridge:draft-import", (arg) => {
+      const x = validate(
+        z
+          .object({
+            projectId: Id,
+            expectedVersion: z.number().int().nonnegative(),
+            json: z.string().min(1).max(500000),
+          })
+          .strict(),
+        arg,
+      );
+      if (new TextEncoder().encode(x.json).length > 500000)
+        throw new AppError("BRIDGE_SIZE", "Draft exceeds byte limit.");
+      let input: unknown;
+      try {
+        input = JSON.parse(x.json);
+      } catch {
+        throw new AppError("BRIDGE_JSON", "Paste draft JSON only.");
+      }
+      return workflow.importDraft(x.projectId, x.expectedVersion, input);
+    });
     handle("story:new", (arg) => {
       const request = validate(StoryRequestSchema, arg),
         now = new Date().toISOString();
