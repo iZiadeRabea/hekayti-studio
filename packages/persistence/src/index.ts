@@ -45,6 +45,16 @@ import {
   type LibraryQuery,
 } from "@hekayti/contracts/library";
 import { latestLibraryRecords } from "@hekayti/core/library";
+import {
+  PlannerSnapshotSchema,
+  type PlannerSnapshot,
+} from "@hekayti/contracts/planner";
+import {
+  emptyPlanner,
+  validatePlannerAppend,
+  validateStoryPlan,
+  planToConcept,
+} from "@hekayti/core/planner";
 
 export class SqliteProjectRepository
   implements ProjectRepository, StoryWorkflowRepository, LibraryRepository
@@ -207,6 +217,62 @@ export class SqliteProjectRepository
         )
         .all();
       this.db.exec("PRAGMA journal_mode=WAL;");
+      // Additive v3 planner extension: no legacy payload/hash/schema rewrites.
+      const plannerTables = ["story_planners", "story_planner_meta"];
+      const plannerPresent = plannerTables.map((name) =>
+        Boolean(
+          this.db
+            .prepare("SELECT name FROM sqlite_master WHERE name=?")
+            .get(name),
+        ),
+      );
+      const hasPlannerMarkerColumn = this.db
+        .prepare("PRAGMA table_info(library_index_meta)")
+        .all()
+        .some((row) => row.name === "planner_initialized");
+      if (
+        hasPlannerMarkerColumn &&
+        Number(
+          this.db
+            .prepare(
+              "SELECT planner_initialized FROM library_index_meta WHERE id=1",
+            )
+            .get()?.planner_initialized,
+        ) === 1 &&
+        !plannerPresent.every(Boolean)
+      )
+        throw new AppError(
+          "PLANNER_CORRUPT",
+          "Previously initialized planner extension is missing; original retained.",
+        );
+      if (plannerPresent.some(Boolean) && !plannerPresent.every(Boolean))
+        throw new AppError(
+          "PLANNER_CORRUPT",
+          "Planner extension tables are incomplete; original retained.",
+        );
+      if (!plannerPresent.some(Boolean))
+        this.transaction(() =>
+          this.db.exec(
+            "CREATE TABLE story_planners(project_id TEXT PRIMARY KEY REFERENCES projects(id),payload TEXT NOT NULL,version INTEGER NOT NULL,digest TEXT NOT NULL); CREATE TABLE story_planner_meta(id INTEGER PRIMARY KEY CHECK(id=1),schema_version TEXT NOT NULL); INSERT INTO story_planner_meta VALUES(1,'planner-storage/1.0');",
+          ),
+        );
+      if (!hasPlannerMarkerColumn)
+        this.transaction(() =>
+          this.db.exec(
+            "ALTER TABLE library_index_meta ADD COLUMN planner_initialized INTEGER NOT NULL DEFAULT 0; UPDATE library_index_meta SET planner_initialized=1 WHERE id=1;",
+          ),
+        );
+      const plannerMarker = this.db
+        .prepare("SELECT * FROM story_planner_meta")
+        .all();
+      if (
+        plannerMarker.length !== 1 ||
+        plannerMarker[0]!.schema_version !== "planner-storage/1.0"
+      )
+        throw new AppError(
+          "PLANNER_CORRUPT",
+          "Planner storage marker differs.",
+        );
     } catch (e) {
       this.db.close();
       throw e;
@@ -288,6 +354,30 @@ export class SqliteProjectRepository
           throw new Error("approved usage source");
       }
       for (const r of state.records) {
+        if (r.origin.transport === "planner-derived") {
+          if (r.payload.type !== "STORY_CONCEPT")
+            throw new Error("planner payload");
+          const concept = r.payload.concept;
+          const rows = this.db
+            .prepare("SELECT payload FROM story_planners")
+            .all();
+          if (
+            !rows.some((row) => {
+              const s = validate(
+                PlannerSnapshotSchema,
+                JSON.parse(String(row.payload)),
+              );
+              return s.plans.some(
+                (p) =>
+                  s.acceptances.some(
+                    (a) => a.planRevisionId === p.revisionId,
+                  ) &&
+                  canonicalJson(planToConcept(p)) === canonicalJson(concept),
+              );
+            })
+          )
+            throw new Error("planner source");
+        }
         if (r.origin.transport === "manual-paste") {
           const source = r.origin.importId
             ? this.loadManualImport(r.origin.importId)
@@ -546,6 +636,21 @@ export class SqliteProjectRepository
       .flatMap((s) => s.concepts)
       .find((c) => c.conceptId === conceptId);
     if (!concept) return false;
+    const planned = workflow.plannerImports?.find(
+      (source) =>
+        source.concept.conceptId === conceptId &&
+        source.plan.planning.request.revisionId === requestRevisionId,
+    );
+    if (
+      planned?.plan.provenance.sources.some(
+        (source) =>
+          source.ref.recordId === record.recordId &&
+          source.ref.version === record.version &&
+          source.digest ===
+            createHash("sha256").update(canonicalJson(record)).digest("hex"),
+      )
+    )
+      return true;
     if (
       "concept" in record.payload &&
       canonicalJson(record.payload.concept) === canonicalJson(concept)
@@ -697,6 +802,7 @@ export class SqliteProjectRepository
       if (value.projectId !== id || value.recordVersion !== Number(row.version))
         throw new Error("identity");
       this.validateWorkflowHashes(value);
+      this.validatePlannerWorkflowSources(value);
       for (const imported of value.bridgeImports ?? [])
         if (
           canonicalJson(this.loadManualImport(imported.importId)) !==
@@ -756,6 +862,222 @@ export class SqliteProjectRepository
           "QA source hash no longer matches its exact reviewed content.",
         );
   }
+  private validatePlannerWorkflowSources(s: WorkflowSnapshot) {
+    const retained = s.plannerImports?.length
+      ? this.loadPlanner(s.projectId)
+      : null;
+    for (const source of s.plannerImports ?? []) {
+      if (!retained)
+        throw new AppError(
+          "PLANNER_SOURCE",
+          "Retained accepted planner source missing.",
+        );
+      const planner = retained;
+      if (
+        !planner.plans.some(
+          (p) => canonicalJson(p) === canonicalJson(source.plan),
+        ) ||
+        !planner.acceptances.some(
+          (a) => canonicalJson(a) === canonicalJson(source.acceptance),
+        ) ||
+        source.acceptance.planHash !==
+          createHash("sha256")
+            .update(canonicalJson(source.plan))
+            .digest("hex") ||
+        canonicalJson(planToConcept(source.plan)) !==
+          canonicalJson(source.concept)
+      )
+        throw new AppError(
+          "PLANNER_SOURCE",
+          "Planner canonical source differs.",
+        );
+    }
+  }
+  validateCurrentPlannerSource(s: WorkflowSnapshot) {
+    const source = s.plannerImports?.find(
+      (source) => source.concept.conceptId === s.current.conceptId,
+    );
+    if (!source) return;
+    const planner = this.loadPlanner(s.projectId);
+    if (
+      planner?.currentPlanRevisionId !== source.plan.revisionId ||
+      planner.currentAcceptanceId !== source.acceptance.acceptanceId
+    )
+      throw new AppError(
+        "PLANNER_STALE",
+        "Current planner acceptance changed; rebuild from the current plan.",
+      );
+    const row = this.db
+      .prepare("SELECT payload FROM story_library WHERE id='library'")
+      .get()!;
+    const library = validate(
+        LibraryStateSchema,
+        JSON.parse(String(row.payload)),
+      ),
+      latest = latestLibraryRecords(library);
+    if (
+      source.plan.provenance.sources.some(
+        (ref) =>
+          !latest.some(
+            (r) =>
+              r.recordId === ref.ref.recordId &&
+              r.version === ref.ref.version &&
+              createHash("sha256").update(canonicalJson(r)).digest("hex") ===
+                ref.digest,
+          ),
+      )
+    )
+      throw new AppError(
+        "PLANNER_STALE",
+        "Selected Library source changed; plan again before downstream review.",
+      );
+  }
+  loadPlanner(projectId: string): PlannerSnapshot | null {
+    const row = this.db
+      .prepare("SELECT * FROM story_planners WHERE project_id=?")
+      .get(projectId);
+    if (!row) return null;
+    try {
+      const s = validate(
+        PlannerSnapshotSchema,
+        JSON.parse(String(row.payload)),
+      );
+      if (
+        s.projectId !== projectId ||
+        s.recordVersion !== Number(row.version) ||
+        createHash("sha256").update(canonicalJson(s)).digest("hex") !==
+          row.digest
+      )
+        throw new Error("seal");
+      validatePlannerAppend(emptyPlanner(projectId), s);
+      const workflowRow = this.db
+        .prepare("SELECT payload FROM story_workflows WHERE project_id=?")
+        .get(projectId);
+      if (!workflowRow) throw new Error("workflow");
+      const w = validate(
+        WorkflowSnapshotSchema,
+        JSON.parse(String(workflowRow.payload)),
+      );
+      const libraryRow = this.db
+        .prepare("SELECT payload FROM story_library WHERE id='library'")
+        .get();
+      const library = validate(
+        LibraryStateSchema,
+        JSON.parse(String(libraryRow!.payload)),
+      );
+      for (const p of s.plans) {
+        if (
+          !w.requests.some(
+            (r) => canonicalJson(r) === canonicalJson(p.planning.request),
+          )
+        )
+          throw new Error("request");
+        for (const source of p.provenance.sources) {
+          const r = library.records.find(
+            (r) =>
+              r.recordId === source.ref.recordId &&
+              r.version === source.ref.version,
+          );
+          if (
+            !r ||
+            source.digest !==
+              createHash("sha256").update(canonicalJson(r)).digest("hex") ||
+            source.lifecycle !== r.status ||
+            source.fit !== (r.creative?.culture.fit ?? "UNSCREENED") ||
+            source.provisional !== (r.status !== "PROMOTED_TO_LIBRARY")
+          )
+            throw new Error("retained source");
+        }
+      }
+      for (const a of s.acceptances) {
+        const p = s.plans.find((p) => p.revisionId === a.planRevisionId)!;
+        if (
+          a.planHash !==
+            createHash("sha256").update(canonicalJson(p)).digest("hex") ||
+          validateStoryPlan(p).findings.some((f) =>
+            ["high", "blocker"].includes(f.severity),
+          )
+        )
+          throw new Error("acceptance");
+      }
+      for (const f of s.feedback) {
+        const l = w.reportLinks.find((l) => l.reportId === f.reportId),
+          d = w.drafts.find((d) => d.draftId === f.draftId),
+          p = s.plans.find((p) => p.revisionId === f.planRevisionId)!;
+        if (
+          !l ||
+          !d ||
+          l.draftId !== d.draftId ||
+          l.conceptId !== planToConcept(p).conceptId ||
+          l.requestRevisionId !== f.requestRevisionId
+        )
+          throw new Error("feedback");
+        if (
+          f.outcome !== "REJECTED" &&
+          !w.approvals.some(
+            (a) =>
+              a.approval.approvalId === f.approvalId &&
+              a.draftId === f.draftId &&
+              a.reportId === f.reportId,
+          )
+        )
+          throw new Error("approval");
+      }
+      return s;
+    } catch {
+      throw new AppError(
+        "PLANNER_CORRUPT",
+        "Stored planner failed validation; original retained.",
+      );
+    }
+  }
+  savePlanner(
+    input: PlannerSnapshot,
+    expectedVersion: number,
+  ): PlannerSnapshot {
+    return this.transaction(() => {
+      const before =
+        this.loadPlanner(input.projectId) ?? emptyPlanner(input.projectId);
+      if (before.recordVersion !== expectedVersion)
+        throw new AppError("PLANNER_CONFLICT", "Planner changed; reload.");
+      const s = validate(PlannerSnapshotSchema, {
+        ...input,
+        recordVersion: expectedVersion + 1,
+      });
+      validatePlannerAppend(before, s);
+      if (!this.loadProject(s.projectId))
+        throw new AppError(
+          "PROJECT_MISSING",
+          "Create canonical project first.",
+        );
+      const digest = createHash("sha256")
+        .update(canonicalJson(s))
+        .digest("hex");
+      if (
+        !this.db
+          .prepare("SELECT project_id FROM story_planners WHERE project_id=?")
+          .get(s.projectId)
+      )
+        this.db
+          .prepare("INSERT INTO story_planners VALUES(?,?,?,?)")
+          .run(s.projectId, canonicalJson(s), s.recordVersion, digest);
+      else if (
+        this.db
+          .prepare(
+            "UPDATE story_planners SET payload=?,version=?,digest=? WHERE project_id=? AND version=?",
+          )
+          .run(
+            canonicalJson(s),
+            s.recordVersion,
+            digest,
+            s.projectId,
+            expectedVersion,
+          ).changes !== 1
+      )
+        throw new AppError("PLANNER_CONFLICT", "Planner changed; reload.");
+      return this.loadPlanner(s.projectId)!;
+    });
+  }
   createWorkflow(input: WorkflowSnapshot) {
     const s = validate(WorkflowSnapshotSchema, input);
     if (s.recordVersion !== 0)
@@ -812,6 +1134,7 @@ export class SqliteProjectRepository
             "Workflow import must match retained manual import source.",
           );
       this.validateWorkflowHashes(s);
+      this.validatePlannerWorkflowSources(s);
       for (const b of s.blueprints) this.saveBlueprint(b);
       for (const d of s.drafts) for (const e of d.editions) this.saveEdition(e);
       const result = this.db

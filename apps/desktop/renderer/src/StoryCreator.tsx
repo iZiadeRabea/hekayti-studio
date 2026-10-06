@@ -5,11 +5,14 @@ import {
   type WorkflowSnapshot,
 } from "@hekayti/core/workflow";
 import type { DesktopApi, Result } from "../../src/api";
+import { StoryPlanner } from "./StoryPlanner";
 
 export function StoryCreator() {
   const [snapshot, setSnapshot] = useState<WorkflowSnapshot | null>(null),
     [projects, setProjects] = useState<Project[]>([]),
-    [status, setStatus] = useState("Synthetic mock providers only"),
+    [status, setStatus] = useState(
+      "Synthetic creator and manual Story Planner",
+    ),
     [busy, setBusy] = useState(false);
   const [age, setAge] = useState(42),
     [mode, setMode] =
@@ -128,8 +131,10 @@ export function StoryCreator() {
       <h2>New Story — synthetic creator</h2>
       <p>
         No real child details. Personalization uses the fixed invented example
-        ليلى; grammatical agreement is authored explicitly. Sources are
-        deterministic mocks even when a future source preference says AI.
+        ليلى; grammatical agreement is authored explicitly. Plan before prose
+        with acknowledged Library inspiration and manual AI copy/paste. The
+        separate Create more concepts button retains the deterministic mock
+        path.
       </p>
       <p role="status" data-testid="story-status">
         {status}
@@ -171,6 +176,8 @@ export function StoryCreator() {
               "behavioral",
               "values",
               "adventure",
+              "bedtime",
+              "early-learning",
             ].map((x) => (
               <option key={x}>{x}</option>
             ))}
@@ -309,6 +316,7 @@ export function StoryCreator() {
             Blank blueprint editions remain immutable placeholders; drafted
             editions below have separate IDs.
           </p>
+          <StoryPlanner workflow={snapshot} onWorkflow={setSnapshot} />
           <button disabled={busy} onClick={() => action("create-more")}>
             Create more concepts
           </button>

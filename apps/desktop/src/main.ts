@@ -22,7 +22,12 @@ import {
   publicError,
   type StoryBlueprint,
 } from "@hekayti/contracts";
-import { ageGuidance, contentHash, invalidateDependents } from "@hekayti/core";
+import {
+  ageGuidance,
+  contentHash,
+  canonicalJson,
+  invalidateDependents,
+} from "@hekayti/core";
 import { SqliteProjectRepository, writeNewFile } from "@hekayti/persistence";
 import {
   writeCreativeArchive,
@@ -34,6 +39,14 @@ import { proofHtml, proofMetadata, proofPages } from "@hekayti/export";
 import type { Result } from "./api";
 import { StoryRequestSchema } from "@hekayti/contracts/story";
 import { StoryWorkflowService } from "@hekayti/core/workflow";
+import {
+  StoryPlannerService,
+  planGenerationInstructions,
+} from "@hekayti/core/planner";
+import {
+  PlanningRequestSchema,
+  PlanFeedbackSchema,
+} from "@hekayti/contracts/planner";
 import { MockStoryConceptProvider } from "@hekayti/core/story";
 import { MockStoryDraftProvider } from "@hekayti/core/language";
 import {
@@ -50,6 +63,7 @@ import {
   generationInstructions,
   manualDraftInstructions,
   repairInstructions,
+  latestLibraryRecords,
 } from "@hekayti/core/library";
 
 protocol.registerSchemesAsPrivileged([
@@ -654,6 +668,141 @@ app
         throw new AppError("BRIDGE_JSON", "Paste draft JSON only.");
       }
       return workflow.importDraft(x.projectId, x.expectedVersion, input);
+    });
+    const planner = new StoryPlannerService(repo, workflow, {
+      id: randomUUID,
+      now: () => new Date().toISOString(),
+    });
+    handle("planner:load", (arg) => planner.load(validate(Id, arg)));
+    const plannerBase = {
+      projectId: Id,
+      expectedPlanner: z.number().int().nonnegative(),
+      expectedWorkflow: z.number().int().nonnegative(),
+    };
+    const plannerCommand = z.discriminatedUnion("action", [
+      z
+        .object({
+          ...plannerBase,
+          action: z.literal("PLAN"),
+          planning: PlanningRequestSchema,
+          expectedLibrary: z.number().int().nonnegative(),
+        })
+        .strict(),
+      z
+        .object({
+          ...plannerBase,
+          action: z.literal("ACCEPT"),
+          reviewerAlias: z.string().trim().min(1).max(80),
+          advisoryAcknowledged: z.literal(true),
+        })
+        .strict(),
+      z.object({ ...plannerBase, action: z.literal("PREPARE") }).strict(),
+      z
+        .object({
+          ...plannerBase,
+          action: z.literal("COPY"),
+          packageId: Id,
+          target: ConsumerTargetSchema,
+          syntheticReviewed: z.literal(true),
+        })
+        .strict(),
+      z
+        .object({
+          ...plannerBase,
+          action: z.literal("IMPORT"),
+          packageId: Id,
+          json: z.string().min(1).max(500000),
+        })
+        .strict(),
+      z
+        .object({
+          ...plannerBase,
+          action: z.literal("FEEDBACK"),
+          feedback: PlanFeedbackSchema,
+          expectedLibrary: z.number().int().nonnegative(),
+        })
+        .strict(),
+    ]);
+    handle("planner:command", async (arg) => {
+      const x = validate(plannerCommand, arg);
+      if (x.action === "PLAN") {
+        if (x.planning.request.projectId !== x.projectId)
+          throw new AppError("PLANNER_OWNER", "Planning project differs.");
+        return {
+          planner: await planner.plan(
+            x.planning,
+            x.expectedPlanner,
+            x.expectedWorkflow,
+            x.expectedLibrary,
+          ),
+          workflow: workflow.load(x.projectId)!,
+        };
+      }
+      if (x.action === "ACCEPT")
+        return planner.accept(
+          x.projectId,
+          x.expectedPlanner,
+          x.expectedWorkflow,
+          x.reviewerAlias,
+          x.advisoryAcknowledged,
+        );
+      if (x.action === "PREPARE")
+        return planner.prepare(
+          x.projectId,
+          x.expectedPlanner,
+          x.expectedWorkflow,
+        );
+      if (x.action === "IMPORT")
+        return {
+          planner: planner.load(x.projectId),
+          workflow: await planner.import(
+            x.projectId,
+            x.packageId,
+            x.json,
+            x.expectedPlanner,
+            x.expectedWorkflow,
+          ),
+        };
+      if (x.action === "FEEDBACK")
+        return {
+          planner: planner.feedback(
+            x.projectId,
+            x.feedback,
+            x.expectedPlanner,
+            x.expectedWorkflow,
+            x.expectedLibrary,
+          ),
+        };
+      const s = planner.load(x.projectId),
+        w = workflow.load(x.projectId),
+        p = s.packages.find((p) => p.packageId === x.packageId);
+      if (
+        !w ||
+        s.recordVersion !== x.expectedPlanner ||
+        w.recordVersion !== x.expectedWorkflow ||
+        !p ||
+        p.plan.revisionId !== s.currentPlanRevisionId ||
+        p.acceptance.acceptanceId !== s.currentAcceptanceId ||
+        canonicalJson(p.plan.planning.request) !==
+          canonicalJson(w.requests.at(-1)) ||
+        p.blueprintRevisionId !== w.current.blueprintRevisionId
+      )
+        throw new AppError("PLANNER_STALE", "Reload current accepted package.");
+      const latest = latestLibraryRecords(repo.loadLibrary());
+      if (
+        p.plan.provenance.sources.some(
+          (source) =>
+            !latest.some(
+              (r) =>
+                r.recordId === source.ref.recordId &&
+                r.version === source.ref.version,
+            ),
+        )
+      )
+        throw new AppError("PLANNER_STALE", "Source changed; plan again.");
+      const text = planGenerationInstructions(p, w, x.target);
+      clipboard.writeText(text);
+      return { planner: s, text };
     });
     handle("story:new", (arg) => {
       const request = validate(StoryRequestSchema, arg),

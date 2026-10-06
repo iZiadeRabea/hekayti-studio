@@ -138,6 +138,7 @@ export const LibraryRecordSchema = z
           "manual-paste",
           "synthetic-starter",
           "approved-workflow",
+          "planner-derived",
         ]),
         importId: Id.nullable(),
         packageId: Id.nullable(),

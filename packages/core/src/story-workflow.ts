@@ -25,6 +25,10 @@ import {
 } from "./story-system";
 import { reviewStoryLanguage } from "./story-language";
 import { ManualImportSchema } from "@hekayti/contracts/library";
+import {
+  PlannedConceptSetSchema,
+  PlannerWorkflowSourceSchema,
+} from "@hekayti/contracts/planner";
 
 export const manualBridgeProvenance = Object.freeze({
   kind: "manual" as const,
@@ -41,7 +45,7 @@ const manual = (
     deterministic: boolean;
   },
 ) =>
-  s.schemaVersion === "workflow/1.1" &&
+  ["workflow/1.1", "workflow/1.2"].includes(s.schemaVersion) &&
   canonicalJson(p) === canonicalJson(manualBridgeProvenance);
 
 const nullableId = Id.nullable();
@@ -55,13 +59,16 @@ const ApprovalRecordSchema = z
   .strict();
 export const WorkflowSnapshotSchema = z
   .object({
-    schemaVersion: z.enum(["workflow/1.0", "workflow/1.1"]),
+    schemaVersion: z.enum(["workflow/1.0", "workflow/1.1", "workflow/1.2"]),
+    plannerImports: z.array(PlannerWorkflowSourceSchema).max(1000).optional(),
     bridgeImports: z.array(ManualImportSchema).max(1000).optional(),
     projectId: Id,
     storyId: Id,
     recordVersion: z.number().int().nonnegative(),
     requests: z.array(StoryRequestSchema).min(1).max(1000),
-    conceptSets: z.array(ConceptSetSchema).max(1000),
+    conceptSets: z
+      .array(z.union([ConceptSetSchema, PlannedConceptSetSchema]))
+      .max(1000),
     blueprints: z.array(BlueprintSchema).max(1000),
     drafts: z.array(StoryDraftSchema).max(1000),
     blueprintLinks: z
@@ -104,6 +111,29 @@ export const WorkflowSnapshotSchema = z
       fail("Legacy workflow cannot contain manual imports.");
     if (s.schemaVersion === "workflow/1.1" && !s.bridgeImports?.length)
       fail("Manual workflow requires import history.");
+    if (s.schemaVersion !== "workflow/1.2" && s.plannerImports !== undefined)
+      fail("Planner imports require additive workflow/1.2.");
+    if (s.schemaVersion === "workflow/1.2" && !s.plannerImports?.length)
+      fail("Planner workflow requires exact accepted plan history.");
+    for (const source of s.plannerImports ?? []) {
+      if (
+        source.plan.revisionId !== source.acceptance.planRevisionId ||
+        source.plan.planning.request.revisionId !==
+          source.acceptance.requestRevisionId ||
+        !s.requests.some(
+          (r) =>
+            canonicalJson(r) === canonicalJson(source.plan.planning.request),
+        ) ||
+        !s.conceptSets.some(
+          (set) =>
+            set.schemaVersion === "planned-concept-set/1.0" &&
+            set.concepts.some(
+              (c) => canonicalJson(c) === canonicalJson(source.concept),
+            ),
+        )
+      )
+        fail("Planner source relationship differs.");
+    }
     for (const imported of s.bridgeImports ?? []) {
       if (!s.requests.some((r) => r.revisionId === imported.requestRevisionId))
         fail("Import request missing.");
@@ -149,8 +179,15 @@ export const WorkflowSnapshotSchema = z
           (x) =>
             x.provenance.kind !== "mock" &&
             (!manual(s, x.provenance) ||
-              !s.bridgeImports?.some((i) =>
-                i.candidates.some((c) => canonicalJson(c) === canonicalJson(x)),
+              !(
+                s.plannerImports?.some(
+                  (i) => canonicalJson(i.concept) === canonicalJson(x),
+                ) ||
+                s.bridgeImports?.some((i) =>
+                  i.candidates.some(
+                    (c) => canonicalJson(c) === canonicalJson(x),
+                  ),
+                )
               )),
         )
       )
@@ -350,6 +387,7 @@ export const WorkflowSnapshotSchema = z
   });
 export type WorkflowSnapshot = z.infer<typeof WorkflowSnapshotSchema>;
 export interface StoryWorkflowRepository {
+  validateCurrentPlannerSource?(value: WorkflowSnapshot): void;
   loadWorkflow(projectId: string): WorkflowSnapshot | null;
   createWorkflow(value: WorkflowSnapshot): void;
   saveWorkflow(
@@ -388,8 +426,10 @@ export function validateWorkflowAppend(
   )
     throw new AppError("WORKFLOW_OWNER", "Workflow ownership cannot change.");
   if (
-    previous.schemaVersion === "workflow/1.1" &&
-    next.schemaVersion !== "workflow/1.1"
+    (previous.schemaVersion === "workflow/1.1" &&
+      next.schemaVersion === "workflow/1.0") ||
+    (previous.schemaVersion === "workflow/1.2" &&
+      next.schemaVersion !== "workflow/1.2")
   )
     throw new AppError(
       "WORKFLOW_VERSION",
@@ -414,6 +454,18 @@ export function validateWorkflowAppend(
         "WORKFLOW_IMMUTABLE",
         "Previous workflow artifacts must be retained unchanged.",
       );
+  if (
+    canonicalJson(
+      (next.plannerImports ?? []).slice(
+        0,
+        previous.plannerImports?.length ?? 0,
+      ),
+    ) !== canonicalJson(previous.plannerImports ?? [])
+  )
+    throw new AppError(
+      "WORKFLOW_IMMUTABLE",
+      "Planner import history is immutable.",
+    );
   if (next.current.approvalId) {
     const old = previous.approvals.some(
       (x) => x.approval.approvalId === next.current.approvalId,
@@ -452,6 +504,15 @@ export function assembledBlueprint(s: WorkflowSnapshot): StoryBlueprint {
 }
 export function workflowHashInput(s: WorkflowSnapshot) {
   return {
+    ...(s.plannerImports?.find(
+      (source) => source.concept.conceptId === s.current.conceptId,
+    )
+      ? {
+          plannerSource: s.plannerImports.find(
+            (source) => source.concept.conceptId === s.current.conceptId,
+          ),
+        }
+      : {}),
     request: s.requests.find(
       (x) => x.revisionId === s.current.requestRevisionId,
     ),
@@ -472,6 +533,15 @@ export function historicalWorkflowHashInput(
     (x) => x.revisionId === draft.sourceRevision,
   )!;
   return {
+    ...(s.plannerImports?.find(
+      (source) => source.concept.conceptId === link.conceptId,
+    )
+      ? {
+          plannerSource: s.plannerImports.find(
+            (source) => source.concept.conceptId === link.conceptId,
+          ),
+        }
+      : {}),
     request: s.requests.find((x) => x.revisionId === link.requestRevisionId),
     concept: s.conceptSets
       .flatMap((x) => x.concepts)
@@ -661,6 +731,7 @@ export class StoryWorkflowService {
     return this.commit(s, next);
   }
   private sources(s: WorkflowSnapshot) {
+    this.repository.validateCurrentPlannerSource?.(s);
     const request = s.requests.at(-1)!,
       concept = s.conceptSets
         .find((x) => x.conceptSetId === s.current.conceptSetId)
@@ -787,20 +858,75 @@ export class StoryWorkflowService {
       generation: s.conceptSets.length,
       concepts: imported.candidates,
     });
-    next.schemaVersion = "workflow/1.1";
+    next.schemaVersion =
+      s.schemaVersion === "workflow/1.2" ? "workflow/1.2" : "workflow/1.1";
     next.bridgeImports = [...(s.bridgeImports ?? []), imported];
     next.conceptSets.push(set);
     next.current.conceptSetId = set.conceptSetId;
     this.reset(next, "concept");
     return this.commit(s, next);
   }
-  importDraft(id: string, expected: number, input: unknown) {
+  importPlan(id: string, expected: number, input: unknown) {
+    const s = this.baseline(id, expected),
+      next = structuredClone(s),
+      source = validate(PlannerWorkflowSourceSchema, input),
+      r = s.requests.at(-1)!;
+    if (
+      canonicalJson(r) !== canonicalJson(source.plan.planning.request) ||
+      source.acceptance.requestRevisionId !== r.revisionId
+    )
+      throw new AppError(
+        "PLANNER_STALE",
+        "Accepted plan belongs to another request.",
+      );
+    next.schemaVersion = "workflow/1.2";
+    next.plannerImports = [...(s.plannerImports ?? []), source];
+    const set = validate(PlannedConceptSetSchema, {
+      schemaVersion: "planned-concept-set/1.0",
+      conceptSetId: this.seam.id(),
+      requestId: r.requestId,
+      requestRevisionId: r.revisionId,
+      generation: s.conceptSets.length,
+      concepts: [source.concept],
+    });
+    next.conceptSets.push(set);
+    next.current.conceptSetId = set.conceptSetId;
+    this.reset(next, "concept");
+    return this.commit(s, next);
+  }
+  invalidatePlan(id: string, expected: number) {
+    const s = this.baseline(id, expected);
+    if (!s.current.conceptSetId) return s;
+    const next = structuredClone(s);
+    next.current.conceptSetId = null;
+    this.reset(next, "concept");
+    return this.commit(s, next);
+  }
+  importDraft(
+    id: string,
+    expected: number,
+    input: unknown,
+    planBinding?: { revisionId: string; hash: string },
+  ) {
     const s = this.baseline(id, expected),
       next = structuredClone(s),
       d = validate(StoryDraftSchema, input),
       { request, concept } = this.sources(s),
       b = s.blueprints.find(
         (x) => x.revisionId === s.current.blueprintRevisionId,
+      );
+    const planned = s.plannerImports?.find(
+      (source) => source.concept.conceptId === concept.conceptId,
+    );
+    if (
+      planned &&
+      (!planBinding ||
+        planBinding.revisionId !== planned.plan.revisionId ||
+        planBinding.hash !== planned.acceptance.planHash)
+    )
+      throw new AppError(
+        "PLANNER_BINDING",
+        "Planned prose requires the current plan-response envelope, including exact plan hash and revision.",
       );
     if (
       !b ||
@@ -861,6 +987,7 @@ export class StoryWorkflowService {
     const s = this.baseline(id, expected),
       next = structuredClone(s),
       report = s.reports.find((x) => x.reportId === s.current.reportId);
+    this.repository.validateCurrentPlannerSource?.(s);
     if (!report || !s.current.draftId || !advisoryAcknowledged)
       throw new AppError(
         "WORKFLOW_APPROVAL_REQUIRED",

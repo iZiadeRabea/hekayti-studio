@@ -1,6 +1,8 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { DesktopApi } from "./api";
 const api: DesktopApi = {
+  plannerLoad: (id) => ipcRenderer.invoke("planner:load", id),
+  plannerCommand: (input) => ipcRenderer.invoke("planner:command", input),
   libraryPage: (input) => ipcRenderer.invoke("library:page", input),
   starterImport: (input) => ipcRenderer.invoke("library:starter-import", input),
   creativeBatchOpen: (input) => ipcRenderer.invoke("library:batch-open", input),

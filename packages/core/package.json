@@ -11,7 +11,8 @@
     "./workflow": "./src/story-workflow.ts",
     "./library": "./src/story-library.ts",
     "./creative": "./src/library-creative.ts",
-    "./dna": "./src/story-dna.ts"
+    "./dna": "./src/story-dna.ts",
+    "./planner": "./src/story-planner.ts"
   },
   "dependencies": {
     "@hekayti/contracts": "0.5.1",

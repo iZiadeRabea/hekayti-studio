@@ -24,6 +24,7 @@ import {
   StoryConceptSchema,
   ConceptSetSchema,
 } from "@hekayti/contracts/story";
+import { PlannedConceptSetSchema } from "@hekayti/contracts/planner";
 
 const loc = (msa: string, eg: string, en: string): LocalizedText => ({
   "ar-MSA-simple": msa,
@@ -405,11 +406,13 @@ const finding = (
 export function evaluateConcepts(
   request: StoryRequest,
   structure: StoryStructureProfile,
-  set: ConceptSet,
+  set: ConceptSet | import("zod").infer<typeof PlannedConceptSetSchema>,
   manualCreative = false,
 ): ConceptEvaluation[] {
   check(request, structure);
-  validate(ConceptSetSchema, set);
+  if (set.schemaVersion === "planned-concept-set/1.0")
+    validate(PlannedConceptSetSchema, set);
+  else validate(ConceptSetSchema, set);
   if (
     set.requestId !== request.requestId ||
     set.requestRevisionId !== request.revisionId
