@@ -1,6 +1,6 @@
 # Hekayti Studio agent entrypoint
 
-Current authorization: Phase4.2.1 planner quality plus Arabic-first UI, docs/implementation/phase4.2.1-plan.md. Implementation and same independent QA closure complete; serial GPT-6.1 Sol MEDIUM UI/Ops owns the one consolidated release preparation. Workspace0.5.3 on feature/phase4.2.1-planner-quality. Root Astra final compact approval remains pending. No main merge/tag/push/Drive before APPROVED FOR RELEASE.
+Current authorization: Astra final compact review APPROVED FOR RELEASE exact clean05dd02ab3f337c61d4a9db34d62283ae93b60462, including quality+ArabicUI. QA all4groups CLOSED;100foundation/329design/266app/typecheck/build/dev+unsignedpackage/health/securityPASS. Same MEDIUM Ops may safelyFFmain, create immutable v0.5.3-planner-quality/checkpoint/phase4.2.1-planner-quality-complete/privatepush/readback and ONE source plus separate791 creative Drive rawdownload/hash/freshrestores. Actual completion requires external receipt, not approval alone.
 
 Stable96e64925d9556981808f00ed323941c2e61ce2dd/main/v0.5.2-story-planner/checkpoint/phase4.2-story-planner-complete and VERIFIED ignored backups/receipts/hekayti-studio-phase42-final-96e64925.json are preserved safety anchors. Older pending/approval/stop entries are historical in CHANGELOG, not current phase authority. Existing owner trial/runtime databases must not be touched.
 

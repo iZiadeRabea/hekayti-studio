@@ -1,6 +1,6 @@
 # Start here — new AI session
 
-Current: Phase4.2.1 quality plus Arabic-first UI implemented, same independent QA all4 groups CLOSED; workspace0.5.3, serial MEDIUM consolidated release preparation. Plan docs/implementation/phase4.2.1-plan.md; evidence docs/implementation/phase4.2.1-testing.md. Final compact root approval and external release/recovery pending; no main/tag/push/Drive yet.
+Current: Astra compact final review APPROVED FOR RELEASE Phase4.2.1 quality+ArabicUI exact05dd02ab3f337c61d4a9db34d62283ae93b60462. QA all4groups CLOSED/consolidated gatesPASS. Same MEDIUM may safelyFFmain/immutable0.5.3tags/privatepush and ONE source+separate791 creative cloud downloads/hashes/freshrestores. Actual final identity/completion requires ignored external receipt. Plan phase4.2.1-plan.md/evidence phase4.2.1-testing.md; no approval-alone cloud claims.
 
 Stable96e64925d9556981808f00ed323941c2e61ce2dd/v0.5.2-story-planner/checkpoint/phase4.2-story-planner-complete is VERIFIED by ignored backups/receipts/hekayti-studio-phase42-final-96e64925.json. Preserve old history/tags/backups. Earlier preparation/approval banners are historical in CHANGELOG, not current authority. Resolve exact refs with git rev-parse.
 

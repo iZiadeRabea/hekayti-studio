@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.3-planner-quality final compact acceptance —2026-10-06
+
+Astra APPROVED FOR RELEASE exactclean05dd02ab3f337c61d4a9db34d62283ae93b60462 including quality+ArabicUI.100/329/266/typecheck/build/dev+unsignedpackage/health/historysecurityPASS; fourQA groupsCLOSED; actualownerA–Itrue. Nullpattern and1medium+4low human-review cautions remain honest. Same existing MEDIUM Ops authorized safe mainFF/immutabletags/privatepush/ONEsource+separate791 cloud rawdownload/hash/freshrestores. Exact final proof external, not inferred here. Root2normalreviewpoints/no extraUIreview/newagents/ExtraHigh; no postbackup sourcecommit/tagmove/Phase5. Preparation/pending entries below are historical.
+
 ## 0.5.3 planner quality + Arabic-first UI preparation — 2026-10-06 (not released)
 
 Same independent QA all4groups CLOSED; original6 regressions +4 independent boundaries retained,35/35 focused/typecheck. Bounded semantic/local-negation/operation handling, counter-only progression and distinct social participants fixed; all8 canonical beat roles translate including REPEAT. Single consolidated100foundation/329design/266app/typecheck PASS. Production0.5.3 build/unsignedpackage and actual dev/packaged regressions recorded in phase4.2.1-testing.md; exactowner desktop1.1 raw summaries/HOW compare to tracked artifact. Workspace/internal references only, dependencies unchanged. Reused HIGHimplementation/HIGHQA/MEDIUMUI+Ops, ZERO new agents/no ExtraHigh; root initial/final compact points only. Final approval/private Git/source+Library recovery pending; stable96e64925 VERIFIED receipt preserved. Older pending entries below are historical.
