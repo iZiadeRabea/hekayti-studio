@@ -21,6 +21,7 @@ import {
   importLibraryBatch,
   parseLibraryBatch,
   screenCulture,
+  projectCreativeLibrary,
 } from "@hekayti/core/creative";
 import {
   StoryLibraryService,
@@ -658,6 +659,89 @@ test("red team Phase41: non-default/religious context needs acknowledgment at se
   assert.throws(() => repo.saveGenerationPackage(bad), /acknowledgment/);
   assert.equal(p.context[0]!.creative!.culture.reviewedBy, null);
   repo.close();
+});
+
+test("red team Phase41: portable baseline plus local outcomes is stable without approval authority", () => {
+  const prior = {
+    originalType: "APPROVED_STORY_REFERENCE",
+    originalStatus: "PROMOTED_TO_LIBRARY",
+    originalVersion: 9,
+    approvalHash: "a".repeat(64),
+    authority: "HISTORICAL_ONLY_NOT_CURRENT_APPROVAL" as const,
+  };
+  const repo = new SqliteProjectRepository(":memory:");
+  importLibraryBatch(
+    repo,
+    [
+      {
+        ...seed(),
+        creative: {
+          schemaVersion: "creative-metadata/1.0",
+          source: null,
+          culture: screenCulture("Synthetic", "Ordinary fictional scene"),
+          historicalAttribution: prior,
+          usageSummary: {
+            timesUsed: 7,
+            approvedCount: 2,
+            rejectedCount: 1,
+            variantsCreated: 3,
+          },
+        },
+      },
+    ],
+    0,
+    "baseline",
+    "now",
+  );
+  new StoryLibraryService(repo, {
+    id: () => "unused",
+    now: () => "now",
+  }).action("qa41-seed", 1, "local-review", "REVIEW", "synthetic-owner");
+  // Pure projection countercase; this synthetic shaped event is not saved as a
+  // canonical approved outcome or claimed to be a provider/workflow execution.
+  const state = repo.loadLibrary(),
+    input = {
+      ...state,
+      usage: [
+        {
+          eventId: "local-used",
+          record: { recordId: "qa41-seed", version: 2 },
+          projectId: "synthetic-project",
+          requestRevisionId: "synthetic-revision",
+          outcome: "USED" as const,
+          timestamp: "now",
+        },
+      ],
+    };
+  try {
+    const one = projectCreativeLibrary(input, true),
+      two = projectCreativeLibrary(input, true);
+    assert.deepEqual(one, two);
+    const r = one.records[0]!;
+    assert.deepEqual(r.creative!.historicalAttribution, prior);
+    assert.equal(
+      r.creative!.latestLocalAttribution!.originalStatus,
+      "REVIEWED",
+    );
+    assert.equal(
+      r.creative!.latestLocalAttribution!.authority,
+      "HISTORICAL_ONLY_NOT_CURRENT_APPROVAL",
+    );
+    assert.deepEqual(r.creative!.usageSummary, {
+      timesUsed: 8,
+      approvedCount: 2,
+      rejectedCount: 1,
+      variantsCreated: 3,
+    });
+    assert.equal(r.status, "GENERATED");
+    assert.equal(repo.loadLibrary().usage.length, 0);
+    assert.equal(
+      repo.loadLibrary().records[0]!.creative!.usageSummary!.timesUsed,
+      7,
+    );
+  } finally {
+    repo.close();
+  }
 });
 
 test("red team Phase41: independent 5000 disposable rows import/search/export/restore/replay", () => {
