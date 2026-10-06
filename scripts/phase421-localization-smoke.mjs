@@ -243,6 +243,55 @@ try {
   gates.push(
     "Actual Arabic accept/prepare/clipboard path; UI switch does not translate authored story text or change workflow; English and Arabic preferences persist across process restarts",
   );
+  await page.getByRole("button", { name: "منشئ القصة", exact: true }).click();
+  await page.getByLabel("عمر الطفل بالشهور", { exact: true }).fill("8");
+  await page
+    .getByLabel("لغة القصة", { exact: true })
+    .selectOption("ar-MSA-simple");
+  await page
+    .getByLabel("نوع القصة", { exact: true })
+    .selectOption("early-learning");
+  await page.getByRole("button", { name: "قصة جديدة", exact: true }).click();
+  await page.getByTestId("workflow-state").waitFor();
+  const infantId = await page
+    .getByLabel("فتح قصة محفوظة", { exact: true })
+    .inputValue();
+  await page
+    .getByLabel(
+      "راجعت الإلهام الأولي من المكتبة؛ وهذا لا يعني اعتماده للاستخدام النهائي.",
+    )
+    .check();
+  await page
+    .getByLabel(
+      "أقرّ بالحاجة إلى ملاءمة المحتوى ثقافيًا وللعمر واللغة العربية.",
+    )
+    .check();
+  await page
+    .getByRole("button", {
+      name: "خطّط القصة / أعد التخطيط بالاختيارات",
+      exact: true,
+    })
+    .click();
+  await page
+    .getByTestId("planner-status")
+    .filter({ hasText: "تم حفظ التغييرات والتحقق من الخطة" })
+    .waitFor();
+  const infant = must(
+    await page.evaluate((id) => window.hekayti.plannerLoad(id), infantId),
+  ).plans.at(-1);
+  assert.ok(infant.beats.some((beat) => beat.role === "REPEAT"));
+  assert.ok(
+    (await page.getByTestId("story-planner").innerText()).includes("التكرار:"),
+  );
+  assert.ok(
+    !(await page.getByTestId("story-planner").innerText()).includes("REPEAT:"),
+  );
+  await page
+    .getByTestId("story-planner")
+    .screenshot({ path: join(data, "arabic-infant-repeat.png") });
+  gates.push(
+    "Actual8-month StoryPlan1.1 REPEAT role displays Arabic التكرار while canonical role and simplified-MSA story language remain unchanged",
+  );
   const evidence = {
     status: "PASS",
     packaged,

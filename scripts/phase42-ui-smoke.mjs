@@ -6,6 +6,7 @@ import { resolve, join } from "node:path";
 import assert from "node:assert/strict";
 import { countWords } from "@hekayti/contracts";
 import { manualBridgeProvenance } from "@hekayti/core/workflow";
+import { validateStoryPlan } from "@hekayti/core/planner";
 import {
   readCreativeArchive,
   SqliteProjectRepository,
@@ -14,6 +15,7 @@ import {
 } from "@hekayti/persistence";
 await mkdir("temp/phase42-ui", { recursive: true });
 const packaged = process.argv.includes("--packaged"),
+  ownerLive = process.argv.includes("--owner-live"),
   data = await mkdtemp(resolve("temp/phase42-ui/run-")),
   gates = [],
   archive = join(data, "planner-creative.zip");
@@ -60,7 +62,38 @@ try {
   await page
     .getByLabel("Story language", { exact: true })
     .selectOption("ar-EG");
-  await button("New Story").click();
+  let ownerPlanning;
+  if (ownerLive) {
+    ownerPlanning = JSON.parse(
+      await readFile(
+        "examples/story-planner/quality-live-request.json",
+        "utf8",
+      ),
+    );
+    // Seed the exact synthetic fixture through the public desktop IPC: theme,
+    // languageModes and profileId are not editable in the minimal creator form.
+    // IDs are isolated so the default demo project is not overwritten.
+    ownerPlanning.request.projectId =
+      "owner-live-synthetic-" + crypto.randomUUID();
+    ownerPlanning.request.storyId = "owner-live-story-" + crypto.randomUUID();
+    must(
+      await page.evaluate(
+        (request) => window.hekayti.newStory(request),
+        ownerPlanning.request,
+      ),
+    );
+    await button("Projects").click();
+    await button("Story Creator").click();
+    await page
+      .getByLabel("Reopen story")
+      .selectOption(ownerPlanning.request.projectId);
+    await page
+      .getByLabel("Optional fictional setting")
+      .fill(ownerPlanning.selectedSetting);
+    await page
+      .getByLabel("Creator constraints for human review")
+      .fill(ownerPlanning.constraints[0]);
+  } else await button("New Story").click();
   await page.getByTestId("workflow-state").waitFor();
   const projectId = await page.getByLabel("Reopen story").inputValue();
   await page
@@ -85,6 +118,96 @@ try {
   );
   assert.equal(planner.plans.length, 1);
   assert.ok(planner.plans[0].provenance.sources.length > 0);
+  let exactLiveResult;
+  if (ownerLive) {
+    const live = planner.plans[0],
+      qa = validateStoryPlan(live);
+    const expected = JSON.parse(
+      await readFile(
+        "examples/story-planner/quality-live-regression.json",
+        "utf8",
+      ),
+    ).after.plan;
+    assert.equal(live.schemaVersion, "story-plan/1.1");
+    assert.deepEqual(live.planning.request, ownerPlanning.request);
+    for (const key of [
+      "profile",
+      "variation",
+      "generation",
+      "selectedFamily",
+      "selectedCharacter",
+      "selectedSetting",
+      "constraints",
+      "inspirationReviewed",
+      "adaptationAcknowledged",
+      "sensitiveOptIn",
+      "religiousOptIn",
+    ])
+      assert.deepEqual(live.planning[key], ownerPlanning[key]);
+    assert.equal(
+      live.quality.objectiveIntent.primaryIntent,
+      "SHARING_TURN_TAKING",
+    );
+    assert.equal(
+      live.provenance.selectedStoryFamilyId,
+      expected.provenance.selectedStoryFamilyId,
+    );
+    assert.equal(live.provenance.selectedPatternId, null);
+    assert.deepEqual(
+      live.beats.map((b) => b.summary),
+      expected.beats.map((b) => b.summary),
+    );
+    assert.equal(
+      live.quality.situation.resolutionMethod,
+      expected.quality.situation.resolutionMethod,
+    );
+    assert.ok(
+      !qa.findings.some((f) => ["high", "blocker"].includes(f.severity)),
+    );
+    const resolution = live.quality.transitions.find(
+      (t) => t.beatId === live.resolutionBeatId,
+    );
+    const acceptance = {
+      A: live.provenance.sourceMode !== "EDITORIAL_FALLBACK",
+      B:
+        !!live.provenance.selectedStoryFamilyId &&
+        live.provenance.sources.length > 0,
+      C: ["STRONG", "ACCEPTABLE"].includes(
+        live.quality.structuralCompatibility.level,
+      ),
+      D: new Set(resolution.participantIds).size >= 2,
+      E: new Set(live.quality.transitions.map((t) => t.strategy)).size >= 4,
+      F: /each child/.test(live.quality.situation.resolutionMethod),
+      G: !live.goal.description.includes(
+        live.planning.request.objective.description,
+      ),
+      H: !live.beats.some((b) =>
+        /Approach \d|next visible clue/.test(b.summary),
+      ),
+      I: !qa.findings.some((f) => ["high", "blocker"].includes(f.severity)),
+    };
+    assert.ok(Object.values(acceptance).every(Boolean));
+    exactLiveResult = {
+      intent: live.quality.objectiveIntent.primaryIntent,
+      family: live.provenance.selectedStoryFamilyId,
+      pattern: live.provenance.selectedPatternId,
+      sourceMode: live.provenance.sourceMode,
+      characters: live.characters,
+      beats: live.beats,
+      quality: live.quality,
+      signals: qa.signals,
+      findings: qa.findings,
+      acceptance,
+    };
+    await writeFile(
+      join(data, "exact-live-result.json"),
+      JSON.stringify(exactLiveResult, null, 2),
+    );
+    await page.getByTestId("planner-quality").waitFor();
+    await page
+      .getByTestId("story-planner")
+      .screenshot({ path: join(data, "exact-live-plan.png") });
+  }
   gates.push(
     "Actual 791-row import/request/plan/source provenance/logic display; acceptance gated by explicit acknowledgement",
   );
@@ -276,6 +399,8 @@ try {
   const evidence = {
     status: "PASS",
     packaged,
+    ownerLive,
+    exactLiveResult,
     data,
     projectId,
     archive,

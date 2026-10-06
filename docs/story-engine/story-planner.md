@@ -2,6 +2,8 @@
 
 ## Phase4.2.1 focused quality boundary
 
+Current preparation: same independent QA four-group closure complete; full consolidated/actual dev+package evidence is in [phase4.2.1-testing.md](../implementation/phase4.2.1-testing.md). Actual exact owner desktop UI workflow uses `node --import tsx scripts/phase42-ui-smoke.mjs --owner-live [--packaged]`: hidden request metadata is seeded through the public IPC, then visible plan/accept/package/clipboard/import/QA/testapproval/feedback/restart run unchanged. Raw beat summaries/HOW match the tracked quality artifact. Arabic default/switch/RTL/restart and infant REPEAT are independently exercised by `node scripts/phase421-localization-smoke.mjs [--packaged]`. No provider/human-quality certification; final release/recovery still requires approval.
+
 “Objective semantics influence structural planning before prose generation.” “Structural validity alone is insufficient; Story Plans require concrete age-appropriate progression toward the requested objective.”
 
 Current desktop selects `planner-quality/1.0`, producing strict `story-plan/1.1` with versioned ObjectiveIntent evidence, structural compatibility, an editorial situation and per-beat active participants/strategy/information/relationship/consequence/HOW. Ten bounded intents cover sharing, helping, emotional regulation, supported habits, learning/discovery, connection repair and four GENERAL fallbacks. Rules examine objective kind/description/successScenario, not titles, special family IDs, embeddings or an LLM. English and a small explicit Arabic vocabulary are covered; unrecognized free text remains limited GENERAL coverage, not a semantic-understanding claim.

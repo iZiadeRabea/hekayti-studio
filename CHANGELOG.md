@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.3 planner quality + Arabic-first UI preparation — 2026-10-06 (not released)
+
+Same independent QA all4groups CLOSED; original6 regressions +4 independent boundaries retained,35/35 focused/typecheck. Bounded semantic/local-negation/operation handling, counter-only progression and distinct social participants fixed; all8 canonical beat roles translate including REPEAT. Single consolidated100foundation/329design/266app/typecheck PASS. Production0.5.3 build/unsignedpackage and actual dev/packaged regressions recorded in phase4.2.1-testing.md; exactowner desktop1.1 raw summaries/HOW compare to tracked artifact. Workspace/internal references only, dependencies unchanged. Reused HIGHimplementation/HIGHQA/MEDIUMUI+Ops, ZERO new agents/no ExtraHigh; root initial/final compact points only. Final approval/private Git/source+Library recovery pending; stable96e64925 VERIFIED receipt preserved. Older pending entries below are historical.
+
 ## Phase4.2.1 focused planner quality + Arabic-first UI — 2026-10-06 (not released)
 
 Bounded versioned objective intents/evidence, actual structural-field compatibility and compatible regeneration, concrete age-aware situations/meaningful progression/reciprocal HOW, active social participants and quality findings. Current desktop opts StoryPlan1.1/PlanQA1.1; accepted1.0 histories/packages/hashes retain explicit legacy validation/public integration boundary with actual retained v0.5.2 golden reload assurance. Existing manual package/import/approval/feedback authority and791 source facts unchanged. Exact live A–I local regression PASS;58 focused tests/typecheck PASS. Arabic-first/English-switch independent of story language, RTL/technical-ID wrapping, scoped isolated UI/restart/clipboard PASS. No provider/native/literary/child-appeal claim. Independent QA/consolidated expensive gates/final approval/release pending; prior stable96e64925 preserved.
