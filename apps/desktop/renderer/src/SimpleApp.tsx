@@ -23,6 +23,7 @@ import { SimplePlanPreview } from "./SimplePlanPreview";
 import { SimpleReader, SimpleCompare } from "./SimpleReader";
 import { SimpleWriter } from "./SimpleWriter";
 import { SimpleIllustrations } from "./SimpleIllustrations";
+import { resolveIllustrationReader } from "./illustration-source";
 import { VisualBibleEditor, VisualStyleEditor } from "./VisualEditors";
 import { SimpleError } from "./SimpleFeedback";
 
@@ -155,9 +156,28 @@ export function SimpleApp() {
   }
   async function illustrationCommand(input: IllustrationCommand) {
     const next = await unwrap(window.hekayti.illustrationCommand(input));
-    if (next) setIllustrations(next);
+    if (next && !(await applyIllustrationSnapshot(next))) return;
     if (next && input.action === "COPY") setStatus(c("Image prompt copied."));
     return next;
+  }
+  async function applyIllustrationSnapshot(next: IllustrationSnapshot) {
+    if (!reader) {
+      setIllustrations(null);
+      setError("CREATOR_ILLUSTRATION_SOURCE");
+      return false;
+    }
+    try {
+      const exact = await resolveIllustrationReader(next, reader, (input) =>
+        unwrap(window.hekayti.simpleReader(input)),
+      );
+      setReader(exact);
+      setIllustrations(next);
+      return true;
+    } catch {
+      setIllustrations(null);
+      setError("CREATOR_ILLUSTRATION_SOURCE");
+      return false;
+    }
   }
   const illustrateBindings = () => ({
     ...bindings(),
@@ -417,7 +437,7 @@ export function SimpleApp() {
                           mode: reader.mode,
                         }),
                       );
-                      if (next) setIllustrations(next);
+                      if (next) await applyIllustrationSnapshot(next);
                     }
                   })
                 }
@@ -467,7 +487,7 @@ export function SimpleApp() {
             {reader && illustrations && !visualEditor && (
               <SimpleIllustrations
                 snapshot={illustrations}
-                pages={reader.pages}
+                source={reader}
                 busy={busy}
                 onBack={() => setIllustrations(null)}
                 onPrepare={() =>
@@ -510,21 +530,7 @@ export function SimpleApp() {
                         planId,
                       }),
                     );
-                    if (next) {
-                      const pageSource =
-                        next.plan &&
-                        (await unwrap(
-                          window.hekayti.simpleReader({
-                            projectId: reader.projectId,
-                            mode: next.plan.mode,
-                            draftId: next.plan.draftId,
-                          }),
-                        ));
-                      if (pageSource) {
-                        setReader(pageSource);
-                        setIllustrations(next);
-                      }
-                    }
+                    if (next) await applyIllustrationSnapshot(next);
                   })
                 }
               />

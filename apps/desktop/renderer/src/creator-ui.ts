@@ -60,6 +60,9 @@ export const creatorArabic = {
   "Read the story and review its notices before saving an outcome.":
     "اقرأ القصة وراجع ملاحظاتها قبل حفظ رأيك.",
   "Illustration plan versions": "نسخ خطة الصور",
+  "Image source draft": "مسودة مصدر الصور",
+  "The image plan and displayed draft do not match. Reopen the exact source before continuing.":
+    "خطة الصور والمسودة المعروضة غير متطابقتين. أعد فتح المصدر الصحيح قبل المتابعة.",
   "Initialize the inspiration Library before creating a story.":
     "جهّز مكتبة الإلهام أولًا قبل إنشاء القصة.",
   "Review the provisional inspiration notice before continuing.":
@@ -133,6 +136,12 @@ export const creatorArabic = {
   "Save review": "حفظ المراجعة",
   "Review meaning and language": "مراجعة المعنى واللغة",
   "Pages need human review": "صفحات تحتاج مراجعة بشرية",
+  "Reason groups": "أسباب المراجعة",
+  Occurrences: "عدد الملاحظات",
+  "Affected pages": "الصفحات المتأثرة",
+  "Affected locations": "المواضع المتأثرة",
+  "Review recommended": "تحتاج مراجعة",
+  "Minor note": "ملاحظة بسيطة",
   "Show details": "عرض التفاصيل",
   "Blocking issues": "ملاحظات يجب حلها قبل المتابعة",
   "Search my stories": "ابحث في قصصي",

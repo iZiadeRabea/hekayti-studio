@@ -181,6 +181,10 @@ export function SimpleReader({
       </button>
       <PlanNotices
         notices={model.notices}
+        pageKey={(location) =>
+          model.pages.find((x) => location.split(/[/.]/).includes(x.pageId))
+            ?.pageId
+        }
         locate={(location) => {
           const parts = location.split(/[/.]/);
           const page = model.pages.find((x) => parts.includes(x.pageId));

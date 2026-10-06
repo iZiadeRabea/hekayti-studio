@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import type { IllustrationSnapshot } from "@hekayti/contracts/illustration";
-import type { ReaderPage } from "@hekayti/contracts/creator";
+import type { StoryReaderModel } from "@hekayti/contracts/creator";
+import { illustrationSourceMatches } from "./illustration-source";
 import { ReaderPageText } from "./SimpleReader";
 import { useCreatorUi } from "./creator-ui";
 
 export function SimpleIllustrations({
   snapshot,
-  pages,
+  source,
   onBack,
   onPrepare,
   onGenerate,
@@ -17,7 +18,7 @@ export function SimpleIllustrations({
   busy,
 }: {
   snapshot: IllustrationSnapshot;
-  pages: ReaderPage[];
+  source: StoryReaderModel;
   onBack: () => void;
   onPrepare: () => void;
   onGenerate: () => void;
@@ -29,13 +30,14 @@ export function SimpleIllustrations({
 }) {
   const { c } = useCreatorUi();
   const [tab, setTab] = useState("CHARACTER_REFERENCE");
+  const bound = illustrationSourceMatches(snapshot, source);
   const [reviewed, setReviewed] = useState<Set<string>>(new Set());
   useEffect(() => {
     setReviewed(new Set());
     setTab("CHARACTER_REFERENCE");
   }, [snapshot.plan?.planId, snapshot.stale]);
   const prompts = snapshot.prompts.filter(
-    (x) => x.planId === snapshot.plan?.planId,
+    (x) => bound && x.planId === snapshot.plan?.planId,
   );
   const current = prompts.filter(
     (x) =>
@@ -45,12 +47,32 @@ export function SimpleIllustrations({
         x.pageNumber === Number(tab.slice(5))),
   );
   const shownPage = tab.startsWith("PAGE:")
-    ? pages.find((x) => x.pageNumber === Number(tab.slice(5)))
+    ? bound
+      ? source.pages.find((x) => x.pageNumber === Number(tab.slice(5)))
+      : undefined
     : undefined;
   return (
     <section className="simple-workspace" data-testid="simple-illustrations">
       <button onClick={onBack}>{c("Back")}</button>
       <h2>{c("Prepare illustrations")}</h2>
+      {snapshot.plan && !bound && (
+        <p role="alert" data-testid="illustration-source-mismatch">
+          {c(
+            "The image plan and displayed draft do not match. Reopen the exact source before continuing.",
+          )}
+        </p>
+      )}
+      {snapshot.plan && bound && (
+        <p>
+          {c("Image source draft")}:{" "}
+          {c(
+            source.review.approved
+              ? "Approved after human review"
+              : "Not approved",
+          )}{" "}
+          — {c(source.historical ? "Earlier draft" : "Current draft")}
+        </p>
+      )}
       {onPlan && snapshot.plans.length > 0 && (
         <label>
           {c("Illustration plan versions")}
@@ -86,7 +108,7 @@ export function SimpleIllustrations({
         {c("Prepare current illustration plan")}
       </button>
       <button
-        disabled={busy || !snapshot.plan || snapshot.stale}
+        disabled={busy || !snapshot.plan || snapshot.stale || !bound}
         onClick={onGenerate}
       >
         {c("Prepare image prompts")}
@@ -153,7 +175,9 @@ export function SimpleIllustrations({
             {c("I reviewed the character reference and this image prompt.")}
           </label>
           <button
-            disabled={busy || snapshot.stale || !reviewed.has(x.promptId)}
+            disabled={
+              busy || snapshot.stale || !bound || !reviewed.has(x.promptId)
+            }
             onClick={() => onCopy(x.promptId)}
           >
             {c("Copy image prompt")}

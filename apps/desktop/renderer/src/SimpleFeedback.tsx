@@ -1,5 +1,7 @@
 import { useCreatorUi, type CreatorUiKey } from "./creator-ui";
 const reasons: Readonly<Record<string, CreatorUiKey>> = {
+  CREATOR_ILLUSTRATION_SOURCE:
+    "The image plan and displayed draft do not match. Reopen the exact source before continuing.",
   CREATOR_LIBRARY_EMPTY:
     "Initialize the inspiration Library before creating a story.",
   CREATOR_PROVISIONAL_REVIEW:

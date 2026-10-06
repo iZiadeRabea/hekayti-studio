@@ -21,6 +21,14 @@ import { SimpleIllustrations } from "../../apps/desktop/renderer/src/SimpleIllus
 import type { IllustrationSnapshot } from "@hekayti/contracts/illustration";
 import { SimplePlanPreview } from "../../apps/desktop/renderer/src/SimplePlanPreview";
 import {
+  PlanNotices,
+  groupAdvisoryNotices,
+} from "../../apps/desktop/renderer/src/SimplePlanPreview";
+import {
+  illustrationSourceMatches,
+  resolveIllustrationReader,
+} from "../../apps/desktop/renderer/src/illustration-source";
+import {
   SimpleReader,
   SimpleCompare,
 } from "../../apps/desktop/renderer/src/SimpleReader";
@@ -375,7 +383,7 @@ test("Illustration workspace honestly discloses fictional defaults and stale pro
   const html = render(
     React.createElement(SimpleIllustrations, {
       snapshot,
-      pages: reader.pages,
+      source: reader,
       onBack: () => {},
       onPrepare: () => {},
       onGenerate: () => {},
@@ -494,4 +502,209 @@ test("Reader high findings remain visibly blocking, with human page labels and o
     html.includes(`<code dir="ltr">ar-EG/${reader.pages[0]!.pageId}</code>`),
   );
   assert.match(html, /<fieldset disabled=""><legend>مراجعة المعنى واللغة/);
+});
+function imageSnapshot(draftId: string): IllustrationSnapshot {
+  const bible = {
+    schemaVersion: "visual-bible/1.0" as const,
+    revisionId: "bible",
+    characters: [],
+    location: "ملعب",
+    locationAnchors: [],
+    props: [],
+    continuityRules: [],
+  };
+  const style = {
+    schemaVersion: "visual-style/1.0" as const,
+    revisionId: "style",
+    medium: "PAPER_CUT_COLLAGE" as const,
+    texture: "ورق",
+    light: "نهار",
+    palette: "ألوان هادية",
+    composition: "بسيط",
+    negativeRules: [],
+  };
+  return {
+    recordVersion: 1,
+    plan: {
+      schemaVersion: "illustration-plan/1.0",
+      planId: `plan-${draftId}`,
+      projectId: reader.projectId,
+      draftId,
+      mode: "ar-EG",
+      createdAt: "2026-10-06T00:00:00Z",
+      dependencies: {
+        draftHash: "a".repeat(64),
+        storyRevision: "story",
+        storyHash: "b".repeat(64),
+        planRevision: "story-plan",
+        planHash: "c".repeat(64),
+        bibleRevision: "bible",
+        bibleHash: "d".repeat(64),
+        styleRevision: "style",
+        styleHash: "e".repeat(64),
+      },
+      bible,
+      style,
+      pages: [],
+    },
+    plans: [],
+    bible,
+    style,
+    prompts: [
+      {
+        schemaVersion: "illustration-prompt/1.0",
+        promptId: "prompt",
+        planId: `plan-${draftId}`,
+        planHash: "f".repeat(64),
+        kind: "CHARACTER_REFERENCE",
+        arabicSummary: "وصف صورة المسودة ب",
+        technicalPrompt: "technical-prompt-only",
+        reviewRequired: true,
+      },
+    ],
+    stale: false,
+    staleReasons: [],
+    notice: "",
+  };
+}
+test("H3 retained A → current PREPARE B resolves exact B draft/edition before view, and refuses missing/wrong source", async () => {
+  const a = { ...reader, draftId: "A", historical: true };
+  const b = {
+    ...reader,
+    draftId: "B",
+    pages: [{ ...reader.pages[0]!, narration: "هذه المسودة ب فقط." }],
+  };
+  const calls: unknown[] = [];
+  const historical = await resolveIllustrationReader(
+    imageSnapshot("A"),
+    a,
+    async () => {
+      throw Error("must not load already bound A");
+    },
+  );
+  const prepared = await resolveIllustrationReader(
+    imageSnapshot("B"),
+    historical,
+    async (input) => {
+      calls.push(input);
+      return b;
+    },
+  );
+  assert.deepEqual(calls, [
+    { projectId: reader.projectId, draftId: "B", mode: "ar-EG" },
+  ]);
+  assert.equal(prepared.pages[0]!.narration, "هذه المسودة ب فقط.");
+  assert.equal(illustrationSourceMatches(imageSnapshot("B"), prepared), true);
+  await assert.rejects(
+    resolveIllustrationReader(imageSnapshot("B"), a, async () => a),
+    /CREATOR_ILLUSTRATION_SOURCE/,
+  );
+  await assert.rejects(
+    resolveIllustrationReader(imageSnapshot("B"), a, async () => undefined),
+    /CREATOR_ILLUSTRATION_SOURCE/,
+  );
+  await assert.rejects(
+    resolveIllustrationReader(imageSnapshot("B"), a, async () => ({
+      ...b,
+      mode: "ar-MSA-simple",
+    })),
+    /CREATOR_ILLUSTRATION_SOURCE/,
+  );
+  const html = render(
+    React.createElement(SimpleIllustrations, {
+      snapshot: imageSnapshot("B"),
+      source: a,
+      busy: false,
+      onBack: () => {},
+      onPrepare: () => {},
+      onGenerate: () => {},
+      onCopy: () => {},
+      onEditBible: () => {},
+      onEditStyle: () => {},
+    }),
+  );
+  assert.ok(html.includes('data-testid="illustration-source-mismatch"'));
+  assert.ok(
+    !html.includes("وصف صورة المسودة ب") &&
+      !html.includes(reader.pages[0]!.narration),
+  );
+  assert.match(html, /<button[^>]*disabled=""[^>]*>تجهيز برومبتات الصور/);
+});
+test("M2 unapproved illustration source is labeled honestly and never presented as approved", () => {
+  const source = { ...reader, draftId: "B" };
+  const html = render(
+    React.createElement(SimpleIllustrations, {
+      snapshot: imageSnapshot("B"),
+      source,
+      busy: false,
+      onBack: () => {},
+      onPrepare: () => {},
+      onGenerate: () => {},
+      onCopy: () => {},
+      onEditBible: () => {},
+      onEditStyle: () => {},
+    }),
+  );
+  assert.ok(html.includes("مسودة مصدر الصور") && html.includes("لم تعتمد بعد"));
+  assert.ok(
+    !html.includes("نص الصفحة المعتمد") &&
+      !html.includes("اعتمدت بعد المراجعة البشرية"),
+  );
+});
+test("M3 repeated advisories group by reason/severity with exact counts and locations; blockers remain separate", () => {
+  const notices: PlanPresentation["notices"] = [
+    {
+      code: "RHYTHM",
+      severity: "medium",
+      text: "راجع الإيقاع.",
+      location: "ar-EG/page-1",
+    },
+    {
+      code: "RHYTHM",
+      severity: "medium",
+      text: "راجع الإيقاع.",
+      location: "ar-EG/page-2",
+    },
+    {
+      code: "RHYTHM",
+      severity: "medium",
+      text: "راجع الإيقاع.",
+      location: "ar-MSA-simple/page-2",
+    },
+    {
+      code: "RHYTHM",
+      severity: "low",
+      text: "راجع الإيقاع.",
+      location: "ar-EG/page-1",
+    },
+    { code: "CAST", severity: "high", text: "أصلح الشخصية." },
+  ];
+  const groups = groupAdvisoryNotices(notices);
+  assert.deepEqual(
+    groups.map((rows) => rows.length),
+    [3, 1],
+  );
+  const html = render(
+    React.createElement(PlanNotices, {
+      notices,
+      locate: (location) => `صفحة ${location.endsWith("1") ? "1" : "2"}`,
+      pageKey: (location) => location.split("/").at(-1),
+    }),
+  );
+  assert.equal(
+    (html.match(/data-testid="simple-advisory-group"/g) ?? []).length,
+    2,
+  );
+  assert.ok(
+    html.includes("عدد الملاحظات: 3") && html.includes("الصفحات المتأثرة: 2"),
+  );
+  assert.ok(
+    html.includes("ar-EG/page-1") &&
+      html.includes("ar-EG/page-2") &&
+      html.includes("ar-MSA-simple/page-2"),
+  );
+  assert.ok(
+    html.includes('data-testid="simple-blocking-notices"') &&
+      html.includes("أصلح الشخصية."),
+  );
 });

@@ -1,21 +1,32 @@
 import { useState } from "react";
 import type { PlanPresentation } from "@hekayti/contracts/creator";
 import { useCreatorUi } from "./creator-ui";
+export function groupAdvisoryNotices(notices: PlanPresentation["notices"]) {
+  const groups = new Map<string, PlanPresentation["notices"]>();
+  for (const notice of notices) {
+    if (notice.severity === "high" || notice.severity === "blocker") continue;
+    const key = JSON.stringify([notice.code, notice.severity, notice.text]);
+    const rows = groups.get(key) ?? [];
+    rows.push(notice);
+    groups.set(key, rows);
+  }
+  return [...groups.values()];
+}
 
 export function PlanNotices({
   notices,
   locate,
+  pageKey,
 }: {
   notices: PlanPresentation["notices"];
   locate?: (location: string) => string | undefined;
+  pageKey?: (location: string) => string | undefined;
 }) {
   const { c } = useCreatorUi();
   const blocking = notices.filter(
     (x) => x.severity === "high" || x.severity === "blocker",
   );
-  const advisory = notices.filter(
-    (x) => x.severity !== "high" && x.severity !== "blocker",
-  );
+  const advisory = groupAdvisoryNotices(notices);
   const items = (rows: typeof notices) => (
     <ul>
       {rows.map((x, i) => (
@@ -46,12 +57,70 @@ export function PlanNotices({
         </div>
       )}
       {advisory.length > 0 && (
-        <details>
-          <summary>
-            {c("Review meaning and language")} ({advisory.length})
-          </summary>
-          {items(advisory)}
-        </details>
+        <section data-testid="simple-advisory-groups">
+          <h3>
+            {c("Review meaning and language")} — {c("Reason groups")}:{" "}
+            {advisory.length}
+          </h3>
+          {advisory.map((rows, i) => {
+            const first = rows[0]!;
+            const locations = [
+              ...new Set(rows.flatMap((x) => (x.location ? [x.location] : []))),
+            ];
+            const pages = new Set(
+              locations.flatMap((x) => (pageKey?.(x) ? [pageKey(x)!] : [])),
+            );
+            const humanLocations = [
+              ...new Set(
+                locations.flatMap((x) => (locate?.(x) ? [locate(x)!] : [])),
+              ),
+            ];
+            return (
+              <section
+                key={i}
+                className="advisory-group"
+                data-testid="simple-advisory-group"
+              >
+                <p dir="auto">{first.text}</p>
+                <p>
+                  {c(
+                    first.severity === "medium"
+                      ? "Review recommended"
+                      : "Minor note",
+                  )}{" "}
+                  — {c("Occurrences")}: {rows.length} —{" "}
+                  {c(pageKey ? "Affected pages" : "Affected locations")}:{" "}
+                  {pageKey ? pages.size : locations.length}
+                </p>
+                <details>
+                  <summary>{c("Show details")}</summary>
+                  {humanLocations.length > 0 && (
+                    <ul>
+                      {humanLocations.map((x) => (
+                        <li key={x} dir="auto">
+                          {x}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <details>
+                    <summary>{c("Technical details")}</summary>
+                    <ul>
+                      {rows.map((x, n) => (
+                        <li key={n}>
+                          <code dir="ltr">
+                            {x.code}
+                            {x.location ? ` — ${x.location}` : ""}
+                          </code>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                </details>
+              </section>
+            );
+          })}
+        </section>
       )}
     </section>
   );
