@@ -1,4 +1,18 @@
-# Phase4.1 focused verification — not release acceptance
+# Phase4.1 consolidated verification — final Astra review PENDING
+
+## Final0.5.1 preparation receipts — 2026-10-06
+
+One full `pwsh -NoProfile -File scripts/test.ps1`:100 foundation +329 design assertions +189 application tests,0 failures/skips; typecheck PASS. Exact log temp/phase41-preparation/full-test.log. Production bundle temp/phase41-preparation/build.log PASS. Online health0 failures/0 warnings and reachable-history security PASS: online-health.log/history-security.log in same folder. Versions/internal workspace references0.5.1 only, dependencies unchanged. npm lock regeneration reports8 moderate advisory findings; no unapproved force-upgrade performed.
+
+Full-suite independent QA5000 benchmark is the final scale measurement, avoiding a duplicate run: in-memory SQLite disposable rows (NOT corpus), import987ms/search378ms/filter357ms/export1194ms/empty restore4836ms/replay5219ms; ZIP8561571bytes SHA256 f5efd7b28f85c4e06dc55192f36844cb2317245f88bc56420a16d10146b17ea1. Exact machine output in full-test.log. This measures bounded aggregate behavior, not unlimited scale or production disk throughput.
+
+Actual791-row isolated corpus verification: scripts/phase41-library-benchmark.mjs --corpus-only; temp/phase41-preparation/corpus-recovery.log and temp/phase41-benchmark/run-0P4f1i/evidence.json. Import919.29ms/export633.58ms/preview584.22ms/empty restore1913.66ms/merge2707.15ms. Exact projected records equal after empty restore/re-export;791 replayed without duplicates, disk reopened. Archive temp/phase41-benchmark/run-0P4f1i/sourced-creative-library.zip,4346720bytes SHA256 dadc7b523f9c009113aa5ff510bf23efd38998ad2aafea0462be056d5a70d30e. Self-contained source metadata, no cached fulltext or private project DB required; repeated historical attribution/real usage countercases also independently verified in full suite. Source+creative cloud publication remains PENDING.
+
+Fresh actual dev UI: phase41-ui.log (7 gate groups, import/filter/DNA/lifecycle/ZIP/preview/empty restore/restart), evidence temp/phase41-ui/source-qZi4aK/evidence.json and starter-dna.png; restored temp/phase41-ui/restore-yJAygi. Phase4 manual bridge6 groups: phase4-ui.log, temp/phase4-ui/run-sArRem/evidence.json. Phase3 eight groups/restart: phase3-ui.log, temp/phase3-ui/run-qkPPYw/phase3-ui-result.json. Legacy UI7 actions: legacy-ui.log, temp/phase2-ui/run-S0HtAl/rtl-editing.png. Desktop SQLite/six-page Arabic print+digital proofs: desktop.log, temp/phase2-smoke/run-mTTure/smoke-result.json. All PASS, only isolated ignored userdata.
+
+Unsigned Windows directory package built once using existing product/app/output/data identifiers: package.log. Actual packaged Phase4.1 seven-gate recovery UI: phase41-packaged-ui.log, temp/phase41-ui/source-GNEZFA/evidence.json and starter-dna.png, independent restored temp/phase41-ui/restore-zRnQ57. Packaged desktop six-page proofs: desktop-packaged.log, temp/phase2-smoke/run-a2VMfo/smoke-result.json. No signing/installer/native-human/physical printer certification implied. No normal userdata overwritten.
+
+Independent closure commit bcd11523886cbfb4136dfff100909c14db1e1185 integrated unchanged: all four findings CLOSED,13 non-benchmark QA tests +84 focused tests/typecheck previously PASS; final full suite also includes independent scale test. Final Astra acceptance/release/tag/Git push/Drive pending. Corpus/rights/culture/DNA/family exact counts and limits in phase4.1-overview.md. Below are historical implementation/fix receipts, whose former pending statements are superseded by this section.
 
 ## Consolidated independent-QA fix batch
 

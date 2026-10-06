@@ -4,9 +4,9 @@
 - Current branch at milestone: feature/phase4-1-starter-library
 - Latest stable checkpoint: checkpoint/phase4-hybrid-library-complete
 - Latest stable tag: v0.5.0-hybrid-library
-- Last successful tests: Phase4 released full gates100foundation/329design/154app; Phase4.1 implementation focused80/typecheck/UI7 PASS, not final release acceptance.
+- Last successful tests: Phase4.1 consolidated100foundation/329design/189app/typecheck PASS; build/onlinehealth/historysecurity PASS. Final UI/package evidence in docs/implementation/phase4.1-testing.md; not release acceptance.
 
-Phase4.1 starter Library/StoryDNA implementation is preparing handoff on feature/phase4-1-starter-library. Independent QA, final full gates, Astra acceptance and release/cloud recovery remain PENDING. Approved scope: docs/implementation/phase4.1-plan.md. HYBRID BY DEFAULT, no API dependency. No later features/private data/provider login authorized.
+Phase4.1 starter Library/StoryDNA0.5.1 preparation is on feature/phase4-1-starter-library. Independent QA confirms all four findings CLOSED; consolidated validation completed before final Astra review. Astra acceptance and release/source+creative cloud recovery remain PENDING. Approved scope: docs/implementation/phase4.1-plan.md. HYBRID BY DEFAULT, no API dependency. No later features/private data/provider login authorized.
 
 Current stable release remains v0.5.0-hybrid-library / checkpoint/phase4-hybrid-library-complete at 4bf822a5cc191b659223a519db3ac903c1368045, private origin main/tags verified. Phase4 four independent QA findings CLOSED;100 foundation +329 design +154 app/typecheck/build/dev+packaged UI/security/recovery PASS. Historical preparation/pending entries live in CHANGELOG, not current instructions.
 
@@ -18,4 +18,4 @@ Prior Phase3 verified final:58d4c52d22e52c43f684e3da2eb0bfd5056545f5; private Re
 
 Known limits: internal prototype, unsigned Windows package, native Arabic/early-childhood/cultural/religious review and physical print proof required. Historical source rights remain owner-reviewed, not globally cleared. Free-text privacy needs explicit declaration. Operational private orders/photos/database encryption/retention/backup remain separate future decisions. Exact future release/cloud identity belongs in external ignored receipts, never an unverified source-state promise.
 
-Next: one independent QA, batched fixes, one final consolidated gate/Astra review; only then separately authorized release and verified source + creative Drive recovery. Owner can manually try actual public/synthetic ChatGPT/Gemini responses; no provider comparison claimed.
+Next: one final Astra review; only then separately authorized release and verified source + creative Drive recovery. Future exact SHA/cloud IDs belong in external ignored backups/receipts, not premature source claims. Owner can manually try actual public/synthetic ChatGPT/Gemini responses; no provider comparison claimed.

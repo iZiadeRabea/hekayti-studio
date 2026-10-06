@@ -8,10 +8,11 @@ const data = await mkdtemp(resolve("temp/phase41-ui/source-")),
   restoredData = await mkdtemp(resolve("temp/phase41-ui/restore-")),
   archive = join(data, "public-creative.zip"),
   gates = [];
+const packaged = process.argv.includes("--packaged");
 const launch = (dir) =>
   electron.launch({
-    executablePath: resolve("node_modules/electron/dist/electron.exe"),
-    args: [resolve("apps/desktop"), "--phase2-data=" + dir],
+    executablePath: resolve(packaged ? "dist/phase2-package/win-unpacked/Hekayti Studio Phase 2.exe" : "node_modules/electron/dist/electron.exe"),
+    args: [...(packaged ? [] : [resolve("apps/desktop")]), "--phase2-data=" + dir],
     timeout: 30000,
   });
 let app = await launch(data);
@@ -171,6 +172,7 @@ try {
   gates.push("Actual app restart reopens persisted imported corpus");
   const evidence = {
     status: "PASS",
+    packaged,
     gates,
     data,
     restoredData,

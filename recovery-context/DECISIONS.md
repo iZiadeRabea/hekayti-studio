@@ -2,6 +2,8 @@
 
 ## Phase4.1 — 2026-10-06
 
+- D044: Independent Sol QA confirms all four portability/lineage/extraction findings CLOSED after one consolidated fix batch; reuse verified implementation/QA routes and one Astra final review. Prepare workspace0.5.1 with one full regression/build/security/UI recovery gate, not stable release authority. Actual791-row creative projection survives empty restore/re-export/merge without fulltext cache or operational project DB; final source and creative Drive recovery require separate approval.
+
 - D038: Owner authorizes substantial grounded starter records with truthful source/scoping/counts, not title-to-plot fabrication or synthetic performance inflation. Historical primary editions preferred; rights user-managed, no fabricated clearance.12 Egyptian-Arabic opening excerpts are distinct from ancient Egypt and Turkish Nasreddin provenance.
 - D039: Default selectable EGYPTIAN_ARAB_MUSLIM_FAMILY is provisional editorial profile, not inferred family identity. Cultural fit != origin != religious accuracy != lifecycle approval. Explicit generation acknowledgment for non-READY/religious contexts; no fabricated qualified review.
 - D040: Library stores reusable narrative structure intelligence, not just content/ideas. Optional versioned evidence/UNKNOWN DNA, complete structural vector patterns and representative enrichment; same-theme different structures differ, many variants may share one family. Actual user events/scores only for feedback.

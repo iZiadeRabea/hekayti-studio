@@ -14,6 +14,7 @@ import { createHash } from "node:crypto";
 import {
   SqliteProjectRepository,
   createCreativeArchive,
+  readCreativeArchive,
   previewCreativeRestore,
   restoreCreativeArchive,
 } from "@hekayti/persistence";
@@ -45,6 +46,34 @@ writeFileSync(join(dir, "sourced-creative-library.zip"), realZip, {
   flag: "wx",
 });
 source.close();
+// Full-suite independent QA already measures 5000 rows. This mode verifies the
+// actual corpus recovery separately without repeating that expensive benchmark.
+if (process.argv.includes("--corpus-only")) {
+  const targetPath = join(dir, "actual-restored.sqlite");
+  const target = new SqliteProjectRepository(targetPath);
+  const p = measure("realCorpusPreviewMs", () => previewCreativeRestore(target, realZip));
+  measure("realCorpusEmptyRestoreMs", () => assert.equal(
+    restoreCreativeArchive(target, realZip, { ...p, choices: {} }, "2026-10-06").added,
+    originals.length,
+  ));
+  const second = createCreativeArchive(target, true);
+  assert.deepEqual(readCreativeArchive(second).bundle.records, readCreativeArchive(realZip).bundle.records);
+  measure("realCorpusMergeMs", () => {
+    const preview = previewCreativeRestore(target, realZip);
+    assert.equal(restoreCreativeArchive(target, realZip, { ...preview, choices: {} }, "2026-10-06").replayed, originals.length);
+  });
+  target.close();
+  const reopened = new SqliteProjectRepository(targetPath);
+  assert.equal(reopened.pageLibrary({ limit: 30 }).total, originals.length);
+  reopened.close();
+  const receipt = { status: "PASS", actualStarterRows: originals.length, timings,
+    metadataRoundtrip: "Exact projected records equal after empty restore, repeated export and merge; reopened independently without cached fulltext/project database",
+    realArchive: { path: join(dir, "sourced-creative-library.zip"), bytes: realZip.length,
+      sha256: createHash("sha256").update(realZip).digest("hex") }, dir };
+  writeFileSync(join(dir, "evidence.json"), JSON.stringify(receipt, null, 2), { flag: "wx" });
+  console.log(JSON.stringify(receipt, null, 2));
+  process.exit(0);
+}
 const path = join(dir, "performance-only.sqlite"),
   repo = new SqliteProjectRepository(path),
   base = originals.find((r) => r.payload.type === "IDEA_SEED");

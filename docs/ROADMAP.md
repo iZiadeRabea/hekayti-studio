@@ -1,6 +1,6 @@
 # Practical roadmap
 
-Current Phase4 status: IMPLEMENTED; final Astra architecture/release review APPROVED 76eafab. Mechanical v0.5.0-hybrid-library/checkpoint publication and one verified source recovery authorized. Earlier pending statements are historical. No later roadmap feature authorized; runtime database recovery remains future security work.
+Current Phase4.1 status: IMPLEMENTED, independent QA four findings CLOSED; version0.5.1 consolidated validation prepared for final Astra review, which remains PENDING. Phase4v0.5.0 actually released/recovered at4bf822a5. No Phase4.1 publication/cloud authority or later roadmap feature authorized; private runtime database recovery remains future security work.
 Phase1 below = research/design, distinct from business Phase1 (owner tool) and business Phase2 (future customer website). No following phase authorized merely by this file.
 
 | Phase | Goal / deliverables | Dependencies | Checkpoint | Acceptance criteria |

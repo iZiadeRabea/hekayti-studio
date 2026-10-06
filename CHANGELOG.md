@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1 preparation — 2026-10-06 (not released)
+
+Independent QA four findings CLOSED; historical attribution/local revisions/counts preserved, decision-plan restore identity and family conflict safety fixed,40 Nigeria observations reparsed from cache. Version/internal references0.5.1 only, no dependency upgrades/features. Consolidated100foundation/329design/189app/typecheck/build/onlinehealth/historysecurity PASS; final UI/package/corpus recovery receipts in phase4.1-testing. Final Astra review/source+creative cloud release PENDING; older pending implementation notes below are historical.
+
 ## Phase4.1 implementation — 2026-10-06 (not released)
 
 765 sourced inspiration seeds +26 openly synthetic structural families;121 original brief scoped abstracts/644 extractive seeds;25 richer StoryDNA,20 patterns/22 structurally mapped sources. Evidence/unknowns/cultural profile/adaptation/faith/rights separated. Compatible batch/paging/ZIP allowlist, atomic empty+merge restore/CAS/rollback, historical approval/ratings not replayed; explicit minimal UI import/filters/restart.5000 disposable benchmark measured, excluded from source counts. Independent QA/final gates/release/cloud recovery PENDING.
