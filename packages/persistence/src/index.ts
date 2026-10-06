@@ -401,6 +401,15 @@ export class SqliteProjectRepository
         fail();
       const edition = d!.editions.find((e) => e.mode === plan.mode);
       if (
+        canonicalJson(
+          plan.bible.characters.map((c) => [c.characterId, c.name]).sort(),
+        ) !==
+        canonicalJson(
+          p!.characters.map((c) => [c.characterId, c.displayName]).sort(),
+        )
+      )
+        fail();
+      if (
         !edition ||
         canonicalJson(plan.pages.map((p) => p.pageId)) !==
           canonicalJson(bp!.pagePlan.map((p) => p.pageId)) ||

@@ -2,6 +2,7 @@ import type { StoryPlan } from "@hekayti/contracts/planner";
 import type { PlanPresentation } from "@hekayti/contracts/creator";
 import type { LanguageMode, QaFinding } from "@hekayti/contracts";
 import { arabicClauses } from "./creator-arabic-clauses";
+import { msaProject, msaTitles } from "./creator-msa-clauses";
 export function presentQaFindings(
   findings: QaFinding[],
   mode: LanguageMode,
@@ -161,26 +162,6 @@ const clauses: Record<string, string> = {
   "The towel and soap are ready in their places for next time":
     "الفوطة والصابون في أماكنهم للمرة الجاية",
 };
-function msa(text: string) {
-  return text
-    .replaceAll("الاتنين", "الطفلان")
-    .replaceAll("الصاحب", "الصديق")
-    .replaceAll("صاحبه", "صديقه")
-    .replaceAll("الإيدين", "اليدان")
-    .replaceAll("الإيد", "اليد")
-    .replaceAll("جنب", "بجانب")
-    .replaceAll("الفوطة", "المنشفة")
-    .replaceAll("لسه", "ما زال")
-    .replaceAll("عايز", "يريد")
-    .replaceAll("بيكملوا", "يكملان")
-    .replaceAll("بيكمل", "يكمل")
-    .replaceAll("بيلعبوا", "يلعبان")
-    .replaceAll("بيلعب", "يلعب")
-    .replaceAll("مع بعض", "معًا")
-    .replaceAll("اللي", "الذي")
-    .replaceAll("الجاي", "التالي")
-    .replaceAll("هادي", "هادئ");
-}
 export function categoryLabel(category: string, mode: LanguageMode) {
   return mode === "en"
     ? category
@@ -220,10 +201,11 @@ export function presentPlan(
   const convert = (input: string): string => {
     if (!arabic) return input;
     if (!/[A-Za-z]/.test(input)) return input;
-    if (allClauses[input])
-      return mode === "ar-MSA-simple"
-        ? msa(allClauses[input]!)
-        : allClauses[input]!;
+    if (mode === "ar-MSA-simple")
+      return (
+        msaProject(input, a, b, p.setting.description, settingText) ?? unknown()
+      );
+    if (allClauses[input]) return allClauses[input]!;
     let s = input;
     const focus = /soft ball/.test(s)
       ? "الكرة الناعمة"
@@ -232,8 +214,6 @@ export function presentPlan(
         : "عربية اللعبة";
     const method = /swap roller and catcher/.test(s),
       signal = /short clapping/.test(s) ? "تصفيقة قصيرة" : "كارت دور صغير";
-    const simple = (value: string) =>
-      mode === "ar-MSA-simple" ? msa(value) : value;
     // Controlled sharing operations: every branch is keyed to the actual action,
     // object, role exchange and selected cue, not just the objective label.
     const patterns: [RegExp, string][] = [
@@ -442,11 +422,12 @@ export function presentPlan(
         continue;
       s = s.replaceAll(en, ar);
     }
-    return /[A-Za-z]/.test(s) ? unknown() : simple(s);
+    return /[A-Za-z]/.test(s) ? unknown() : s;
   };
+  const selectedTitles = mode === "ar-MSA-simple" ? msaTitles : titles;
   let title = p.title.startsWith("The short route: ")
-    ? `المشوار الصغير: ${titles[p.title.slice(17)] ?? unknown()}`
-    : (titles[p.title] ?? (arabic ? unknown() : p.title));
+    ? `${mode === "ar-MSA-simple" ? "الرحلة القصيرة" : "المشوار الصغير"}: ${selectedTitles[p.title.slice(17)] ?? unknown()}`
+    : (selectedTitles[p.title] ?? (arabic ? unknown() : p.title));
   if (!arabic) title = p.title;
   const q = p.schemaVersion === "story-plan/1.0" ? null : p.quality;
   const events = p.beats.map((beat, i) => ({
@@ -467,7 +448,7 @@ export function presentPlan(
   const result: PlanPresentation = {
     mode,
     supported: false,
-    title: mode === "ar-MSA-simple" ? msa(title) : title,
+    title,
     ageMonths: p.planning.request.ageMonths,
     category: categoryLabel(p.planning.request.primaryCategory, mode),
     goal: convert(p.goal.description),
@@ -487,7 +468,9 @@ export function presentPlan(
     problem: p.problem
       ? convert(p.problem.description)
       : arabic
-        ? "من غير مشكلة تحتاج حل"
+        ? mode === "ar-MSA-simple"
+          ? "لا توجد مشكلة تحتاج إلى حل"
+          : "من غير مشكلة تحتاج حل"
         : "No problem to solve",
     opening: convert(p.openingState),
     resolution: convert(

@@ -83,6 +83,16 @@ test("Arabic supported goal presets expose selected concrete operation across ca
       true,
       `${goalPreset}/${category}: ${unknown.join("\n")}\n${p.goal.description}\n${p.openingState}`,
     );
+    const msa = presentPlan(p, "ar-MSA-simple");
+    assert.equal(
+      msa.supported,
+      true,
+      `${goalPreset}/${category}: ${JSON.stringify(msa)}`,
+    );
+    assert.doesNotMatch(
+      JSON.stringify(msa.events) + msa.goal + msa.resolution,
+      /بيدحرج|ياخد|يحددوا|يتفقوا|يوصلوا|عشان|يشاوروا|ماكملش|يحط|يسيب|لسه|معاه/,
+    );
   }
   h.repo.close();
 });
@@ -108,6 +118,11 @@ test("reviewed age presets use AgeEngine forms and Arabic semantics without auto
       s.presentation.supported,
       true,
       `${age}: ${JSON.stringify(s.presentation.events)}`,
+    );
+    assert.equal(
+      presentPlan(s.planner.plans[0]!, "ar-MSA-simple").supported,
+      true,
+      `${age}: independent MSA`,
     );
   }
   h.repo.close();
@@ -332,6 +347,8 @@ test("illustration derives12 exact pages, refs before cover/pages, immutable edi
     /لا عنوان/,
   );
   assert.equal(out.stale, false);
+  assert.match(out.plan!.pages[0]!.action, /نص مسودة الصفحة المحفوظة/);
+  assert.doesNotMatch(out.plan!.pages[0]!.action, /نص الصفحة المعتمد/);
   const original = canonicalJson(out.plan),
     oldId = out.plan!.planId;
   await h.illustration.command({
@@ -349,6 +366,10 @@ test("illustration derives12 exact pages, refs before cover/pages, immutable edi
   const history = await h.illustration.load(id, "ar-EG", oldId);
   assert.equal(history.stale, true);
   assert.equal(canonicalJson(history.plan), original);
+  await assert.rejects(
+    h.illustration.load(id, "ar-MSA-simple", oldId),
+    /different exact edition/,
+  );
   await assert.rejects(
     h.illustration.command({
       action: "COPY",
@@ -372,6 +393,41 @@ test("unknown legacy/custom semantic clauses are honestly marked review, not tra
   assert.match(view.events[0]!.action, /لم نختَرع/);
   assert.doesNotMatch(JSON.stringify(view), /purple kite/);
   h.repo.close();
+});
+
+test("negative custom intent retains authored polarity and cannot invent a positive success or hidden save", async () => {
+  const h = harness(),
+    denied = "لا يشارك الطفل اللعبة ولا ينتظر دوره مع صاحبه.";
+  try {
+    const s = await h.creator.create({
+      ...owner,
+      customGoal: denied,
+      expectedLibrary: h.repo.loadLibrary().recordVersion,
+    });
+    const p = s.planner.plans[0]!;
+    assert.equal(p.planning.request.objective.description, denied);
+    assert.equal(p.planning.request.objective.successScenario, denied);
+    assert.equal(s.presentation.objective, denied);
+    assert.equal(s.presentation.supported, false);
+    assert.ok(
+      s.presentation.notices.some(
+        (n) => n.code === "CREATOR_CUSTOM_INTENT_REVIEW",
+      ),
+    );
+    const before = canonicalJson(h.repo.listProjects());
+    await assert.rejects(
+      h.creator.create({
+        ...owner,
+        customGoal: denied,
+        successScenario: "The child shares a toy and takes turns with a friend",
+        expectedLibrary: h.repo.loadLibrary().recordVersion,
+      }),
+      /clarification/,
+    );
+    assert.equal(canonicalJson(h.repo.listProjects()), before);
+  } finally {
+    h.repo.close();
+  }
 });
 test("Simple review uses canonical QA/approval/feedback, preserves edit intent, no promotion and atomic failures", async () => {
   const h = await prepared(),

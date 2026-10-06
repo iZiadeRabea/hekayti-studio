@@ -170,6 +170,11 @@ export class IllustrationService {
         "ILLUSTRATION_MISSING",
         "Retained illustration plan was not found.",
       );
+    if (plan && mode && plan.mode !== mode)
+      throw new AppError(
+        "CREATOR_EDITION_MISSING",
+        "Retained illustration plan belongs to a different exact edition; no source substitution occurred.",
+      );
     const reasons = plan ? await this.stale(plan) : [];
     return {
       recordVersion: state.recordVersion,
@@ -295,8 +300,23 @@ export class IllustrationService {
     }
     const source = this.source(x.projectId, x.mode),
       view = presentPlan(source.p, x.mode);
+    const previousBible = state.bibles.at(-1),
+      sameCast =
+        previousBible &&
+        canonicalJson(
+          previousBible.characters.map((c) => [c.characterId, c.name]).sort(),
+        ) ===
+          canonicalJson(
+            source.p.characters
+              .map((c) => [c.characterId, c.displayName])
+              .sort(),
+          );
+    const reusableBible =
+      sameCast && previousBible?.location === view.setting
+        ? previousBible
+        : undefined;
     const bible: VisualBible =
-      state.bibles.at(-1) ??
+      reusableBible ??
       VisualBibleSchema.parse({
         schemaVersion: "visual-bible/1.0",
         revisionId: this.seam.id(),
@@ -400,7 +420,7 @@ export class IllustrationService {
                 ) || actual.dialogue.some((d) => d.speakerId === c.characterId),
             )
             .map((c) => c.characterId),
-          action: `أحداث الخطة: ${events.map((e) => e.action).join(" ")}\nنص الصفحة المعتمد: ${actual.narration}\n${actual.dialogue.map((d) => `${source.p.characters.find((c) => c.characterId === d.speakerId)?.displayName}: ${d.text}`).join("\n")}`,
+          action: `أحداث الخطة: ${events.map((e) => e.action).join(" ")}\nنص مسودة الصفحة المحفوظة: ${actual.narration}\n${actual.dialogue.map((d) => `${source.p.characters.find((c) => c.characterId === d.speakerId)?.displayName}: ${d.text}`).join("\n")}`,
           expression: "التعبير الدقيق يُراجع مع النص؛ لا خوف أو انفعال مفترض",
           setting: view.setting,
           props: [
@@ -431,7 +451,7 @@ export class IllustrationService {
       this.repo.saveCreator(
         {
           ...state,
-          bibles: state.bibles.length ? state.bibles : [bible],
+          bibles: reusableBible ? state.bibles : [...state.bibles, bible],
           styles: state.styles.length ? state.styles : [style],
           plans: [...state.plans, plan],
         },

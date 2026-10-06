@@ -379,6 +379,21 @@ export class SimpleCreatorService {
       presentation.objective = authoredInput.customGoal;
     if (authoredInput?.constraints)
       presentation.constraints = [authoredInput.constraints];
+    if (
+      authoredInput?.goalPreset === "CUSTOM" &&
+      plan.schemaVersion !== "story-plan/1.0" &&
+      plan.quality.objectiveIntent.limited
+    ) {
+      presentation.supported = false;
+      presentation.notices.push({
+        code: "CREATOR_CUSTOM_INTENT_REVIEW",
+        severity: "medium",
+        text:
+          presentation.mode === "en"
+            ? "Custom goal meaning is uncertain. Clarify an observable intended success; no positive success was invented."
+            : "معنى الهدف المخصص يحتاج توضيحًا ومراجعة: حدد النتيجة المرئية التي تريدها؛ لم نخترع نجاحًا إيجابيًا بدل نصك.",
+      });
+    }
     presentation.notices.push(
       ...presentQaFindings(validateStoryPlan(plan).findings, presentation.mode),
     );
@@ -415,13 +430,35 @@ export class SimpleCreatorService {
         x.exactAgeMonths ??
         defaults.agePresets.find((p) => p.key === x.agePreset)!.ageMonths;
     const description = x.customGoal ?? data[2][mode];
+    const authoredGoal =
+      x.customGoal !== undefined || x.goalPreset === "CUSTOM";
+    const normalizedGoal = description
+      .normalize("NFKC")
+      .replace(/[\u064b-\u065f\u0670]/g, "");
+    const customDenied =
+      authoredGoal &&
+      /(?:^|\s|[،؛.!?])(?:لا|ولا|لن|ليس|ليست|بدون|دون|عدم|مش)\s|\b(?:not|never|without|avoid|cannot|can't|don't|doesn't|no)\b/iu.test(
+        normalizedGoal,
+      );
+    if (customDenied && x.successScenario)
+      throw new AppError(
+        "CREATOR_CUSTOM_INTENT_REVIEW",
+        "Custom negative/conflicting goal requires explicit clarification; no positive criterion was invented and nothing was saved.",
+      );
     const customSharing =
       x.goalPreset === "CUSTOM" &&
+      !customDenied &&
       /دور|يستنى|ينتظر/.test(description) &&
       /صاحب|صديق|يلعب|لعب/.test(description);
     const success =
       x.successScenario ??
-      (customSharing ? goalData[0]![3][mode] : data[3][mode]);
+      (customDenied
+        ? description
+        : customSharing
+          ? goalData[0]![3][mode]
+          : x.goalPreset === "CUSTOM"
+            ? description
+            : data[3][mode]);
     const projectId = this.seam.id(),
       now = this.seam.now(),
       request = StoryRequestSchema.parse({
