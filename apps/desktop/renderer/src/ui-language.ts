@@ -464,6 +464,7 @@ const enumArabic: Readonly<Record<string, string>> = {
   "early-learning": "تعلم مبكر",
   connection: "التواصل",
   emotional: "المشاعر",
+  "emotional-learning": "المشاعر",
   entertainment: "المتعة",
   manual: "يدوي",
   curated: "من المكتبة",

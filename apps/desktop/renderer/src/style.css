@@ -9,6 +9,73 @@ body {
   background: #f7f9f9;
   line-height: 1.8;
 }
+.creator-mode-switch {
+  padding: 8px 32px;
+  display: flex;
+  justify-content: flex-end;
+}
+.simple-workspace dl > div {
+  margin-block: 12px;
+}
+.simple-workspace dt {
+  font-weight: 700;
+}
+.simple-workspace dd {
+  margin-inline-start: 0;
+  white-space: pre-wrap;
+}
+.reader-page {
+  padding: 24px;
+  margin-block: 20px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background: #fff;
+  line-height: 2;
+  font-size: 1.2rem;
+  overflow-wrap: anywhere;
+}
+.reader-page p {
+  white-space: pre-wrap;
+}
+.reader-comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+@media (max-width: 760px) {
+  .reader-comparison {
+    grid-template-columns: 1fr;
+  }
+}
+.simple-form,
+.simple-workspace {
+  max-width: 1000px;
+  margin-inline: auto;
+}
+.simple-form input:not([type="checkbox"]),
+.simple-form select {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 17px;
+}
+.simple-type-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.simple-type-cards button + button {
+  margin-inline-start: 0;
+}
+.primary-action {
+  background: #d5e8e8;
+  padding: 14px 24px;
+  font-size: 18px;
+  margin-block: 16px;
+}
+.simple-workspace [dir="auto"] {
+  unicode-bidi: plaintext;
+}
 header,
 main {
   padding: 20px 32px;

@@ -65,8 +65,10 @@ export function writerDiagnosticReason(code: string): UiKey {
 // Presentation only: validation/assembly/CAS remain in the desktop service.
 export function WriterResponseFeedback({
   preview,
+  simple = false,
 }: {
   preview: WriterPreview;
+  simple?: boolean;
 }) {
   const { t, label } = useUi();
   return (
@@ -105,7 +107,7 @@ export function WriterResponseFeedback({
                     <dt>{t("Story edition")}</dt>
                     <dd>
                       {label(diagnostic.mode)}{" "}
-                      <bdi dir="ltr">{diagnostic.mode}</bdi>
+                      {!simple && <bdi dir="ltr">{diagnostic.mode}</bdi>}
                     </dd>
                   </div>
                 )}
