@@ -1,6 +1,6 @@
 # Phase4.2.1 independent adversarial QA
 
-Reviewed combined quality/Arabic-UI HEAD `0a7f409e05d8048b05e29225723eaf173bc46bbe` on `feature/phase4.2.1-planner-quality`, against stable `96e64925d9556981808f00ed323941c2e61ce2dd`. One independent HIGH QA context; no implementation authorship, extra reviewer, provider/network call, source-corpus change or normal owner database access. Status: **changes requested**; no architectural BLOCKER.
+Reviewed combined quality/Arabic-UI HEAD `0a7f409e05d8048b05e29225723eaf173bc46bbe` on `feature/phase4.2.1-planner-quality`, against stable `96e64925d9556981808f00ed323941c2e61ce2dd`. One independent HIGH QA context; no implementation authorship, extra reviewer, provider/network call, source-corpus change or normal owner database access. Initial status: **changes requested**; no architectural BLOCKER. The same-context independent closure below supersedes that initial status and retains the original finding evidence.
 
 ## Batched findings
 
@@ -47,3 +47,16 @@ Passing checks independently confirm:
 ## Limits and next gate
 
 No main merge, tag, push, Drive action, full historical suite, build, packaging or owner runtime access. No claim of provider output quality, developmental/native review, child appeal, or comprehensive free-text semantics. Source/library authority and old accepted hashes were checked through focused local fixtures, not production private data. After the single batched fix, re-run unchanged six regressions and affected focused positives; consolidated release/package/recovery gates remain with Ops and final owner approval.
+
+## Same-context independent closure — CLOSED
+
+Reviewed compact fix report and scoped diff at `fbef5bd875e574ea91f8fbb9266a114b0deef82f` (including UI fix `a1b69adc0cd500df322b44f0a7eb55233bcd4f37`). Original six regression assertions and original finding descriptions remain unchanged. Only four independent boundary tests were added to the owned QA file; no implementation edit or additional reviewer.
+
+- **H1 CLOSED:** all three actual desktop-selected quality-service counterexamples now preserve the relevant objective or disclose a limited GENERAL fallback. Independent boundary checks confirm that unrelated English/Arabic local negation does not erase positive sharing, while a contradictory sharing instruction remains limited rather than confidently positive.
+- **M1 CLOSED:** the original fake-counter attempts are flagged. Additional Arabic attempt/step padding is flagged too; substantive changes from 1 to 2 and from ١ to ٢ counted objects retain progression. Infant/quiet meaningful repetition still passes.
+- **M2 CLOSED:** the original duplicate resolution actor IDs are rejected. Two genuinely distinct introduced participants pass; distinct but unintroduced or undeclared participants remain rejected.
+- **L1 CLOSED:** infant REPEAT translates for display. Independent enumeration of the contract verifies all eight canonical beat roles have Arabic labels, with plan bytes, technical revision IDs and request language unchanged.
+
+Actual closure command was the same focused command above: **35/35 PASS, 0 failures/skips** (15 independent tests, 12 existing quality, 8 localization). Typecheck PASS. Exact owner request/full791 Library and concrete sharing sequence, current manual-package/import/QA/approval/idempotent feedback/creative recovery, fabricated source-proof rejection and actual retained v0.5.2 golden reload/append all passed again. Git comparison confirms the owner request/regression artifact, retained golden fixture, contracts and persistence code are unchanged by this fix batch. No full suite/build/package or new GUI smoke was run in closure.
+
+Remaining open finding counts: **BLOCKER 0 / HIGH 0 / MEDIUM 0 / LOW 0**. This closes the four reported groups, not every possible prose-level defect: lexical/local-polarity handling and numbered-label normalization remain finite rules, not universal semantics or literary/developmental/native/child-appeal certification. Legacy1.0 integrations still require explicit quality opt-in, while the desktop path is already selected. Consolidated Ops/release gates and owner approval remain pending and are not implied by this focused closure.

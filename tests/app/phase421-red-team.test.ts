@@ -248,6 +248,113 @@ test("P421-QA-06: known infant REPEAT role has an Arabic display label without c
   assert.equal(repeated.role, "REPEAT");
 });
 
+test("closure boundary: unrelated local negation does not erase positive English/Arabic sharing, while contradictory sharing stays limited", () => {
+  for (const objective of [
+    {
+      kind: "behavioral" as const,
+      description: "Do not rush. Take turns with the ball",
+      successScenario: "The friends take turns with the ball",
+    },
+    {
+      kind: "behavioral" as const,
+      description: "لا تدفع صديقك؛ تبادل الأدوار في اللعبة",
+      successScenario: "يشارك الكرة مع صديقه",
+    },
+  ]) {
+    const intent = detectObjectiveIntent(objective);
+    assert.equal(intent.primaryIntent, "SHARING_TURN_TAKING");
+    assert.equal(intent.limited, false);
+    assert.ok(intent.evidence.some((e) => e.field === "successScenario"));
+  }
+  const ambiguous = detectObjectiveIntent({
+    kind: "behavioral",
+    description: "Do not take turns with the broken ball",
+    successScenario: "Take turns with the ball",
+  });
+  assert.equal(ambiguous.primaryIntent, "GENERAL_BEHAVIORAL");
+  assert.equal(ambiguous.limited, true);
+});
+
+test("closure boundary: substantive quantities progress, but Arabic counter-only padding does not", async () => {
+  for (const digits of [
+    ["1", "2"],
+    ["١", "٢"],
+  ]) {
+    const p = planning();
+    p.request.objective = {
+      kind: "educational",
+      description: "Count the balls",
+      successScenario: "Count each ball in the tray",
+    };
+    const counted = await compose(p);
+    for (const [index, quantity] of digits.entries()) {
+      const i = index + 1,
+        beat = counted.beats[i]!,
+        transition = counted.quality.transitions[i]!;
+      beat.action = "compare";
+      beat.role = "ATTEMPT";
+      beat.beforeState = counted.beats[i - 1]!.afterState;
+      beat.afterState = `The tray contains ${quantity} counted balls`;
+      beat.summary = `Count ${quantity} balls in the tray`;
+      transition.strategy = `Touch and count ${quantity} balls`;
+      transition.informationChange = `${quantity} balls have been counted`;
+      transition.relationshipChange = `The adult sees ${quantity} counted balls`;
+      transition.consequence = `${quantity} counted balls are visible in the tray`;
+    }
+    counted.beats[3]!.beforeState = counted.beats[2]!.afterState;
+    assert.equal(blocks(counted, "NON_PROGRESSING_BEATS"), false);
+  }
+  const padded = await compose();
+  for (const [index, counter] of ["١", "٢"].entries()) {
+    const i = index + 1,
+      beat = padded.beats[i]!,
+      transition = padded.quality.transitions[i]!;
+    beat.action = "try";
+    beat.role = "ATTEMPT";
+    beat.beforeState = padded.beats[i - 1]!.afterState;
+    beat.afterState = `The friend is still waiting; محاولة ${counter}`;
+    beat.summary = `Roll alone while the friend waits; محاولة ${counter}`;
+    for (const key of [
+      "strategy",
+      "informationChange",
+      "relationshipChange",
+      "consequence",
+    ] as const)
+      transition[key] = `The friend remains excluded; خطوة ${counter}`;
+  }
+  padded.beats[3]!.beforeState = padded.beats[2]!.afterState;
+  assert.equal(blocks(padded, "NON_PROGRESSING_BEATS"), true);
+});
+
+test("closure boundary: distinct introduced resolution actors pass, distinct but unintroduced actors do not", async () => {
+  const p = await compose();
+  const resolution = p.quality.transitions.find(
+    (t) => t.beatId === p.resolutionBeatId,
+  )!;
+  assert.equal(new Set(resolution.participantIds).size, 2);
+  assert.equal(blocks(p, "SOCIAL_INTENT_CAST_MISMATCH"), false);
+  const unintroduced = resolution.participantIds[1]!;
+  for (const beat of p.beats)
+    beat.introduces = beat.introduces.filter((id) => id !== unintroduced);
+  assert.equal(blocks(p, "SOCIAL_INTENT_CAST_MISMATCH"), true);
+  resolution.participantIds[1] = "undeclared-but-distinct-actor";
+  assert.equal(blocks(p, "SOCIAL_INTENT_CAST_MISMATCH"), true);
+});
+
+test("closure boundary: every canonical beat role has Arabic display text without mutating plan or technical values", async () => {
+  const roles = QualityStoryPlanSchema.shape.beats.element.shape.role.options;
+  assert.equal(roles.length, 8);
+  const p = await compose(),
+    original = canonicalJson(p);
+  for (const role of roles) {
+    assert.notEqual(label(role, "ar"), role);
+    assert.match(label(role, "ar"), /[\u0600-\u06ff]/u);
+  }
+  assert.equal(canonicalJson(p), original);
+  assert.equal(label(p.revisionId, "ar"), p.revisionId);
+  assert.equal(p.planning.request.primaryLanguageMode, "ar-EG");
+});
+
 test("independent owner A-I checks use the current service and exact 791-record snapshot", async () => {
   const main = readFileSync("apps/desktop/src/main.ts", "utf8");
   assert.match(
