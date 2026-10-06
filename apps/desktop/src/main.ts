@@ -676,7 +676,7 @@ app
         id: randomUUID,
         now: () => new Date().toISOString(),
       },
-      "planner-quality/1.0",
+      "planner-quality/1.1",
     );
     handle("planner:load", (arg) => planner.load(validate(Id, arg)));
     const plannerBase = {
@@ -722,6 +722,14 @@ app
       z
         .object({
           ...plannerBase,
+          action: z.literal("PREVIEW"),
+          packageId: Id,
+          json: z.string().min(1).max(500000),
+        })
+        .strict(),
+      z
+        .object({
+          ...plannerBase,
           action: z.literal("FEEDBACK"),
           feedback: PlanFeedbackSchema,
           expectedLibrary: z.number().int().nonnegative(),
@@ -754,6 +762,14 @@ app
       if (x.action === "PREPARE")
         return planner.prepare(
           x.projectId,
+          x.expectedPlanner,
+          x.expectedWorkflow,
+        );
+      if (x.action === "PREVIEW")
+        return planner.preview(
+          x.projectId,
+          x.packageId,
+          x.json,
           x.expectedPlanner,
           x.expectedWorkflow,
         );

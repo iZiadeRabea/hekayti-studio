@@ -42,11 +42,12 @@ export function composeConcretePlan(
   base: StoryPlan,
   intent: ObjectiveIntent,
   compatibility: StructuralCompatibility,
+  options: { preserveBedtimeObjective?: boolean } = {},
 ): QualityPlan {
   const p = structuredClone(base),
     r = p.planning.request,
     g = p.guidance,
-    calm = r.primaryCategory === "bedtime",
+    calm = r.primaryCategory === "bedtime" && !options.preserveBedtimeObjective,
     infant = g.narrativeForm === "recognition",
     routine = g.narrativeForm === "routine",
     social = intent.socialMechanisms.length > 0 && !infant,
@@ -921,7 +922,9 @@ const progressionText = (s: string) =>
       "",
     ),
   );
-export function qualityFindings(p: QualityPlan): QaFinding[] {
+export function qualityFindings(
+  p: Extract<StoryPlan, { schemaVersion: "story-plan/1.1" | "story-plan/1.2" }>,
+): QaFinding[] {
   const result: QaFinding[] = [],
     add = (
       category: string,

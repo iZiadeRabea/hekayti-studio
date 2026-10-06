@@ -1,5 +1,9 @@
 # Architecture / product decision log
 
+## Phase4.2.2 —2026-10-06
+
+- D053: Owner approves focused writer bridge: strict small writer-response1.0 plus app-owned canonical assembly/current-package validation, additive PlanPackage1.1 and StoryPlan1.2/PlanQA1.2 category-aware desktop dispatch. Alternative: ask external AI to supply UUIDs/counts/provenance or mutate old validation/hash semantics. Reason: usable manual prose with retained accepted-plan authority. Consequence: readonly PREVIEW is advisory, IMPORT reruns canonical safety/source/CAS; legacy1.0/1.1 response/history unchanged. Category intent composes concrete safe activity with objective, AgeEngine remains authority, human review remains mandatory. One HIGH replacement implementation because prior context unavailable, existing MEDIUM UI/Ops, one new independent HIGH QA after integration; root compact initial/final only. Final gate/approval required before release/cloud, no ownerDB/provider/corpus/later-phase work.
+
 ## Phase4.2.1 — 2026-10-06
 
 - D052: Astra final compact review APPROVED FOR RELEASE exact05dd02ab3f337c61d4a9db34d62283ae93b60462 including Arabic addendum; same MEDIUM routine release/recovery delegated. OwnerA–Itrue, all gatesPASS/QAclosed; nullpattern/provisional source and1medium+4low human cautions accepted honestly. Safe mainFF/immutable v0.5.3-planner-quality/checkpoint/phase4.2.1-planner-quality-complete/privatepush/readback/ONEsource+separate791 cloud hashes/freshrestores authorized. Actual identity external; no postbackup commit/tagmove. Root2normalreviewpoints, no extraUIreview/architectureescalation/newagents/ExtraHigh.

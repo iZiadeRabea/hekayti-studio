@@ -1,5 +1,9 @@
 # Changelog
 
+## Phase4.2.2 focused writer bridge —2026-10-06 (not released)
+
+Additive category-aware StoryPlan1.2/PlanQA1.2 and writer-response1.0/PlanPackage1.1 desktop dispatch; external AI writes prose fields only, app assembles canonical IDs/counts/source/manual provenance. Arabic package sections include allowed perpage cast, concrete literary guidance and independent Arabic authorship. Readonly actionable preview and import revalidate current accepted package/hash/Blueprint/CAS; legacy schemas/response/history retained. Synthetic42month sharing+adventure regression now follows a short visible cooperative route; category countercases and no-mutation failures tested. UI f1655eda integrated; independent QA/consolidated gates/final approval pending. No ownerDB/corpus/provider/release/cloud changes. Evidence/limits: docs/implementation/phase4.2.2-writer-bridge.md.
+
 ## v0.5.3-planner-quality final compact acceptance —2026-10-06
 
 Astra APPROVED FOR RELEASE exactclean05dd02ab3f337c61d4a9db34d62283ae93b60462 including quality+ArabicUI.100/329/266/typecheck/build/dev+unsignedpackage/health/historysecurityPASS; fourQA groupsCLOSED; actualownerA–Itrue. Nullpattern and1medium+4low human-review cautions remain honest. Same existing MEDIUM Ops authorized safe mainFF/immutabletags/privatepush/ONEsource+separate791 cloud rawdownload/hash/freshrestores. Exact final proof external, not inferred here. Root2normalreviewpoints/no extraUIreview/newagents/ExtraHigh; no postbackup sourcecommit/tagmove/Phase5. Preparation/pending entries below are historical.

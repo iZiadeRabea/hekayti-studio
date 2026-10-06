@@ -1,6 +1,10 @@
 import type { Project, StoryBlueprint, StoryRequest } from "@hekayti/contracts";
 import type { WorkflowSnapshot } from "@hekayti/core/workflow";
-import type { PlannerSnapshot, PlanPackage } from "@hekayti/contracts/planner";
+import type {
+  PlannerSnapshot,
+  PlanPackage,
+  WriterPreview,
+} from "@hekayti/contracts/planner";
 import type {
   LibraryState,
   GenerationPackage,
@@ -12,14 +16,13 @@ export type Result<T> =
   | { ok: false; error: { code: string; message: string } };
 export interface DesktopApi {
   plannerLoad(projectId: string): Promise<Result<PlannerSnapshot | null>>;
-  plannerCommand(
-    input: Record<string, unknown>,
-  ): Promise<
+  plannerCommand(input: Record<string, unknown>): Promise<
     Result<{
       planner: PlannerSnapshot;
       workflow?: WorkflowSnapshot;
       package?: PlanPackage;
       text?: string;
+      preview?: WriterPreview;
     }>
   >;
   libraryPage(input: Record<string, unknown>): Promise<

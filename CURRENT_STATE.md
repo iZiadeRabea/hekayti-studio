@@ -1,5 +1,7 @@
 # Current state
 
+Phase4.2.2 current override —2026-10-06: focused implementation and existing MEDIUM UI integrated on feature/phase4.2.2-writer-bridge, baseline clean main e34ea7edb411cc886ac910e3e723c6ed09e7e71a/v0.5.3/checkpoint. Additive StoryPlan1.2/PlanQA1.2/category intent and PlanPackage1.1/writer-response1.0, read-only PREVIEW and canonical app assembly; old parsers/retained hashes unchanged. Independent QA, consolidated gates and new final approval pending. No main/tag/push/Drive/provider/ownerDB/corpus/image/video/Phase5 changes. Details and limits in docs/implementation/phase4.2.2-writer-bridge.md; earlier Phase4.2.1 evidence below remains historical.
+
 - Current project version: v0.5.3-planner-quality
 - Current workspace version: 0.5.3
 - Current branch at milestone: main

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Id, CharacterBibleSchema } from "./index";
+import { Id, CharacterBibleSchema, LanguageModeSchema } from "./index";
 import {
   StoryRequestSchema,
   StoryStructureProfileSchema,
@@ -250,9 +250,34 @@ export const QualityStoryPlanSchema = LegacyStoryPlanSchema.extend({
   schemaVersion: z.literal("story-plan/1.1"),
   quality: PlannerQualitySchema,
 });
+export const CategoryIntentSchema = z
+  .object({
+    schemaVersion: z.literal("category-intent/1.0"),
+    category: z.enum([
+      "educational",
+      "behavioral",
+      "values",
+      "everyday-life",
+      "bedtime",
+      "emotional-learning",
+      "adventure",
+      "discovery",
+      "early-learning",
+    ]),
+    signature: text,
+    storyNeeds: z.array(text).min(1).max(8),
+  })
+  .strict();
+export const WriterStoryPlanSchema = QualityStoryPlanSchema.extend({
+  schemaVersion: z.literal("story-plan/1.2"),
+  quality: PlannerQualitySchema.extend({
+    categoryIntent: CategoryIntentSchema,
+  }),
+});
 export const StoryPlanSchema = z.union([
   LegacyStoryPlanSchema,
   QualityStoryPlanSchema,
+  WriterStoryPlanSchema,
 ]);
 export type StoryPlan = z.infer<typeof StoryPlanSchema>;
 export const LegacyPlanQaSchema = z
@@ -290,7 +315,17 @@ export const QualityPlanQaSchema = LegacyPlanQaSchema.extend({
     ResolutionSpecificity: qualitySignal,
   }),
 });
-export const PlanQaSchema = z.union([LegacyPlanQaSchema, QualityPlanQaSchema]);
+export const WriterPlanQaSchema = QualityPlanQaSchema.extend({
+  schemaVersion: z.literal("plan-qa/1.2"),
+  signals: QualityPlanQaSchema.shape.signals.extend({
+    CategoryPresence: qualitySignal,
+  }),
+});
+export const PlanQaSchema = z.union([
+  LegacyPlanQaSchema,
+  QualityPlanQaSchema,
+  WriterPlanQaSchema,
+]);
 export type PlanQa = z.infer<typeof PlanQaSchema>;
 export const PlanAcceptanceSchema = z
   .object({
@@ -320,7 +355,7 @@ export const PlannerWorkflowSourceSchema = z
     concept: StoryConceptSchema,
   })
   .strict();
-export const PlanPackageSchema = z
+export const LegacyPlanPackageSchema = z
   .object({
     schemaVersion: z.literal("plan-package/1.0"),
     packageId: Id,
@@ -335,7 +370,69 @@ export const PlanPackageSchema = z
     humanReviewRequired: z.literal(true),
   })
   .strict();
+export const WriterPlanPackageSchema = LegacyPlanPackageSchema.extend({
+  schemaVersion: z.literal("plan-package/1.1"),
+  outputSchemaVersion: z.literal("writer-response/1.0"),
+});
+export const PlanPackageSchema = z.union([
+  LegacyPlanPackageSchema,
+  WriterPlanPackageSchema,
+]);
 export type PlanPackage = z.infer<typeof PlanPackageSchema>;
+export const WriterResponseSchema = z
+  .object({
+    schemaVersion: z.literal("writer-response/1.0"),
+    editions: z
+      .array(
+        z
+          .object({
+            mode: LanguageModeSchema,
+            pages: z
+              .array(
+                z
+                  .object({
+                    pageNumber: z.number().int().positive().max(200),
+                    narration: z.string().max(20000),
+                    dialogue: z
+                      .array(
+                        z
+                          .object({
+                            speaker: z.string().trim().min(1).max(200),
+                            text: z.string().min(1).max(20000),
+                          })
+                          .strict(),
+                      )
+                      .max(200),
+                    altText: z.string().max(20000),
+                  })
+                  .strict(),
+              )
+              .min(1)
+              .max(200),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(3),
+  })
+  .strict();
+export type WriterResponse = z.infer<typeof WriterResponseSchema>;
+export type WriterDiagnostic = {
+  code: string;
+  message: string;
+  mode?: z.infer<typeof LanguageModeSchema>;
+  pageNumber?: number;
+  speaker?: string;
+};
+export type WriterPreview = {
+  status: "READY" | "REVIEW" | "FAIL";
+  diagnostics: WriterDiagnostic[];
+  editions: {
+    mode: z.infer<typeof LanguageModeSchema>;
+    pageCount: number;
+    totalWords: number;
+  }[];
+};
 export const PlanResponseSchema = z
   .object({
     schemaVersion: z.literal("plan-response/1.0"),

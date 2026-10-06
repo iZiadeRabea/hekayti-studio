@@ -1,5 +1,7 @@
 # Rules for future AI/Codex sessions
 
+Current authorization override: Phase4.2.2 owner-approved writer bridge/category composition from clean e34ea7ed stable0.5.3. Docs/implementation/phase4.2.2-writer-bridge.md defines current contracts/evidence/limits. Focused checks now, one independent QA after integration and one final consolidated gate later. No release/cloud operations before new final approval; prior Phase4.2.1 authority below is historical. Preserve ownerDB,791 source rows and historical accepted hashes.
+
 Before coding: read START_HERE.md, PROJECT_CONTEXT.md, CURRENT_STATE.md, DECISIONS.md and SKILLS.md; inspect Git status and read SECURITY.md.
 Repository files are authoritative. Never keep decisions or recovery details only in chat.
 Current owner authorization is Phase4.2.1 focused planner quality plus Arabic-first UI under docs/implementation/phase4.2.1-plan.md, superseding old scope banners. Existing96e64925/v0.5.2/checkpoint/verified final receipt is the safety anchor; preserve owner/runtime trial databases. Focused checks now; one same independent QA/batched fixes and consolidated expensive gates later. No merge/push/stable tag/Drive before new final approval.
