@@ -1,11 +1,11 @@
 # Current state
 
-- Current project version: v0.5.1-starter-library
+- Current project version: v0.5.2-story-planner
 - Current workspace version: 0.5.2; final release checkpoint will update stable fields below
-- Current branch at milestone: feature/phase4.2-story-planner (implementation, not released)
-- Latest stable checkpoint: checkpoint/phase4.1-starter-library-complete
-- Latest stable tag: v0.5.1-starter-library
-- Last successful tests: 2026-10-06 08:47:54 +03:00 — foundation, design and available application suites passed; visual/packaging gates recorded separately
+- Current branch at milestone: main
+- Latest stable checkpoint: checkpoint/phase4.2-story-planner-complete
+- Latest stable tag: v0.5.2-story-planner
+- Last successful tests: 2026-10-06 10:07:41 +03:00 — foundation, design and available application suites passed; visual/packaging gates recorded separately
 
 Phase4.1 starter Library/StoryDNA final Astra architecture review APPROVED scoped preparation4fd7f084aae9105ec6e110d7020634f9daea2cd8. Independent QA all four findings CLOSED;100foundation/329design/189app/typecheck/build/onlinehealth/historysecurity/dev+unsigned packaged UI PASS. Mechanical v0.5.1-starter-library / checkpoint/phase4.1-starter-library-complete and both verified source+creative Drive recoveries authorized. Exact final Git/cloud/readback/restore identity is external: ignored backups/receipts/hekayti-studio-phase41-final-<releaseSHA8>.json and private Drive Manifests; do not infer cloud verification from this source file. HYBRID BY DEFAULT, no API dependency; no later features/private data/provider login authorized.
 

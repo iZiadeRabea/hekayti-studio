@@ -42,3 +42,5 @@ Create named checkpoints with scripts/checkpoint.ps1. Commit the ledger before c
 - 2026-10-06 04:10:07 +03:00 — checkpoint/phase4-hybrid-library-complete; branch main; stable tag: v0.5.0-hybrid-library. Resolve SHA from immutable Git tag. Tests/health passed before commit.
 
 - 2026-10-06 08:47:54 +03:00 — checkpoint/phase4.1-starter-library-complete; branch main; stable tag: v0.5.1-starter-library. Resolve SHA from immutable Git tag. Tests/health passed before commit.
+
+- 2026-10-06 10:07:41 +03:00 — checkpoint/phase4.2-story-planner-complete; branch main; stable tag: v0.5.2-story-planner. Resolve SHA from immutable Git tag. Tests/health passed before commit.
