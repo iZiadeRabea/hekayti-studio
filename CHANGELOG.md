@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.1-starter-library final acceptance — 2026-10-06
+
+Final Astra consolidated architecture review APPROVED4fd7f084; independent QA all four CLOSED and100foundation/329design/189app/typecheck/build/dev+packaged UI/security PASS. Compatible metadata/DNA and separate safe creative projection accepted with explicit partial-source/human-review/unsigned/tooling limits. Mechanical immutable release/private Git readback and both verified Drive recoveries authorized. Exact final SHA/archive hashes/cloud/restore receipts: ignored backups/receipts/hekayti-studio-phase41-final-<releaseSHA8>.json and private Manifests. No premature cloud PASS here; old preparation pending entries below are historical. STOP Phase4.1.
+
 ## 0.5.1 preparation — 2026-10-06 (not released)
 
 Independent QA four findings CLOSED; historical attribution/local revisions/counts preserved, decision-plan restore identity and family conflict safety fixed,40 Nigeria observations reparsed from cache. Version/internal references0.5.1 only, no dependency upgrades/features. Consolidated100foundation/329design/189app/typecheck/build/onlinehealth/historysecurity PASS; final UI/package/corpus recovery receipts in phase4.1-testing. Final Astra review/source+creative cloud release PENDING; older pending implementation notes below are historical.

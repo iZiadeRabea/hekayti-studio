@@ -1,6 +1,6 @@
 # Setup / new computer
 
-Workspace0.5.1 is Phase4.1 final-review preparation, not stable. Latest verified stable source recovery is Phase4 at4bf822a5 (CURRENT_STATE.md). Pinned dependencies and original Phase2 product/app/data identifiers remain; smoke tests use isolated ignored temp directories. Phase4.1 publication/source+creative cloud recovery awaits separate Astra approval.
+Workspace0.5.1 Phase4.1 final Astra review APPROVED4fd7f084; mechanical release and both verified backups authorized. Final immutable release/cloud receipts external lookup CURRENT_STATE.md; prior Phase4 recovery retained. Pinned dependencies and original Phase2 product/app/data identifiers remain; smoke tests use isolated ignored temp directories. No private operational database backup or Phase5 authorized.
 
 1. Install Git for Windows, PowerShell 7 and GitHub CLI from their official distributors. Install/sign in to Codex using the official product installer. Do not copy authentication files from old machines.
 2. `gh auth login --hostname github.com --git-protocol https --web` then `gh auth setup-git`. Credentials remain in the OS credential store.

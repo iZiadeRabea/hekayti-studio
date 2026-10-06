@@ -2,6 +2,8 @@
 
 Current authorization: Phase4.1 only, docs/implementation/phase4.1-plan.md including StoryDNA addendum. Sole verified GPT-6.1 Sol Engineering implementation/corpus research, then one independent Sol QA and one Astra final review. HYBRID BY DEFAULT; no API dependency. Routine compatible implementation and root continuity are explicitly delegated. No additional agents/routing probes, paid AI, private children/customer data, real photos, image/video/site or later features.
 
+Final Astra review APPROVED4fd7f084 and all four independent QA findings CLOSED: mechanical0.5.1 release and both verified Drive recoveries explicitly authorized, then STOP. Earlier no-publication/pending-review instructions below are historical stage boundaries; no new features/Phase5 authorized. Final external receipt lookup CURRENT_STATE.md.
+
 Latest stable Phase4 at4bf822a5cc191b659223a519db3ac903c1368045 is actually released/private Git+Drive recovered; exact evidence CURRENT_STATE.md and ignored final receipt. Earlier Phase3/4 stop/pending instructions are historical, not current authorization.
 
 Before project changes read START_HERE.md, PROJECT_CONTEXT.md, CURRENT_STATE.md, DECISIONS.md, SKILLS.md; follow CONTRIBUTING_AI.md and SECURITY.md; inspect Git status. Read relevant compact plan/modules, not repeated whole history/research.

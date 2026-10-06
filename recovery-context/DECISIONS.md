@@ -2,6 +2,8 @@
 
 ## Phase4.1 — 2026-10-06
 
+- D045: Final consolidated Astra architecture review APPROVES scoped4fd7f084 for v0.5.1-starter-library/checkpoint/phase4.1-starter-library-complete. Compatible optional metadata/DNA, honest791-row composition and safe separate creative projection accepted with sparse/inferred structure,8 moderate tooling advisories/no high-critical, no human rights/culture/native certification. Mechanical FF/private Git readback plus ONE source and separate creative Drive download/hash/fresh restore authorized; final identity external to source, no moving tags/post-backup commit, STOP after Phase4.1.
+
 - D044: Independent Sol QA confirms all four portability/lineage/extraction findings CLOSED after one consolidated fix batch; reuse verified implementation/QA routes and one Astra final review. Prepare workspace0.5.1 with one full regression/build/security/UI recovery gate, not stable release authority. Actual791-row creative projection survives empty restore/re-export/merge without fulltext cache or operational project DB; final source and creative Drive recovery require separate approval.
 
 - D038: Owner authorizes substantial grounded starter records with truthful source/scoping/counts, not title-to-plot fabrication or synthetic performance inflation. Historical primary editions preferred; rights user-managed, no fabricated clearance.12 Egyptian-Arabic opening excerpts are distinct from ancient Egypt and Turkish Nasreddin provenance.

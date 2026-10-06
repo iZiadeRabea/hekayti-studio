@@ -1,6 +1,6 @@
 # Permanent product context
 
-Current milestone: Phase4.1 starter Library + StoryDNA0.5.1 preparation for final Astra review; independent QA all four findings CLOSED and consolidated gates recorded. Approved compact plan/addendum docs/implementation/phase4.1-plan.md. Latest stable Phase4 is actually released/recovered at4bf822a5cc191b659223a519db3ac903c1368045; exact private Git/Drive receipt CURRENT_STATE.md. No Phase4.1 stable/cloud claim.
+Current milestone: Phase4.1 final Astra architecture review APPROVED4fd7f084; independent QA all four CLOSED and consolidated gates PASS. Mechanical v0.5.1-starter-library/checkpoint release and verified source+creative recovery authorized, then STOP. Exact final SHA/cloud verification external receipt lookup CURRENT_STATE.md; no premature cloud claim. Prior Phase4 verified recovery4bf822a5 retained. Approved plan/addendum docs/implementation/phase4.1-plan.md; no Phase5 authorization.
 
 ## Identity and market
 Project: Hekayti Studio. Initial market: Egypt only.
