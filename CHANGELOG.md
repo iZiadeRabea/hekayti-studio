@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.2-story-planner final architecture acceptance — 2026-10-06
+
+Astra APPROVED FOR RELEASE scoped clean e81db3a6fd2c944bc43b827339277667de117907 after independent four-group closure and consolidated100foundation/329design/228app/typecheck/build/onlinehealth/historysecurity/dev+unsigned package PASS. Same serial Sol MEDIUM Ops authorized for mechanical immutable checkpoint/private Git readback/ONE source and separate791-row Library Drive download/hash/fresh restores; external final receipt proves actual completion. Mandatory release/recovery checks retained, no post-backup source commit/tag move. Human literary/native/cultural/child-appeal/provider quality remains manual; no API/later phase.
+
 ## 0.5.2 Story Planner preparation — 2026-10-06 (not released)
 
 Independent QA all four groups CLOSED,16 QA and3 targeted closure tests PASS. Consolidated100foundation/329design/228app/typecheck/build/onlinehealth/historysecurity PASS; development/unsigned packaged planner/import/QA/test approval/feedback/restart and existing Phase3/4/4.1/desktop regressions PASS; legacy RTL/PDF UI PASS. Eight trial kits regenerate without artifact changes; comparisons remain blank. Local creative ZIP including GENERATED planner variant passes independent empty restore with operational history excluded. Internal package versions0.5.2 only, no dependency upgrade. Actual routing1HIGH Engineering+1HIGH independent QA+1serialMEDIUM Ops (three contexts, explicit platform effort-change exception), no extra HIGH/Extra High. Final Astra acceptance/mechanical release/source+Library cloud verification PENDING; stable Phase4.1 remains the recovery anchor.

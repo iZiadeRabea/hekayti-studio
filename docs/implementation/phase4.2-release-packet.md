@@ -41,4 +41,6 @@ Sparse provisional source DNA/heuristic metadata adaptation, arbitrary objective
 
 ## 7. Release Recommendation
 
+Final review outcome: root Astra **APPROVED FOR RELEASE** for exact clean e81db3a6fd2c944bc43b827339277667de117907. Same serial Sol MEDIUM Ops authorized as below; Gate P/final completion still requires downloaded source+Library hashes/fresh restore receipt. No intervening architecture escalation; initial plan/final review are the two normal Astra review points. Required checkpoint/backup/restore tests are release/recovery checks, not ad hoc repeats per edit.
+
 Recommend **APPROVED FOR RELEASE** for this scoped synthetic manual-trial preparation. This recommendation does not declare release or cloud recovery complete. After explicit approval, same serial Sol MEDIUM Ops verifies clean preparation/main, safe fast-forward, immutable `v0.5.2-story-planner` and `checkpoint/phase4.2-story-planner-complete`, private push/readback, existing required source recovery scripts and separate Library Drive download/hash/fresh restore. Exact immutable identity/evidence belongs in ignored final receipt; stop on unexpected main/conflict/contract/gate/destructive ambiguity. User next action after release: actual manual ChatGPT/Gemini trials. No illustration/video/API/Phase5 work.
