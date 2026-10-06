@@ -24,6 +24,12 @@ import {
 } from "@hekayti/contracts";
 import { ageGuidance, contentHash, invalidateDependents } from "@hekayti/core";
 import { SqliteProjectRepository, writeNewFile } from "@hekayti/persistence";
+import {
+  writeCreativeArchive,
+  previewCreativeRestore,
+  restoreCreativeArchive,
+} from "@hekayti/persistence";
+import { parseLibraryBatch, importLibraryBatch } from "@hekayti/core/creative";
 import { proofHtml, proofMetadata, proofPages } from "@hekayti/export";
 import type { Result } from "./api";
 import { StoryRequestSchema } from "@hekayti/contracts/story";
@@ -252,6 +258,124 @@ app
     win.webContents.on("will-navigate", (event) => event.preventDefault());
     handle("projects:list", () => repo.listProjects());
     handle("library:load", () => library.load());
+    handle("library:page", (arg) => repo.pageLibrary(arg));
+    const publicBatchInput = z
+      .object({
+        expectedVersion: z.number().int().nonnegative(),
+        publicCreativeReviewed: z.literal(true),
+      })
+      .strict();
+    const importRaw = (raw: string, expectedVersion: number) => {
+      const records = parseLibraryBatch(raw),
+        result = importLibraryBatch(
+          repo,
+          records,
+          expectedVersion,
+          randomUUID(),
+          new Date().toISOString(),
+        );
+      return { added: result.added, replayed: result.replayed };
+    };
+    handle("library:starter-import", async (arg) => {
+      const x = validate(
+        publicBatchInput.extend({
+          profile: z
+            .enum(["EGYPTIAN_ARAB_MUSLIM_FAMILY", "GENERAL_FAMILY"])
+            .default("EGYPTIAN_ARAB_MUSLIM_FAMILY"),
+        }),
+        arg,
+      );
+      const records = parseLibraryBatch(
+        await readFile(join(root, "fixtures/starter-library.jsonl"), "utf8"),
+      );
+      for (const r of records)
+        if (r.creative) r.creative.culture.profile = x.profile;
+      return importRaw(JSON.stringify(records), x.expectedVersion);
+    });
+    handle("library:batch-open", async (arg) => {
+      const x = validate(publicBatchInput, arg);
+      const selected = await dialog.showOpenDialog(win, {
+        properties: ["openFile"],
+        filters: [
+          { name: "Creative JSON/JSONL", extensions: ["json", "jsonl"] },
+        ],
+      });
+      if (selected.canceled) return null;
+      const path = selected.filePaths[0]!;
+      if ((await stat(path)).size > 25_000_000)
+        throw new AppError(
+          "LIBRARY_BATCH_SIZE",
+          "Creative import exceeds25MB; original retained.",
+        );
+      return importRaw(await readFile(path, "utf8"), x.expectedVersion);
+    });
+    handle("creative:export", async (arg) => {
+      validate(
+        z.object({ publicCreativeReviewed: z.literal(true) }).strict(),
+        arg,
+      );
+      const selected = await dialog.showSaveDialog(win, {
+        defaultPath: "hekayti-creative-library.zip",
+        filters: [
+          { name: "Portable creative Library ZIP", extensions: ["zip"] },
+        ],
+      });
+      if (selected.canceled || !selected.filePath) return null;
+      return writeCreativeArchive(selected.filePath, repo, true);
+    });
+    let creativePreview: { id: string; bytes: Buffer; digest: string } | null =
+      null;
+    handle("creative:preview", async () => {
+      const selected = await dialog.showOpenDialog(win, {
+        properties: ["openFile"],
+        filters: [
+          { name: "Portable creative Library ZIP", extensions: ["zip"] },
+        ],
+      });
+      if (selected.canceled) return null;
+      const path = selected.filePaths[0]!;
+      if ((await stat(path)).size > 30_000_000)
+        throw new AppError("CREATIVE_ZIP", "Creative ZIP exceeds30MB.");
+      const bytes = await readFile(path),
+        preview = previewCreativeRestore(repo, bytes);
+      creativePreview = { id: randomUUID(), bytes, digest: preview.digest };
+      const { records, ...result } = preview;
+      return { previewId: creativePreview.id, ...result };
+    });
+    handle("creative:restore", (arg) => {
+      const x = validate(
+        z
+          .object({
+            previewId: Id,
+            digest: z.string().regex(/^[a-f0-9]{64}$/),
+            expectedVersion: z.number().int().nonnegative(),
+            choice: z.enum(["KEEP_EXISTING", "COPY_WITH_NEW_IDS"]),
+          })
+          .strict(),
+        arg,
+      );
+      if (
+        !creativePreview ||
+        creativePreview.id !== x.previewId ||
+        creativePreview.digest !== x.digest
+      )
+        throw new AppError(
+          "CREATIVE_STALE",
+          "Preview no longer available; choose archive again.",
+        );
+      const current = previewCreativeRestore(repo, creativePreview.bytes),
+        choices = Object.fromEntries(
+          current.conflicts.map((r) => [r.recordId, x.choice]),
+        );
+      const result = restoreCreativeArchive(
+        repo,
+        creativePreview.bytes,
+        { digest: x.digest, expectedVersion: x.expectedVersion, choices },
+        new Date().toISOString(),
+      );
+      creativePreview = null;
+      return result;
+    });
     handle("bridge:load", (arg) =>
       repo.loadGenerationPackage(validate(Id, arg)),
     );
@@ -445,6 +569,7 @@ app
             variation: VariationSchema,
             candidateCount: z.number().int().min(3).max(5),
             selected: z.array(LibraryRefSchema).max(30),
+            culturalAcknowledged: z.literal(true).optional(),
           })
           .strict(),
         arg,

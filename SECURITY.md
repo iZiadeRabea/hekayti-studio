@@ -12,3 +12,8 @@ Security checks inspect tracked/current staged source and all reachable historic
 ZIP and Git bundle backups are not encrypted and contain source/metadata only; keep Drive private and do not create public links.
 No background update manager or scheduled task is activated by setup. External service connections must be reauthorized on a new account.
 
+## Phase4.1 creative Library boundary
+
+Public historical source summaries/evidence are allowed tracked creative data; no full source texts or private customer/child identifiers. Source rights/profile/religious fields are provisional, not permission or certification. Strict batch/JSONL/DNA reject bidi controls. Indexed mirror corruption is checked against canonical data before filters and is not repaired silently.
+
+Creative ZIP is separate from source/Git/context recovery: fixed three-entry JSONL allowlist, CRC/hash/directory/size validation before mutation, no arbitrary ZIP extraction or mixed SQLite. Explicit public/synthetic free-text declaration is required, not automatic privacy certification. Operational IDs/tables/provider notes/audit aliases/current approval authority are excluded; historical counts/approval hashes cannot replay operational events. Preview/CAS/conflict choices/transaction rollback preserve original data. Private operational DB encryption/backup remains outside current authorization.

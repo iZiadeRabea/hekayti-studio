@@ -8,6 +8,7 @@ import type { Project, StoryBlueprint } from "@hekayti/contracts";
 import type { DesktopApi, Result } from "../../src/api";
 import { StoryCreator } from "./StoryCreator";
 import { StoryLibrary } from "./StoryLibrary";
+import { StarterLibrary } from "./StarterLibrary";
 declare global {
   interface Window {
     hekayti: DesktopApi;
@@ -48,6 +49,7 @@ function App() {
           "Projects",
           "Story Creator",
           "Library / Inbox / Bridge",
+          "Starter / Creative Library",
           "RTL Test",
           "Core Data Inspector",
           "Export Test",
@@ -61,6 +63,7 @@ function App() {
       <main>
         {tab === "Story Creator" && <StoryCreator />}
         {tab === "Library / Inbox / Bridge" && <StoryLibrary />}
+        {tab === "Starter / Creative Library" && <StarterLibrary />}
         <p role="status" className="status" dir="auto">
           {status}
         </p>

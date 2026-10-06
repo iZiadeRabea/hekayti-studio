@@ -1,0 +1,7 @@
+# Cultural fit is not provenance or religious certification
+
+Default target: EGYPTIAN_ARAB_MUSLIM_FAMILY. GENERAL_FAMILY is also selectable at explicit starter import and filterable. Both retain the same conservative provisional flags; selecting another label never silently clears sensitivity. Reimporting an existing identity with a different profile conflicts instead of overwriting it. Not every Arab or Egyptian family is Muslim; the profile is an editorial target, not an inferred customer identity.
+
+READY / NEEDS_ADAPTATION / SENSITIVE_REVIEW / NOT_DEFAULT are separate from source culture, lifecycle and rights. Factors record violence, fear, family relationships, faith, language, stereotypes, age, setting and ethics with adaptation suggestions. Limited keyword screening is transparent and nonexhaustive; historic Egyptian opening-only records conservatively require further review. Agent READY would mean provisional profile fit only. No actual native, sensitivity, religious or rights review is recorded; reviewedBy is null.
+
+RELIGIOUS_ACCURACY_REVIEW_REQUIRED is separate from general fit. Mythological/faith references must not become factual instruction through a metadata label. Normal generation rejects promoted non-READY/religious context unless explicitly acknowledged, including reopened frozen packages. That acknowledgment is permission to consider material, not a certification or permission to violate age/Arabic/safety constraints.

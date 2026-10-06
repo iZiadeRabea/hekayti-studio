@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { CreativeMetadataSchema } from "./library-metadata";
+export * from "./library-metadata";
 import { Id, AgeBandSchema, StoryObjectiveSchema } from "./index";
 import {
   StoryConceptSchema,
@@ -25,7 +27,13 @@ export const VariationSchema = z.enum([
 ]);
 export const OperatorMetadataSchema = z
   .object({
-    sourceType: z.enum(["CURATED", "AI", "HYBRID", "HUMAN"]),
+    sourceType: z.enum([
+      "CURATED",
+      "AI",
+      "HYBRID",
+      "HUMAN",
+      "SYNTHETIC_HEKAYTI",
+    ]),
     sourceProvider: z.enum(["CHATGPT", "GEMINI", "OTHER", "MANUAL"]),
     providerNote: text.nullable(),
     modelNote: text.nullable(),
@@ -80,6 +88,7 @@ export const LibraryRecordSchema = z
     recordId: Id,
     version: z.number().int().positive(),
     title: text,
+    creative: CreativeMetadataSchema.optional(),
     payload,
     status: LibraryStatusSchema,
     metadata: OperatorMetadataSchema,
@@ -193,6 +202,19 @@ export const LibraryStateSchema = z
   .strict()
   .superRefine((s, c) => {
     const fail = (message: string) => c.addIssue({ code: "custom", message });
+    const refs = new Map(
+      s.records.map((r, index) => [`${r.recordId}:${r.version}`, { r, index }]),
+    );
+    const resolve = (ref: z.infer<typeof LibraryRefSchema>) =>
+      refs.get(`${ref.recordId}:${ref.version}`);
+    const events = new Set(s.events.map((e) => `${e.recordId}:${e.version}`));
+    if (refs.size !== s.records.length)
+      fail("Record revisions must be unique.");
+    if (
+      new Set(s.events.map((e) => e.eventId)).size !== s.events.length ||
+      new Set(s.usage.map((e) => e.eventId)).size !== s.usage.length
+    )
+      fail("Event identities must be unique.");
     if (
       new Set(
         s.usage.map(
@@ -202,59 +224,40 @@ export const LibraryStateSchema = z
       ).size !== s.usage.length
     )
       fail("Usage outcomes count each record/request once, including retries.");
-    if (
-      new Set(s.events.map((e) => e.eventId)).size !== s.events.length ||
-      new Set(s.usage.map((e) => e.eventId)).size !== s.usage.length
-    )
-      fail("Event identities must be unique.");
-    if (
-      new Set(s.records.map((r) => `${r.recordId}:${r.version}`)).size !==
-      s.records.length
-    )
-      fail("Record revisions must be unique.");
-    const resolve = (ref: z.infer<typeof LibraryRefSchema>) =>
-      s.records.find(
-        (r) => r.recordId === ref.recordId && r.version === ref.version,
-      );
-    for (const r of s.records) {
-      const previous = s.records.filter(
-        (x) => x.recordId === r.recordId && x.version < r.version,
-      );
-      if (r.version !== previous.length + 1)
-        fail("Record versions must be contiguous.");
-      if (r.family && resolve(r.family)?.payload.type !== "STORY_FAMILY")
-        fail("Family reference must resolve to a structural family.");
-      if (r.derivedFrom && !resolve(r.derivedFrom))
-        fail("Derived source must resolve.");
-      if (
-        r.derivedFrom &&
-        (r.derivedFrom.recordId === r.recordId ||
-          s.records.indexOf(resolve(r.derivedFrom)!) >= s.records.indexOf(r))
-      )
-        fail(
-          "Derived lineage must refer to an earlier different record, never itself or a cycle.",
-        );
-      if (
-        r.family &&
-        s.records.indexOf(resolve(r.family)!) >= s.records.indexOf(r)
-      )
-        fail("Family revision must precede the linked variant revision.");
-      if (previous.some((x) => s.records.indexOf(x) >= s.records.indexOf(r)))
-        fail("Revision history must be ordered.");
-      if (
-        !s.events.some(
-          (e) => e.recordId === r.recordId && e.version === r.version,
-        )
-      )
+    const latest = new Map<string, z.infer<typeof LibraryRecordSchema>>();
+    const patternSignatures = new Map<string, string>();
+    for (const [index, r] of s.records.entries()) {
+      const pattern = r.creative?.dna?.pattern;
+      if (pattern) {
+        const known = patternSignatures.get(pattern.patternId);
+        if (known && known !== pattern.signature)
+          fail(
+            "Compact pattern ID collision: complete structural signatures differ.",
+          );
+        patternSignatures.set(pattern.patternId, pattern.signature);
+      }
+      const previous = latest.get(r.recordId);
+      if (r.version !== (previous?.version ?? 0) + 1)
+        fail("Record versions must be contiguous and ordered.");
+      if (!events.has(`${r.recordId}:${r.version}`))
         fail("Record revision requires its human audit event.");
+      if (r.family) {
+        const f = resolve(r.family);
+        if (f?.r.payload.type !== "STORY_FAMILY" || f.index >= index)
+          fail(
+            "Family reference must resolve to an earlier structural family.",
+          );
+      }
+      if (r.derivedFrom) {
+        const d = resolve(r.derivedFrom);
+        if (!d || d.index >= index || d.r.recordId === r.recordId)
+          fail(
+            "Derived lineage must refer to an earlier different record, never itself or a cycle.",
+          );
+      }
+      latest.set(r.recordId, r);
     }
-    const latest = s.records.filter(
-      (r) =>
-        !s.records.some(
-          (x) => x.recordId === r.recordId && x.version > r.version,
-        ),
-    );
-    const variants = latest.filter((r) => r.family);
+    const variants = [...latest.values()].filter((r) => r.family);
     if (
       new Set(variants.map((r) => `${r.family!.recordId}:${r.variantNumber}`))
         .size !== variants.length ||
@@ -262,11 +265,7 @@ export const LibraryStateSchema = z
     )
       fail("Family variant numbers and identities must be unique.");
     for (const e of s.events)
-      if (
-        !s.records.some(
-          (r) => r.recordId === e.recordId && r.version === e.version,
-        )
-      )
+      if (!refs.has(`${e.recordId}:${e.version}`))
         fail("Event record missing.");
     for (const e of s.usage)
       if (!resolve(e.record)) fail("Usage record missing.");
@@ -288,6 +287,7 @@ export const GenerationPackageSchema = z
     outputSchemaVersion: z.literal("bridge-response/1.0"),
     generation: z.number().int().nonnegative(),
     humanReviewRequired: z.literal(true),
+    culturalAcknowledged: z.literal(true).optional(),
   })
   .strict();
 export type GenerationPackage = z.infer<typeof GenerationPackageSchema>;

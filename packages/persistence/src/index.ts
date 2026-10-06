@@ -39,6 +39,12 @@ import {
 } from "@hekayti/core/library";
 import { storyStructureFor } from "@hekayti/core/age";
 export { LocalAssetStore, writeNewFile } from "./assets";
+export * from "./creative-archive";
+import {
+  LibraryQuerySchema,
+  type LibraryQuery,
+} from "@hekayti/contracts/library";
+import { latestLibraryRecords } from "@hekayti/core/library";
 
 export class SqliteProjectRepository
   implements ProjectRepository, StoryWorkflowRepository, LibraryRepository
@@ -174,6 +180,32 @@ export class SqliteProjectRepository
       this.db
         .prepare("SELECT id,digest FROM generation_package_seals LIMIT 0")
         .all();
+      const hasIndex = !!this.db
+        .prepare("SELECT name FROM sqlite_master WHERE name='library_index'")
+        .get();
+      const hasIndexMarker = !!this.db
+        .prepare(
+          "SELECT name FROM sqlite_master WHERE name='library_index_meta'",
+        )
+        .get();
+      if (hasIndex !== hasIndexMarker)
+        throw new AppError(
+          "LIBRARY_CORRUPT",
+          "Creative index initialization is incomplete/missing; original retained.",
+        );
+      if (!hasIndex)
+        this.transaction(() => {
+          this.db.exec(
+            "CREATE TABLE library_index(id TEXT PRIMARY KEY,version INTEGER NOT NULL,title TEXT NOT NULL,type TEXT NOT NULL,status TEXT NOT NULL,culture TEXT NOT NULL,fit TEXT NOT NULL,payload TEXT NOT NULL); CREATE INDEX library_index_type_status ON library_index(type,status); CREATE INDEX library_index_culture_fit ON library_index(culture,fit); CREATE TABLE library_index_meta(id INTEGER PRIMARY KEY CHECK(id=1),schema_version TEXT NOT NULL); INSERT INTO library_index_meta VALUES(1,'library-index/1.0');",
+          );
+          for (const record of latestLibraryRecords(this.loadLibrary()))
+            this.indexLibraryRecord(record);
+        });
+      this.db
+        .prepare(
+          "SELECT id,version,title,type,status,culture,fit,payload FROM library_index LIMIT 0",
+        )
+        .all();
       this.db.exec("PRAGMA journal_mode=WAL;");
     } catch (e) {
       this.db.close();
@@ -204,6 +236,7 @@ export class SqliteProjectRepository
     }
   }
   loadLibrary(): LibraryState {
+    // The aggregate remains authoritative; indexed paging checks it, not a second canon.
     try {
       const row = this.db
         .prepare("SELECT payload,version FROM story_library WHERE id='library'")
@@ -343,8 +376,145 @@ export class SqliteProjectRepository
           .changes !== 1
       )
         throw new AppError("LIBRARY_CONFLICT", "Library changed; reload.");
+      for (const record of next.records.slice(previous.records.length))
+        this.indexLibraryRecord(record);
       return this.loadLibrary();
     });
+  }
+  private indexLibraryRecord(
+    record: import("@hekayti/contracts/library").LibraryRecord,
+  ) {
+    this.db
+      .prepare(
+        "INSERT INTO library_index VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET version=excluded.version,title=excluded.title,type=excluded.type,status=excluded.status,culture=excluded.culture,fit=excluded.fit,payload=excluded.payload",
+      )
+      .run(
+        record.recordId,
+        record.version,
+        record.title,
+        record.payload.type,
+        record.status,
+        record.creative?.source?.sourceCulture ?? "unknown",
+        record.creative?.culture.fit ?? "UNSCREENED",
+        canonicalJson(record),
+      );
+  }
+  pageLibrary(input: unknown) {
+    const q = validate(LibraryQuerySchema, input),
+      state = this.loadLibrary(),
+      latest = latestLibraryRecords(state),
+      canon = new Map(latest.map((r) => [r.recordId, r]));
+    const indexRows = this.db.prepare("SELECT * FROM library_index").all();
+    const marker = this.db.prepare("SELECT * FROM library_index_meta").all();
+    if (
+      marker.length !== 1 ||
+      marker[0]!.schema_version !== "library-index/1.0" ||
+      Number(marker[0]!.id) !== 1 ||
+      indexRows.length !== latest.length
+    )
+      throw new AppError(
+        "LIBRARY_CORRUPT",
+        "Library index/marker missing or unexpected; original retained.",
+      );
+    // Check the entire mirror BEFORE filtering: a forged fit/title must not hide
+    // an authoritative record from query results. Linear, never per-record saves.
+    for (const row of indexRows) {
+      const r = canon.get(String(row.id));
+      if (
+        !r ||
+        String(row.payload) !== canonicalJson(r) ||
+        row.title !== r.title ||
+        row.type !== r.payload.type ||
+        row.status !== r.status ||
+        Number(row.version) !== r.version ||
+        row.culture !== (r.creative?.source?.sourceCulture ?? "unknown") ||
+        row.fit !== (r.creative?.culture.fit ?? "UNSCREENED")
+      )
+        throw new AppError(
+          "LIBRARY_CORRUPT",
+          "Library index differs from authoritative creative records; original retained.",
+        );
+    }
+    const where: string[] = [],
+      args: (string | number)[] = [];
+    for (const [field, column] of [
+      ["type", "type"],
+      ["status", "status"],
+      ["fit", "fit"],
+    ] as const)
+      if (q[field]) {
+        where.push(`${column}=?`);
+        args.push(q[field]!);
+      }
+    if (q.culture) {
+      where.push("culture LIKE ? ESCAPE '\\'");
+      args.push("%" + q.culture.replace(/[\\%_]/g, "\\$&") + "%");
+    }
+    if (q.search) {
+      where.push("title LIKE ? ESCAPE '\\'");
+      args.push("%" + q.search.replace(/[\\%_]/g, "\\$&") + "%");
+    }
+    for (const [field, path] of [
+      ["age", "$.tags.ageBands"],
+      ["theme", "$.tags.themes"],
+      ["objective", "$.tags.objectives"],
+      ["storyType", "$.tags.storyTypes"],
+    ] as const)
+      if (q[field]) {
+        where.push("EXISTS (SELECT 1 FROM json_each(payload,?) WHERE value=?)");
+        args.push(path, q[field]!);
+      }
+    for (const [field, path] of [
+      ["source", "$.metadata.sourceType"],
+      ["provider", "$.metadata.sourceProvider"],
+      ["religious", "$.creative.culture.religiousReview"],
+      ["familyId", "$.family.recordId"],
+      ["patternId", "$.creative.dna.pattern.patternId"],
+      ["profile", "$.creative.culture.profile"],
+      ["plotDepth", "$.creative.dna.dimensions.plotDepth"],
+    ] as const)
+      if (q[field]) {
+        where.push("json_extract(payload,?)=?");
+        args.push(path, q[field]!);
+      }
+    const filter = where.length ? " WHERE " + where.join(" AND ") : "";
+    const total = Number(
+      this.db
+        .prepare("SELECT count(*) n FROM library_index" + filter)
+        .get(...args)!.n,
+    );
+    const rows = this.db
+      .prepare(
+        "SELECT * FROM library_index" +
+          filter +
+          " ORDER BY id LIMIT ? OFFSET ?",
+      )
+      .all(...args, q.limit, q.offset);
+    const records = rows.map((row) => {
+      const record = canon.get(String(row.id));
+      if (
+        !record ||
+        String(row.payload) !== canonicalJson(record) ||
+        row.title !== record.title ||
+        row.type !== record.payload.type ||
+        row.status !== record.status ||
+        Number(row.version) !== record.version ||
+        row.culture !== (record.creative?.source?.sourceCulture ?? "unknown") ||
+        row.fit !== (record.creative?.culture.fit ?? "UNSCREENED")
+      )
+        throw new AppError(
+          "LIBRARY_CORRUPT",
+          "Library index differs from authoritative creative records; original retained.",
+        );
+      return record;
+    });
+    return {
+      recordVersion: state.recordVersion,
+      total,
+      offset: q.offset,
+      limit: q.limit,
+      records,
+    };
   }
   saveGenerationPackage(input: GenerationPackage) {
     this.transaction(() => {

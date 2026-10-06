@@ -1,0 +1,11 @@
+# Starter Library — Phase4.1
+
+Explicit import only in **Starter / Creative Library**. Normal userdata is never populated or replaced automatically. The committed JSONL is reproducible from locally cached primary sources using `scripts/collect-starter-library.mjs --emit`; full source texts stay ignored under temp and are not source-backup assets.
+
+791 total records: 765 externally grounded IDEA_SEED records and 26 explicitly synthetic editorial structural families. No full canonical STORY_CONCEPT is claimed. 121 seeds have agent-authored short original abstracts, including explicitly labelled opening-only observations; 644 are bounded extractive inspiration observations, not invented complete summaries. Zero catalog-only or performance rows count toward these totals. 765 have sparse DNA; only25 have representative richer action/causal enrichment,20 pattern signatures and22 source-to-family mappings. UNKNOWN is intentional.
+
+Composition:313 Aesop narrative units;211 Grimm tales/legends;34 Arabian linked/frame/voyage units;34 West-African and40 southern Nigerian tales;111 Turkish Nasreddin narrative paragraphs;8 ancient Egyptian translations;12 historical Egyptian-Arabic opening excerpts;2 Kalila frame chapters. A narrative unit is not necessarily an independent tale. Turkish Nasreddin is NOT relabelled Egyptian Goha; ancient Egypt is not modern folklore. Arab/Egyptian coverage is meaningful but smaller than global fable collections; the unavailable Kalila chapters and Holy-Land collection are not invented.
+
+All records start GENERATED, with no ratings, usage or approvals. Source-derived material is provisional inspiration, not age-safe executable prose. Preserve the source locator and scope; redesign causality, threats, cast and language for the selected age. Use the existing explicit SAVE → REVIEW → APPROVE → PROMOTE workflow before choosing context in the hybrid bridge. Cultural acknowledgment does not make religious assertions verified.
+
+Next owner action: inspect representative Egyptian/Arab sources and manually try a public/synthetic package in ChatGPT or Gemini; import its actual response through the existing strict canonical pipeline. No provider quality comparison or native-child-development certification has been performed.

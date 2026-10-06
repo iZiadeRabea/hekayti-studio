@@ -31,6 +31,7 @@ for (const name of ["test-a-under-1", "test-b-1-to-2", "test-c-3-plus"])
     `examples/test-stories/${name}.json`,
     `apps/desktop/dist/fixtures/${name}.json`,
   );
+await copyFile("examples/starter-library/starter-library.jsonl","apps/desktop/dist/fixtures/starter-library.jsonl");
 await mkdir("apps/desktop/dist/fonts", { recursive: true });
 for (const subset of ["arabic", "latin"])
   await copyFile(

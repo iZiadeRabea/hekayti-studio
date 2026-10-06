@@ -50,13 +50,11 @@ export const emptyLibrary = (): LibraryState => ({
   events: [],
   usage: [],
 });
-export const latestLibraryRecords = (s: LibraryState) =>
-  s.records.filter(
-    (r) =>
-      !s.records.some(
-        (x) => x.recordId === r.recordId && x.version > r.version,
-      ),
-  );
+export const latestLibraryRecords = (s: LibraryState) => {
+  const latest = new Map<string, LibraryRecord>();
+  for (const r of s.records) latest.set(r.recordId, r);
+  return [...latest.values()];
+};
 const transitions: Record<string, string> = {
   SAVE: "SAVED",
   REVIEW: "REVIEWED",
@@ -89,18 +87,20 @@ export function validateLibraryAppend(
       );
   const added = after.records.slice(before.records.length),
     events = after.events.slice(before.events.length);
+  const eventMap = new Map(
+    events.map((e) => [`${e.recordId}:${e.version}`, e]),
+  );
+  const recordMap = new Map(
+    after.records.map((r) => [`${r.recordId}:${r.version}`, r]),
+  );
   if (added.length !== events.length)
     throw new AppError(
       "LIBRARY_EVENT",
       "Each new revision needs exactly one audit event.",
     );
   for (const r of added) {
-    const e = events.find(
-      (x) => x.recordId === r.recordId && x.version === r.version,
-    );
-    const previous = after.records.find(
-      (x) => x.recordId === r.recordId && x.version === r.version - 1,
-    );
+    const e = eventMap.get(`${r.recordId}:${r.version}`);
+    const previous = recordMap.get(`${r.recordId}:${r.version - 1}`);
     if (!e) throw new AppError("LIBRARY_EVENT", "Missing revision event.");
     if (!previous) {
       if (e.action !== "CREATE" || r.status !== "GENERATED" || r.version !== 1)
@@ -190,6 +190,31 @@ export function libraryStatistics(s: LibraryState, id: string) {
       (r) => r.family?.recordId === id,
     ).length,
   };
+}
+export function libraryStatisticsByRecord(s: LibraryState) {
+  const stats = new Map(
+    latestLibraryRecords(s).map((r) => [
+      r.recordId,
+      { timesUsed: 0, approvedCount: 0, rejectedCount: 0, variantsCreated: 0 },
+    ]),
+  );
+  for (const r of latestLibraryRecords(s))
+    if (r.family) {
+      const f = stats.get(r.family.recordId);
+      if (f) f.variantsCreated++;
+    }
+  for (const event of s.usage) {
+    const value = stats.get(event.record.recordId);
+    if (value)
+      value[
+        event.outcome === "USED"
+          ? "timesUsed"
+          : event.outcome === "APPROVED"
+            ? "approvedCount"
+            : "rejectedCount"
+      ]++;
+  }
+  return stats;
 }
 type Ref = z.infer<typeof LibraryRefSchema>;
 export class StoryLibraryService {
@@ -647,6 +672,7 @@ export function prepareGenerationPackage(
     candidateCount: number;
     selected: Ref[];
     generation: number;
+    culturalAcknowledged?: true;
   },
   state: LibraryState,
 ): GenerationPackage {
@@ -681,6 +707,20 @@ export function prepareGenerationPackage(
       "Curated sourcing requires selected promoted library context.",
     );
   if (
+    context.some(
+      (x) =>
+        x.creative &&
+        (x.creative.culture.fit !== "READY" ||
+          x.creative.culture.religiousReview ===
+            "RELIGIOUS_ACCURACY_REVIEW_REQUIRED"),
+    ) &&
+    !input.culturalAcknowledged
+  )
+    throw new AppError(
+      "CULTURAL_SELECTION",
+      "Non-default/religious material requires explicit cultural acknowledgment; screening is not qualified review.",
+    );
+  if (
     ["SimilarVersion", "NewVariant"].includes(input.variation) &&
     !context.some((x) => x.payload.type === "STORY_FAMILY" || x.family)
   )
@@ -701,6 +741,7 @@ export function prepareGenerationPackage(
     generation: input.generation,
     outputSchemaVersion: "bridge-response/1.0",
     humanReviewRequired: true,
+    ...(input.culturalAcknowledged ? { culturalAcknowledged: true } : {}),
     ...generationRules(input.strategy, input.variation),
   });
 }
@@ -737,6 +778,20 @@ function generationRules(
 export function validateGenerationEnvelope(input: unknown): GenerationPackage {
   const p = validate(GenerationPackageSchema, input),
     rules = generationRules(p.strategy, p.variation);
+  if (
+    p.context.some(
+      (x) =>
+        x.creative &&
+        (x.creative.culture.fit !== "READY" ||
+          x.creative.culture.religiousReview ===
+            "RELIGIOUS_ACCURACY_REVIEW_REQUIRED"),
+    ) &&
+    !p.culturalAcknowledged
+  )
+    throw new AppError(
+      "CULTURAL_SELECTION",
+      "Non-default/religious frozen context lacks explicit acknowledgment.",
+    );
   if (
     canonicalJson(p.fixedRules) !== canonicalJson(rules.fixedRules) ||
     canonicalJson(p.creativeFreedom) !== canonicalJson(rules.creativeFreedom) ||

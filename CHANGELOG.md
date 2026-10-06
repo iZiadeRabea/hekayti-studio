@@ -1,6 +1,12 @@
 # Changelog
 
-Final Astra architecture/release review APPROVED preparation 76eafab92b7b3e52c09100fbffa269257b6e2bf4 on 2026-10-06. Phase4 implemented within accepted internal-prototype scope: four independent QA findings closed, 154 application tests and consolidated build/security/development+packaged restart regressions PASS. Prior PENDING review/QA notes below are historical, not current. Mechanical v0.5.0-hybrid-library / checkpoint/phase4-hybrid-library-complete publication and ONE verified private source recovery authorized; stop afterward. Exact future final SHA/archive/cloud/readback/restore identity belongs in ignored local backups/receipts/hekayti-studio-phase4-final-<SHA8>.json and private Drive Manifests, not this source commit. Prior Phase3 verified receipt retained. Backup includes source+Git+context ONLY, not runtime user Library database; operational database backup remains a future security decision. No later features/provider login/paid AI/private data authorized.
+## Phase4.1 implementation — 2026-10-06 (not released)
+
+765 sourced inspiration seeds +26 openly synthetic structural families;121 original brief scoped abstracts/644 extractive seeds;25 richer StoryDNA,20 patterns/22 structurally mapped sources. Evidence/unknowns/cultural profile/adaptation/faith/rights separated. Compatible batch/paging/ZIP allowlist, atomic empty+merge restore/CAS/rollback, historical approval/ratings not replayed; explicit minimal UI import/filters/restart.5000 disposable benchmark measured, excluded from source counts. Independent QA/final gates/release/cloud recovery PENDING.
+
+## 0.5.0-hybrid-library verified release — 2026-10-06
+
+Final Astra acceptance of76eafab, mechanical release4bf822a5cc191b659223a519db3ac903c1368045/private main+peeled tags,154app/full local gates and source/Git/context recovery verified. Archive2632065bytes SHA25633D0D49FBB506EAF13D44B0C5B22AC62D898AAA870C9AF21D9DF477BFBF859C1; private Releases1LYmt-DdBfJOb4neKeyKOB8ugdHr9FddD, receipt1GM4ty7pzvDpg2UlS59-V1GQukyv8GIvB. Download/hash/fresh restore100foundation+329design+154app/typecheck/offlinehealth/security PASS. Runtime Library/customer database not backed up. Older preparation/pending entries below are historical milestones.
 
 ## 0.5.0 preparation — 2026-10-06 (not released)
 

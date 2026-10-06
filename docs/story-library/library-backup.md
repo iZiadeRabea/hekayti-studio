@@ -1,0 +1,13 @@
+# Portable creative Library ZIP — separate from source and private orders
+
+Export explicitly declared public/synthetic creative text. Native dialog writes a fresh ZIP without overwriting an existing file. Free-text privacy cannot be proved automatically; the declaration is not a fabricated qualified human/legal review. Never export identifying child/customer information. This is NOT a mixed SQLite dump.
+
+creative-library/1.0 is a canonical ZIP STORE with exactly manifest.json, library.jsonl and SHA256.json. CRC32, entry hashes, sizes, complete directory and no trailing payload are verified before any mutation. No arbitrary paths, compression, symlinks, executable entries, extra files or SQLite database accepted. Other ZIP formats are not silently coerced.
+
+Allowlist: latest creative payload/tags, family/variant/derived relationships, source/culture/rights notes, DNA/evidence/patterns, optional editorial scores/notes and actual aggregate usage counts as historical summaries. Original version/type/status/hash remains historical attribution. Latest-only export is explicit, not a full revision audit archive. Runtime user data and source/Git archives retain their original history separately.
+
+Excluded: projects, workflows, requests, packages, raw pasted imports, editions, asset/photo/customer tables, reviewer aliases/timestamps, project/request-linked usage events and provider/model notes. Concept/request/character/bible/component/beat identifiers become portable placeholders; trusted-fact IDs removed and provider proof replaced by historical-only manual attribution. Public sourceProvider category remains. No current approval, promoted status or usage events replayed: restored rows enter GENERATED; saved scores are imported opinions, not fresh pattern-rating events.
+
+Preview is read-only and binds archive digest + library CAS. Empty restore and merge are atomic. Exact replay is idempotent; identity and family variant-number/ID collisions require explicit KEEP_EXISTING or COPY_WITH_NEW_IDS. COPY also copies the variant's structural family under deterministic new IDs, retaining its number; contradictory family KEEP is rejected. Original records never overwritten. All choices/references validate before commit; failure rolls back. Never reset a working repository/database as a restore shortcut.
+
+Local isolated real-corpus export and independent restore are tested. Private Drive Library publication/download/hash receipts are PENDING separate final approval. Existing source/Git/context recovery is not a backup of runtime user Library; encrypted operational database/order backup remains a future security decision.

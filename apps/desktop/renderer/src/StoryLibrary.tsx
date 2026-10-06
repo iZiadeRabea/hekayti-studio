@@ -34,6 +34,7 @@ export function StoryLibrary() {
     [pkg, setPkg] = useState<GenerationPackage | null>(null),
     [instructions, setInstructions] = useState(""),
     [reviewed, setReviewed] = useState(false),
+    [culturalAcknowledged, setCulturalAcknowledged] = useState(false),
     [json, setJson] = useState(""),
     [repair, setRepair] = useState(""),
     [repairError, setRepairError] = useState(""),
@@ -327,7 +328,7 @@ export function StoryLibrary() {
             no hard delete.
           </p>
           <ul>
-            {displayed.map((r) => (
+            {displayed.slice(0, 100).map((r) => (
               <li key={r.recordId} data-testid={`library-record-${r.recordId}`}>
                 <button onClick={() => setDetail(r.recordId)}>{r.title}</button>{" "}
                 · {r.payload.type} · {r.status} · v{r.version}
@@ -743,10 +744,45 @@ export function StoryLibrary() {
             {chosen.length} promoted library records selected; context is frozen
             when package is created.
           </p>
+          <label>
+            Context record IDs (comma-separated, max30; browse paged starter
+            separately)
+            <input
+              aria-label="Context record IDs"
+              value={chosen.join(",")}
+              onChange={(e) =>
+                setChosen(
+                  e.target.value
+                    .split(",")
+                    .map((x) => x.trim())
+                    .filter(Boolean),
+                )
+              }
+            />
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={culturalAcknowledged}
+              onChange={(e) => setCulturalAcknowledged(e.target.checked)}
+            />
+            Explicitly acknowledge selected non-default/religious source flags;
+            this is not qualified cultural/religious clearance.
+          </label>
           <button
             disabled={!story}
             onClick={async () => {
               if (!story) return;
+              if (
+                chosen.length > 30 ||
+                new Set(chosen).size !== chosen.length ||
+                chosen.some((id) => !latest.some((r) => r.recordId === id))
+              ) {
+                setStatus(
+                  "Select at most30 distinct existing context IDs; unknown IDs cannot be silently omitted.",
+                );
+                return;
+              }
               const p = await unwrap(
                 window.hekayti.bridgePrepare({
                   projectId,
@@ -754,6 +790,9 @@ export function StoryLibrary() {
                   strategy,
                   variation,
                   candidateCount: count,
+                  ...(culturalAcknowledged
+                    ? { culturalAcknowledged: true }
+                    : {}),
                   selected: latest
                     .filter((r) => chosen.includes(r.recordId))
                     .map((r) => ({ recordId: r.recordId, version: r.version })),

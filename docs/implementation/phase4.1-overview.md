@@ -1,0 +1,11 @@
+# Phase4.1 implementation review packet
+
+Status: implementation handoff preparation; independent QA, final consolidated regression, Astra acceptance and release/cloud recovery PENDING. Approved scope/addendum: phase4.1-plan.md. No new API/provider dependency, consumer automation or later production features.
+
+Modules: additive contracts library-metadata/story-dna; portable core batch/privacy projection/culture/DNA/pattern feedback; SQLite v3 derived index/paging; fixed allowlisted creative ZIP + preview/atomic merge/restore; named desktop IPC and Starter/Creative Library UI; reproducible cached collector and committed strict JSONL. Workflow1.0/1.1, canonical Age/Arabic semantics, provenance and previous approval/history tests preserved. No root version advance until release preparation.
+
+Actual composition765 source IDEA_SEED +26 synthetic structural families; zero canonical full concepts.121 original brief abstracts,644 extractive seeds;25 richer DNA,20 patterns,22 mapped sources. Egyptian12 historical opening excerpts +8 ancient translations,Arabian34,African74,Turkish111,Kalila2; remainder Aesop/Grimm524. See source-registry for exact locators, scopes and gaps. Representative enrichment intentionally not exhaustive; no title-based outlines or fake Egyptian origins. No ratings/usage seeded.
+
+5000 benchmark and actual isolated corpus import/export/independent UI restore measured; details phase4.1-testing.md. Conservative profiles and explicit non-default/religious acknowledgment apply at service/persistence boundaries. Free-text privacy requires explicit declaration; no mixed runtimeDB export. ZIP historical approvals cannot become current approval. Original corrupt data retained, no automatic repair.
+
+QA focus: malformed source/profile/DNA, forged signatures, index corruption filtering, legacy migrations, batch CAS/idempotency, dependency/variant collision choices, archive tamper/privacy canaries, no historical approval/score replay, frozen generation context and original canonical pipeline. Sole verified Sol implementation; then one independent Sol QA and a batched fix round, with one Astra final review after final gates. Owner lean override controls cadence; no redundant probes/delegation/research/full historical runs per edit.

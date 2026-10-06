@@ -1,0 +1,7 @@
+# Versioned StoryDNA foundation
+
+Library stores reusable narrative structure intelligence, not just content/ideas. Optional story-dna/1.0 supports18 fields: protagonist, goal/want, need, setting, opening, inciting event, problem, stakes, conflict type, attempts, turn, discovery, climax, resolution, ending, theme, emotional/character arcs. SOURCE_EXTRACTED or EDITORIAL_INFERENCE needs evidence; UNKNOWN/NOT_AVAILABLE requires explicit nulls. Agent paraphrases are labelled inference, not actual human review. An unfinished papyrus has no invented resolution.
+
+Sparse infant recognition is valid without a conventional conflict or climax. Optional ranges for cast/beats/locations and categories for depth/density/repetition/twist/emotion/adventure/parent participation/age/style/voice/sentence/vocabulary/direct-descriptive/tone/bedtime/read-aloud can remain unknown. Range bounds are ordered; no fabricated measured reading levels. Current representative enrichment25 records; only22 support complete structural vectors. Others mostly preserve bounded opening/closing observations, not rich analysis.
+
+Causal links carry source/agent evidence. Advisory flags detect missing resolution links, unsetup solutions, disappearing goals, causal jumps, unchanged/self-contradictory transitions and disconnected attempts. They are review prompts from sparse metadata, not a literary critic or native semantic certification. All DNA survives strict batch persistence and portable creative projection.

@@ -9,7 +9,7 @@ param(
     [switch]$Backup
 )
 . "$PSScriptRoot/common.ps1"
-if($Name -notmatch '^checkpoint/[a-z0-9][a-z0-9/-]*$') { throw 'Use checkpoint/descriptive-name' }
+if($Name -notmatch '^checkpoint/[a-z0-9][a-z0-9/.-]*$') { throw 'Use checkpoint/descriptive-name' }
 $null=Invoke-Git @('check-ref-format',"refs/tags/$Name")
 if($StableTag -and $StableTag -notmatch '^v\d+\.\d+\.\d+(-[a-zA-Z0-9.-]+)?$') { throw 'StableTag must be a semantic version tag' }
 foreach($tag in @($Name,$StableTag) | Where-Object { $_ }) {

@@ -9,7 +9,9 @@
     "./age": "./src/story-age.ts",
     "./language": "./src/story-language.ts",
     "./workflow": "./src/story-workflow.ts",
-    "./library": "./src/story-library.ts"
+    "./library": "./src/story-library.ts",
+    "./creative": "./src/library-creative.ts",
+    "./dna": "./src/story-dna.ts"
   },
   "dependencies": {
     "@hekayti/contracts": "0.5.0",

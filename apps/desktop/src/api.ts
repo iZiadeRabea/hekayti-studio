@@ -10,6 +10,55 @@ export type Result<T> =
   | { ok: true; value: T }
   | { ok: false; error: { code: string; message: string } };
 export interface DesktopApi {
+  libraryPage(
+    input: Record<string, unknown>,
+  ): Promise<
+    Result<{
+      recordVersion: number;
+      total: number;
+      offset: number;
+      limit: number;
+      records: LibraryRecord[];
+    }>
+  >;
+  starterImport(input: {
+    expectedVersion: number;
+    publicCreativeReviewed: true;
+    profile?: "EGYPTIAN_ARAB_MUSLIM_FAMILY" | "GENERAL_FAMILY";
+  }): Promise<Result<{ added: number; replayed: number }>>;
+  creativeBatchOpen(input: {
+    expectedVersion: number;
+    publicCreativeReviewed: true;
+  }): Promise<Result<{ added: number; replayed: number } | null>>;
+  creativeExport(input: {
+    publicCreativeReviewed: true;
+  }): Promise<Result<{ path: string; sha256: string; bytes: number } | null>>;
+  creativePreview(): Promise<
+    Result<{
+      previewId: string;
+      digest: string;
+      expectedVersion: number;
+      total: number;
+      add: number;
+      replay: number;
+      conflicts: { recordId: string; title: string; decision: string }[];
+      exclusions: string[];
+      notice: string;
+    } | null>
+  >;
+  creativeRestore(input: {
+    previewId: string;
+    digest: string;
+    expectedVersion: number;
+    choice: "KEEP_EXISTING" | "COPY_WITH_NEW_IDS";
+  }): Promise<
+    Result<{
+      added: number;
+      replayed: number;
+      kept: number;
+      recordVersion: number;
+    }>
+  >;
   bridgeCopy(input: Record<string, unknown>): Promise<Result<boolean>>;
   libraryLoad(): Promise<Result<LibraryState>>;
   librarySeed(): Promise<Result<LibraryState>>;

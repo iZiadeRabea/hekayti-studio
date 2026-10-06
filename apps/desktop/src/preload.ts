@@ -1,6 +1,12 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { DesktopApi } from "./api";
 const api: DesktopApi = {
+  libraryPage: (input) => ipcRenderer.invoke("library:page", input),
+  starterImport: (input) => ipcRenderer.invoke("library:starter-import", input),
+  creativeBatchOpen: (input) => ipcRenderer.invoke("library:batch-open", input),
+  creativeExport: (input) => ipcRenderer.invoke("creative:export", input),
+  creativePreview: () => ipcRenderer.invoke("creative:preview"),
+  creativeRestore: (input) => ipcRenderer.invoke("creative:restore", input),
   bridgeCopy: (input) => ipcRenderer.invoke("bridge:copy", input),
   libraryLoad: () => ipcRenderer.invoke("library:load"),
   librarySeed: () => ipcRenderer.invoke("library:seed"),

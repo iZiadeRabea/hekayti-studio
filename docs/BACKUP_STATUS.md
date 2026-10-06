@@ -1,5 +1,11 @@
 # Backup verification receipts
 
+## Latest verified release: Phase4
+
+4bf822a5cc191b659223a519db3ac903c1368045 / v0.5.0-hybrid-library / checkpoint/phase4-hybrid-library-complete; private Git main and peeled tags match. Source ZIP2632065bytes SHA25633D0D49FBB506EAF13D44B0C5B22AC62D898AAA870C9AF21D9DF477BFBF859C1. Private Releases1LYmt-DdBfJOb4neKeyKOB8ugdHr9FddD; Manifests1GM4ty7pzvDpg2UlS59-V1GQukyv8GIvB; exact ignored backups/receipts/hekayti-studio-phase4-final-4bf822a5.json. Cloud download/hash and independent357-file/full-bundle restore100foundation/329design/154app/typecheck/offlinehealth/security PASS. Source/Git/context only, NOT runtime Library/customer DB.
+
+Phase4.1 local creative ZIP/restore verification is distinct; NO new cloud upload/readback claimed yet. Private Drive Library requires separately approved final recovery. Historical receipts below remain valid for their original milestones.
+
 ## Phase 2 core milestone
 
 2026-10-06: docs/implementation/phase2-delivery.md records private Drive download/hash matching and independent recovery of checkpoint/pdf-windows-spikes with all foundation/design/application tests and health passing. The release-inclusive final archive identity and verified remote/restore evidence live in its manifest/checksum, ignored backups/receipts/hekayti-studio-phase2-delivery-<SHA>.json and Drive Manifests. Resolve v0.3.0-core/checkpoint/phase2-complete rather than relying on historical SHAs below.
