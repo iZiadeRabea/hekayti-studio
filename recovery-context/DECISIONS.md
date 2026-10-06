@@ -2,6 +2,8 @@
 
 ## Phase4.2 — 2026-10-06
 
+- D047: Independent QA closes all four groups after one Engineering fix batch. Serial GPT-6.1 Sol MEDIUM Ops runs one consolidated100foundation/329design/228app/typecheck gate, build/online health/history security/dev+unsigned packaged UI and local creative recovery. Internal workspace versions0.5.2 only; deps/app/data identities preserved. Root Astra final compact approval precedes any main/push/stable tag/Drive. Platform followup_task cannot change effort; the explicit lean cost exception is one HIGH Engineering + one HIGH independent QA + one serial MEDIUM Ops context (three contexts, no additional HIGH/Extra High). This honors MEDIUM routine ops without claiming two total workers. No provider calls or human/native/child-appeal/provider-quality certification; source+Library external recovery remains pending until authorized.
+
 - D046: Owner authorizes Story Planner before manual prose and real synthetic trial readiness, superseding historical Phase4.1-only scope. Reuse request/age/language/Library/canonical workflow; strict planner artifacts, workflow/1.2 single concept, planner-bound hash inputs only for planner stories and sealed append-only v3 SQLite extension. Alternative: duplicate requests, fake candidate duplication or mutate legacy hashes. Reason: compatible auditable integration. Derived abstractions never claim source facts; explicit provisional inspiration never promotes content. Actual reviewed draft/QA/approval feedback updates idempotent source usage/ratings/real GENERATED variants. Structured editorial learning is not fine-tuning. One Sol HIGH implementation, independent QA, batched fixes and consolidated review; no release ops/API/private data/later features before authority.
 
 ## Phase4.1 — 2026-10-06

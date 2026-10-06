@@ -1,0 +1,32 @@
+# Phase 4.2 consolidated preparation evidence — 2026-10-06
+
+Reviewed feature implementation/QA closure `a0b4d45aadbbb4e67fefe94cd0d418d1610b4b52`; stable main remains `1d9ade078114112f05dc62aaafc3d7a055e2f651`. Preparation adds routine smoke/docs/context and workspace0.5.2 only. Resolve final clean preparation SHA from the final handoff/external receipt; do not embed a document's own future commit SHA. No main merge/tag/push/Drive performed.
+
+One consolidated `pwsh -NoProfile -File scripts/test.ps1`: **100 foundation + 329 design + 228 application PASS**, zero application failures/skips/TODO; typecheck PASS. This includes all Phase2/3/4/4.1/4.2 historical suites,23 planner and16 independent red-team cases. No whole-suite repeat for documentation or package metadata. Supporting QA's16+3 closure and Engineering92 focused evidence are distinct scopes, not added to consolidated counts.
+
+| Command / scope | Result / ignored evidence |
+| --- | --- |
+| `scripts/test.ps1` | PASS; `temp/phase42-release/full-tests.log` |
+| `npm run build`, then `npm run package:win` for0.5.2 | PASS production main/preload/renderer/fonts/licence/typecheck and unsigned complete Windows directory; `build-initial.log`, `package.log` |
+| `pwsh -NoProfile -File scripts/health-check.ps1` | Online PASS,0 failures/0 warnings; `health.log` |
+| `pwsh -NoProfile -File scripts/security-check.ps1 -History` | PASS tracked/history paths and credential signatures; `security.log` |
+| `npm audit --json` | Existing8 moderate tooling advisories,0 high/critical; audit exits1 for moderate findings; `audit.json`. No upgrades attempted |
+| `node scripts/ui-smoke.mjs` | Legacy RTL/MSA/Egyptian/mixed edit/export/PDF/render security PASS; `legacy-ui.log`, `temp/phase2-ui/run-8gi6iF` |
+| `node scripts/phase3-ui-smoke.mjs [--packaged]` | Both PASS canonical approval/restart/staleness; `phase3-dev.log`, `phase3-packaged.log`; isolated `temp/phase3-ui/run-ZhTSrI`, `run-Q9YEeO` |
+| `node --import tsx scripts/phase4-ui-smoke.mjs [--packaged]` | Both PASS Library/Inbox/manual bridge/provenance/restart; `phase4-dev.log`, `phase4-packaged.log`; `temp/phase4-ui/run-0thwav/evidence.json`, `run-bVTcDn/evidence.json` |
+| `node scripts/phase41-ui-smoke.mjs [--packaged]` | Both PASS791-row explicit import/paging/source/DNA filters/creative export/independent empty restore/restart; `phase41-dev.log`, `phase41-packaged.log`; `temp/phase41-ui/source-KuOc0J/evidence.json`, `source-q5Bf32/evidence.json` |
+| `node scripts/desktop-smoke.mjs [--packaged]` | Both PASS isolated SQLite/assets/staleness/actual6-page PDF export; `desktop-dev.log`, `desktop-packaged.log`; `temp/phase2-smoke/run-Dw1SXM`, `run-KlWSA0` |
+| `node --import tsx scripts/phase42-ui-smoke.mjs [--packaged]` | Both PASS full actual planner UI/IPC/clipboard/import/canonical QA/test approval/feedback/restart; `planner-dev-final.log`, `planner-packaged.log`; `temp/phase42-ui/run-L3jyZK/evidence.json`, `run-OXibJA/evidence.json` |
+| `node --import tsx scripts/generate-story-planner-trials.ts` | Eight cases regenerated with zero Git artifact changes; full-suite independent case verifies both packages, hashes/schema/page IDs, blank NOT_RUN evaluations and comparison |
+
+Log names without a directory above are under `temp/phase42-release/`. All launchers create their own ignored userdata; no normal runtime DB/actual provider/customer data is accessed. Test dialogs target fresh isolated paths. The smoke's synthetic approval/rating/feedback actions test bindings and counters; they are never claimed as actual human literary/native/developmental review. No external AI/API/consumer-site automation occurs.
+
+Planner UI: explicitly import starter corpus; create48-month Egyptian-Arabic request; acknowledge provisional/adaptation limits; compose/display plan/logic/provenance; disabled acceptance before acknowledgment; accept/build canonical Blueprint; prepare immutable package; separately review/copy CHATGPT/GEMINI/GENERIC to actual clipboard; construct clearly labelled synthetic structured response from current Blueprint; import; current canonical QA/explicit test approval; current feedback; verify GENERATED planner-derived variant; process restart retains exact planner state and approval history. Screenshot is retained in each planner evidence directory; inspected narrow workflow, no consumer UI polish claim.
+
+Actual creative ZIP export includes the new variant's retained record ID, demotes all portable records to GENERATED and removes operational import/package/authority IDs. Independent empty SQLite dry-run is read-only, restore retains variant/lineage, `loadPlanner(projectId)` is null and no operational project ID occurs in bundle. Initial smoke harness attempts corrected a nonexistent export and an assertion that incorrectly expected operational origin transport to survive projection; these were script mistakes, not feature failures. The final dev and packaged commands pass the corrected strict assertions; no feature/QA assertions were edited.
+
+Source/Library external Phase4.2 verification remains **PENDING final approval**. Existing source recovery scripts are unchanged and tested by foundation coverage; verified Phase4.1 source+creative receipt `backups/receipts/hekayti-studio-phase41-final-1d9ade07.json` remains safety anchor. `backup.ps1` requires its own tests/security/health before a release source ZIP; fresh restored checkout tests are a separate recovery proof, not repeated development checks after small edits. Do not claim new cloud recovery from local/archive/schema success.
+
+Actual model routing: root GPT-6 Astra initial compact plan/final compact review only; GPT-6.1 Sol HIGH Engineering (same context/batched fix), GPT-6.1 Sol HIGH independent QA (same context/closure), serial GPT-6.1 Sol MEDIUM Ops. Platform followup_task cannot lower an existing context's effort, so one additional serial MEDIUM context is an explicit lean-cost exception: **three worker contexts**, not two; no extra HIGH/Extra High. No additional agents or feature QA workers were created by Ops.
+
+Limits remain: sparse provisional DNA/unknowns, zero READY starter rows, deterministic metadata adaptation and arbitrary objective/free-prose semantic limits, real native/cultural/religious/developmental review, child appeal and provider comparison unvalidated, unsigned prototype and8 moderate tooling advisories. Source/private operational recovery remain separate; no Phase5.

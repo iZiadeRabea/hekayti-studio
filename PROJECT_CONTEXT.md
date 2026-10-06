@@ -1,6 +1,6 @@
 # Permanent product context
 
-Current milestone: Phase4.2 Story Planner/manual trial readiness implementation on feature/phase4.2-story-planner; independent QA/consolidated gates/final approval pending. Approved plan docs/implementation/phase4.2-plan.md. Stable Phase4.1 release1d9ade078114112f05dc62aaafc3d7a055e2f651 and verified source/creative receipts retained. No release operations or Phase5 authorization.
+Current milestone: Phase4.2 Story Planner/manual trial readiness prepared as workspace0.5.2 on feature/phase4.2-story-planner. Independent QA four findings CLOSED; consolidated regression/build/health/security/dev+unsigned package gates PASS. Compact Astra final approval and mechanical Git/source+Library cloud release verification pending. Approved plan docs/implementation/phase4.2-plan.md; gate evidence phase4.2-testing.md/release-packet.md. Stable Phase4.1 release1d9ade078114112f05dc62aaafc3d7a055e2f651 and verified source/creative receipts retained. No release operations or Phase5 authorization yet.
 
 ## Identity and market
 Project: Hekayti Studio. Initial market: Egypt only.
@@ -32,7 +32,7 @@ Core logic is reusable without Electron. Phase 1 recommended Electron + React/Ty
 
 Owner authorizes Phase4.2 Story Planner: existing request/age/library → explicit plan/causal QA → frozen manual prose package → canonical import/QA/human approval → real feedback. Planning precedes prose; structured editorial learning is not AI model fine-tuning. Existing791 GENERATED starter rows remain provisional, READY0; explicit reviewed inspiration is separate from promotion. Default EGYPTIAN_ARAB_MUSLIM_FAMILY and GENERAL_FAMILY retain separate sensitivity/religious opt-ins. Source facts/unknowns and human-review limits remain honest.
 
-HYBRID BY DEFAULT remains; accepted plans reuse Blueprint/Draft/QA/Approval without mock replacement. No API/credentials/consumer automation/private data/images/video/site/later features. One Sol HIGH implementation, one independent QA, batched fixes, consolidated gates and compact Astra acceptance. Compatible decisions/root continuity delegated; no extra agents/probes/repeated research/full suites per edit. Phase4.2 release/push/cloud recovery needs final approval.
+HYBRID BY DEFAULT remains; accepted plans reuse Blueprint/Draft/QA/Approval without mock replacement. No API/credentials/consumer automation/private data/images/video/site/later features. One Sol HIGH Engineering context, one independent Sol HIGH QA context, one serial Sol MEDIUM Ops context, batched fixes, consolidated gates and compact Astra acceptance. Platform followup cannot lower effort, so this is an explicit three-context cost exception; no extra HIGH/Extra High. Compatible decisions/root continuity delegated; no probes/repeated research/full suites per edit. Phase4.2 release/push/cloud recovery needs final approval.
 
 ## Canonical production design
 One versioned Story Blueprint meaning layer with linked natural-language editions feeds Printed Book, Digital Book and eligible Video Story. Personalization levels0–4 are optional; photo-reference level4 does not automatically make a child protagonist. Age word/page limits are provisional editorial guidance, not clinical facts. Human approvals bind revisions/hashes and downstream changes mark artifacts stale.

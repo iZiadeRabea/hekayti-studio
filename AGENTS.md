@@ -1,6 +1,6 @@
 # Hekayti Studio agent entrypoint
 
-Current authorization: owner-approved Phase4.2 Story Planner/manual trial readiness, docs/implementation/phase4.2-plan.md. One GPT-6.1 Sol HIGH implementation worker, one independent Sol QA, one batched fix pass and one final compact Astra architecture approval. No Extra High by default or extra workers. HYBRID BY DEFAULT; structured editorial learning, not fine-tuning. Compatible implementation/root continuity delegated. No API/consumer automation/private data/images/video/site/Phase5.
+Current authorization: owner-approved Phase4.2 Story Planner/manual trial readiness, docs/implementation/phase4.2-plan.md. Implementation and independent QA closure complete; serial consolidated validation/release preparation uses GPT-6.1 Sol MEDIUM. Actual routing: one HIGH Engineering context, one HIGH independent QA context, one serial MEDIUM Ops context because followup_task cannot lower an existing worker's effort. This explicit cost exception is three worker contexts, not two; no additional HIGH/Extra High workers. Root Astra only initial plan/final compact review. HYBRID BY DEFAULT; structured editorial learning, not fine-tuning. No API/consumer automation/private data/images/video/site/Phase5.
 
 Stable Phase4.1 is released at1d9ade078114112f05dc62aaafc3d7a055e2f651 with verified source/creative recovery receipt. This checkpoint is the Phase4.2 safety anchor; do not duplicate it. Historical Phase4.1-only/STOP instructions are superseded. No Phase4.2 main merge/push/stable tag/Drive until final approval.
 

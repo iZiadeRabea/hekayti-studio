@@ -4,6 +4,8 @@ Owner authorization supersedes historical Phase4.1-only banners. Base: main 1d9a
 
 Implementation model requested: GPT-6.1 Sol HIGH. No Extra High and no additional implementation agents. Root GPT-6 Astra supplied one compact architecture plan. One independent Sol QA follows implementation; batch fixes, then one consolidated expensive verification and compact seven-section release packet.
 
+Preparation routing clarification: platform followup_task cannot lower an existing worker's effort. Routine validation/release therefore uses one additional serial GPT-6.1 Sol MEDIUM Ops context after the HIGH Engineering and HIGH independent QA contexts. Actual total is three worker contexts, an explicit cost exception, not two; no additional HIGH/Extra High. Root Astra performs initial plan/final compact review only. Ops performs no feature architecture or additional independent QA.
+
 - Reuse StoryRequest, Age/Language engines and immutable Blueprint/Draft/QA/Approval. Add strict versioned planning wrapper, plan, blocks, findings, package, import and feedback contracts. Legacy contracts/hashes remain intact; additive workflow/1.2 single-plan concept sets avoid fake candidate duplication.
 - Deterministic ranked retrieval uses structural DNA/family vectors, age/type/objective/profile, variation, operational reuse and actual feedback. Unknown source fields stay unknown. Derived blocks are editorial abstractions with exact source revisions.
 - GENERATED starter inspiration requires explicit review/acknowledgment; promotion authority is unchanged. Sensitive/not-default/religious material needs separate explicit opt-in. No silent religion insertion.

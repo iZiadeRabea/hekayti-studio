@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2 Story Planner preparation — 2026-10-06 (not released)
+
+Independent QA all four groups CLOSED,16 QA and3 targeted closure tests PASS. Consolidated100foundation/329design/228app/typecheck/build/onlinehealth/historysecurity PASS; development/unsigned packaged planner/import/QA/test approval/feedback/restart and existing Phase3/4/4.1/desktop regressions PASS; legacy RTL/PDF UI PASS. Eight trial kits regenerate without artifact changes; comparisons remain blank. Local creative ZIP including GENERATED planner variant passes independent empty restore with operational history excluded. Internal package versions0.5.2 only, no dependency upgrade. Actual routing1HIGH Engineering+1HIGH independent QA+1serialMEDIUM Ops (three contexts, explicit platform effort-change exception), no extra HIGH/Extra High. Final Astra acceptance/mechanical release/source+Library cloud verification PENDING; stable Phase4.1 remains the recovery anchor.
+
 ## Phase4.2 Story Planner implementation — 2026-10-06 (unreleased)
 
 Planning precedes prose: versioned planner/derived blocks/causal QA, deterministic family/DNA/vector retrieval, material age/four-mode variation behavior and explicit cultural/provisional consent. Additive workflow/1.2 single concept/Blueprint/manual Draft/QA/human approval; legacy hashes untouched, planner approvals bind frozen plan. Sealed append-only SQLite extension/CAS/current staleness, narrow UI/IPC, real feedback/GENERATED variants. Eight reproducible unreviewed trials/read-only evaluator/blank comparison; no provider calls/fake approval. Focused20 planner +32 workflow/Phase4 +3 selected creative checks/typecheck PASS; independent QA/full gates/final acceptance/release/recovery PENDING.
