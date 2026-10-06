@@ -1,6 +1,6 @@
 # Hekayti Studio agent entrypoint
 
-Current authority: Phase4.3 implementation/validation only; candidate0.6.0 awaits final compact approval. No main/tag/push/cloud before approval. Stable ad581cbc/v0.5.4 verified by ignored phase422 receipt. Existing HIGH implementation/HIGH independentQA/MEDIUM UI+ops reused; zero new contexts/probes/ExtraHigh. Root initial/final compact review only. CURRENT_STATE.md and phase4.3-release-packet.md are current; earlier routing/milestone descriptions below are historical.
+Current authority: Phase4.3 APPROVED FOR RELEASE exact d5bbeeab217b9f05219d53219f2cabcaab0fc96a. Essential safe immutable0.6.0/private Git and mandatory source/separate791 recovery only; no optional work/postbackup source commit/tag move. Actual identity/verification requires ignored external receipt. Existing HIGH/HIGH/MEDIUM reused, zero new contexts/probes/ExtraHigh; root initial/final only. Earlier entries below are historical.
 
 Stable e34ea7edb411cc886ac910e3e723c6ed09e7e71a/v0.5.3-planner-quality/checkpoint/phase4.2.1-planner-quality-complete and verified ignored receipt backups/receipts/hekayti-studio-phase421-final-e34ea7ed.json remain preserved. Do not touch owner trial/runtime databases.
 

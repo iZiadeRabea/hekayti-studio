@@ -2,7 +2,7 @@
 
 Current approved work: Phase4.3 feature/phase4.3-simple-creator, verified ad581cbc/v0.5.4 preserved. Read CURRENT_STATE.md and docs/implementation/phase4.3-backend.md first. Simple Arabic/Reader/illustration descriptions only; independent QA/final gates/release approval pending. Historical stop/release banners below are not current authority. No images/API/ownerDB/Phase5/release/cloud. Existing HIGH implementation/HIGH QA/MEDIUM UI+ops reused, no new agents.
 
-Current: Phase4.3 candidate0.6.0 awaits final compact approval and external recovery. No main/tag/push/cloud before approval. See CURRENT_STATE.md and docs/implementation/phase4.3-release-packet.md / phase4.3-testing.md. Stable ad581cbc/v0.5.4 is verified by backups/receipts/hekayti-studio-phase422-final-ad581cbc.json. Earlier milestone descriptions below are historical, not current authority.
+Current: Phase4.3 APPROVED FOR RELEASE exact d5bbeeab217b9f05219d53219f2cabcaab0fc96a. Essential immutable0.6.0/private Git and mandatory recovery only; actual SHA/cloud completion requires ignored external receipt. See CURRENT_STATE.md/phase4.3-release-packet.md/testing.md. Stable ad581cbc/v0.5.4 receipt preserved. Earlier entries below are historical; no postbackup source commit/tag move.
 
 Stable main e34ea7edb411cc886ac910e3e723c6ed09e7e71a/v0.5.3-planner-quality/checkpoint/phase4.2.1-planner-quality-complete is VERIFIED in ignored backups/receipts/hekayti-studio-phase421-final-e34ea7ed.json. Preserve old history/tags/backups and owner/runtime trial databases. Historical milestones are in CHANGELOG, not current pending banners.
 
