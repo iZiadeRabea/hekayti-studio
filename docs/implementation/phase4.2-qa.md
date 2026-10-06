@@ -2,7 +2,7 @@
 
 Reviewed implementation: `d3640b716892835b78af2b169887bab1c40300fa`, feature/phase4.2-story-planner; stable baseline `1d9ade078114112f05dc62aaafc3d7a055e2f651` unchanged. One independent GPT-6.1 Sol HIGH review, no implementation authorship or additional agents. Synthetic in-memory/disposable SQLite only. Owned changes: this report and tests/app/phase42-red-team.test.ts.
 
-Recommendation: **batch fixes before consolidated verification/final acceptance**. No major architecture incompatibility found. Existing canonical integration, legacy hashes and provisional-source boundaries remain intact in focused checks. Six desired-behavior regression assertions fail, grouped below into one HIGH and three MEDIUM findings. No BLOCKER; no separate LOW finding.
+Current recommendation: **proceed to consolidated verification/final acceptance**. Independent closure of fix `8cc4b6076ac2b066e6bf861137e9b21d652baad9` confirms all four finding groups CLOSED. Remaining BLOCKER/HIGH/MEDIUM/LOW findings: **0/0/0/0** within this review scope. No major architecture incompatibility found. The original reproductions and initial evidence below are retained as historical QA evidence; they no longer describe the fixed implementation.
 
 ## HIGH — P42-QA-A: stale planner approval still authorizes a new approved-workflow reference
 
@@ -44,3 +44,22 @@ Independent passing checks cover canonical envelope side-path denial, declared h
 No full historical suite/build/health/security scan/package GUI gate, external research, provider call, consumer login, private data, main merge/tag/push or Drive operation was performed. Those expensive consolidated gates remain deferred. Native Arabic, literary quality, child appeal, cultural/religious accuracy and provider comparison still require real manual review; schema success does not establish them. Trial files are unreviewed templates, not fabricated human/provider successes.
 
 The independent QA commit contains only the two owned files. Disposable synthetic test databases remain under ignored temp/; no cleanup or normal runtime data access was performed.
+
+## Independent closure — 2026-10-06
+
+Reviewed only the compact fix diff, original findings and targeted boundary tests on clean feature HEAD `8cc4b6076ac2b066e6bf861137e9b21d652baad9`. No implementation edits. The original fourteen tests, including all six desired-behavior assertions, are unchanged; two independent closure countercases were appended.
+
+| Finding | Closure evidence | Status |
+| --- | --- | --- |
+| P42-QA-A, HIGH | Fresh extraction checks current planner/source authority in the service and direct new-approved-reference persistence. Missing-validator adapters fail closed for planner extraction. Stale service/direct creates preserve Library, workflow and retained historical references. | CLOSED |
+| P42-QA-B, MEDIUM | Return-to-default requires an actual transition; causal anchors cannot point after resolution or precede their prerequisite anchor; pre-resolution problem continuity is checked. Original infant/routine boundary cases remain valid. | CLOSED |
+| P42-QA-C, MEDIUM | Same-family member fallback is explicitly disclosed as REVIEW. An independent real-used-family countercase confirms CompletelyNew without selectedFamily prefers a genuine unused available alternative. | CLOSED |
+| P42-QA-D, MEDIUM | Exact eligible family revision is retained with member provenance. The original actual approval/feedback case now creates/counts the family variant and one real use/approved outcome. Family revisions stale the package; members never silently rebind obsolete lineage. Independent NotDefault/religious countercase requires both separate opt-ins even when member metadata is otherwise eligible. | CLOSED |
+
+Closure commands/results:
+
+- `node --import tsx --test tests/app/phase42-red-team.test.ts`: **16/16 PASS**, no failures/skips/TODO; fourteen unchanged original tests plus two independent countercases.
+- `node --import tsx --test --test-name-pattern='member lineage freezes|member inspiration cannot|stale planner extraction' tests/app/phase42-planner.test.ts`: **3/3 PASS**, directly verifies family source staleness/consent and fresh-extraction service/persistence boundaries.
+- `npm run typecheck`: **PASS**; `git diff --check`: **PASS**. Original test-file diff contains additions only.
+
+Engineering's reported focused92/92 result was inspected as supporting evidence, not independently rerun wholesale. Full suite/build/health/security/dev+packaged and final architecture acceptance remain the next consolidated gate. No API/provider/human-quality claims, release operations or normal runtime data access. Only the two existing QA-owned files changed in closure.

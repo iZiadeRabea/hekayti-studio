@@ -703,3 +703,81 @@ test("independent positive: eight local manual kits are usable, hash-bound and h
     /Static trial package IDs cannot replay authority/,
   );
 });
+
+test("closure: CompletelyNew prefers an available unused family over used family members without an explicit selection", async () => {
+  const family = seeds.find(
+    (r) => r.recordId === "structure-pattern-981b90da",
+  )!;
+  const member = seeds.find((r) => r.recordId === "source-aesop-2")!;
+  const p = planning();
+  p.generation = 1;
+  const alternative = rankPlanningCandidates(
+    planning(),
+    state(seeds.filter((r) => r.payload.type === "STORY_FAMILY")),
+  ).find((c) => c.record.recordId !== family.recordId)!.record;
+  const h = harness([family, member]);
+  try {
+    const acceptedMember = await accepted(h, p);
+    assert.equal(
+      acceptedMember.pkg.plan.provenance.sources[0]!.ref.recordId,
+      member.recordId,
+    );
+    importLibraryBatch(
+      h.repo,
+      [alternative],
+      h.repo.loadLibrary().recordVersion,
+      "qa-unused-alternative",
+      "now",
+    );
+    const next = await composeStoryPlan(
+      { ...planning(), variation: "CompletelyNew", selectedFamily: null },
+      h.repo.loadLibrary(),
+      { planId: "qa-closure-new", revisionId: "qa-closure-new-r1" },
+    );
+    assert.equal(next.provenance.selectedStoryFamilyId, alternative.recordId);
+    assert.notEqual(
+      next.provenance.selectedPatternId,
+      family.creative!.dna!.pattern!.patternId,
+    );
+    assert.equal(
+      validateStoryPlan(next).signals.VariationCompliance,
+      "ACCEPTABLE",
+    );
+    assert.equal(
+      next.provenance.limitations.some((l) =>
+        l.includes("No unused alternative"),
+      ),
+      false,
+    );
+  } finally {
+    h.repo.close();
+  }
+});
+
+test("closure: family NotDefault and religious requirements cannot be bypassed through an otherwise eligible member", () => {
+  const member = seeds.find((r) => r.recordId === "source-aesop-2")!;
+  const base = seeds.find((r) => r.recordId === "structure-pattern-981b90da")!;
+  const family = structuredClone(base);
+  family.creative!.culture.fit = "NOT_DEFAULT";
+  family.creative!.culture.religiousReview =
+    "RELIGIOUS_ACCURACY_REVIEW_REQUIRED";
+  const library = state([family, member]);
+  for (const options of [
+    { sensitiveOptIn: false, religiousOptIn: false },
+    { sensitiveOptIn: true, religiousOptIn: false },
+    { sensitiveOptIn: false, religiousOptIn: true },
+  ]) {
+    assert.equal(
+      rankPlanningCandidates({ ...planning(), ...options }, library).length,
+      0,
+    );
+  }
+  const acknowledged = rankPlanningCandidates(
+    { ...planning(), sensitiveOptIn: true, religiousOptIn: true },
+    library,
+  );
+  assert.deepEqual(
+    new Set(acknowledged.map((r) => r.record.recordId)),
+    new Set([family.recordId, member.recordId]),
+  );
+});
