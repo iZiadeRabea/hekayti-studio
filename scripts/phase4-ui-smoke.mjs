@@ -8,11 +8,12 @@ import { storyStructureFor } from "@hekayti/core/age";
 import { manualBridgeProvenance } from "@hekayti/core/workflow";
 import { countWords } from "@hekayti/contracts";
 await mkdir("temp/phase4-ui", { recursive: true });
+const packaged = process.argv.includes("--packaged");
 const data = await mkdtemp(resolve("temp/phase4-ui/run-"));
 const launch = () =>
   electron.launch({
-    executablePath: resolve("node_modules/electron/dist/electron.exe"),
-    args: [resolve("apps/desktop"), "--phase2-data=" + data],
+    executablePath: resolve(packaged ? "dist/phase2-package/win-unpacked/Hekayti Studio Phase 2.exe" : "node_modules/electron/dist/electron.exe"),
+    args: [...(packaged ? [] : [resolve("apps/desktop")]), "--phase2-data=" + data],
     timeout: 30000,
   });
 let desktop = await launch();

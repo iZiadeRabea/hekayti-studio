@@ -1,5 +1,7 @@
 # Current state
 
+Phase4 current milestone: **0.5.0 preparation, not released**. Independent QA P4-RT-001–004 CLOSED (84/84 focused + typecheck). Consolidated 100 foundation + 329 design + 154 app tests/typecheck, build, online health/history security, development/packaged Phase4 and Phase3 restart, legacy UI and desktop export PASS. Astra final review, publication and verified Phase4 recovery PENDING. Exact receipts docs/implementation/phase4-testing.md. Stable v0.4.0/Phase3 verified receipt below remains unchanged; historical pending Phase4 bullets describe earlier stages. Next action: Astra final review then authorized mechanical recovery; owner manually tries real synthetic ChatGPT/Gemini packages.
+
 - Current project version: v0.4.0-story-engine
 - Current branch at milestone: feature/phase4-hybrid-library (implementation, not stable)
 - Latest stable checkpoint: checkpoint/phase3-story-engine-complete

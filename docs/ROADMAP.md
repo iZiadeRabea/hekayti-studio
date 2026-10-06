@@ -19,4 +19,6 @@ Phases3–9 use small vertical slices: manual short story → imported art → s
 
 ## Current status — 2026-10-06
 
+Phase4 authorized hybrid Library/Inbox/manual bridge implemented; four independent QA findings CLOSED and consolidated regression/unsigned package PASS. 0.5.0 preparation only; Astra review/publication/verified recovery PENDING. Historical Phase3 paragraphs below remain release history. No later-roadmap or production/native certification authorized.
+
 Phase 3 synthetic Story Engine v0.4.0-story-engine is approved by final Astra review after independent QA closure and consolidated regression/package gates. Mechanical release publication and verified recovery are authorized; stop afterward. Exact final identity belongs in the external receipt. Existing later-phase roadmap above remains unchanged and requires new owner approval. No paid AI, later production features or full UI is implicitly authorized. Confirm private-order backup/consent boundaries before any real data.

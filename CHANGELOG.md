@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0 preparation — 2026-10-06 (not released)
+
+Independent QA confirms four findings CLOSED, 84 focused tests/typecheck. Consolidated 100 foundation + 329 design + 154 application tests/typecheck, production build, online health/history security, development/packaged Phase4 and Phase3 restart, legacy UI and isolated desktop export PASS. Workspace/internal versions advanced without dependency upgrades; original product/app/data paths retained. Astra final review and publication/recovery pending; exact receipts phase4-testing.md.
+
 ## Phase 4 implementation — 2026-10-06 (not released)
 
 HYBRID-default persistent reusable Library/Inbox, structural families/variants, explicit lifecycle/editorial opinion/usage, immutable manual ChatGPT/Gemini/generic packages and strict atomic pasted-concept import. Additive SQLite v3 and workflow/1.1 preserve Phase 3 history; general imported meaning uses existing Blueprint plus structured manual draft/QA/explicit approval without mock substitution. Minimal secure Library/Bridge UI, synthetic starter, focused tests and QA packet. Independent QA/full final gates/stable release pending; no API/provider/production-quality claim. Corrected continuity to the actually verified Phase 3 final Git/Drive receipt, retaining Wave1 history.

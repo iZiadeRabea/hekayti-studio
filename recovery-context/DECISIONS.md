@@ -1,5 +1,7 @@
 # Architecture / product decision log
 
+D037 / 2026-10-06: prepare 0.5.0 after independent QA closes all four Phase4 findings. Reuse verified GPT-6.1 Sol implementation and independent Sol QA routes, no extra probe/worker; Astra supplies approved plan and one final review. One consolidated full regression/package/security gate after batched fixes. No API dependency, later features or stable publication before final approval. Exact evidence phase4-testing.md; verified Phase4 recovery remains pending.
+
 ## Phase 4 — 2026-10-06
 
 - D033: Owner authorizes reusable Library/Inbox/manual bridge, HYBRID BY DEFAULT with CURATED/AI-led choices and no API dependency. Alternative: API/provider lock-in or purely curated mock production. Reason: owner-operated creative sourcing without credentials/automation; same frozen request/context/output schema for ChatGPT/Gemini/generic, no provider identity/quality proof from notes.

@@ -1,5 +1,7 @@
 # Hekayti Studio agent entrypoint
 
+Current Phase4 boundary: 0.5.0 preparation; independent QA four findings CLOSED and consolidated gates PASS. Astra final review PENDING, no main/stable push/Drive until approval. Exact review packet phase4-overview.md and phase4-testing.md; no new features authorized.
+
 Phase 4 owner authorization supersedes historical Phase 3 stop wording only within docs/implementation/phase4-plan.md. HYBRID BY DEFAULT; offline manual ChatGPT/Gemini/generic bridge, no API dependency. Sole verified GPT-6.1 Sol Engineering implementation then independent Sol QA, Astra final review. Routine compatible implementation/continuity updates delegated; no extra agents or paid/private/photo/image/video/site work. Focused tests during edits; one consolidated expensive gate after QA fixes. No main/stable publication/Drive until final approval. Phase 3 exact verified final receipt is recorded in phase4-overview.md.
 
 BEFORE MAKING ANY PROJECT CHANGES, read START_HERE.md, PROJECT_CONTEXT.md, CURRENT_STATE.md, DECISIONS.md and SKILLS.md. Follow CONTRIBUTING_AI.md and SECURITY.md. Inspect Git status.

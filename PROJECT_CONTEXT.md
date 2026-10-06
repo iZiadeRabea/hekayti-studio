@@ -1,5 +1,7 @@
 # Permanent product context
 
+Current milestone: Phase4 0.5.0 preparation, not stable. Four-finding independent QA closure and consolidated local regression/package/security gates PASS; Astra final review, publication and verified Phase4 recovery PENDING. HYBRID BY DEFAULT, offline manual bridge/no API dependency. Latest verified cloud recovery remains Phase3. Historical pending statements below describe prior milestones.
+
 ## Identity and market
 Project: Hekayti Studio. Initial market: Egypt only.
 

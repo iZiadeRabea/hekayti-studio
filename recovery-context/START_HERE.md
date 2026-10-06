@@ -1,5 +1,7 @@
 # Start here — new AI session
 
+Current stage: Phase4 0.5.0 preparation, independent QA four findings CLOSED, consolidated local regression/package/security PASS. Astra final review and publication/recovery PENDING. Exact receipts phase4-testing.md; version preparation is not stable release.
+
 Current owner authorization: Phase 4 reusable hybrid Library/Inbox/manual AI bridge, HYBRID BY DEFAULT with no API dependency. Read docs/implementation/phase4-plan.md and phase4-overview.md for approved scope/gates. This supersedes historical stop boundaries only for that scope; no extra agents, private data or paid AI. Focused iteration then independent QA; final expensive gate/release/recovery remains separate.
 
 BEFORE MAKING ANY PROJECT CHANGES, READ:

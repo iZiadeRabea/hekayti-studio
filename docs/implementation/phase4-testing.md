@@ -1,5 +1,17 @@
 # Phase 4 testing and QA packet
 
+Current closure/preparation receipts below supersede historical pending QA/regression statements in earlier stage notes; Phase4 publication and verified recovery still pending Astra authorization.
+
+## Consolidated preparation receipts — 2026-10-06
+
+- `temp/phase4-preparation/full-test.log`: ONE full scripts/test.ps1, 100 foundation + 329 design assertions + **154/154 application tests**, typecheck PASS, zero skips/failures/cancellations; app TAP 10018.5785ms.
+- `temp/phase4-preparation/build.log`: production build PASS. `health.log`: online health PASS, 0 warnings/failures (private remote and existing Phase3 tags checked). `security-history.log`: full Git-history security PASS. Same directory `package.log`: unsigned Windows x64 0.5.0 package PASS; no appId/product/userData change.
+- `temp/phase4-preparation/phase4-ui.log` and `phase4-packaged-ui.log`: development and packaged **6/6** actual clipboard/import/repair/creative manual Arabic QA/approval/restart gate groups PASS. Exact persisted receipts `temp/phase4-ui/run-mxEfaD/evidence.json` and `temp/phase4-ui/run-OLTARH/evidence.json`; synthetic isolated data, no external provider automation.
+- `temp/phase4-preparation/phase3-ui.log` and `phase3-packaged-ui.log`: development/packaged **8/8** creator/provenance/isolation/approval/restart/staleness groups PASS; data `temp/phase3-ui/run-EZO3ZV` and `temp/phase3-ui/run-Q3mf22`.
+- `temp/phase4-preparation/legacy-ui.log`: **7/7** legacy UI groups PASS, data `temp/phase2-ui/run-5HIqlZ`. `desktop.log` and `packaged-desktop.log`: actual development/packaged SQLite and six-page print/digital export smoke PASS; evidence `temp/phase2-smoke/run-j7nrGk/smoke-result.json` and `temp/phase2-smoke/run-0S4cS2/smoke-result.json`.
+
+Independent report remains independently owned: phase4-red-team.md (four findings CLOSED, 84/84). Final Astra approval, stable Git publication and Phase4 fresh archive/cloud readback/restore PENDING; local tests and package are not cloud recovery. Receipts ignored/local; preserve for mechanical release workflow.
+
 Implementation stage only; independent QA and final expensive regression/recovery remain pending. Run focused tests with `node --import tsx --test tests/app/phase4-library.test.ts tests/app/story-workflow.test.ts tests/app/phase3-red-team.test.ts tests/app/persistence.test.ts tests/app/boundaries.test.ts`, and `npm run typecheck`. Legacy test intent remains; v1 migration fixture now drops new v3 tables when constructing an actual v1 database, and supported schema expectations are 3.
 
 Engineering focused evidence: strict lifecycle/promotion, shared target schemas/four intents/frozen context, JSON size/ownership/provenance rejection, atomic/idempotent imports/usage, structural families/unique variants, creative imported semantics preserved through canonical Blueprint/manual prose/current QA/explicit approval, CAS/corrupt-state retention and actual v2→3 migration preserving Phase 3 workflow/approval bytes. The real offline desktop functional flow is scripts/phase4-ui-smoke.mjs (`node --import tsx scripts/phase4-ui-smoke.mjs` after local UI bundle); it uses isolated synthetic storage under ignored temp/phase4-ui, checks actual clipboard copy, invalid import repair, Inbox/use-now/manual draft/approval and restart/package reopening. Exact receipt path is added at completed handoff below; no external consumer model used.

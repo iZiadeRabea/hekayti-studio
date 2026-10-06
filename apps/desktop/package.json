@@ -1,5 +1,5 @@
 {
-  "name":"hekayti-desktop","productName":"Hekayti Studio Phase 2","version":"0.4.0","private":true,"type":"module",
+  "name":"hekayti-desktop","productName":"Hekayti Studio Phase 2","version":"0.5.0","private":true,"type":"module",
   "main":"dist/main.cjs",
-  "dependencies":{"@hekayti/contracts":"0.4.0","@hekayti/core":"0.4.0","@hekayti/persistence":"0.4.0","@hekayti/export":"0.4.0","react":"19.3.0","react-dom":"19.3.0","@fontsource/noto-sans-arabic":"5.3.0"}
+  "dependencies":{"@hekayti/contracts":"0.5.0","@hekayti/core":"0.5.0","@hekayti/persistence":"0.5.0","@hekayti/export":"0.5.0","react":"19.3.0","react-dom":"19.3.0","@fontsource/noto-sans-arabic":"5.3.0"}
 }
