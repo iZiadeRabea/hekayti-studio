@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "planning-request/1.0",
+  "planningRevisionId": "02-infant-eg-bedtime-planning",
+  "request": {
+    "schemaVersion": "story-request/1.0",
+    "requestId": "02-infant-eg-bedtime-request",
+    "revisionId": "02-infant-eg-bedtime-request-r1",
+    "projectId": "02-infant-eg-bedtime-project",
+    "storyId": "02-infant-eg-bedtime-story",
+    "ageMonths": 10,
+    "languageModes": [
+      "ar-EG"
+    ],
+    "primaryLanguageMode": "ar-EG",
+    "primaryCategory": "bedtime",
+    "objective": {
+      "kind": "connection",
+      "description": "A warm goodnight routine",
+      "successScenario": "Notice the same familiar blanket and settle with caregiver"
+    },
+    "theme": "A warm goodnight routine",
+    "readingMode": "adult-read",
+    "personalization": {
+      "origin": "synthetic",
+      "profileId": "synthetic-trial",
+      "level": 0,
+      "preferences": [],
+      "heroMode": "none"
+    },
+    "sourceStrategy": "hybrid",
+    "trustedFacts": [],
+    "outputIntents": [
+      "print",
+      "digital"
+    ]
+  },
+  "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+  "variation": "FreshConcept",
+  "generation": 1,
+  "selectedFamily": null,
+  "selectedCharacter": null,
+  "selectedSetting": null,
+  "constraints": [
+    "Synthetic-only fictional story. No private identifying details; no unsolicited religious lesson."
+  ],
+  "inspirationReviewed": true,
+  "adaptationAcknowledged": true,
+  "sensitiveOptIn": false,
+  "religiousOptIn": false
+}

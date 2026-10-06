@@ -1,5 +1,7 @@
 # Manual AI bridge
 
+Phase4.2 adds the [Story Planner](story-planner.md): accepted fixed plans now use a shared `plan-response/1.0` prose envelope with exact hash/revision/actor/beat/objective/resolution anchors. Story Creator includes the full plan-first manual flow. Static unreviewed [manual trials](manual-story-trials.md) use separate portable IDs and a read-only evaluator; live import requires the current accepted live package. Existing candidate bridge below remains available independently.
+
 1. Create/reopen a synthetic request in Story Creator. In Library, explicitly review/approve/promote reusable records and select context if desired.
 2. Choose current story, HYBRID/CURATED/AI_LED, variation and 3–5 candidates. Prepare the immutable package. ChatGPT, Gemini and generic targets share the identical strict response JSON schema and constraints; their labels are routing notes only.
 3. Review all content for synthetic-only privacy/safety, then copy instructions manually into the service. No browser automation, login, credentials, API call or model benchmark is performed by Hekayti.

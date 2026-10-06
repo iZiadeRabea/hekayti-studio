@@ -1,7 +1,7 @@
 # Current state
 
 - Current project version: v0.5.1-starter-library
-- Current branch at milestone: main
+- Current branch at milestone: feature/phase4.2-story-planner (implementation, not released)
 - Latest stable checkpoint: checkpoint/phase4.1-starter-library-complete
 - Latest stable tag: v0.5.1-starter-library
 - Last successful tests: 2026-10-06 08:47:54 +03:00 — foundation, design and available application suites passed; visual/packaging gates recorded separately
@@ -18,4 +18,6 @@ Prior Phase3 verified final:58d4c52d22e52c43f684e3da2eb0bfd5056545f5; private Re
 
 Known limits: internal prototype, unsigned Windows package, native Arabic/early-childhood/cultural/religious review and physical print proof required. Historical source rights remain owner-reviewed, not globally cleared. Free-text privacy needs explicit declaration. Operational private orders/photos/database encryption/retention/backup remain separate future decisions. Exact future release/cloud identity belongs in external ignored receipts, never an unverified source-state promise.
 
-Next: complete authorized mechanical release and verify both backups, then STOP Phase4.1. No Phase5 authorized. Owner can manually try public/synthetic source adaptations and actual ChatGPT/Gemini responses; no provider comparison claimed. Source backup excludes runtime databases; creative ZIP includes only explicit safe projection, not private operational recovery.
+Phase4.2 implementation: strict planner contracts, structural retrieval/derived blocks, age/causal validation, sealed append-only SQLite extension, additive workflow/1.2 single accepted concept, fixed manual prose envelope, real feedback/GENERATED variants and minimal Story Creator UI. Focused20 planner +32 workflow/Phase4 +3 selected creative portability checks PASS (55 distinct); typecheck PASS. Eight reproducible unreviewed synthetic manual cases with both packages/blank evaluations prepared. No API/provider call/human-quality certification. See docs/implementation/phase4.2-execution.md.
+
+Next: one independent Sol HIGH QA, batched fixes, then one consolidated full regression/build/health/security/dev+packaged gate and compact seven-section final Astra packet. No Phase4.2 merge/push/stable tag/Drive or Phase5 now. Recovery anchor: ignored backups/receipts/hekayti-studio-phase41-final-1d9ade07.json; no new backup claimed. Planner histories are operational data excluded from portable creative archives.

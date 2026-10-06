@@ -1,0 +1,11 @@
+# Story Plan validation
+
+`validateStoryPlan` returns severity/category/location/message/suggestedAction and STRONG / ACCEPTABLE / REVIEW / FAIL signals. These are explainable internal editorial signals, not measurements of literary quality.
+
+Deterministic checks cover typed goal/protagonist or recognition subject, canonical Age Engine guidance, age actions/cast/units, contiguous unique ordered beats, declared/introduced actors, before/after state links, explicit location transitions, backward-only cause/setup references, set-up resource tokens, original problem/goal identity, repeated attempt progression and resolution-linked ending. Infant recognition deliberately has no conventional conflict. Missing fields fail the strict shape contract before logic QA.
+
+Checks establish explicit field relationships. They cannot establish that arbitrary strings are true, that a resolution feels earned, that a child's developmental needs are met, or that free prose honestly follows its declared anchors. Human review is always required, especially arbitrary objective delivery, quiet/no-conflict story choices, culturally sensitive adaptation and actual language naturalness.
+
+External `plan-response/1.0` binds package/plan/hash/request plus actors, objective, major ordered beat IDs and resolution ID, then the unchanged StoryDraft contract. Import checks exact modes/pages/speakers/provenance and measured words, bidi controls, byte limit, canonical coverage and existing age/language/story QA. Generic bare StoryDraft import cannot bypass a planned concept's hash/revision envelope. Declared anchors can be dishonest; full prose semantic certification is explicitly unavailable. Stylistic creativity is allowed within fixed structure.
+
+Acceptance is immutable; plan/current request/Library-source drift requires new review/package. Canonical approval must bind current draft/report and planner source; feedback APPROVED/EDITED requires actual current human text approval. EDITED also requires an earlier retained draft; REJECTED binds a current reviewed unapproved draft. Idempotent retries preserve counters; changed retry content conflicts. No imported feedback, historical summaries or provider claims confer authority.

@@ -1,0 +1,318 @@
+{
+  "schemaVersion": "story-plan/1.0",
+  "planId": "03-toddler-msa-routine-plan",
+  "revisionId": "03-toddler-msa-routine-plan-r1",
+  "planning": {
+    "schemaVersion": "planning-request/1.0",
+    "planningRevisionId": "03-toddler-msa-routine-planning",
+    "request": {
+      "schemaVersion": "story-request/1.0",
+      "requestId": "03-toddler-msa-routine-request",
+      "revisionId": "03-toddler-msa-routine-request-r1",
+      "projectId": "03-toddler-msa-routine-project",
+      "storyId": "03-toddler-msa-routine-story",
+      "ageMonths": 18,
+      "languageModes": [
+        "ar-MSA-simple"
+      ],
+      "primaryLanguageMode": "ar-MSA-simple",
+      "primaryCategory": "everyday-life",
+      "objective": {
+        "kind": "behavioral",
+        "description": "Putting a toy in its basket",
+        "successScenario": "Try one familiar action with caregiver support"
+      },
+      "theme": "Putting a toy in its basket",
+      "readingMode": "adult-read",
+      "personalization": {
+        "origin": "synthetic",
+        "profileId": "synthetic-trial",
+        "level": 0,
+        "preferences": [],
+        "heroMode": "none"
+      },
+      "sourceStrategy": "hybrid",
+      "trustedFacts": [],
+      "outputIntents": [
+        "print",
+        "digital"
+      ]
+    },
+    "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+    "variation": "FreshConcept",
+    "generation": 2,
+    "selectedFamily": null,
+    "selectedCharacter": null,
+    "selectedSetting": null,
+    "constraints": [
+      "Synthetic-only fictional story. No private identifying details; no unsolicited religious lesson."
+    ],
+    "inspirationReviewed": true,
+    "adaptationAcknowledged": true,
+    "sensitiveOptIn": false,
+    "religiousOptIn": false
+  },
+  "title": "Putting a toy in its basket — helping",
+  "protagonistId": "03-toddler-msa-routine-plan-r1-actor-0",
+  "recognitionSubject": null,
+  "goal": {
+    "goalId": "03-toddler-msa-routine-plan-r1-goal",
+    "description": "Practice Putting a toy in its basket; visible success: Try one familiar action with caregiver support"
+  },
+  "need": null,
+  "setting": {
+    "locationId": "03-toddler-msa-routine-plan-r1-place",
+    "description": "a familiar play corner"
+  },
+  "openingState": "goal is introduced; familiar materials and support are available",
+  "problem": {
+    "problemId": "03-toddler-msa-routine-plan-r1-problem",
+    "description": "A small supported step is needed to Putting a toy in its basket"
+  },
+  "stakes": "The familiar activity is not complete yet; reassurance and adult support remain available",
+  "incitingBeatId": "03-toddler-msa-routine-plan-r1-beat-2",
+  "turningBeatId": null,
+  "climaxBeatId": null,
+  "discovery": null,
+  "characters": [
+    {
+      "characterId": "03-toddler-msa-routine-plan-r1-actor-0",
+      "bibleVersion": "03-toddler-msa-routine-plan-r1-bible-0",
+      "origin": "synthetic",
+      "displayName": "نور",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    }
+  ],
+  "beats": [
+    {
+      "beatId": "03-toddler-msa-routine-plan-r1-beat-1",
+      "sequence": 1,
+      "role": "OPENING",
+      "action": "notice",
+      "actorId": "03-toddler-msa-routine-plan-r1-actor-0",
+      "locationId": "03-toddler-msa-routine-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "goal is introduced; familiar materials and support are available",
+      "afterState": "state-1: visible step completed",
+      "summary": "Introduce Practice Putting a toy in its basket; visible success: Try one familiar action with caregiver support at a familiar play corner",
+      "emotion": "curious",
+      "causes": [],
+      "setupRefs": [],
+      "introduces": [
+        "03-toddler-msa-routine-plan-r1-actor-0"
+      ],
+      "requires": [],
+      "establishes": [
+        "03-toddler-msa-routine-plan-r1-setup"
+      ],
+      "addressesProblemId": null,
+      "achievesGoalId": null,
+      "progress": "Goal, support and materials established"
+    },
+    {
+      "beatId": "03-toddler-msa-routine-plan-r1-beat-2",
+      "sequence": 2,
+      "role": "RESOLUTION",
+      "action": "ask-help",
+      "actorId": "03-toddler-msa-routine-plan-r1-actor-0",
+      "locationId": "03-toddler-msa-routine-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "state-1: visible step completed",
+      "afterState": "state-2: goal achieved",
+      "summary": "helping enables Try one familiar action with caregiver support",
+      "emotion": "curious",
+      "causes": [
+        "03-toddler-msa-routine-plan-r1-beat-1"
+      ],
+      "setupRefs": [
+        "03-toddler-msa-routine-plan-r1-beat-1"
+      ],
+      "introduces": [],
+      "requires": [
+        "03-toddler-msa-routine-plan-r1-setup"
+      ],
+      "establishes": [],
+      "addressesProblemId": "03-toddler-msa-routine-plan-r1-problem",
+      "achievesGoalId": "03-toddler-msa-routine-plan-r1-goal",
+      "progress": "Visible achievement: Try one familiar action with caregiver support"
+    },
+    {
+      "beatId": "03-toddler-msa-routine-plan-r1-beat-3",
+      "sequence": 3,
+      "role": "ENDING",
+      "action": "repeat",
+      "actorId": "03-toddler-msa-routine-plan-r1-actor-0",
+      "locationId": "03-toddler-msa-routine-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "state-2: goal achieved",
+      "afterState": "state-3: visible step completed",
+      "summary": "Reassured closure of the same shared experience",
+      "emotion": "reassured",
+      "causes": [
+        "03-toddler-msa-routine-plan-r1-beat-2"
+      ],
+      "setupRefs": [],
+      "introduces": [],
+      "requires": [],
+      "establishes": [],
+      "addressesProblemId": "03-toddler-msa-routine-plan-r1-problem",
+      "achievesGoalId": null,
+      "progress": "Reassured closure of the same shared experience"
+    }
+  ],
+  "resolutionBeatId": "03-toddler-msa-routine-plan-r1-beat-2",
+  "endingBeatId": "03-toddler-msa-routine-plan-r1-beat-3",
+  "emotionalArc": "Shared curiosity → supported change → reassurance",
+  "guidance": {
+    "ageBandId": "12-23m",
+    "authority": "editorial-D/H",
+    "narrativeForm": "routine",
+    "conventionalPlot": false,
+    "beatRange": [
+      1,
+      3
+    ],
+    "activeCharacterRange": [
+      1,
+      2
+    ],
+    "pageRange": [
+      8,
+      12
+    ],
+    "wordsPerPage": [
+      2,
+      10
+    ],
+    "sentenceWords": [
+      2,
+      6
+    ],
+    "allowedMechanisms": [
+      "routine",
+      "helping",
+      "discovery"
+    ],
+    "conflict": "supported-friction",
+    "repetition": "High repeat with one change",
+    "vocabulary": "Everyday nouns/actions; one concrete clause",
+    "dialogue": "Tiny exchanges",
+    "emotionalComplexity": "Gentle familiar routines",
+    "adventure": "No peril/quest",
+    "educationalComplexity": "Hello/goodbye, in/out, naming",
+    "parentParticipation": "Invite gesture or one word; revisit pages. Warm, slow; caregiver supports action. Caregiver cues are optional and separate from child narration.",
+    "durationGuidance": "Read at the child's pace, pause for response and stop freely. Use actual read-aloud review; there is no universal minutes-per-year rule or guaranteed attention duration.",
+    "warnings": [
+      "All numeric budgets are provisional editorial advice, not medical certainty or guaranteed outcomes."
+    ]
+  },
+  "languageGuidance": [
+    "Planning metadata may be English; write child-facing prose independently in each requested register.",
+    "ar-MSA-simple: natural simplified Modern Standard Arabic; age-appropriate concrete clauses.",
+    "ar-EG: idiomatic Egyptian children's Arabic; never word-replacement from MSA.",
+    "Native linguistic review required; no bidi control characters."
+  ],
+  "provenance": {
+    "selectedStoryFamilyId": "structure-pattern-1b6ee415",
+    "selectedPatternId": "pattern-1b6ee415",
+    "sourceDnaIds": [
+      "structure-pattern-1b6ee415"
+    ],
+    "sources": [
+      {
+        "ref": {
+          "recordId": "structure-pattern-1b6ee415",
+          "version": 1
+        },
+        "digest": "3abc901234f1bb466a63b34fbe5a45f1af72dd8d59c8c1cc45a8c7c66cb858cc",
+        "lifecycle": "GENERATED",
+        "fit": "NEEDS_ADAPTATION",
+        "provisional": true
+      }
+    ],
+    "derivedBlocks": [
+      {
+        "blockId": "derived-ef16cb98-0",
+        "kind": "mechanism",
+        "value": "criterion-reframing",
+        "source": {
+          "recordId": "structure-pattern-1b6ee415",
+          "version": 1
+        },
+        "sourceField": "payload.structure.mechanism",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-9fa00fe1-1",
+        "kind": "conflict",
+        "value": "criterion-dispute",
+        "source": {
+          "recordId": "structure-pattern-1b6ee415",
+          "version": 1
+        },
+        "sourceField": "payload.structure.conflictPattern",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-6271f1e3-2",
+        "kind": "attempt",
+        "value": "{\"attemptSequence\":\"comparison→counter-criterion\",\"conflictCategory\":\"criterion-dispute\",\"goalCategory\":\"defend-worth\",\"mechanism\":\"criterion-reframing\",\"resolutionCategory\":\"argument-reframed\",\"turn\":\"function-introduced\"}",
+        "source": {
+          "recordId": "structure-pattern-1b6ee415",
+          "version": 1
+        },
+        "sourceField": "payload.structure.narrativePattern",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-7ad1e1d1-3",
+        "kind": "resolution",
+        "value": "argument-reframed",
+        "source": {
+          "recordId": "structure-pattern-1b6ee415",
+          "version": 1
+        },
+        "sourceField": "payload.structure.resolutionPattern",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-d4f0abdf-4",
+        "kind": "emotion",
+        "value": "Not established by structural classification; human adaptation required.",
+        "source": {
+          "recordId": "structure-pattern-1b6ee415",
+          "version": 1
+        },
+        "sourceField": "payload.structure.emotionalArc",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      }
+    ],
+    "sourceMode": "ACKNOWLEDGED_PROVISIONAL",
+    "mechanism": "helping",
+    "patternVector": {
+      "goalCategory": "defend-worth",
+      "conflictCategory": "criterion-dispute",
+      "mechanism": "criterion-reframing",
+      "attemptSequence": "comparison→counter-criterion",
+      "turn": "function-introduced",
+      "resolutionCategory": "argument-reframed"
+    },
+    "selectionSignals": [
+      "Reusable structural family",
+      "Complete structural vector; not theme-only grouping",
+      "Requested cultural profile",
+      "Adaptation explicitly acknowledged",
+      "Explicitly reviewed provisional inspiration; no promotion implied",
+      "Actual operational approval/rejection history only",
+      "Prefer less-used structure"
+    ],
+    "limitations": [
+      "Derived plan is an editorial adaptation, not an account of source events.",
+      "Objective delivery and literary quality require human review.",
+      "Creator constraints are recorded verbatim for human review and manual writing; no automatic free-text compliance certification."
+    ]
+  }
+}

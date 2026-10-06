@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "plan-qa/1.0",
+  "planRevisionId": "04-toddler-eg-education-plan-r1",
+  "findings": [
+    {
+      "findingId": "plan-1",
+      "severity": "low",
+      "category": "human-literary",
+      "location": "plan",
+      "message": "Deterministic QA checks explicit structural fields, not the truth of arbitrary prose or child appeal.",
+      "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+    },
+    {
+      "findingId": "plan-2",
+      "severity": "medium",
+      "category": "objective",
+      "location": "goal",
+      "message": "Concrete objective delivery needs editorial judgment even when exact objective anchors match.",
+      "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+    },
+    {
+      "findingId": "plan-3",
+      "severity": "low",
+      "category": "limitations",
+      "location": "provenance",
+      "message": "Derived plan is an editorial adaptation, not an account of source events.",
+      "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+    },
+    {
+      "findingId": "plan-4",
+      "severity": "low",
+      "category": "limitations",
+      "location": "provenance",
+      "message": "Objective delivery and literary quality require human review.",
+      "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+    },
+    {
+      "findingId": "plan-5",
+      "severity": "low",
+      "category": "limitations",
+      "location": "provenance",
+      "message": "Creator constraints are recorded verbatim for human review and manual writing; no automatic free-text compliance certification.",
+      "suggestedAction": "Revise the linked plan structure and review again; do not alter final prose alone."
+    }
+  ],
+  "signals": {
+    "AgeFit": "ACCEPTABLE",
+    "CausalCoherence": "STRONG",
+    "ObjectiveAlignment": "REVIEW",
+    "CulturalFit": "REVIEW",
+    "StructuralCompleteness": "STRONG",
+    "VariationCompliance": "ACCEPTABLE"
+  },
+  "method": "DETERMINISTIC_EDITORIAL_ADVISORY",
+  "humanReviewRequired": true
+}

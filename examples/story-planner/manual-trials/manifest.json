@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "manual-trials/1.0",
+  "generatedAt": "2026-10-06",
+  "sourceLibraryRows": 791,
+  "providerCalls": 0,
+  "operationalAcceptances": 0,
+  "operationalApprovals": 0,
+  "cases": [
+    {
+      "id": "01-infant-msa-recognition",
+      "ageMonths": 8,
+      "language": "ar-MSA-simple",
+      "category": "early-learning",
+      "variation": "FreshConcept",
+      "planHash": "a2be471160e56039f15f623e18d3981c1d173b60109426571502bd4e77bc95fb",
+      "requestHash": "2b6ce1821d21bf5988a44b2345cb3b11fff7060df35a6902645bab6f95982fb2",
+      "planQaHigh": 0,
+      "status": "UNREVIEWED_MANUAL_TRIAL_TEMPLATE"
+    },
+    {
+      "id": "02-infant-eg-bedtime",
+      "ageMonths": 10,
+      "language": "ar-EG",
+      "category": "bedtime",
+      "variation": "FreshConcept",
+      "planHash": "4e85a0fa9b33780760ff6606b214fd35bf6a655d77c5a5b5e6aefb8d8c2dffb0",
+      "requestHash": "0927b372052676463da0abef26ff8e3c782a54e4d1a14c6008ca3992b39859b9",
+      "planQaHigh": 0,
+      "status": "UNREVIEWED_MANUAL_TRIAL_TEMPLATE"
+    },
+    {
+      "id": "03-toddler-msa-routine",
+      "ageMonths": 18,
+      "language": "ar-MSA-simple",
+      "category": "everyday-life",
+      "variation": "FreshConcept",
+      "planHash": "5b41cdc2864158957c7479613ace59045743cb900cbd9be5c04f6a1d245f6f5e",
+      "requestHash": "bac3a8c57da21916d0fea760269c3ebde87806a61d3c285af7b7adae4a316f91",
+      "planQaHigh": 0,
+      "status": "UNREVIEWED_MANUAL_TRIAL_TEMPLATE"
+    },
+    {
+      "id": "04-toddler-eg-education",
+      "ageMonths": 22,
+      "language": "ar-EG",
+      "category": "educational",
+      "variation": "FreshConcept",
+      "planHash": "8be1cdf854eeaede605e33e97793afbdeb516210d52b3b66c1f75d40fd1c23f8",
+      "requestHash": "947a30f8b0aca96e675b783e82de41c333172ba24c59d616b76f0b8286ca611f",
+      "planQaHigh": 0,
+      "status": "UNREVIEWED_MANUAL_TRIAL_TEMPLATE"
+    },
+    {
+      "id": "05-two-year-eg-turns",
+      "ageMonths": 30,
+      "language": "ar-EG",
+      "category": "behavioral",
+      "variation": "NewVariant",
+      "planHash": "5b5a4e247c3756f5a55a4f5773a856e00bde69f582efc9a94b38aa1fb50d13cd",
+      "requestHash": "ce43cba87047ae2a5c2d9af16c3a793d89e69f14b8edc2f322006f190fb8e502",
+      "planQaHigh": 0,
+      "status": "UNREVIEWED_MANUAL_TRIAL_TEMPLATE"
+    },
+    {
+      "id": "06-preschool-msa-sharing",
+      "ageMonths": 48,
+      "language": "ar-MSA-simple",
+      "category": "values",
+      "variation": "SimilarVersion",
+      "planHash": "df2f59296b95d8975c76231a8c29ebbdfdf263ba30b77cd2fc2280da9358d921",
+      "requestHash": "0f3b192cf49a0a08c1c0922fbf384c1aa431b1b9e57dd0d56a63af423d830b48",
+      "planQaHigh": 0,
+      "status": "UNREVIEWED_MANUAL_TRIAL_TEMPLATE"
+    },
+    {
+      "id": "07-preschool-eg-adventure",
+      "ageMonths": 52,
+      "language": "ar-EG",
+      "category": "adventure",
+      "variation": "FreshConcept",
+      "planHash": "fcfa2d1272391d1d9c503972429b92ae53dd3e9175c0495c570428cdaaf83e93",
+      "requestHash": "58c209360502ffb6b1ce886864626135eacbfb354737d79d7c0beb2a520fc9fc",
+      "planQaHigh": 0,
+      "status": "UNREVIEWED_MANUAL_TRIAL_TEMPLATE"
+    },
+    {
+      "id": "08-older-msa-education",
+      "ageMonths": 72,
+      "language": "ar-MSA-simple",
+      "category": "educational",
+      "variation": "CompletelyNew",
+      "planHash": "eed177710cbc0e53e919c857fedb03d9cd60c3ae625c8e26659f1be19c1ed153",
+      "requestHash": "ddab914c63d6a99756eeaa02a06c44ab44fc2cac8fd4a54d6d032865120c64e2",
+      "planQaHigh": 0,
+      "status": "UNREVIEWED_MANUAL_TRIAL_TEMPLATE"
+    }
+  ]
+}

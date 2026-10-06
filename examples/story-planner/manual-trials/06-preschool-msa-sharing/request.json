@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "planning-request/1.0",
+  "planningRevisionId": "06-preschool-msa-sharing-planning",
+  "request": {
+    "schemaVersion": "story-request/1.0",
+    "requestId": "06-preschool-msa-sharing-request",
+    "revisionId": "06-preschool-msa-sharing-request-r1",
+    "projectId": "06-preschool-msa-sharing-project",
+    "storyId": "06-preschool-msa-sharing-story",
+    "ageMonths": 48,
+    "languageModes": [
+      "ar-MSA-simple"
+    ],
+    "primaryLanguageMode": "ar-MSA-simple",
+    "primaryCategory": "values",
+    "objective": {
+      "kind": "behavioral",
+      "description": "Sharing materials",
+      "successScenario": "Two friends use the same materials together"
+    },
+    "theme": "Sharing materials",
+    "readingMode": "adult-read",
+    "personalization": {
+      "origin": "synthetic",
+      "profileId": "synthetic-trial",
+      "level": 0,
+      "preferences": [],
+      "heroMode": "none"
+    },
+    "sourceStrategy": "hybrid",
+    "trustedFacts": [],
+    "outputIntents": [
+      "print",
+      "digital"
+    ]
+  },
+  "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+  "variation": "SimilarVersion",
+  "generation": 5,
+  "selectedFamily": {
+    "recordId": "structure-pattern-14198870",
+    "version": 1
+  },
+  "selectedCharacter": null,
+  "selectedSetting": null,
+  "constraints": [
+    "Synthetic-only fictional story. No private identifying details; no unsolicited religious lesson."
+  ],
+  "inspirationReviewed": true,
+  "adaptationAcknowledged": true,
+  "sensitiveOptIn": false,
+  "religiousOptIn": false
+}

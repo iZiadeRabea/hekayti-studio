@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "planning-request/1.0",
+  "planningRevisionId": "03-toddler-msa-routine-planning",
+  "request": {
+    "schemaVersion": "story-request/1.0",
+    "requestId": "03-toddler-msa-routine-request",
+    "revisionId": "03-toddler-msa-routine-request-r1",
+    "projectId": "03-toddler-msa-routine-project",
+    "storyId": "03-toddler-msa-routine-story",
+    "ageMonths": 18,
+    "languageModes": [
+      "ar-MSA-simple"
+    ],
+    "primaryLanguageMode": "ar-MSA-simple",
+    "primaryCategory": "everyday-life",
+    "objective": {
+      "kind": "behavioral",
+      "description": "Putting a toy in its basket",
+      "successScenario": "Try one familiar action with caregiver support"
+    },
+    "theme": "Putting a toy in its basket",
+    "readingMode": "adult-read",
+    "personalization": {
+      "origin": "synthetic",
+      "profileId": "synthetic-trial",
+      "level": 0,
+      "preferences": [],
+      "heroMode": "none"
+    },
+    "sourceStrategy": "hybrid",
+    "trustedFacts": [],
+    "outputIntents": [
+      "print",
+      "digital"
+    ]
+  },
+  "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+  "variation": "FreshConcept",
+  "generation": 2,
+  "selectedFamily": null,
+  "selectedCharacter": null,
+  "selectedSetting": null,
+  "constraints": [
+    "Synthetic-only fictional story. No private identifying details; no unsolicited religious lesson."
+  ],
+  "inspirationReviewed": true,
+  "adaptationAcknowledged": true,
+  "sensitiveOptIn": false,
+  "religiousOptIn": false
+}

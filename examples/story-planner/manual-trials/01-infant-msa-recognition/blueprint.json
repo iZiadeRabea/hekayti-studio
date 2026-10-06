@@ -1,0 +1,314 @@
+{
+  "schemaVersion": "blueprint/1.1",
+  "profileOrigin": "synthetic",
+  "specificationOnly": false,
+  "storyId": "01-infant-msa-recognition-story",
+  "projectId": "01-infant-msa-recognition-project",
+  "revisionId": "01-infant-msa-recognition-blueprint-r1",
+  "workingTitle": "Familiar soft ball — sound-play",
+  "ageMonths": 8,
+  "ageBandId": "0-11m",
+  "ageProfileVersion": "age-profiles/0.1",
+  "languageModes": [
+    "ar-MSA-simple"
+  ],
+  "primaryLanguageMode": "ar-MSA-simple",
+  "primaryCategory": "early-learning",
+  "secondaryCategories": [],
+  "objective": {
+    "kind": "connection",
+    "description": "Familiar soft ball",
+    "successScenario": "Shared attention to a soft ball and repeated sound"
+  },
+  "educationalObjective": null,
+  "behavioralObjective": null,
+  "emotionalObjective": null,
+  "theme": "Familiar soft ball",
+  "tone": "warm and concrete",
+  "readingMode": "adult-read",
+  "protagonistId": null,
+  "supportingCharacterIds": [],
+  "characterBibleRefs": [],
+  "characterBibles": [],
+  "personalization": {
+    "level": 0,
+    "heroMode": "none",
+    "privateProfileRef": null
+  },
+  "syntheticPersonalization": {
+    "origin": "synthetic",
+    "profileId": "synthetic-trial",
+    "level": 0,
+    "preferences": [],
+    "heroMode": "none"
+  },
+  "setting": "a familiar play corner",
+  "environmentBibleRef": "01-infant-msa-recognition-plan-r1-concept-d74f3ea6-environment",
+  "meaningBeats": [
+    {
+      "beatId": "01-infant-msa-recognition-plan-r1-beat-1",
+      "sequence": 1,
+      "purpose": "Familiar soft ball",
+      "actionOrDiscovery": "notice: Introduce Shared attention: Familiar soft ball at a familiar play corner a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Introduce Shared attention: Familiar soft ball at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "beforeState": "familiar subject awaits shared attention",
+      "afterState": "state-1: visible step completed",
+      "nextBeatId": "01-infant-msa-recognition-plan-r1-beat-2"
+    },
+    {
+      "beatId": "01-infant-msa-recognition-plan-r1-beat-2",
+      "sequence": 2,
+      "purpose": "Familiar soft ball",
+      "actionOrDiscovery": "repeat: Familiar recognition 2; repetition with one sensory change a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Familiar recognition 2; repetition with one sensory change",
+        "state-2: visible step completed"
+      ],
+      "beforeState": "state-1: visible step completed",
+      "afterState": "state-2: visible step completed",
+      "nextBeatId": "01-infant-msa-recognition-plan-r1-beat-3"
+    },
+    {
+      "beatId": "01-infant-msa-recognition-plan-r1-beat-3",
+      "sequence": 3,
+      "purpose": "Familiar soft ball",
+      "actionOrDiscovery": "recognize: sound-play enables Shared attention to a soft ball and repeated sound a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "sound-play enables Shared attention to a soft ball and repeated sound",
+        "state-3: goal achieved"
+      ],
+      "beforeState": "state-2: visible step completed",
+      "afterState": "state-3: goal achieved",
+      "nextBeatId": "01-infant-msa-recognition-plan-r1-beat-4"
+    },
+    {
+      "beatId": "01-infant-msa-recognition-plan-r1-beat-4",
+      "sequence": 4,
+      "purpose": "Familiar soft ball",
+      "actionOrDiscovery": "settle: Reassured closure of the same shared experience a familiar play corner",
+      "emotion": "reassured",
+      "visibleFacts": [
+        "Reassured closure of the same shared experience",
+        "state-4: visible step completed"
+      ],
+      "beforeState": "state-3: goal achieved",
+      "afterState": "state-4: visible step completed",
+      "nextBeatId": null
+    }
+  ],
+  "pagePlan": [
+    {
+      "pageId": "01-infant-msa-recognition-plan-r1-beat-1-7c104310-page1",
+      "order": 1,
+      "beatIds": [
+        "01-infant-msa-recognition-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Shared attention: Familiar soft ball at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Shared attention: Familiar soft ball at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "object: familiar subject awaits shared attention -> state-1: visible step completed",
+      "propStates": "familiar subject awaits shared attention -> state-1: visible step completed"
+    },
+    {
+      "pageId": "01-infant-msa-recognition-plan-r1-beat-1-7c104310-page2",
+      "order": 2,
+      "beatIds": [
+        "01-infant-msa-recognition-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Shared attention: Familiar soft ball at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Shared attention: Familiar soft ball at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "object: familiar subject awaits shared attention -> state-1: visible step completed",
+      "propStates": "familiar subject awaits shared attention -> state-1: visible step completed"
+    },
+    {
+      "pageId": "01-infant-msa-recognition-plan-r1-beat-1-7c104310-page3",
+      "order": 3,
+      "beatIds": [
+        "01-infant-msa-recognition-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "repeat: Familiar recognition 2; repetition with one sensory change a familiar play corner",
+      "mustShow": [
+        "Familiar recognition 2; repetition with one sensory change",
+        "state-2: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "object: state-1: visible step completed -> state-2: visible step completed",
+      "propStates": "state-1: visible step completed -> state-2: visible step completed"
+    },
+    {
+      "pageId": "01-infant-msa-recognition-plan-r1-beat-1-7c104310-page4",
+      "order": 4,
+      "beatIds": [
+        "01-infant-msa-recognition-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "recognize: sound-play enables Shared attention to a soft ball and repeated sound a familiar play corner",
+      "mustShow": [
+        "sound-play enables Shared attention to a soft ball and repeated sound",
+        "state-3: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "object: state-2: visible step completed -> state-3: goal achieved",
+      "propStates": "state-2: visible step completed -> state-3: goal achieved"
+    },
+    {
+      "pageId": "01-infant-msa-recognition-plan-r1-beat-1-7c104310-page5",
+      "order": 5,
+      "beatIds": [
+        "01-infant-msa-recognition-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "recognize: sound-play enables Shared attention to a soft ball and repeated sound a familiar play corner",
+      "mustShow": [
+        "sound-play enables Shared attention to a soft ball and repeated sound",
+        "state-3: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "object: state-2: visible step completed -> state-3: goal achieved",
+      "propStates": "state-2: visible step completed -> state-3: goal achieved"
+    },
+    {
+      "pageId": "01-infant-msa-recognition-plan-r1-beat-1-7c104310-page6",
+      "order": 6,
+      "beatIds": [
+        "01-infant-msa-recognition-plan-r1-beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "settle: Reassured closure of the same shared experience a familiar play corner",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-4: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "object: state-3: goal achieved -> state-4: visible step completed",
+      "propStates": "state-3: goal achieved -> state-4: visible step completed"
+    }
+  ],
+  "languageVersions": [
+    {
+      "languageVersionId": "01-infant-msa-recognition-request-01-infant-msa-recognition-bluep-2de376ba-ar-MSA-simple",
+      "mode": "ar-MSA-simple",
+      "sourceRevision": "01-infant-msa-recognition-blueprint-r1",
+      "status": "draft",
+      "diacriticsPolicy": "Pending native language review",
+      "pages": [
+        {
+          "pageId": "01-infant-msa-recognition-plan-r1-beat-1-7c104310-page1",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "01-infant-msa-recognition-plan-r1-beat-1-7c104310-page2",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "01-infant-msa-recognition-plan-r1-beat-1-7c104310-page3",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "01-infant-msa-recognition-plan-r1-beat-1-7c104310-page4",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "01-infant-msa-recognition-plan-r1-beat-1-7c104310-page5",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "01-infant-msa-recognition-plan-r1-beat-1-7c104310-page6",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        }
+      ],
+      "totalWords": 0,
+      "glossaryRefs": [],
+      "review": "Placeholder only: prose not drafted or approved."
+    }
+  ],
+  "illustrationBrief": "Layered paper-cut; visible actions and stable character references; no generated art.",
+  "styleProfileRef": "paper-cut-style-bible",
+  "videoAdaptationNotes": {
+    "childViewingEligibility": "ineligible-child-viewing",
+    "reason": "Under-two product policy",
+    "shotPlanStatus": "not planned"
+  },
+  "outputIntents": [
+    "print",
+    "digital"
+  ],
+  "safetyQualityChecks": [
+    {
+      "check": "Human literary, age and native-language review",
+      "status": "pending; not approved"
+    }
+  ],
+  "approvalRecords": [],
+  "lineage": {
+    "parentRevisionId": null
+  },
+  "dependencyHashes": {},
+  "generatedAssets": [],
+  "exportRefs": [],
+  "parentParticipation": "Point/name/respond to looks or sounds. Caregiver labels/sound imitation; stop freely. Caregiver cues are optional and separate from child narration."
+}

@@ -1,0 +1,528 @@
+{
+  "schemaVersion": "blueprint/1.1",
+  "profileOrigin": "synthetic",
+  "specificationOnly": false,
+  "storyId": "06-preschool-msa-sharing-story",
+  "projectId": "06-preschool-msa-sharing-project",
+  "revisionId": "06-preschool-msa-sharing-blueprint-r1",
+  "workingTitle": "Sharing materials — discovery",
+  "ageMonths": 48,
+  "ageBandId": "36-59m",
+  "ageProfileVersion": "age-profiles/0.1",
+  "languageModes": [
+    "ar-MSA-simple"
+  ],
+  "primaryLanguageMode": "ar-MSA-simple",
+  "primaryCategory": "values",
+  "secondaryCategories": [],
+  "objective": {
+    "kind": "behavioral",
+    "description": "Sharing materials",
+    "successScenario": "Two friends use the same materials together"
+  },
+  "educationalObjective": null,
+  "behavioralObjective": "Sharing materials",
+  "emotionalObjective": null,
+  "theme": "Sharing materials",
+  "tone": "warm and concrete",
+  "readingMode": "adult-read",
+  "protagonistId": "06-preschool-msa-sharing-plan-r1-actor-0",
+  "supportingCharacterIds": [
+    "06-preschool-msa-sharing-plan-r1-actor-1"
+  ],
+  "characterBibleRefs": [
+    {
+      "characterId": "06-preschool-msa-sharing-plan-r1-actor-0",
+      "bibleVersion": "06-preschool-msa-sharing-plan-r1-bible-0"
+    },
+    {
+      "characterId": "06-preschool-msa-sharing-plan-r1-actor-1",
+      "bibleVersion": "06-preschool-msa-sharing-plan-r1-bible-1"
+    }
+  ],
+  "characterBibles": [
+    {
+      "characterId": "06-preschool-msa-sharing-plan-r1-actor-0",
+      "bibleVersion": "06-preschool-msa-sharing-plan-r1-bible-0",
+      "origin": "synthetic",
+      "displayName": "نور",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    },
+    {
+      "characterId": "06-preschool-msa-sharing-plan-r1-actor-1",
+      "bibleVersion": "06-preschool-msa-sharing-plan-r1-bible-1",
+      "origin": "synthetic",
+      "displayName": "سلمى",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    }
+  ],
+  "personalization": {
+    "level": 0,
+    "heroMode": "none",
+    "privateProfileRef": null
+  },
+  "syntheticPersonalization": {
+    "origin": "synthetic",
+    "profileId": "synthetic-trial",
+    "level": 0,
+    "preferences": [],
+    "heroMode": "none"
+  },
+  "setting": "a familiar play corner",
+  "environmentBibleRef": "06-preschool-msa-sharing-plan-r1-concept-f1b3632f-environment",
+  "meaningBeats": [
+    {
+      "beatId": "06-preschool-msa-sharing-plan-r1-beat-1",
+      "sequence": 1,
+      "purpose": "Sharing materials",
+      "actionOrDiscovery": "notice: Introduce Practice Sharing materials; visible success: Two friends use the same materials together at a familiar play corner a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Introduce Practice Sharing materials; visible success: Two friends use the same materials together at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "beforeState": "goal is introduced; familiar materials and support are available",
+      "afterState": "state-1: visible step completed",
+      "nextBeatId": "06-preschool-msa-sharing-plan-r1-beat-2"
+    },
+    {
+      "beatId": "06-preschool-msa-sharing-plan-r1-beat-2",
+      "sequence": 2,
+      "purpose": "Sharing materials",
+      "actionOrDiscovery": "try: Approach 1: try; discovery; use the next visible clue; step 1 a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Approach 1: try; discovery; use the next visible clue; step 1",
+        "state-2: visible step completed"
+      ],
+      "beforeState": "state-1: visible step completed",
+      "afterState": "state-2: visible step completed",
+      "nextBeatId": "06-preschool-msa-sharing-plan-r1-beat-3"
+    },
+    {
+      "beatId": "06-preschool-msa-sharing-plan-r1-beat-3",
+      "sequence": 3,
+      "purpose": "Sharing materials",
+      "actionOrDiscovery": "compare: Approach 2: compare; discovery; use the next visible clue; step 2 a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Approach 2: compare; discovery; use the next visible clue; step 2",
+        "state-3: visible step completed"
+      ],
+      "beforeState": "state-2: visible step completed",
+      "afterState": "state-3: visible step completed",
+      "nextBeatId": "06-preschool-msa-sharing-plan-r1-beat-4"
+    },
+    {
+      "beatId": "06-preschool-msa-sharing-plan-r1-beat-4",
+      "sequence": 4,
+      "purpose": "Sharing materials",
+      "actionOrDiscovery": "discover: discovery enables Two friends use the same materials together a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "discovery enables Two friends use the same materials together",
+        "state-4: goal achieved"
+      ],
+      "beforeState": "state-3: visible step completed",
+      "afterState": "state-4: goal achieved",
+      "nextBeatId": "06-preschool-msa-sharing-plan-r1-beat-5"
+    },
+    {
+      "beatId": "06-preschool-msa-sharing-plan-r1-beat-5",
+      "sequence": 5,
+      "purpose": "Sharing materials",
+      "actionOrDiscovery": "settle: Reassured closure of the same shared experience a familiar play corner",
+      "emotion": "reassured",
+      "visibleFacts": [
+        "Reassured closure of the same shared experience",
+        "state-5: visible step completed"
+      ],
+      "beforeState": "state-4: goal achieved",
+      "afterState": "state-5: visible step completed",
+      "nextBeatId": null
+    }
+  ],
+  "pagePlan": [
+    {
+      "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page1",
+      "order": 1,
+      "beatIds": [
+        "06-preschool-msa-sharing-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Sharing materials; visible success: Two friends use the same materials together at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Sharing materials; visible success: Two friends use the same materials together at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "06-preschool-msa-sharing-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page2",
+      "order": 2,
+      "beatIds": [
+        "06-preschool-msa-sharing-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Sharing materials; visible success: Two friends use the same materials together at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Sharing materials; visible success: Two friends use the same materials together at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "06-preschool-msa-sharing-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page3",
+      "order": 3,
+      "beatIds": [
+        "06-preschool-msa-sharing-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Sharing materials; visible success: Two friends use the same materials together at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Sharing materials; visible success: Two friends use the same materials together at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "06-preschool-msa-sharing-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page4",
+      "order": 4,
+      "beatIds": [
+        "06-preschool-msa-sharing-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "try: Approach 1: try; discovery; use the next visible clue; step 1 a familiar play corner",
+      "mustShow": [
+        "Approach 1: try; discovery; use the next visible clue; step 1",
+        "state-2: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "06-preschool-msa-sharing-plan-r1-actor-1: state-1: visible step completed -> state-2: visible step completed",
+      "propStates": "state-1: visible step completed -> state-2: visible step completed"
+    },
+    {
+      "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page5",
+      "order": 5,
+      "beatIds": [
+        "06-preschool-msa-sharing-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "try: Approach 1: try; discovery; use the next visible clue; step 1 a familiar play corner",
+      "mustShow": [
+        "Approach 1: try; discovery; use the next visible clue; step 1",
+        "state-2: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "06-preschool-msa-sharing-plan-r1-actor-1: state-1: visible step completed -> state-2: visible step completed",
+      "propStates": "state-1: visible step completed -> state-2: visible step completed"
+    },
+    {
+      "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page6",
+      "order": 6,
+      "beatIds": [
+        "06-preschool-msa-sharing-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "compare: Approach 2: compare; discovery; use the next visible clue; step 2 a familiar play corner",
+      "mustShow": [
+        "Approach 2: compare; discovery; use the next visible clue; step 2",
+        "state-3: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "06-preschool-msa-sharing-plan-r1-actor-0: state-2: visible step completed -> state-3: visible step completed",
+      "propStates": "state-2: visible step completed -> state-3: visible step completed"
+    },
+    {
+      "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page7",
+      "order": 7,
+      "beatIds": [
+        "06-preschool-msa-sharing-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "compare: Approach 2: compare; discovery; use the next visible clue; step 2 a familiar play corner",
+      "mustShow": [
+        "Approach 2: compare; discovery; use the next visible clue; step 2",
+        "state-3: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "06-preschool-msa-sharing-plan-r1-actor-0: state-2: visible step completed -> state-3: visible step completed",
+      "propStates": "state-2: visible step completed -> state-3: visible step completed"
+    },
+    {
+      "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page8",
+      "order": 8,
+      "beatIds": [
+        "06-preschool-msa-sharing-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "compare: Approach 2: compare; discovery; use the next visible clue; step 2 a familiar play corner",
+      "mustShow": [
+        "Approach 2: compare; discovery; use the next visible clue; step 2",
+        "state-3: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "06-preschool-msa-sharing-plan-r1-actor-0: state-2: visible step completed -> state-3: visible step completed",
+      "propStates": "state-2: visible step completed -> state-3: visible step completed"
+    },
+    {
+      "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page9",
+      "order": 9,
+      "beatIds": [
+        "06-preschool-msa-sharing-plan-r1-beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "discover: discovery enables Two friends use the same materials together a familiar play corner",
+      "mustShow": [
+        "discovery enables Two friends use the same materials together",
+        "state-4: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "06-preschool-msa-sharing-plan-r1-actor-1: state-3: visible step completed -> state-4: goal achieved",
+      "propStates": "state-3: visible step completed -> state-4: goal achieved"
+    },
+    {
+      "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page10",
+      "order": 10,
+      "beatIds": [
+        "06-preschool-msa-sharing-plan-r1-beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "discover: discovery enables Two friends use the same materials together a familiar play corner",
+      "mustShow": [
+        "discovery enables Two friends use the same materials together",
+        "state-4: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "06-preschool-msa-sharing-plan-r1-actor-1: state-3: visible step completed -> state-4: goal achieved",
+      "propStates": "state-3: visible step completed -> state-4: goal achieved"
+    },
+    {
+      "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page11",
+      "order": 11,
+      "beatIds": [
+        "06-preschool-msa-sharing-plan-r1-beat-5"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "settle: Reassured closure of the same shared experience a familiar play corner",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-5: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "06-preschool-msa-sharing-plan-r1-actor-0: state-4: goal achieved -> state-5: visible step completed",
+      "propStates": "state-4: goal achieved -> state-5: visible step completed"
+    },
+    {
+      "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page12",
+      "order": 12,
+      "beatIds": [
+        "06-preschool-msa-sharing-plan-r1-beat-5"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "settle: Reassured closure of the same shared experience a familiar play corner",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-5: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "06-preschool-msa-sharing-plan-r1-actor-0: state-4: goal achieved -> state-5: visible step completed",
+      "propStates": "state-4: goal achieved -> state-5: visible step completed"
+    }
+  ],
+  "languageVersions": [
+    {
+      "languageVersionId": "06-preschool-msa-sharing-request-06-preschool-msa-sharing-bluepri-2f2cb3ae-ar-MSA-simple",
+      "mode": "ar-MSA-simple",
+      "sourceRevision": "06-preschool-msa-sharing-blueprint-r1",
+      "status": "draft",
+      "diacriticsPolicy": "Pending native language review",
+      "pages": [
+        {
+          "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page1",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page2",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page3",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page4",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page5",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page6",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page7",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page8",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page9",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page10",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page11",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "06-preschool-msa-sharing-plan-r1-beat-1-87a3537-page12",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        }
+      ],
+      "totalWords": 0,
+      "glossaryRefs": [],
+      "review": "Placeholder only: prose not drafted or approved."
+    }
+  ],
+  "illustrationBrief": "Layered paper-cut; visible actions and stable character references; no generated art.",
+  "styleProfileRef": "paper-cut-style-bible",
+  "videoAdaptationNotes": {
+    "childViewingEligibility": "eligible-co-viewing",
+    "reason": "Finite caregiver co-viewing requires review",
+    "shotPlanStatus": "not planned"
+  },
+  "outputIntents": [
+    "print",
+    "digital"
+  ],
+  "safetyQualityChecks": [
+    {
+      "check": "Human literary, age and native-language review",
+      "status": "pending; not approved"
+    }
+  ],
+  "approvalRecords": [],
+  "lineage": {
+    "parentRevisionId": null
+  },
+  "dependencyHashes": {},
+  "generatedAssets": [],
+  "exportRefs": [],
+  "parentParticipation": "Optional prediction/feeling question, not quiz. Reassuring, unhurried. Caregiver cues are optional and separate from child narration."
+}

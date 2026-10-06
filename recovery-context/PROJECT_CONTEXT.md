@@ -1,6 +1,6 @@
 # Permanent product context
 
-Current milestone: Phase4.1 final Astra architecture review APPROVED4fd7f084; independent QA all four CLOSED and consolidated gates PASS. Mechanical v0.5.1-starter-library/checkpoint release and verified source+creative recovery authorized, then STOP. Exact final SHA/cloud verification external receipt lookup CURRENT_STATE.md; no premature cloud claim. Prior Phase4 verified recovery4bf822a5 retained. Approved plan/addendum docs/implementation/phase4.1-plan.md; no Phase5 authorization.
+Current milestone: Phase4.2 Story Planner/manual trial readiness implementation on feature/phase4.2-story-planner; independent QA/consolidated gates/final approval pending. Approved plan docs/implementation/phase4.2-plan.md. Stable Phase4.1 release1d9ade078114112f05dc62aaafc3d7a055e2f651 and verified source/creative receipts retained. No release operations or Phase5 authorization.
 
 ## Identity and market
 Project: Hekayti Studio. Initial market: Egypt only.
@@ -30,9 +30,9 @@ Core logic is reusable without Electron. Phase 1 recommended Electron + React/Ty
 
 ## Current authorization
 
-Owner authorizes Phase4.1 only: sourced starter corpus, versioned cultural/provenance/DNA metadata, extensible structural patterns/real feedback, compatible batch/indexed paging and separate safe creative ZIP recovery. Library stores reusable narrative structure intelligence, not just content/ideas. Similarity permitted; source origin does not imply profile fit or faith certification. Default EGYPTIAN_ARAB_MUSLIM_FAMILY selectable alongside GENERAL_FAMILY; rights owner-managed/nonblocking for research, no invented legal/native/religious review. See phase4.1-overview and story-library docs.
+Owner authorizes Phase4.2 Story Planner: existing request/age/library → explicit plan/causal QA → frozen manual prose package → canonical import/QA/human approval → real feedback. Planning precedes prose; structured editorial learning is not AI model fine-tuning. Existing791 GENERATED starter rows remain provisional, READY0; explicit reviewed inspiration is separate from promotion. Default EGYPTIAN_ARAB_MUSLIM_FAMILY and GENERAL_FAMILY retain separate sensitivity/religious opt-ins. Source facts/unknowns and human-review limits remain honest.
 
-HYBRID BY DEFAULT remains; canonical imported concepts/manual prose use existing Blueprint/QA/approval without mock replacement. No API dependency, credentials, consumer automation, real child/customer/photo data, images/video/website or later features. One verified Sol Engineering worker handles implementation/corpus; one independent Sol QA, batch fixes, final consolidated gates and one Astra acceptance. Routine compatible decisions/root continuity delegated; no extra agents/probes or repeated research/full suites per edit. Phase4.1 release/push/cloud recovery requires separate final approval. Phase3/4 history belongs in CHANGELOG, not stacked conflicting current banners.
+HYBRID BY DEFAULT remains; accepted plans reuse Blueprint/Draft/QA/Approval without mock replacement. No API/credentials/consumer automation/private data/images/video/site/later features. One Sol HIGH implementation, one independent QA, batched fixes, consolidated gates and compact Astra acceptance. Compatible decisions/root continuity delegated; no extra agents/probes/repeated research/full suites per edit. Phase4.2 release/push/cloud recovery needs final approval.
 
 ## Canonical production design
 One versioned Story Blueprint meaning layer with linked natural-language editions feeds Printed Book, Digital Book and eligible Video Story. Personalization levels0–4 are optional; photo-reference level4 does not automatically make a child protagonist. Age word/page limits are provisional editorial guidance, not clinical facts. Human approvals bind revisions/hashes and downstream changes mark artifacts stale.

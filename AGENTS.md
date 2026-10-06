@@ -1,8 +1,8 @@
 # Hekayti Studio agent entrypoint
 
-Current authorization: Phase4.1 only, docs/implementation/phase4.1-plan.md including StoryDNA addendum. Sole verified GPT-6.1 Sol Engineering implementation/corpus research, then one independent Sol QA and one Astra final review. HYBRID BY DEFAULT; no API dependency. Routine compatible implementation and root continuity are explicitly delegated. No additional agents/routing probes, paid AI, private children/customer data, real photos, image/video/site or later features.
+Current authorization: owner-approved Phase4.2 Story Planner/manual trial readiness, docs/implementation/phase4.2-plan.md. One GPT-6.1 Sol HIGH implementation worker, one independent Sol QA, one batched fix pass and one final compact Astra architecture approval. No Extra High by default or extra workers. HYBRID BY DEFAULT; structured editorial learning, not fine-tuning. Compatible implementation/root continuity delegated. No API/consumer automation/private data/images/video/site/Phase5.
 
-Final Astra review APPROVED4fd7f084 and all four independent QA findings CLOSED: mechanical0.5.1 release and both verified Drive recoveries explicitly authorized, then STOP. Earlier no-publication/pending-review instructions below are historical stage boundaries; no new features/Phase5 authorized. Final external receipt lookup CURRENT_STATE.md.
+Stable Phase4.1 is released at1d9ade078114112f05dc62aaafc3d7a055e2f651 with verified source/creative recovery receipt. This checkpoint is the Phase4.2 safety anchor; do not duplicate it. Historical Phase4.1-only/STOP instructions are superseded. No Phase4.2 main merge/push/stable tag/Drive until final approval.
 
 Latest stable Phase4 at4bf822a5cc191b659223a519db3ac903c1368045 is actually released/private Git+Drive recovered; exact evidence CURRENT_STATE.md and ignored final receipt. Earlier Phase3/4 stop/pending instructions are historical, not current authorization.
 

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "planning-request/1.0",
+  "planningRevisionId": "04-toddler-eg-education-planning",
+  "request": {
+    "schemaVersion": "story-request/1.0",
+    "requestId": "04-toddler-eg-education-request",
+    "revisionId": "04-toddler-eg-education-request-r1",
+    "projectId": "04-toddler-eg-education-project",
+    "storyId": "04-toddler-eg-education-story",
+    "ageMonths": 22,
+    "languageModes": [
+      "ar-EG"
+    ],
+    "primaryLanguageMode": "ar-EG",
+    "primaryCategory": "educational",
+    "objective": {
+      "kind": "educational",
+      "description": "Big and small cups",
+      "successScenario": "Notice a visible size difference with adult naming"
+    },
+    "theme": "Big and small cups",
+    "readingMode": "adult-read",
+    "personalization": {
+      "origin": "synthetic",
+      "profileId": "synthetic-trial",
+      "level": 0,
+      "preferences": [],
+      "heroMode": "none"
+    },
+    "sourceStrategy": "hybrid",
+    "trustedFacts": [],
+    "outputIntents": [
+      "print",
+      "digital"
+    ]
+  },
+  "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+  "variation": "FreshConcept",
+  "generation": 3,
+  "selectedFamily": null,
+  "selectedCharacter": null,
+  "selectedSetting": null,
+  "constraints": [
+    "Synthetic-only fictional story. No private identifying details; no unsolicited religious lesson."
+  ],
+  "inspirationReviewed": true,
+  "adaptationAcknowledged": true,
+  "sensitiveOptIn": false,
+  "religiousOptIn": false
+}

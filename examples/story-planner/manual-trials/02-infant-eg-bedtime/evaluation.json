@@ -1,0 +1,80 @@
+{
+  "caseId": "02-infant-eg-bedtime",
+  "status": "NOT_RUN",
+  "planHash": "4e85a0fa9b33780760ff6606b214fd35bf6a655d77c5a5b5e6aefb8d8c2dffb0",
+  "sourceFamily": "structure-pattern-1754165c",
+  "sourcePattern": "pattern-1754165c",
+  "request": {
+    "schemaVersion": "story-request/1.0",
+    "requestId": "02-infant-eg-bedtime-request",
+    "revisionId": "02-infant-eg-bedtime-request-r1",
+    "projectId": "02-infant-eg-bedtime-project",
+    "storyId": "02-infant-eg-bedtime-story",
+    "ageMonths": 10,
+    "languageModes": [
+      "ar-EG"
+    ],
+    "primaryLanguageMode": "ar-EG",
+    "primaryCategory": "bedtime",
+    "objective": {
+      "kind": "connection",
+      "description": "A warm goodnight routine",
+      "successScenario": "Notice the same familiar blanket and settle with caregiver"
+    },
+    "theme": "A warm goodnight routine",
+    "readingMode": "adult-read",
+    "personalization": {
+      "origin": "synthetic",
+      "profileId": "synthetic-trial",
+      "level": 0,
+      "preferences": [],
+      "heroMode": "none"
+    },
+    "sourceStrategy": "hybrid",
+    "trustedFacts": [],
+    "outputIntents": [
+      "print",
+      "digital"
+    ]
+  },
+  "results": [
+    {
+      "provider": "CHATGPT",
+      "modelNote": null,
+      "responseFile": null,
+      "schemaValidation": null,
+      "declaredStructureDrift": null,
+      "actualProseDrift": null,
+      "ageFit": null,
+      "languageNaturalness": null,
+      "plotLogic": null,
+      "creativity": null,
+      "emotionalQuality": null,
+      "culturalFit": null,
+      "childAppeal": null,
+      "editingRequired": null,
+      "notes": null
+    },
+    {
+      "provider": "GEMINI",
+      "modelNote": null,
+      "responseFile": null,
+      "schemaValidation": null,
+      "declaredStructureDrift": null,
+      "actualProseDrift": null,
+      "ageFit": null,
+      "languageNaturalness": null,
+      "plotLogic": null,
+      "creativity": null,
+      "emotionalQuality": null,
+      "culturalFit": null,
+      "childAppeal": null,
+      "editingRequired": null,
+      "notes": null
+    }
+  ],
+  "overallPreference": null,
+  "humanReviewer": null,
+  "reviewedAt": null,
+  "notice": "Blank pending actual manual external trials. Child appeal is unvalidated unless appropriately reviewed; no winner preselected."
+}

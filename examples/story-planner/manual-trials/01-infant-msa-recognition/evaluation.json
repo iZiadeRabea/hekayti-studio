@@ -1,0 +1,80 @@
+{
+  "caseId": "01-infant-msa-recognition",
+  "status": "NOT_RUN",
+  "planHash": "a2be471160e56039f15f623e18d3981c1d173b60109426571502bd4e77bc95fb",
+  "sourceFamily": "structure-pattern-14198870",
+  "sourcePattern": "pattern-14198870",
+  "request": {
+    "schemaVersion": "story-request/1.0",
+    "requestId": "01-infant-msa-recognition-request",
+    "revisionId": "01-infant-msa-recognition-request-r1",
+    "projectId": "01-infant-msa-recognition-project",
+    "storyId": "01-infant-msa-recognition-story",
+    "ageMonths": 8,
+    "languageModes": [
+      "ar-MSA-simple"
+    ],
+    "primaryLanguageMode": "ar-MSA-simple",
+    "primaryCategory": "early-learning",
+    "objective": {
+      "kind": "connection",
+      "description": "Familiar soft ball",
+      "successScenario": "Shared attention to a soft ball and repeated sound"
+    },
+    "theme": "Familiar soft ball",
+    "readingMode": "adult-read",
+    "personalization": {
+      "origin": "synthetic",
+      "profileId": "synthetic-trial",
+      "level": 0,
+      "preferences": [],
+      "heroMode": "none"
+    },
+    "sourceStrategy": "hybrid",
+    "trustedFacts": [],
+    "outputIntents": [
+      "print",
+      "digital"
+    ]
+  },
+  "results": [
+    {
+      "provider": "CHATGPT",
+      "modelNote": null,
+      "responseFile": null,
+      "schemaValidation": null,
+      "declaredStructureDrift": null,
+      "actualProseDrift": null,
+      "ageFit": null,
+      "languageNaturalness": null,
+      "plotLogic": null,
+      "creativity": null,
+      "emotionalQuality": null,
+      "culturalFit": null,
+      "childAppeal": null,
+      "editingRequired": null,
+      "notes": null
+    },
+    {
+      "provider": "GEMINI",
+      "modelNote": null,
+      "responseFile": null,
+      "schemaValidation": null,
+      "declaredStructureDrift": null,
+      "actualProseDrift": null,
+      "ageFit": null,
+      "languageNaturalness": null,
+      "plotLogic": null,
+      "creativity": null,
+      "emotionalQuality": null,
+      "culturalFit": null,
+      "childAppeal": null,
+      "editingRequired": null,
+      "notes": null
+    }
+  ],
+  "overallPreference": null,
+  "humanReviewer": null,
+  "reviewedAt": null,
+  "notice": "Blank pending actual manual external trials. Child appeal is unvalidated unless appropriately reviewed; no winner preselected."
+}

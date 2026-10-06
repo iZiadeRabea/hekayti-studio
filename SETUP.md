@@ -26,6 +26,8 @@ Read docs/PHASE_1_INDEX.md for design rationale. Bootstrap restores foundation/s
 
 ## Approved Phase 2 prototype
 
+Current Phase4.2 manual planner setup: `npm ci`, then existing build/desktop commands. No API keys. Story Creator now includes planning/acceptance/manual prose import. Static synthetic trials and read-only local evaluation: docs/story-engine/manual-story-trials.md. Focused development checks: `node --import tsx --test tests/app/phase42-planner.test.ts`; full release gates run once after independent QA. Release is not yet authorized.
+
 Owner approved core/feasibility implementation on 2026-10-06. Follow docs/implementation/development-setup.md: install supported Node, npm ci, npm run build/desktop. No API keys required. Run scripts/test.ps1 for all suites. Portable Windows package is unsigned/local-test only; app data outside binaries, synthetic-only.
 
 ## Phase 3 synthetic Story Creator — 0.4.0 preparation

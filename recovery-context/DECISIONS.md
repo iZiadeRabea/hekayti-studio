@@ -1,5 +1,9 @@
 # Architecture / product decision log
 
+## Phase4.2 — 2026-10-06
+
+- D046: Owner authorizes Story Planner before manual prose and real synthetic trial readiness, superseding historical Phase4.1-only scope. Reuse request/age/language/Library/canonical workflow; strict planner artifacts, workflow/1.2 single concept, planner-bound hash inputs only for planner stories and sealed append-only v3 SQLite extension. Alternative: duplicate requests, fake candidate duplication or mutate legacy hashes. Reason: compatible auditable integration. Derived abstractions never claim source facts; explicit provisional inspiration never promotes content. Actual reviewed draft/QA/approval feedback updates idempotent source usage/ratings/real GENERATED variants. Structured editorial learning is not fine-tuning. One Sol HIGH implementation, independent QA, batched fixes and consolidated review; no release ops/API/private data/later features before authority.
+
 ## Phase4.1 — 2026-10-06
 
 - D045: Final consolidated Astra architecture review APPROVES scoped4fd7f084 for v0.5.1-starter-library/checkpoint/phase4.1-starter-library-complete. Compatible optional metadata/DNA, honest791-row composition and safe separate creative projection accepted with sparse/inferred structure,8 moderate tooling advisories/no high-critical, no human rights/culture/native certification. Mechanical FF/private Git readback plus ONE source and separate creative Drive download/hash/fresh restore authorized; final identity external to source, no moving tags/post-backup commit, STOP after Phase4.1.

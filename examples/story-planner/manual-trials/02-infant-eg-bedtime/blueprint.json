@@ -1,0 +1,314 @@
+{
+  "schemaVersion": "blueprint/1.1",
+  "profileOrigin": "synthetic",
+  "specificationOnly": false,
+  "storyId": "02-infant-eg-bedtime-story",
+  "projectId": "02-infant-eg-bedtime-project",
+  "revisionId": "02-infant-eg-bedtime-blueprint-r1",
+  "workingTitle": "A warm goodnight routine — recognition",
+  "ageMonths": 10,
+  "ageBandId": "0-11m",
+  "ageProfileVersion": "age-profiles/0.1",
+  "languageModes": [
+    "ar-EG"
+  ],
+  "primaryLanguageMode": "ar-EG",
+  "primaryCategory": "bedtime",
+  "secondaryCategories": [],
+  "objective": {
+    "kind": "connection",
+    "description": "A warm goodnight routine",
+    "successScenario": "Notice the same familiar blanket and settle with caregiver"
+  },
+  "educationalObjective": null,
+  "behavioralObjective": null,
+  "emotionalObjective": null,
+  "theme": "A warm goodnight routine",
+  "tone": "warm and concrete",
+  "readingMode": "adult-read",
+  "protagonistId": null,
+  "supportingCharacterIds": [],
+  "characterBibleRefs": [],
+  "characterBibles": [],
+  "personalization": {
+    "level": 0,
+    "heroMode": "none",
+    "privateProfileRef": null
+  },
+  "syntheticPersonalization": {
+    "origin": "synthetic",
+    "profileId": "synthetic-trial",
+    "level": 0,
+    "preferences": [],
+    "heroMode": "none"
+  },
+  "setting": "a quiet familiar room",
+  "environmentBibleRef": "02-infant-eg-bedtime-plan-r1-concept-454ea49d-environment",
+  "meaningBeats": [
+    {
+      "beatId": "02-infant-eg-bedtime-plan-r1-beat-1",
+      "sequence": 1,
+      "purpose": "A warm goodnight routine",
+      "actionOrDiscovery": "recognize: Introduce Shared attention: A warm goodnight routine at a quiet familiar room a quiet familiar room",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Introduce Shared attention: A warm goodnight routine at a quiet familiar room",
+        "state-1: visible step completed"
+      ],
+      "beforeState": "familiar subject awaits shared attention",
+      "afterState": "state-1: visible step completed",
+      "nextBeatId": "02-infant-eg-bedtime-plan-r1-beat-2"
+    },
+    {
+      "beatId": "02-infant-eg-bedtime-plan-r1-beat-2",
+      "sequence": 2,
+      "purpose": "A warm goodnight routine",
+      "actionOrDiscovery": "repeat: Familiar recognition 2; repetition with one sensory change a quiet familiar room",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Familiar recognition 2; repetition with one sensory change",
+        "state-2: visible step completed"
+      ],
+      "beforeState": "state-1: visible step completed",
+      "afterState": "state-2: visible step completed",
+      "nextBeatId": "02-infant-eg-bedtime-plan-r1-beat-3"
+    },
+    {
+      "beatId": "02-infant-eg-bedtime-plan-r1-beat-3",
+      "sequence": 3,
+      "purpose": "A warm goodnight routine",
+      "actionOrDiscovery": "notice: recognition enables Notice the same familiar blanket and settle with caregiver a quiet familiar room",
+      "emotion": "curious",
+      "visibleFacts": [
+        "recognition enables Notice the same familiar blanket and settle with caregiver",
+        "state-3: goal achieved"
+      ],
+      "beforeState": "state-2: visible step completed",
+      "afterState": "state-3: goal achieved",
+      "nextBeatId": "02-infant-eg-bedtime-plan-r1-beat-4"
+    },
+    {
+      "beatId": "02-infant-eg-bedtime-plan-r1-beat-4",
+      "sequence": 4,
+      "purpose": "A warm goodnight routine",
+      "actionOrDiscovery": "settle: Reassured closure of the same shared experience a quiet familiar room",
+      "emotion": "reassured",
+      "visibleFacts": [
+        "Reassured closure of the same shared experience",
+        "state-4: visible step completed"
+      ],
+      "beforeState": "state-3: goal achieved",
+      "afterState": "state-4: visible step completed",
+      "nextBeatId": null
+    }
+  ],
+  "pagePlan": [
+    {
+      "pageId": "02-infant-eg-bedtime-plan-r1-beat-1-8e7ed3b5-page1",
+      "order": 1,
+      "beatIds": [
+        "02-infant-eg-bedtime-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "recognize: Introduce Shared attention: A warm goodnight routine at a quiet familiar room a quiet familiar room",
+      "mustShow": [
+        "Introduce Shared attention: A warm goodnight routine at a quiet familiar room",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "object: familiar subject awaits shared attention -> state-1: visible step completed",
+      "propStates": "familiar subject awaits shared attention -> state-1: visible step completed"
+    },
+    {
+      "pageId": "02-infant-eg-bedtime-plan-r1-beat-1-8e7ed3b5-page2",
+      "order": 2,
+      "beatIds": [
+        "02-infant-eg-bedtime-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "recognize: Introduce Shared attention: A warm goodnight routine at a quiet familiar room a quiet familiar room",
+      "mustShow": [
+        "Introduce Shared attention: A warm goodnight routine at a quiet familiar room",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "object: familiar subject awaits shared attention -> state-1: visible step completed",
+      "propStates": "familiar subject awaits shared attention -> state-1: visible step completed"
+    },
+    {
+      "pageId": "02-infant-eg-bedtime-plan-r1-beat-1-8e7ed3b5-page3",
+      "order": 3,
+      "beatIds": [
+        "02-infant-eg-bedtime-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "repeat: Familiar recognition 2; repetition with one sensory change a quiet familiar room",
+      "mustShow": [
+        "Familiar recognition 2; repetition with one sensory change",
+        "state-2: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "object: state-1: visible step completed -> state-2: visible step completed",
+      "propStates": "state-1: visible step completed -> state-2: visible step completed"
+    },
+    {
+      "pageId": "02-infant-eg-bedtime-plan-r1-beat-1-8e7ed3b5-page4",
+      "order": 4,
+      "beatIds": [
+        "02-infant-eg-bedtime-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: recognition enables Notice the same familiar blanket and settle with caregiver a quiet familiar room",
+      "mustShow": [
+        "recognition enables Notice the same familiar blanket and settle with caregiver",
+        "state-3: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "object: state-2: visible step completed -> state-3: goal achieved",
+      "propStates": "state-2: visible step completed -> state-3: goal achieved"
+    },
+    {
+      "pageId": "02-infant-eg-bedtime-plan-r1-beat-1-8e7ed3b5-page5",
+      "order": 5,
+      "beatIds": [
+        "02-infant-eg-bedtime-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: recognition enables Notice the same familiar blanket and settle with caregiver a quiet familiar room",
+      "mustShow": [
+        "recognition enables Notice the same familiar blanket and settle with caregiver",
+        "state-3: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "object: state-2: visible step completed -> state-3: goal achieved",
+      "propStates": "state-2: visible step completed -> state-3: goal achieved"
+    },
+    {
+      "pageId": "02-infant-eg-bedtime-plan-r1-beat-1-8e7ed3b5-page6",
+      "order": 6,
+      "beatIds": [
+        "02-infant-eg-bedtime-plan-r1-beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "settle: Reassured closure of the same shared experience a quiet familiar room",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-4: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "object: state-3: goal achieved -> state-4: visible step completed",
+      "propStates": "state-3: goal achieved -> state-4: visible step completed"
+    }
+  ],
+  "languageVersions": [
+    {
+      "languageVersionId": "02-infant-eg-bedtime-request-02-infant-eg-bedtime-blueprint-r1-7dde7c52-ar-EG",
+      "mode": "ar-EG",
+      "sourceRevision": "02-infant-eg-bedtime-blueprint-r1",
+      "status": "draft",
+      "diacriticsPolicy": "Pending native language review",
+      "pages": [
+        {
+          "pageId": "02-infant-eg-bedtime-plan-r1-beat-1-8e7ed3b5-page1",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "02-infant-eg-bedtime-plan-r1-beat-1-8e7ed3b5-page2",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "02-infant-eg-bedtime-plan-r1-beat-1-8e7ed3b5-page3",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "02-infant-eg-bedtime-plan-r1-beat-1-8e7ed3b5-page4",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "02-infant-eg-bedtime-plan-r1-beat-1-8e7ed3b5-page5",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "02-infant-eg-bedtime-plan-r1-beat-1-8e7ed3b5-page6",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        }
+      ],
+      "totalWords": 0,
+      "glossaryRefs": [],
+      "review": "Placeholder only: prose not drafted or approved."
+    }
+  ],
+  "illustrationBrief": "Layered paper-cut; visible actions and stable character references; no generated art.",
+  "styleProfileRef": "paper-cut-style-bible",
+  "videoAdaptationNotes": {
+    "childViewingEligibility": "ineligible-child-viewing",
+    "reason": "Under-two product policy",
+    "shotPlanStatus": "not planned"
+  },
+  "outputIntents": [
+    "print",
+    "digital"
+  ],
+  "safetyQualityChecks": [
+    {
+      "check": "Human literary, age and native-language review",
+      "status": "pending; not approved"
+    }
+  ],
+  "approvalRecords": [],
+  "lineage": {
+    "parentRevisionId": null
+  },
+  "dependencyHashes": {},
+  "generatedAssets": [],
+  "exportRefs": [],
+  "parentParticipation": "Point/name/respond to looks or sounds. Caregiver labels/sound imitation; stop freely. Caregiver cues are optional and separate from child narration."
+}

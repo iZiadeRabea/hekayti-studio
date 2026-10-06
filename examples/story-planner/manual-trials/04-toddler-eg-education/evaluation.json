@@ -1,0 +1,80 @@
+{
+  "caseId": "04-toddler-eg-education",
+  "status": "NOT_RUN",
+  "planHash": "8be1cdf854eeaede605e33e97793afbdeb516210d52b3b66c1f75d40fd1c23f8",
+  "sourceFamily": "structure-pattern-14198870",
+  "sourcePattern": "pattern-14198870",
+  "request": {
+    "schemaVersion": "story-request/1.0",
+    "requestId": "04-toddler-eg-education-request",
+    "revisionId": "04-toddler-eg-education-request-r1",
+    "projectId": "04-toddler-eg-education-project",
+    "storyId": "04-toddler-eg-education-story",
+    "ageMonths": 22,
+    "languageModes": [
+      "ar-EG"
+    ],
+    "primaryLanguageMode": "ar-EG",
+    "primaryCategory": "educational",
+    "objective": {
+      "kind": "educational",
+      "description": "Big and small cups",
+      "successScenario": "Notice a visible size difference with adult naming"
+    },
+    "theme": "Big and small cups",
+    "readingMode": "adult-read",
+    "personalization": {
+      "origin": "synthetic",
+      "profileId": "synthetic-trial",
+      "level": 0,
+      "preferences": [],
+      "heroMode": "none"
+    },
+    "sourceStrategy": "hybrid",
+    "trustedFacts": [],
+    "outputIntents": [
+      "print",
+      "digital"
+    ]
+  },
+  "results": [
+    {
+      "provider": "CHATGPT",
+      "modelNote": null,
+      "responseFile": null,
+      "schemaValidation": null,
+      "declaredStructureDrift": null,
+      "actualProseDrift": null,
+      "ageFit": null,
+      "languageNaturalness": null,
+      "plotLogic": null,
+      "creativity": null,
+      "emotionalQuality": null,
+      "culturalFit": null,
+      "childAppeal": null,
+      "editingRequired": null,
+      "notes": null
+    },
+    {
+      "provider": "GEMINI",
+      "modelNote": null,
+      "responseFile": null,
+      "schemaValidation": null,
+      "declaredStructureDrift": null,
+      "actualProseDrift": null,
+      "ageFit": null,
+      "languageNaturalness": null,
+      "plotLogic": null,
+      "creativity": null,
+      "emotionalQuality": null,
+      "culturalFit": null,
+      "childAppeal": null,
+      "editingRequired": null,
+      "notes": null
+    }
+  ],
+  "overallPreference": null,
+  "humanReviewer": null,
+  "reviewedAt": null,
+  "notice": "Blank pending actual manual external trials. Child appeal is unvalidated unless appropriately reviewed; no winner preselected."
+}

@@ -1,0 +1,80 @@
+{
+  "caseId": "07-preschool-eg-adventure",
+  "status": "NOT_RUN",
+  "planHash": "fcfa2d1272391d1d9c503972429b92ae53dd3e9175c0495c570428cdaaf83e93",
+  "sourceFamily": "structure-pattern-14198870",
+  "sourcePattern": "pattern-14198870",
+  "request": {
+    "schemaVersion": "story-request/1.0",
+    "requestId": "07-preschool-eg-adventure-request",
+    "revisionId": "07-preschool-eg-adventure-request-r1",
+    "projectId": "07-preschool-eg-adventure-project",
+    "storyId": "07-preschool-eg-adventure-story",
+    "ageMonths": 52,
+    "languageModes": [
+      "ar-EG"
+    ],
+    "primaryLanguageMode": "ar-EG",
+    "primaryCategory": "adventure",
+    "objective": {
+      "kind": "entertainment",
+      "description": "A supervised garden discovery",
+      "successScenario": "Follow visible clues with a companion and return reassured"
+    },
+    "theme": "A supervised garden discovery",
+    "readingMode": "adult-read",
+    "personalization": {
+      "origin": "synthetic",
+      "profileId": "synthetic-trial",
+      "level": 0,
+      "preferences": [],
+      "heroMode": "none"
+    },
+    "sourceStrategy": "hybrid",
+    "trustedFacts": [],
+    "outputIntents": [
+      "print",
+      "digital"
+    ]
+  },
+  "results": [
+    {
+      "provider": "CHATGPT",
+      "modelNote": null,
+      "responseFile": null,
+      "schemaValidation": null,
+      "declaredStructureDrift": null,
+      "actualProseDrift": null,
+      "ageFit": null,
+      "languageNaturalness": null,
+      "plotLogic": null,
+      "creativity": null,
+      "emotionalQuality": null,
+      "culturalFit": null,
+      "childAppeal": null,
+      "editingRequired": null,
+      "notes": null
+    },
+    {
+      "provider": "GEMINI",
+      "modelNote": null,
+      "responseFile": null,
+      "schemaValidation": null,
+      "declaredStructureDrift": null,
+      "actualProseDrift": null,
+      "ageFit": null,
+      "languageNaturalness": null,
+      "plotLogic": null,
+      "creativity": null,
+      "emotionalQuality": null,
+      "culturalFit": null,
+      "childAppeal": null,
+      "editingRequired": null,
+      "notes": null
+    }
+  ],
+  "overallPreference": null,
+  "humanReviewer": null,
+  "reviewedAt": null,
+  "notice": "Blank pending actual manual external trials. Child appeal is unvalidated unless appropriately reviewed; no winner preselected."
+}

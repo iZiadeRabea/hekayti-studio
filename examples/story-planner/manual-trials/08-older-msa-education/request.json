@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "planning-request/1.0",
+  "planningRevisionId": "08-older-msa-education-planning",
+  "request": {
+    "schemaVersion": "story-request/1.0",
+    "requestId": "08-older-msa-education-request",
+    "revisionId": "08-older-msa-education-request-r1",
+    "projectId": "08-older-msa-education-project",
+    "storyId": "08-older-msa-education-story",
+    "ageMonths": 72,
+    "languageModes": [
+      "ar-MSA-simple"
+    ],
+    "primaryLanguageMode": "ar-MSA-simple",
+    "primaryCategory": "educational",
+    "objective": {
+      "kind": "educational",
+      "description": "Sorting familiar leaves",
+      "successScenario": "Compare visible features and explain one simple grouping"
+    },
+    "theme": "Sorting familiar leaves",
+    "readingMode": "adult-read",
+    "personalization": {
+      "origin": "synthetic",
+      "profileId": "synthetic-trial",
+      "level": 0,
+      "preferences": [],
+      "heroMode": "none"
+    },
+    "sourceStrategy": "hybrid",
+    "trustedFacts": [],
+    "outputIntents": [
+      "print",
+      "digital"
+    ]
+  },
+  "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+  "variation": "CompletelyNew",
+  "generation": 7,
+  "selectedFamily": null,
+  "selectedCharacter": null,
+  "selectedSetting": null,
+  "constraints": [
+    "Synthetic-only fictional story. No private identifying details; no unsolicited religious lesson."
+  ],
+  "inspirationReviewed": true,
+  "adaptationAcknowledged": true,
+  "sensitiveOptIn": false,
+  "religiousOptIn": false
+}

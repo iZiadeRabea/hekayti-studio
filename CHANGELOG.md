@@ -1,5 +1,9 @@
 # Changelog
 
+## Phase4.2 Story Planner implementation — 2026-10-06 (unreleased)
+
+Planning precedes prose: versioned planner/derived blocks/causal QA, deterministic family/DNA/vector retrieval, material age/four-mode variation behavior and explicit cultural/provisional consent. Additive workflow/1.2 single concept/Blueprint/manual Draft/QA/human approval; legacy hashes untouched, planner approvals bind frozen plan. Sealed append-only SQLite extension/CAS/current staleness, narrow UI/IPC, real feedback/GENERATED variants. Eight reproducible unreviewed trials/read-only evaluator/blank comparison; no provider calls/fake approval. Focused20 planner +32 workflow/Phase4 +3 selected creative checks/typecheck PASS; independent QA/full gates/final acceptance/release/recovery PENDING.
+
 ## v0.5.1-starter-library final acceptance — 2026-10-06
 
 Final Astra consolidated architecture review APPROVED4fd7f084; independent QA all four CLOSED and100foundation/329design/189app/typecheck/build/dev+packaged UI/security PASS. Compatible metadata/DNA and separate safe creative projection accepted with explicit partial-source/human-review/unsigned/tooling limits. Mechanical immutable release/private Git readback and both verified Drive recoveries authorized. Exact final SHA/archive hashes/cloud/restore receipts: ignored backups/receipts/hekayti-studio-phase41-final-<releaseSHA8>.json and private Manifests. No premature cloud PASS here; old preparation pending entries below are historical. STOP Phase4.1.

@@ -1,0 +1,326 @@
+{
+  "schemaVersion": "story-plan/1.0",
+  "planId": "02-infant-eg-bedtime-plan",
+  "revisionId": "02-infant-eg-bedtime-plan-r1",
+  "planning": {
+    "schemaVersion": "planning-request/1.0",
+    "planningRevisionId": "02-infant-eg-bedtime-planning",
+    "request": {
+      "schemaVersion": "story-request/1.0",
+      "requestId": "02-infant-eg-bedtime-request",
+      "revisionId": "02-infant-eg-bedtime-request-r1",
+      "projectId": "02-infant-eg-bedtime-project",
+      "storyId": "02-infant-eg-bedtime-story",
+      "ageMonths": 10,
+      "languageModes": [
+        "ar-EG"
+      ],
+      "primaryLanguageMode": "ar-EG",
+      "primaryCategory": "bedtime",
+      "objective": {
+        "kind": "connection",
+        "description": "A warm goodnight routine",
+        "successScenario": "Notice the same familiar blanket and settle with caregiver"
+      },
+      "theme": "A warm goodnight routine",
+      "readingMode": "adult-read",
+      "personalization": {
+        "origin": "synthetic",
+        "profileId": "synthetic-trial",
+        "level": 0,
+        "preferences": [],
+        "heroMode": "none"
+      },
+      "sourceStrategy": "hybrid",
+      "trustedFacts": [],
+      "outputIntents": [
+        "print",
+        "digital"
+      ]
+    },
+    "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+    "variation": "FreshConcept",
+    "generation": 1,
+    "selectedFamily": null,
+    "selectedCharacter": null,
+    "selectedSetting": null,
+    "constraints": [
+      "Synthetic-only fictional story. No private identifying details; no unsolicited religious lesson."
+    ],
+    "inspirationReviewed": true,
+    "adaptationAcknowledged": true,
+    "sensitiveOptIn": false,
+    "religiousOptIn": false
+  },
+  "title": "A warm goodnight routine — recognition",
+  "protagonistId": null,
+  "recognitionSubject": "A warm goodnight routine",
+  "goal": {
+    "goalId": "02-infant-eg-bedtime-plan-r1-goal",
+    "description": "Shared attention: A warm goodnight routine"
+  },
+  "need": null,
+  "setting": {
+    "locationId": "02-infant-eg-bedtime-plan-r1-place",
+    "description": "a quiet familiar room"
+  },
+  "openingState": "familiar subject awaits shared attention",
+  "problem": null,
+  "stakes": null,
+  "incitingBeatId": null,
+  "turningBeatId": null,
+  "climaxBeatId": null,
+  "discovery": null,
+  "characters": [],
+  "beats": [
+    {
+      "beatId": "02-infant-eg-bedtime-plan-r1-beat-1",
+      "sequence": 1,
+      "role": "RECOGNITION",
+      "action": "recognize",
+      "actorId": null,
+      "locationId": "02-infant-eg-bedtime-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "familiar subject awaits shared attention",
+      "afterState": "state-1: visible step completed",
+      "summary": "Introduce Shared attention: A warm goodnight routine at a quiet familiar room",
+      "emotion": "curious",
+      "causes": [],
+      "setupRefs": [],
+      "introduces": [],
+      "requires": [],
+      "establishes": [
+        "02-infant-eg-bedtime-plan-r1-setup"
+      ],
+      "addressesProblemId": null,
+      "achievesGoalId": null,
+      "progress": "Familiar recognition 1; repetition with one sensory change"
+    },
+    {
+      "beatId": "02-infant-eg-bedtime-plan-r1-beat-2",
+      "sequence": 2,
+      "role": "REPEAT",
+      "action": "repeat",
+      "actorId": null,
+      "locationId": "02-infant-eg-bedtime-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "state-1: visible step completed",
+      "afterState": "state-2: visible step completed",
+      "summary": "Familiar recognition 2; repetition with one sensory change",
+      "emotion": "curious",
+      "causes": [
+        "02-infant-eg-bedtime-plan-r1-beat-1"
+      ],
+      "setupRefs": [],
+      "introduces": [],
+      "requires": [],
+      "establishes": [],
+      "addressesProblemId": null,
+      "achievesGoalId": null,
+      "progress": "Familiar recognition 2; repetition with one sensory change"
+    },
+    {
+      "beatId": "02-infant-eg-bedtime-plan-r1-beat-3",
+      "sequence": 3,
+      "role": "RESOLUTION",
+      "action": "notice",
+      "actorId": null,
+      "locationId": "02-infant-eg-bedtime-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "state-2: visible step completed",
+      "afterState": "state-3: goal achieved",
+      "summary": "recognition enables Notice the same familiar blanket and settle with caregiver",
+      "emotion": "curious",
+      "causes": [
+        "02-infant-eg-bedtime-plan-r1-beat-2"
+      ],
+      "setupRefs": [
+        "02-infant-eg-bedtime-plan-r1-beat-1"
+      ],
+      "introduces": [],
+      "requires": [
+        "02-infant-eg-bedtime-plan-r1-setup"
+      ],
+      "establishes": [],
+      "addressesProblemId": null,
+      "achievesGoalId": "02-infant-eg-bedtime-plan-r1-goal",
+      "progress": "Visible achievement: Notice the same familiar blanket and settle with caregiver"
+    },
+    {
+      "beatId": "02-infant-eg-bedtime-plan-r1-beat-4",
+      "sequence": 4,
+      "role": "ENDING",
+      "action": "settle",
+      "actorId": null,
+      "locationId": "02-infant-eg-bedtime-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "state-3: goal achieved",
+      "afterState": "state-4: visible step completed",
+      "summary": "Reassured closure of the same shared experience",
+      "emotion": "reassured",
+      "causes": [
+        "02-infant-eg-bedtime-plan-r1-beat-3"
+      ],
+      "setupRefs": [],
+      "introduces": [],
+      "requires": [],
+      "establishes": [],
+      "addressesProblemId": null,
+      "achievesGoalId": null,
+      "progress": "Reassured closure of the same shared experience"
+    }
+  ],
+  "resolutionBeatId": "02-infant-eg-bedtime-plan-r1-beat-3",
+  "endingBeatId": "02-infant-eg-bedtime-plan-r1-beat-4",
+  "emotionalArc": "Shared curiosity → supported change → reassurance",
+  "guidance": {
+    "ageBandId": "0-11m",
+    "authority": "editorial-D/H",
+    "narrativeForm": "recognition",
+    "conventionalPlot": false,
+    "beatRange": [
+      3,
+      5
+    ],
+    "activeCharacterRange": [
+      0,
+      1
+    ],
+    "pageRange": [
+      6,
+      10
+    ],
+    "wordsPerPage": [
+      0,
+      5
+    ],
+    "sentenceWords": [
+      1,
+      4
+    ],
+    "allowedMechanisms": [
+      "recognition",
+      "reveal",
+      "sound-play"
+    ],
+    "conflict": "none",
+    "repetition": "High exact refrain",
+    "vocabulary": "Familiar nouns/sounds",
+    "dialogue": "Virtually none",
+    "emotionalComplexity": "Warm faces and familiar recognition",
+    "adventure": "No adventure",
+    "educationalComplexity": "Naming, sounds, familiar objects",
+    "parentParticipation": "Point/name/respond to looks or sounds. Caregiver labels/sound imitation; stop freely. Caregiver cues are optional and separate from child narration.",
+    "durationGuidance": "Read at the child's pace, pause for response and stop freely. Use actual read-aloud review; there is no universal minutes-per-year rule or guaranteed attention duration.",
+    "warnings": [
+      "All numeric budgets are provisional editorial advice, not medical certainty or guaranteed outcomes."
+    ]
+  },
+  "languageGuidance": [
+    "Planning metadata may be English; write child-facing prose independently in each requested register.",
+    "ar-MSA-simple: natural simplified Modern Standard Arabic; age-appropriate concrete clauses.",
+    "ar-EG: idiomatic Egyptian children's Arabic; never word-replacement from MSA.",
+    "Native linguistic review required; no bidi control characters."
+  ],
+  "provenance": {
+    "selectedStoryFamilyId": "structure-pattern-1754165c",
+    "selectedPatternId": "pattern-1754165c",
+    "sourceDnaIds": [
+      "structure-pattern-1754165c"
+    ],
+    "sources": [
+      {
+        "ref": {
+          "recordId": "structure-pattern-1754165c",
+          "version": 1
+        },
+        "digest": "dd762db04a0c4a86cfd00b7f83b891f33550e2f25242223f9a5b68b563daeef7",
+        "lifecycle": "GENERATED",
+        "fit": "NEEDS_ADAPTATION",
+        "provisional": true
+      }
+    ],
+    "derivedBlocks": [
+      {
+        "blockId": "derived-fa6f3177-0",
+        "kind": "mechanism",
+        "value": "contrasting-demonstration",
+        "source": {
+          "recordId": "structure-pattern-1754165c",
+          "version": 1
+        },
+        "sourceField": "payload.structure.mechanism",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-62fb98c2-1",
+        "kind": "conflict",
+        "value": "interpersonal-disagreement",
+        "source": {
+          "recordId": "structure-pattern-1754165c",
+          "version": 1
+        },
+        "sourceField": "payload.structure.conflictPattern",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-e4ecf82a-2",
+        "kind": "attempt",
+        "value": "{\"attemptSequence\":\"failed-verbal-advice→bundled-test→separate-test\",\"conflictCategory\":\"interpersonal-disagreement\",\"goalCategory\":\"teach-cooperation\",\"mechanism\":\"contrasting-demonstration\",\"resolutionCategory\":\"practical-understanding\",\"turn\":\"observable-contrast\"}",
+        "source": {
+          "recordId": "structure-pattern-1754165c",
+          "version": 1
+        },
+        "sourceField": "payload.structure.narrativePattern",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-5eb8bb1a-3",
+        "kind": "resolution",
+        "value": "practical-understanding",
+        "source": {
+          "recordId": "structure-pattern-1754165c",
+          "version": 1
+        },
+        "sourceField": "payload.structure.resolutionPattern",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-c978cdb6-4",
+        "kind": "emotion",
+        "value": "Not established by structural classification; human adaptation required.",
+        "source": {
+          "recordId": "structure-pattern-1754165c",
+          "version": 1
+        },
+        "sourceField": "payload.structure.emotionalArc",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      }
+    ],
+    "sourceMode": "ACKNOWLEDGED_PROVISIONAL",
+    "mechanism": "recognition",
+    "patternVector": {
+      "goalCategory": "teach-cooperation",
+      "conflictCategory": "interpersonal-disagreement",
+      "mechanism": "contrasting-demonstration",
+      "attemptSequence": "failed-verbal-advice→bundled-test→separate-test",
+      "turn": "observable-contrast",
+      "resolutionCategory": "practical-understanding"
+    },
+    "selectionSignals": [
+      "Reusable structural family",
+      "Complete structural vector; not theme-only grouping",
+      "Requested cultural profile",
+      "Adaptation explicitly acknowledged",
+      "Explicitly reviewed provisional inspiration; no promotion implied",
+      "Actual operational approval/rejection history only",
+      "Prefer less-used structure"
+    ],
+    "limitations": [
+      "Derived plan is an editorial adaptation, not an account of source events.",
+      "Objective delivery and literary quality require human review.",
+      "Creator constraints are recorded verbatim for human review and manual writing; no automatic free-text compliance certification.",
+      "Source drama reduced to sensory recognition; no conventional conflict or infant moral lesson."
+    ]
+  }
+}

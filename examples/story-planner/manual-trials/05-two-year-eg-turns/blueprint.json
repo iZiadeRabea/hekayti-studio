@@ -1,0 +1,402 @@
+{
+  "schemaVersion": "blueprint/1.1",
+  "profileOrigin": "synthetic",
+  "specificationOnly": false,
+  "storyId": "05-two-year-eg-turns-story",
+  "projectId": "05-two-year-eg-turns-project",
+  "revisionId": "05-two-year-eg-turns-blueprint-r1",
+  "workingTitle": "Taking turns — discovery",
+  "ageMonths": 30,
+  "ageBandId": "24-35m",
+  "ageProfileVersion": "age-profiles/0.1",
+  "languageModes": [
+    "ar-EG"
+  ],
+  "primaryLanguageMode": "ar-EG",
+  "primaryCategory": "behavioral",
+  "secondaryCategories": [],
+  "objective": {
+    "kind": "behavioral",
+    "description": "Taking turns",
+    "successScenario": "Wait briefly and take a supported turn with the same toy"
+  },
+  "educationalObjective": null,
+  "behavioralObjective": "Taking turns",
+  "emotionalObjective": null,
+  "theme": "Taking turns",
+  "tone": "warm and concrete",
+  "readingMode": "adult-read",
+  "protagonistId": "05-two-year-eg-turns-plan-r1-actor-0",
+  "supportingCharacterIds": [
+    "05-two-year-eg-turns-plan-r1-actor-1"
+  ],
+  "characterBibleRefs": [
+    {
+      "characterId": "05-two-year-eg-turns-plan-r1-actor-0",
+      "bibleVersion": "05-two-year-eg-turns-plan-r1-bible-0"
+    },
+    {
+      "characterId": "05-two-year-eg-turns-plan-r1-actor-1",
+      "bibleVersion": "05-two-year-eg-turns-plan-r1-bible-1"
+    }
+  ],
+  "characterBibles": [
+    {
+      "characterId": "05-two-year-eg-turns-plan-r1-actor-0",
+      "bibleVersion": "05-two-year-eg-turns-plan-r1-bible-0",
+      "origin": "synthetic",
+      "displayName": "نور",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    },
+    {
+      "characterId": "05-two-year-eg-turns-plan-r1-actor-1",
+      "bibleVersion": "05-two-year-eg-turns-plan-r1-bible-1",
+      "origin": "synthetic",
+      "displayName": "سلمى",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    }
+  ],
+  "personalization": {
+    "level": 0,
+    "heroMode": "none",
+    "privateProfileRef": null
+  },
+  "syntheticPersonalization": {
+    "origin": "synthetic",
+    "profileId": "synthetic-trial",
+    "level": 0,
+    "preferences": [],
+    "heroMode": "none"
+  },
+  "setting": "a familiar play corner",
+  "environmentBibleRef": "05-two-year-eg-turns-plan-r1-concept-32cf68d6-environment",
+  "meaningBeats": [
+    {
+      "beatId": "05-two-year-eg-turns-plan-r1-beat-1",
+      "sequence": 1,
+      "purpose": "Taking turns",
+      "actionOrDiscovery": "notice: Introduce Practice Taking turns; visible success: Wait briefly and take a supported turn with the same toy at a familiar play corner a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Introduce Practice Taking turns; visible success: Wait briefly and take a supported turn with the same toy at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "beforeState": "goal is introduced; familiar materials and support are available",
+      "afterState": "state-1: visible step completed",
+      "nextBeatId": "05-two-year-eg-turns-plan-r1-beat-2"
+    },
+    {
+      "beatId": "05-two-year-eg-turns-plan-r1-beat-2",
+      "sequence": 2,
+      "purpose": "Taking turns",
+      "actionOrDiscovery": "compare: Approach 1: compare; discovery; change the tested option; step 3 a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Approach 1: compare; discovery; change the tested option; step 3",
+        "state-2: visible step completed"
+      ],
+      "beforeState": "state-1: visible step completed",
+      "afterState": "state-2: visible step completed",
+      "nextBeatId": "05-two-year-eg-turns-plan-r1-beat-3"
+    },
+    {
+      "beatId": "05-two-year-eg-turns-plan-r1-beat-3",
+      "sequence": 3,
+      "purpose": "Taking turns",
+      "actionOrDiscovery": "discover: discovery enables Wait briefly and take a supported turn with the same toy a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "discovery enables Wait briefly and take a supported turn with the same toy",
+        "state-3: goal achieved"
+      ],
+      "beforeState": "state-2: visible step completed",
+      "afterState": "state-3: goal achieved",
+      "nextBeatId": "05-two-year-eg-turns-plan-r1-beat-4"
+    },
+    {
+      "beatId": "05-two-year-eg-turns-plan-r1-beat-4",
+      "sequence": 4,
+      "purpose": "Taking turns",
+      "actionOrDiscovery": "settle: Reassured closure of the same shared experience a familiar play corner",
+      "emotion": "reassured",
+      "visibleFacts": [
+        "Reassured closure of the same shared experience",
+        "state-4: visible step completed"
+      ],
+      "beforeState": "state-3: goal achieved",
+      "afterState": "state-4: visible step completed",
+      "nextBeatId": null
+    }
+  ],
+  "pagePlan": [
+    {
+      "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page1",
+      "order": 1,
+      "beatIds": [
+        "05-two-year-eg-turns-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Taking turns; visible success: Wait briefly and take a supported turn with the same toy at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Taking turns; visible success: Wait briefly and take a supported turn with the same toy at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "05-two-year-eg-turns-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page2",
+      "order": 2,
+      "beatIds": [
+        "05-two-year-eg-turns-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Taking turns; visible success: Wait briefly and take a supported turn with the same toy at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Taking turns; visible success: Wait briefly and take a supported turn with the same toy at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "05-two-year-eg-turns-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page3",
+      "order": 3,
+      "beatIds": [
+        "05-two-year-eg-turns-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "compare: Approach 1: compare; discovery; change the tested option; step 3 a familiar play corner",
+      "mustShow": [
+        "Approach 1: compare; discovery; change the tested option; step 3",
+        "state-2: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "05-two-year-eg-turns-plan-r1-actor-1: state-1: visible step completed -> state-2: visible step completed",
+      "propStates": "state-1: visible step completed -> state-2: visible step completed"
+    },
+    {
+      "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page4",
+      "order": 4,
+      "beatIds": [
+        "05-two-year-eg-turns-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "compare: Approach 1: compare; discovery; change the tested option; step 3 a familiar play corner",
+      "mustShow": [
+        "Approach 1: compare; discovery; change the tested option; step 3",
+        "state-2: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "05-two-year-eg-turns-plan-r1-actor-1: state-1: visible step completed -> state-2: visible step completed",
+      "propStates": "state-1: visible step completed -> state-2: visible step completed"
+    },
+    {
+      "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page5",
+      "order": 5,
+      "beatIds": [
+        "05-two-year-eg-turns-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "discover: discovery enables Wait briefly and take a supported turn with the same toy a familiar play corner",
+      "mustShow": [
+        "discovery enables Wait briefly and take a supported turn with the same toy",
+        "state-3: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "05-two-year-eg-turns-plan-r1-actor-0: state-2: visible step completed -> state-3: goal achieved",
+      "propStates": "state-2: visible step completed -> state-3: goal achieved"
+    },
+    {
+      "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page6",
+      "order": 6,
+      "beatIds": [
+        "05-two-year-eg-turns-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "discover: discovery enables Wait briefly and take a supported turn with the same toy a familiar play corner",
+      "mustShow": [
+        "discovery enables Wait briefly and take a supported turn with the same toy",
+        "state-3: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "05-two-year-eg-turns-plan-r1-actor-0: state-2: visible step completed -> state-3: goal achieved",
+      "propStates": "state-2: visible step completed -> state-3: goal achieved"
+    },
+    {
+      "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page7",
+      "order": 7,
+      "beatIds": [
+        "05-two-year-eg-turns-plan-r1-beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "settle: Reassured closure of the same shared experience a familiar play corner",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-4: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "05-two-year-eg-turns-plan-r1-actor-1: state-3: goal achieved -> state-4: visible step completed",
+      "propStates": "state-3: goal achieved -> state-4: visible step completed"
+    },
+    {
+      "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page8",
+      "order": 8,
+      "beatIds": [
+        "05-two-year-eg-turns-plan-r1-beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "settle: Reassured closure of the same shared experience a familiar play corner",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-4: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "05-two-year-eg-turns-plan-r1-actor-1: state-3: goal achieved -> state-4: visible step completed",
+      "propStates": "state-3: goal achieved -> state-4: visible step completed"
+    }
+  ],
+  "languageVersions": [
+    {
+      "languageVersionId": "05-two-year-eg-turns-request-05-two-year-eg-turns-blueprint-r1-1f95b6cc-ar-EG",
+      "mode": "ar-EG",
+      "sourceRevision": "05-two-year-eg-turns-blueprint-r1",
+      "status": "draft",
+      "diacriticsPolicy": "Pending native language review",
+      "pages": [
+        {
+          "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page1",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page2",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page3",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page4",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page5",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page6",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page7",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "05-two-year-eg-turns-plan-r1-beat-1-c0c83a20-page8",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        }
+      ],
+      "totalWords": 0,
+      "glossaryRefs": [],
+      "review": "Placeholder only: prose not drafted or approved."
+    }
+  ],
+  "illustrationBrief": "Layered paper-cut; visible actions and stable character references; no generated art.",
+  "styleProfileRef": "paper-cut-style-bible",
+  "videoAdaptationNotes": {
+    "childViewingEligibility": "eligible-co-viewing",
+    "reason": "Finite caregiver co-viewing requires review",
+    "shotPlanStatus": "not planned"
+  },
+  "outputIntents": [
+    "print",
+    "digital"
+  ],
+  "safetyQualityChecks": [
+    {
+      "check": "Human literary, age and native-language review",
+      "status": "pending; not approved"
+    }
+  ],
+  "approvalRecords": [],
+  "lineage": {
+    "parentRevisionId": null
+  },
+  "dependencyHashes": {},
+  "generatedAssets": [],
+  "exportRefs": [],
+  "parentParticipation": "Two familiar choices; caregiver models. Natural rhythm with response pauses. Caregiver cues are optional and separate from child narration."
+}

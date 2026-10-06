@@ -1,0 +1,372 @@
+{
+  "schemaVersion": "blueprint/1.1",
+  "profileOrigin": "synthetic",
+  "specificationOnly": false,
+  "storyId": "04-toddler-eg-education-story",
+  "projectId": "04-toddler-eg-education-project",
+  "revisionId": "04-toddler-eg-education-blueprint-r1",
+  "workingTitle": "Big and small cups — discovery",
+  "ageMonths": 22,
+  "ageBandId": "12-23m",
+  "ageProfileVersion": "age-profiles/0.1",
+  "languageModes": [
+    "ar-EG"
+  ],
+  "primaryLanguageMode": "ar-EG",
+  "primaryCategory": "educational",
+  "secondaryCategories": [],
+  "objective": {
+    "kind": "educational",
+    "description": "Big and small cups",
+    "successScenario": "Notice a visible size difference with adult naming"
+  },
+  "educationalObjective": "Big and small cups",
+  "behavioralObjective": null,
+  "emotionalObjective": null,
+  "theme": "Big and small cups",
+  "tone": "warm and concrete",
+  "readingMode": "adult-read",
+  "protagonistId": "04-toddler-eg-education-plan-r1-actor-0",
+  "supportingCharacterIds": [],
+  "characterBibleRefs": [
+    {
+      "characterId": "04-toddler-eg-education-plan-r1-actor-0",
+      "bibleVersion": "04-toddler-eg-education-plan-r1-bible-0"
+    }
+  ],
+  "characterBibles": [
+    {
+      "characterId": "04-toddler-eg-education-plan-r1-actor-0",
+      "bibleVersion": "04-toddler-eg-education-plan-r1-bible-0",
+      "origin": "synthetic",
+      "displayName": "نور",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    }
+  ],
+  "personalization": {
+    "level": 0,
+    "heroMode": "none",
+    "privateProfileRef": null
+  },
+  "syntheticPersonalization": {
+    "origin": "synthetic",
+    "profileId": "synthetic-trial",
+    "level": 0,
+    "preferences": [],
+    "heroMode": "none"
+  },
+  "setting": "a familiar play corner",
+  "environmentBibleRef": "04-toddler-eg-education-plan-r1-concept-67362b23-environment",
+  "meaningBeats": [
+    {
+      "beatId": "04-toddler-eg-education-plan-r1-beat-1",
+      "sequence": 1,
+      "purpose": "Big and small cups",
+      "actionOrDiscovery": "notice: Introduce Practice Big and small cups; visible success: Notice a visible size difference with adult naming at a familiar play corner a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Introduce Practice Big and small cups; visible success: Notice a visible size difference with adult naming at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "beforeState": "goal is introduced; familiar materials and support are available",
+      "afterState": "state-1: visible step completed",
+      "nextBeatId": "04-toddler-eg-education-plan-r1-beat-2"
+    },
+    {
+      "beatId": "04-toddler-eg-education-plan-r1-beat-2",
+      "sequence": 2,
+      "purpose": "Big and small cups",
+      "actionOrDiscovery": "try: discovery enables Notice a visible size difference with adult naming a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "discovery enables Notice a visible size difference with adult naming",
+        "state-2: goal achieved"
+      ],
+      "beforeState": "state-1: visible step completed",
+      "afterState": "state-2: goal achieved",
+      "nextBeatId": "04-toddler-eg-education-plan-r1-beat-3"
+    },
+    {
+      "beatId": "04-toddler-eg-education-plan-r1-beat-3",
+      "sequence": 3,
+      "purpose": "Big and small cups",
+      "actionOrDiscovery": "repeat: Reassured closure of the same shared experience a familiar play corner",
+      "emotion": "reassured",
+      "visibleFacts": [
+        "Reassured closure of the same shared experience",
+        "state-3: visible step completed"
+      ],
+      "beforeState": "state-2: goal achieved",
+      "afterState": "state-3: visible step completed",
+      "nextBeatId": null
+    }
+  ],
+  "pagePlan": [
+    {
+      "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page1",
+      "order": 1,
+      "beatIds": [
+        "04-toddler-eg-education-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Big and small cups; visible success: Notice a visible size difference with adult naming at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Big and small cups; visible success: Notice a visible size difference with adult naming at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "04-toddler-eg-education-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page2",
+      "order": 2,
+      "beatIds": [
+        "04-toddler-eg-education-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Big and small cups; visible success: Notice a visible size difference with adult naming at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Big and small cups; visible success: Notice a visible size difference with adult naming at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "04-toddler-eg-education-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page3",
+      "order": 3,
+      "beatIds": [
+        "04-toddler-eg-education-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Big and small cups; visible success: Notice a visible size difference with adult naming at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Big and small cups; visible success: Notice a visible size difference with adult naming at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "04-toddler-eg-education-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page4",
+      "order": 4,
+      "beatIds": [
+        "04-toddler-eg-education-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "try: discovery enables Notice a visible size difference with adult naming a familiar play corner",
+      "mustShow": [
+        "discovery enables Notice a visible size difference with adult naming",
+        "state-2: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "04-toddler-eg-education-plan-r1-actor-0: state-1: visible step completed -> state-2: goal achieved",
+      "propStates": "state-1: visible step completed -> state-2: goal achieved"
+    },
+    {
+      "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page5",
+      "order": 5,
+      "beatIds": [
+        "04-toddler-eg-education-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "try: discovery enables Notice a visible size difference with adult naming a familiar play corner",
+      "mustShow": [
+        "discovery enables Notice a visible size difference with adult naming",
+        "state-2: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "04-toddler-eg-education-plan-r1-actor-0: state-1: visible step completed -> state-2: goal achieved",
+      "propStates": "state-1: visible step completed -> state-2: goal achieved"
+    },
+    {
+      "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page6",
+      "order": 6,
+      "beatIds": [
+        "04-toddler-eg-education-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "try: discovery enables Notice a visible size difference with adult naming a familiar play corner",
+      "mustShow": [
+        "discovery enables Notice a visible size difference with adult naming",
+        "state-2: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "04-toddler-eg-education-plan-r1-actor-0: state-1: visible step completed -> state-2: goal achieved",
+      "propStates": "state-1: visible step completed -> state-2: goal achieved"
+    },
+    {
+      "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page7",
+      "order": 7,
+      "beatIds": [
+        "04-toddler-eg-education-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "repeat: Reassured closure of the same shared experience a familiar play corner",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-3: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "04-toddler-eg-education-plan-r1-actor-0: state-2: goal achieved -> state-3: visible step completed",
+      "propStates": "state-2: goal achieved -> state-3: visible step completed"
+    },
+    {
+      "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page8",
+      "order": 8,
+      "beatIds": [
+        "04-toddler-eg-education-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "repeat: Reassured closure of the same shared experience a familiar play corner",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-3: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "04-toddler-eg-education-plan-r1-actor-0: state-2: goal achieved -> state-3: visible step completed",
+      "propStates": "state-2: goal achieved -> state-3: visible step completed"
+    }
+  ],
+  "languageVersions": [
+    {
+      "languageVersionId": "04-toddler-eg-education-request-04-toddler-eg-education-blueprint-23ba26e-ar-EG",
+      "mode": "ar-EG",
+      "sourceRevision": "04-toddler-eg-education-blueprint-r1",
+      "status": "draft",
+      "diacriticsPolicy": "Pending native language review",
+      "pages": [
+        {
+          "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page1",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page2",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page3",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page4",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page5",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page6",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page7",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "04-toddler-eg-education-plan-r1-beat-1-7078cb1b-page8",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        }
+      ],
+      "totalWords": 0,
+      "glossaryRefs": [],
+      "review": "Placeholder only: prose not drafted or approved."
+    }
+  ],
+  "illustrationBrief": "Layered paper-cut; visible actions and stable character references; no generated art.",
+  "styleProfileRef": "paper-cut-style-bible",
+  "videoAdaptationNotes": {
+    "childViewingEligibility": "ineligible-child-viewing",
+    "reason": "Under-two product policy",
+    "shotPlanStatus": "not planned"
+  },
+  "outputIntents": [
+    "print",
+    "digital"
+  ],
+  "safetyQualityChecks": [
+    {
+      "check": "Human literary, age and native-language review",
+      "status": "pending; not approved"
+    }
+  ],
+  "approvalRecords": [],
+  "lineage": {
+    "parentRevisionId": null
+  },
+  "dependencyHashes": {},
+  "generatedAssets": [],
+  "exportRefs": [],
+  "parentParticipation": "Invite gesture or one word; revisit pages. Warm, slow; caregiver supports action. Caregiver cues are optional and separate from child narration."
+}

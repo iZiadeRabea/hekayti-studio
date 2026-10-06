@@ -1,0 +1,528 @@
+{
+  "schemaVersion": "blueprint/1.1",
+  "profileOrigin": "synthetic",
+  "specificationOnly": false,
+  "storyId": "07-preschool-eg-adventure-story",
+  "projectId": "07-preschool-eg-adventure-project",
+  "revisionId": "07-preschool-eg-adventure-blueprint-r1",
+  "workingTitle": "A supervised garden discovery — discovery",
+  "ageMonths": 52,
+  "ageBandId": "36-59m",
+  "ageProfileVersion": "age-profiles/0.1",
+  "languageModes": [
+    "ar-EG"
+  ],
+  "primaryLanguageMode": "ar-EG",
+  "primaryCategory": "adventure",
+  "secondaryCategories": [],
+  "objective": {
+    "kind": "entertainment",
+    "description": "A supervised garden discovery",
+    "successScenario": "Follow visible clues with a companion and return reassured"
+  },
+  "educationalObjective": null,
+  "behavioralObjective": null,
+  "emotionalObjective": null,
+  "theme": "A supervised garden discovery",
+  "tone": "warm and concrete",
+  "readingMode": "adult-read",
+  "protagonistId": "07-preschool-eg-adventure-plan-r1-actor-0",
+  "supportingCharacterIds": [
+    "07-preschool-eg-adventure-plan-r1-actor-1"
+  ],
+  "characterBibleRefs": [
+    {
+      "characterId": "07-preschool-eg-adventure-plan-r1-actor-0",
+      "bibleVersion": "07-preschool-eg-adventure-plan-r1-bible-0"
+    },
+    {
+      "characterId": "07-preschool-eg-adventure-plan-r1-actor-1",
+      "bibleVersion": "07-preschool-eg-adventure-plan-r1-bible-1"
+    }
+  ],
+  "characterBibles": [
+    {
+      "characterId": "07-preschool-eg-adventure-plan-r1-actor-0",
+      "bibleVersion": "07-preschool-eg-adventure-plan-r1-bible-0",
+      "origin": "synthetic",
+      "displayName": "نور",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    },
+    {
+      "characterId": "07-preschool-eg-adventure-plan-r1-actor-1",
+      "bibleVersion": "07-preschool-eg-adventure-plan-r1-bible-1",
+      "origin": "synthetic",
+      "displayName": "سلمى",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    }
+  ],
+  "personalization": {
+    "level": 0,
+    "heroMode": "none",
+    "privateProfileRef": null
+  },
+  "syntheticPersonalization": {
+    "origin": "synthetic",
+    "profileId": "synthetic-trial",
+    "level": 0,
+    "preferences": [],
+    "heroMode": "none"
+  },
+  "setting": "a supervised familiar garden",
+  "environmentBibleRef": "07-preschool-eg-adventure-plan-r1-concept-705820f5-environment",
+  "meaningBeats": [
+    {
+      "beatId": "07-preschool-eg-adventure-plan-r1-beat-1",
+      "sequence": 1,
+      "purpose": "A supervised garden discovery",
+      "actionOrDiscovery": "notice: Introduce Practice A supervised garden discovery; visible success: Follow visible clues with a companion and return reassured at a supervised familiar garden a supervised familiar garden",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Introduce Practice A supervised garden discovery; visible success: Follow visible clues with a companion and return reassured at a supervised familiar garden",
+        "state-1: visible step completed"
+      ],
+      "beforeState": "goal is introduced; familiar materials and support are available",
+      "afterState": "state-1: visible step completed",
+      "nextBeatId": "07-preschool-eg-adventure-plan-r1-beat-2"
+    },
+    {
+      "beatId": "07-preschool-eg-adventure-plan-r1-beat-2",
+      "sequence": 2,
+      "purpose": "A supervised garden discovery",
+      "actionOrDiscovery": "try: Approach 1: try; discovery; use the next visible clue; step 1 a supervised familiar garden",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Approach 1: try; discovery; use the next visible clue; step 1",
+        "state-2: visible step completed"
+      ],
+      "beforeState": "state-1: visible step completed",
+      "afterState": "state-2: visible step completed",
+      "nextBeatId": "07-preschool-eg-adventure-plan-r1-beat-3"
+    },
+    {
+      "beatId": "07-preschool-eg-adventure-plan-r1-beat-3",
+      "sequence": 3,
+      "purpose": "A supervised garden discovery",
+      "actionOrDiscovery": "compare: Approach 2: compare; discovery; use the next visible clue; step 2 a supervised familiar garden",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Approach 2: compare; discovery; use the next visible clue; step 2",
+        "state-3: visible step completed"
+      ],
+      "beforeState": "state-2: visible step completed",
+      "afterState": "state-3: visible step completed",
+      "nextBeatId": "07-preschool-eg-adventure-plan-r1-beat-4"
+    },
+    {
+      "beatId": "07-preschool-eg-adventure-plan-r1-beat-4",
+      "sequence": 4,
+      "purpose": "A supervised garden discovery",
+      "actionOrDiscovery": "discover: discovery enables Follow visible clues with a companion and return reassured a supervised familiar garden",
+      "emotion": "curious",
+      "visibleFacts": [
+        "discovery enables Follow visible clues with a companion and return reassured",
+        "state-4: goal achieved"
+      ],
+      "beforeState": "state-3: visible step completed",
+      "afterState": "state-4: goal achieved",
+      "nextBeatId": "07-preschool-eg-adventure-plan-r1-beat-5"
+    },
+    {
+      "beatId": "07-preschool-eg-adventure-plan-r1-beat-5",
+      "sequence": 5,
+      "purpose": "A supervised garden discovery",
+      "actionOrDiscovery": "settle: Reassured closure of the same shared experience a supervised familiar garden",
+      "emotion": "reassured",
+      "visibleFacts": [
+        "Reassured closure of the same shared experience",
+        "state-5: visible step completed"
+      ],
+      "beforeState": "state-4: goal achieved",
+      "afterState": "state-5: visible step completed",
+      "nextBeatId": null
+    }
+  ],
+  "pagePlan": [
+    {
+      "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page1",
+      "order": 1,
+      "beatIds": [
+        "07-preschool-eg-adventure-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice A supervised garden discovery; visible success: Follow visible clues with a companion and return reassured at a supervised familiar garden a supervised familiar garden",
+      "mustShow": [
+        "Introduce Practice A supervised garden discovery; visible success: Follow visible clues with a companion and return reassured at a supervised familiar garden",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "07-preschool-eg-adventure-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page2",
+      "order": 2,
+      "beatIds": [
+        "07-preschool-eg-adventure-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice A supervised garden discovery; visible success: Follow visible clues with a companion and return reassured at a supervised familiar garden a supervised familiar garden",
+      "mustShow": [
+        "Introduce Practice A supervised garden discovery; visible success: Follow visible clues with a companion and return reassured at a supervised familiar garden",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "07-preschool-eg-adventure-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page3",
+      "order": 3,
+      "beatIds": [
+        "07-preschool-eg-adventure-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice A supervised garden discovery; visible success: Follow visible clues with a companion and return reassured at a supervised familiar garden a supervised familiar garden",
+      "mustShow": [
+        "Introduce Practice A supervised garden discovery; visible success: Follow visible clues with a companion and return reassured at a supervised familiar garden",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "07-preschool-eg-adventure-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page4",
+      "order": 4,
+      "beatIds": [
+        "07-preschool-eg-adventure-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "try: Approach 1: try; discovery; use the next visible clue; step 1 a supervised familiar garden",
+      "mustShow": [
+        "Approach 1: try; discovery; use the next visible clue; step 1",
+        "state-2: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "07-preschool-eg-adventure-plan-r1-actor-1: state-1: visible step completed -> state-2: visible step completed",
+      "propStates": "state-1: visible step completed -> state-2: visible step completed"
+    },
+    {
+      "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page5",
+      "order": 5,
+      "beatIds": [
+        "07-preschool-eg-adventure-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "try: Approach 1: try; discovery; use the next visible clue; step 1 a supervised familiar garden",
+      "mustShow": [
+        "Approach 1: try; discovery; use the next visible clue; step 1",
+        "state-2: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "07-preschool-eg-adventure-plan-r1-actor-1: state-1: visible step completed -> state-2: visible step completed",
+      "propStates": "state-1: visible step completed -> state-2: visible step completed"
+    },
+    {
+      "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page6",
+      "order": 6,
+      "beatIds": [
+        "07-preschool-eg-adventure-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "compare: Approach 2: compare; discovery; use the next visible clue; step 2 a supervised familiar garden",
+      "mustShow": [
+        "Approach 2: compare; discovery; use the next visible clue; step 2",
+        "state-3: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "07-preschool-eg-adventure-plan-r1-actor-0: state-2: visible step completed -> state-3: visible step completed",
+      "propStates": "state-2: visible step completed -> state-3: visible step completed"
+    },
+    {
+      "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page7",
+      "order": 7,
+      "beatIds": [
+        "07-preschool-eg-adventure-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "compare: Approach 2: compare; discovery; use the next visible clue; step 2 a supervised familiar garden",
+      "mustShow": [
+        "Approach 2: compare; discovery; use the next visible clue; step 2",
+        "state-3: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "07-preschool-eg-adventure-plan-r1-actor-0: state-2: visible step completed -> state-3: visible step completed",
+      "propStates": "state-2: visible step completed -> state-3: visible step completed"
+    },
+    {
+      "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page8",
+      "order": 8,
+      "beatIds": [
+        "07-preschool-eg-adventure-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "compare: Approach 2: compare; discovery; use the next visible clue; step 2 a supervised familiar garden",
+      "mustShow": [
+        "Approach 2: compare; discovery; use the next visible clue; step 2",
+        "state-3: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "07-preschool-eg-adventure-plan-r1-actor-0: state-2: visible step completed -> state-3: visible step completed",
+      "propStates": "state-2: visible step completed -> state-3: visible step completed"
+    },
+    {
+      "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page9",
+      "order": 9,
+      "beatIds": [
+        "07-preschool-eg-adventure-plan-r1-beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "discover: discovery enables Follow visible clues with a companion and return reassured a supervised familiar garden",
+      "mustShow": [
+        "discovery enables Follow visible clues with a companion and return reassured",
+        "state-4: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "07-preschool-eg-adventure-plan-r1-actor-1: state-3: visible step completed -> state-4: goal achieved",
+      "propStates": "state-3: visible step completed -> state-4: goal achieved"
+    },
+    {
+      "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page10",
+      "order": 10,
+      "beatIds": [
+        "07-preschool-eg-adventure-plan-r1-beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "discover: discovery enables Follow visible clues with a companion and return reassured a supervised familiar garden",
+      "mustShow": [
+        "discovery enables Follow visible clues with a companion and return reassured",
+        "state-4: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "07-preschool-eg-adventure-plan-r1-actor-1: state-3: visible step completed -> state-4: goal achieved",
+      "propStates": "state-3: visible step completed -> state-4: goal achieved"
+    },
+    {
+      "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page11",
+      "order": 11,
+      "beatIds": [
+        "07-preschool-eg-adventure-plan-r1-beat-5"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "settle: Reassured closure of the same shared experience a supervised familiar garden",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-5: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "07-preschool-eg-adventure-plan-r1-actor-0: state-4: goal achieved -> state-5: visible step completed",
+      "propStates": "state-4: goal achieved -> state-5: visible step completed"
+    },
+    {
+      "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page12",
+      "order": 12,
+      "beatIds": [
+        "07-preschool-eg-adventure-plan-r1-beat-5"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "settle: Reassured closure of the same shared experience a supervised familiar garden",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-5: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "07-preschool-eg-adventure-plan-r1-actor-0: state-4: goal achieved -> state-5: visible step completed",
+      "propStates": "state-4: goal achieved -> state-5: visible step completed"
+    }
+  ],
+  "languageVersions": [
+    {
+      "languageVersionId": "07-preschool-eg-adventure-request-07-preschool-eg-adventure-bluep-421fb372-ar-EG",
+      "mode": "ar-EG",
+      "sourceRevision": "07-preschool-eg-adventure-blueprint-r1",
+      "status": "draft",
+      "diacriticsPolicy": "Pending native language review",
+      "pages": [
+        {
+          "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page1",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page2",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page3",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page4",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page5",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page6",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page7",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page8",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page9",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page10",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page11",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "07-preschool-eg-adventure-plan-r1-beat-1-2902a22d-page12",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        }
+      ],
+      "totalWords": 0,
+      "glossaryRefs": [],
+      "review": "Placeholder only: prose not drafted or approved."
+    }
+  ],
+  "illustrationBrief": "Layered paper-cut; visible actions and stable character references; no generated art.",
+  "styleProfileRef": "paper-cut-style-bible",
+  "videoAdaptationNotes": {
+    "childViewingEligibility": "eligible-co-viewing",
+    "reason": "Finite caregiver co-viewing requires review",
+    "shotPlanStatus": "not planned"
+  },
+  "outputIntents": [
+    "print",
+    "digital"
+  ],
+  "safetyQualityChecks": [
+    {
+      "check": "Human literary, age and native-language review",
+      "status": "pending; not approved"
+    }
+  ],
+  "approvalRecords": [],
+  "lineage": {
+    "parentRevisionId": null
+  },
+  "dependencyHashes": {},
+  "generatedAssets": [],
+  "exportRefs": [],
+  "parentParticipation": "Optional prediction/feeling question, not quiz. Reassuring, unhurried. Caregiver cues are optional and separate from child narration."
+}

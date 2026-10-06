@@ -1,0 +1,356 @@
+{
+  "schemaVersion": "story-plan/1.0",
+  "planId": "05-two-year-eg-turns-plan",
+  "revisionId": "05-two-year-eg-turns-plan-r1",
+  "planning": {
+    "schemaVersion": "planning-request/1.0",
+    "planningRevisionId": "05-two-year-eg-turns-planning",
+    "request": {
+      "schemaVersion": "story-request/1.0",
+      "requestId": "05-two-year-eg-turns-request",
+      "revisionId": "05-two-year-eg-turns-request-r1",
+      "projectId": "05-two-year-eg-turns-project",
+      "storyId": "05-two-year-eg-turns-story",
+      "ageMonths": 30,
+      "languageModes": [
+        "ar-EG"
+      ],
+      "primaryLanguageMode": "ar-EG",
+      "primaryCategory": "behavioral",
+      "objective": {
+        "kind": "behavioral",
+        "description": "Taking turns",
+        "successScenario": "Wait briefly and take a supported turn with the same toy"
+      },
+      "theme": "Taking turns",
+      "readingMode": "adult-read",
+      "personalization": {
+        "origin": "synthetic",
+        "profileId": "synthetic-trial",
+        "level": 0,
+        "preferences": [],
+        "heroMode": "none"
+      },
+      "sourceStrategy": "hybrid",
+      "trustedFacts": [],
+      "outputIntents": [
+        "print",
+        "digital"
+      ]
+    },
+    "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+    "variation": "NewVariant",
+    "generation": 4,
+    "selectedFamily": {
+      "recordId": "structure-pattern-14198870",
+      "version": 1
+    },
+    "selectedCharacter": null,
+    "selectedSetting": null,
+    "constraints": [
+      "Synthetic-only fictional story. No private identifying details; no unsolicited religious lesson."
+    ],
+    "inspirationReviewed": true,
+    "adaptationAcknowledged": true,
+    "sensitiveOptIn": false,
+    "religiousOptIn": false
+  },
+  "title": "Taking turns — discovery",
+  "protagonistId": "05-two-year-eg-turns-plan-r1-actor-0",
+  "recognitionSubject": null,
+  "goal": {
+    "goalId": "05-two-year-eg-turns-plan-r1-goal",
+    "description": "Practice Taking turns; visible success: Wait briefly and take a supported turn with the same toy"
+  },
+  "need": "Try a supported alternative rather than repeat the ineffective approach",
+  "setting": {
+    "locationId": "05-two-year-eg-turns-plan-r1-place",
+    "description": "a familiar play corner"
+  },
+  "openingState": "goal is introduced; familiar materials and support are available",
+  "problem": {
+    "problemId": "05-two-year-eg-turns-plan-r1-problem",
+    "description": "The first approach does not yet achieve Wait briefly and take a supported turn with the same toy; a safe discovery approach is needed"
+  },
+  "stakes": "The familiar activity is not complete yet; reassurance and adult support remain available",
+  "incitingBeatId": "05-two-year-eg-turns-plan-r1-beat-2",
+  "turningBeatId": "05-two-year-eg-turns-plan-r1-beat-2",
+  "climaxBeatId": "05-two-year-eg-turns-plan-r1-beat-3",
+  "discovery": "A visible discovery approach enables the requested success",
+  "characters": [
+    {
+      "characterId": "05-two-year-eg-turns-plan-r1-actor-0",
+      "bibleVersion": "05-two-year-eg-turns-plan-r1-bible-0",
+      "origin": "synthetic",
+      "displayName": "نور",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    },
+    {
+      "characterId": "05-two-year-eg-turns-plan-r1-actor-1",
+      "bibleVersion": "05-two-year-eg-turns-plan-r1-bible-1",
+      "origin": "synthetic",
+      "displayName": "سلمى",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    }
+  ],
+  "beats": [
+    {
+      "beatId": "05-two-year-eg-turns-plan-r1-beat-1",
+      "sequence": 1,
+      "role": "OPENING",
+      "action": "notice",
+      "actorId": "05-two-year-eg-turns-plan-r1-actor-0",
+      "locationId": "05-two-year-eg-turns-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "goal is introduced; familiar materials and support are available",
+      "afterState": "state-1: visible step completed",
+      "summary": "Introduce Practice Taking turns; visible success: Wait briefly and take a supported turn with the same toy at a familiar play corner",
+      "emotion": "curious",
+      "causes": [],
+      "setupRefs": [],
+      "introduces": [
+        "05-two-year-eg-turns-plan-r1-actor-0",
+        "05-two-year-eg-turns-plan-r1-actor-1"
+      ],
+      "requires": [],
+      "establishes": [
+        "05-two-year-eg-turns-plan-r1-setup"
+      ],
+      "addressesProblemId": null,
+      "achievesGoalId": null,
+      "progress": "Goal, support and materials established"
+    },
+    {
+      "beatId": "05-two-year-eg-turns-plan-r1-beat-2",
+      "sequence": 2,
+      "role": "INCITING",
+      "action": "compare",
+      "actorId": "05-two-year-eg-turns-plan-r1-actor-1",
+      "locationId": "05-two-year-eg-turns-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "state-1: visible step completed",
+      "afterState": "state-2: visible step completed",
+      "summary": "Approach 1: compare; discovery; change the tested option; step 3",
+      "emotion": "curious",
+      "causes": [
+        "05-two-year-eg-turns-plan-r1-beat-1"
+      ],
+      "setupRefs": [],
+      "introduces": [],
+      "requires": [],
+      "establishes": [],
+      "addressesProblemId": "05-two-year-eg-turns-plan-r1-problem",
+      "achievesGoalId": null,
+      "progress": "Approach 1: compare; discovery; change the tested option; step 3"
+    },
+    {
+      "beatId": "05-two-year-eg-turns-plan-r1-beat-3",
+      "sequence": 3,
+      "role": "RESOLUTION",
+      "action": "discover",
+      "actorId": "05-two-year-eg-turns-plan-r1-actor-0",
+      "locationId": "05-two-year-eg-turns-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "state-2: visible step completed",
+      "afterState": "state-3: goal achieved",
+      "summary": "discovery enables Wait briefly and take a supported turn with the same toy",
+      "emotion": "curious",
+      "causes": [
+        "05-two-year-eg-turns-plan-r1-beat-2"
+      ],
+      "setupRefs": [
+        "05-two-year-eg-turns-plan-r1-beat-1"
+      ],
+      "introduces": [],
+      "requires": [
+        "05-two-year-eg-turns-plan-r1-setup"
+      ],
+      "establishes": [],
+      "addressesProblemId": "05-two-year-eg-turns-plan-r1-problem",
+      "achievesGoalId": "05-two-year-eg-turns-plan-r1-goal",
+      "progress": "Visible achievement: Wait briefly and take a supported turn with the same toy"
+    },
+    {
+      "beatId": "05-two-year-eg-turns-plan-r1-beat-4",
+      "sequence": 4,
+      "role": "ENDING",
+      "action": "settle",
+      "actorId": "05-two-year-eg-turns-plan-r1-actor-1",
+      "locationId": "05-two-year-eg-turns-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "state-3: goal achieved",
+      "afterState": "state-4: visible step completed",
+      "summary": "Reassured closure of the same shared experience",
+      "emotion": "reassured",
+      "causes": [
+        "05-two-year-eg-turns-plan-r1-beat-3"
+      ],
+      "setupRefs": [],
+      "introduces": [],
+      "requires": [],
+      "establishes": [],
+      "addressesProblemId": "05-two-year-eg-turns-plan-r1-problem",
+      "achievesGoalId": null,
+      "progress": "Reassured closure of the same shared experience"
+    }
+  ],
+  "resolutionBeatId": "05-two-year-eg-turns-plan-r1-beat-3",
+  "endingBeatId": "05-two-year-eg-turns-plan-r1-beat-4",
+  "emotionalArc": "Shared curiosity → supported change → reassurance",
+  "guidance": {
+    "ageBandId": "24-35m",
+    "authority": "editorial-D/H",
+    "narrativeForm": "simple-causal",
+    "conventionalPlot": true,
+    "beatRange": [
+      2,
+      4
+    ],
+    "activeCharacterRange": [
+      2,
+      3
+    ],
+    "pageRange": [
+      8,
+      14
+    ],
+    "wordsPerPage": [
+      4,
+      15
+    ],
+    "sentenceWords": [
+      3,
+      9
+    ],
+    "allowedMechanisms": [
+      "discovery",
+      "problem-solving",
+      "helping",
+      "building"
+    ],
+    "conflict": "supported-friction",
+    "repetition": "Recurring refrain",
+    "vocabulary": "Concrete sequencing; occasional linked clauses",
+    "dialogue": "Short exchanges",
+    "emotionalComplexity": "Simple supported feelings",
+    "adventure": "Small familiar exploration; no villain/subplot",
+    "educationalComplexity": "Simple cause/result; adult-modeled turn-taking",
+    "parentParticipation": "Two familiar choices; caregiver models. Natural rhythm with response pauses. Caregiver cues are optional and separate from child narration.",
+    "durationGuidance": "Read at the child's pace, pause for response and stop freely. Use actual read-aloud review; there is no universal minutes-per-year rule or guaranteed attention duration.",
+    "warnings": [
+      "All numeric budgets are provisional editorial advice, not medical certainty or guaranteed outcomes."
+    ]
+  },
+  "languageGuidance": [
+    "Planning metadata may be English; write child-facing prose independently in each requested register.",
+    "ar-MSA-simple: natural simplified Modern Standard Arabic; age-appropriate concrete clauses.",
+    "ar-EG: idiomatic Egyptian children's Arabic; never word-replacement from MSA.",
+    "Native linguistic review required; no bidi control characters."
+  ],
+  "provenance": {
+    "selectedStoryFamilyId": "structure-pattern-14198870",
+    "selectedPatternId": "pattern-14198870",
+    "sourceDnaIds": [
+      "structure-pattern-14198870"
+    ],
+    "sources": [
+      {
+        "ref": {
+          "recordId": "structure-pattern-14198870",
+          "version": 1
+        },
+        "digest": "dd490ef863b9dee660138248c855b6f85efa66222beca547e7bb2f90c5f77792",
+        "lifecycle": "GENERATED",
+        "fit": "NEEDS_ADAPTATION",
+        "provisional": true
+      }
+    ],
+    "derivedBlocks": [
+      {
+        "blockId": "derived-e3e0c6f1-0",
+        "kind": "mechanism",
+        "value": "dream-reality-reversal",
+        "source": {
+          "recordId": "structure-pattern-14198870",
+          "version": 1
+        },
+        "sourceField": "payload.structure.mechanism",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-df6a9ccc-1",
+        "kind": "conflict",
+        "value": "imagined-opportunity",
+        "source": {
+          "recordId": "structure-pattern-14198870",
+          "version": 1
+        },
+        "sourceField": "payload.structure.conflictPattern",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-71d52ad4-2",
+        "kind": "attempt",
+        "value": "{\"attemptSequence\":\"bargain→wake→lower-demand\",\"conflictCategory\":\"imagined-opportunity\",\"goalCategory\":\"gain-resource\",\"mechanism\":\"dream-reality-reversal\",\"resolutionCategory\":\"opportunity-vanishes\",\"turn\":\"payment-is-imaginary\"}",
+        "source": {
+          "recordId": "structure-pattern-14198870",
+          "version": 1
+        },
+        "sourceField": "payload.structure.narrativePattern",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-d8bca11c-3",
+        "kind": "resolution",
+        "value": "opportunity-vanishes",
+        "source": {
+          "recordId": "structure-pattern-14198870",
+          "version": 1
+        },
+        "sourceField": "payload.structure.resolutionPattern",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-ab0860ec-4",
+        "kind": "emotion",
+        "value": "Not established by structural classification; human adaptation required.",
+        "source": {
+          "recordId": "structure-pattern-14198870",
+          "version": 1
+        },
+        "sourceField": "payload.structure.emotionalArc",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      }
+    ],
+    "sourceMode": "ACKNOWLEDGED_PROVISIONAL",
+    "mechanism": "discovery",
+    "patternVector": {
+      "goalCategory": "gain-resource",
+      "conflictCategory": "imagined-opportunity",
+      "mechanism": "dream-reality-reversal",
+      "attemptSequence": "bargain→wake→lower-demand",
+      "turn": "payment-is-imaginary",
+      "resolutionCategory": "opportunity-vanishes"
+    },
+    "selectionSignals": [
+      "Reusable structural family",
+      "Complete structural vector; not theme-only grouping",
+      "Requested cultural profile",
+      "Adaptation explicitly acknowledged",
+      "Explicitly reviewed provisional inspiration; no promotion implied",
+      "Actual operational approval/rejection history only",
+      "Creator-selected family and variation intent"
+    ],
+    "limitations": [
+      "Derived plan is an editorial adaptation, not an account of source events.",
+      "Objective delivery and literary quality require human review.",
+      "Creator constraints are recorded verbatim for human review and manual writing; no automatic free-text compliance certification."
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 # Practical roadmap
 
-Current Phase4.1 status: IMPLEMENTED, independent QA four CLOSED, consolidated gates PASS; final Astra architecture review APPROVED4fd7f084. Mechanical0.5.1 release and source+creative recovery authorized, exact final receipts external to source. STOP after Phase4.1; no later roadmap feature authorized. Private operational database recovery remains future security work.
+Current Phase4.2: owner-authorized Story Planner/manual trial readiness implementation; independent QA/full gates/final architecture acceptance pending. Plan/causal validation before manual prose, compatible canonical workflow, real feedback and eight unreviewed trials. Stable Phase4.1 release/recovery1d9ade078114112f05dc62aaafc3d7a055e2f651 retained. No release ops/Phase5 now. Private operational recovery remains future security work.
 Phase1 below = research/design, distinct from business Phase1 (owner tool) and business Phase2 (future customer website). No following phase authorized merely by this file.
 
 | Phase | Goal / deliverables | Dependencies | Checkpoint | Acceptance criteria |

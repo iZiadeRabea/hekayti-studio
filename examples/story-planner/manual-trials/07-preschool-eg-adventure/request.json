@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "planning-request/1.0",
+  "planningRevisionId": "07-preschool-eg-adventure-planning",
+  "request": {
+    "schemaVersion": "story-request/1.0",
+    "requestId": "07-preschool-eg-adventure-request",
+    "revisionId": "07-preschool-eg-adventure-request-r1",
+    "projectId": "07-preschool-eg-adventure-project",
+    "storyId": "07-preschool-eg-adventure-story",
+    "ageMonths": 52,
+    "languageModes": [
+      "ar-EG"
+    ],
+    "primaryLanguageMode": "ar-EG",
+    "primaryCategory": "adventure",
+    "objective": {
+      "kind": "entertainment",
+      "description": "A supervised garden discovery",
+      "successScenario": "Follow visible clues with a companion and return reassured"
+    },
+    "theme": "A supervised garden discovery",
+    "readingMode": "adult-read",
+    "personalization": {
+      "origin": "synthetic",
+      "profileId": "synthetic-trial",
+      "level": 0,
+      "preferences": [],
+      "heroMode": "none"
+    },
+    "sourceStrategy": "hybrid",
+    "trustedFacts": [],
+    "outputIntents": [
+      "print",
+      "digital"
+    ]
+  },
+  "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+  "variation": "FreshConcept",
+  "generation": 6,
+  "selectedFamily": null,
+  "selectedCharacter": null,
+  "selectedSetting": null,
+  "constraints": [
+    "Synthetic-only fictional story. No private identifying details; no unsolicited religious lesson."
+  ],
+  "inspirationReviewed": true,
+  "adaptationAcknowledged": true,
+  "sensitiveOptIn": false,
+  "religiousOptIn": false
+}

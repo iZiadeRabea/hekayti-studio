@@ -1,0 +1,80 @@
+{
+  "caseId": "05-two-year-eg-turns",
+  "status": "NOT_RUN",
+  "planHash": "5b5a4e247c3756f5a55a4f5773a856e00bde69f582efc9a94b38aa1fb50d13cd",
+  "sourceFamily": "structure-pattern-14198870",
+  "sourcePattern": "pattern-14198870",
+  "request": {
+    "schemaVersion": "story-request/1.0",
+    "requestId": "05-two-year-eg-turns-request",
+    "revisionId": "05-two-year-eg-turns-request-r1",
+    "projectId": "05-two-year-eg-turns-project",
+    "storyId": "05-two-year-eg-turns-story",
+    "ageMonths": 30,
+    "languageModes": [
+      "ar-EG"
+    ],
+    "primaryLanguageMode": "ar-EG",
+    "primaryCategory": "behavioral",
+    "objective": {
+      "kind": "behavioral",
+      "description": "Taking turns",
+      "successScenario": "Wait briefly and take a supported turn with the same toy"
+    },
+    "theme": "Taking turns",
+    "readingMode": "adult-read",
+    "personalization": {
+      "origin": "synthetic",
+      "profileId": "synthetic-trial",
+      "level": 0,
+      "preferences": [],
+      "heroMode": "none"
+    },
+    "sourceStrategy": "hybrid",
+    "trustedFacts": [],
+    "outputIntents": [
+      "print",
+      "digital"
+    ]
+  },
+  "results": [
+    {
+      "provider": "CHATGPT",
+      "modelNote": null,
+      "responseFile": null,
+      "schemaValidation": null,
+      "declaredStructureDrift": null,
+      "actualProseDrift": null,
+      "ageFit": null,
+      "languageNaturalness": null,
+      "plotLogic": null,
+      "creativity": null,
+      "emotionalQuality": null,
+      "culturalFit": null,
+      "childAppeal": null,
+      "editingRequired": null,
+      "notes": null
+    },
+    {
+      "provider": "GEMINI",
+      "modelNote": null,
+      "responseFile": null,
+      "schemaValidation": null,
+      "declaredStructureDrift": null,
+      "actualProseDrift": null,
+      "ageFit": null,
+      "languageNaturalness": null,
+      "plotLogic": null,
+      "creativity": null,
+      "emotionalQuality": null,
+      "culturalFit": null,
+      "childAppeal": null,
+      "editingRequired": null,
+      "notes": null
+    }
+  ],
+  "overallPreference": null,
+  "humanReviewer": null,
+  "reviewedAt": null,
+  "notice": "Blank pending actual manual external trials. Child appeal is unvalidated unless appropriately reviewed; no winner preselected."
+}

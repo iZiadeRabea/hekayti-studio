@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "planning-request/1.0",
+  "planningRevisionId": "05-two-year-eg-turns-planning",
+  "request": {
+    "schemaVersion": "story-request/1.0",
+    "requestId": "05-two-year-eg-turns-request",
+    "revisionId": "05-two-year-eg-turns-request-r1",
+    "projectId": "05-two-year-eg-turns-project",
+    "storyId": "05-two-year-eg-turns-story",
+    "ageMonths": 30,
+    "languageModes": [
+      "ar-EG"
+    ],
+    "primaryLanguageMode": "ar-EG",
+    "primaryCategory": "behavioral",
+    "objective": {
+      "kind": "behavioral",
+      "description": "Taking turns",
+      "successScenario": "Wait briefly and take a supported turn with the same toy"
+    },
+    "theme": "Taking turns",
+    "readingMode": "adult-read",
+    "personalization": {
+      "origin": "synthetic",
+      "profileId": "synthetic-trial",
+      "level": 0,
+      "preferences": [],
+      "heroMode": "none"
+    },
+    "sourceStrategy": "hybrid",
+    "trustedFacts": [],
+    "outputIntents": [
+      "print",
+      "digital"
+    ]
+  },
+  "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+  "variation": "NewVariant",
+  "generation": 4,
+  "selectedFamily": {
+    "recordId": "structure-pattern-14198870",
+    "version": 1
+  },
+  "selectedCharacter": null,
+  "selectedSetting": null,
+  "constraints": [
+    "Synthetic-only fictional story. No private identifying details; no unsolicited religious lesson."
+  ],
+  "inspirationReviewed": true,
+  "adaptationAcknowledged": true,
+  "sensitiveOptIn": false,
+  "religiousOptIn": false
+}

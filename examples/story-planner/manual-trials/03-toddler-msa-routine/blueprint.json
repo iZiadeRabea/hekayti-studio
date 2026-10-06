@@ -1,0 +1,372 @@
+{
+  "schemaVersion": "blueprint/1.1",
+  "profileOrigin": "synthetic",
+  "specificationOnly": false,
+  "storyId": "03-toddler-msa-routine-story",
+  "projectId": "03-toddler-msa-routine-project",
+  "revisionId": "03-toddler-msa-routine-blueprint-r1",
+  "workingTitle": "Putting a toy in its basket — helping",
+  "ageMonths": 18,
+  "ageBandId": "12-23m",
+  "ageProfileVersion": "age-profiles/0.1",
+  "languageModes": [
+    "ar-MSA-simple"
+  ],
+  "primaryLanguageMode": "ar-MSA-simple",
+  "primaryCategory": "everyday-life",
+  "secondaryCategories": [],
+  "objective": {
+    "kind": "behavioral",
+    "description": "Putting a toy in its basket",
+    "successScenario": "Try one familiar action with caregiver support"
+  },
+  "educationalObjective": null,
+  "behavioralObjective": "Putting a toy in its basket",
+  "emotionalObjective": null,
+  "theme": "Putting a toy in its basket",
+  "tone": "warm and concrete",
+  "readingMode": "adult-read",
+  "protagonistId": "03-toddler-msa-routine-plan-r1-actor-0",
+  "supportingCharacterIds": [],
+  "characterBibleRefs": [
+    {
+      "characterId": "03-toddler-msa-routine-plan-r1-actor-0",
+      "bibleVersion": "03-toddler-msa-routine-plan-r1-bible-0"
+    }
+  ],
+  "characterBibles": [
+    {
+      "characterId": "03-toddler-msa-routine-plan-r1-actor-0",
+      "bibleVersion": "03-toddler-msa-routine-plan-r1-bible-0",
+      "origin": "synthetic",
+      "displayName": "نور",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    }
+  ],
+  "personalization": {
+    "level": 0,
+    "heroMode": "none",
+    "privateProfileRef": null
+  },
+  "syntheticPersonalization": {
+    "origin": "synthetic",
+    "profileId": "synthetic-trial",
+    "level": 0,
+    "preferences": [],
+    "heroMode": "none"
+  },
+  "setting": "a familiar play corner",
+  "environmentBibleRef": "03-toddler-msa-routine-plan-r1-concept-62ff0b15-environment",
+  "meaningBeats": [
+    {
+      "beatId": "03-toddler-msa-routine-plan-r1-beat-1",
+      "sequence": 1,
+      "purpose": "Putting a toy in its basket",
+      "actionOrDiscovery": "notice: Introduce Practice Putting a toy in its basket; visible success: Try one familiar action with caregiver support at a familiar play corner a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Introduce Practice Putting a toy in its basket; visible success: Try one familiar action with caregiver support at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "beforeState": "goal is introduced; familiar materials and support are available",
+      "afterState": "state-1: visible step completed",
+      "nextBeatId": "03-toddler-msa-routine-plan-r1-beat-2"
+    },
+    {
+      "beatId": "03-toddler-msa-routine-plan-r1-beat-2",
+      "sequence": 2,
+      "purpose": "Putting a toy in its basket",
+      "actionOrDiscovery": "ask-help: helping enables Try one familiar action with caregiver support a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "helping enables Try one familiar action with caregiver support",
+        "state-2: goal achieved"
+      ],
+      "beforeState": "state-1: visible step completed",
+      "afterState": "state-2: goal achieved",
+      "nextBeatId": "03-toddler-msa-routine-plan-r1-beat-3"
+    },
+    {
+      "beatId": "03-toddler-msa-routine-plan-r1-beat-3",
+      "sequence": 3,
+      "purpose": "Putting a toy in its basket",
+      "actionOrDiscovery": "repeat: Reassured closure of the same shared experience a familiar play corner",
+      "emotion": "reassured",
+      "visibleFacts": [
+        "Reassured closure of the same shared experience",
+        "state-3: visible step completed"
+      ],
+      "beforeState": "state-2: goal achieved",
+      "afterState": "state-3: visible step completed",
+      "nextBeatId": null
+    }
+  ],
+  "pagePlan": [
+    {
+      "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page1",
+      "order": 1,
+      "beatIds": [
+        "03-toddler-msa-routine-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Putting a toy in its basket; visible success: Try one familiar action with caregiver support at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Putting a toy in its basket; visible success: Try one familiar action with caregiver support at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "03-toddler-msa-routine-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page2",
+      "order": 2,
+      "beatIds": [
+        "03-toddler-msa-routine-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Putting a toy in its basket; visible success: Try one familiar action with caregiver support at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Putting a toy in its basket; visible success: Try one familiar action with caregiver support at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "03-toddler-msa-routine-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page3",
+      "order": 3,
+      "beatIds": [
+        "03-toddler-msa-routine-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Putting a toy in its basket; visible success: Try one familiar action with caregiver support at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Putting a toy in its basket; visible success: Try one familiar action with caregiver support at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "03-toddler-msa-routine-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page4",
+      "order": 4,
+      "beatIds": [
+        "03-toddler-msa-routine-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "ask-help: helping enables Try one familiar action with caregiver support a familiar play corner",
+      "mustShow": [
+        "helping enables Try one familiar action with caregiver support",
+        "state-2: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "03-toddler-msa-routine-plan-r1-actor-0: state-1: visible step completed -> state-2: goal achieved",
+      "propStates": "state-1: visible step completed -> state-2: goal achieved"
+    },
+    {
+      "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page5",
+      "order": 5,
+      "beatIds": [
+        "03-toddler-msa-routine-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "ask-help: helping enables Try one familiar action with caregiver support a familiar play corner",
+      "mustShow": [
+        "helping enables Try one familiar action with caregiver support",
+        "state-2: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "03-toddler-msa-routine-plan-r1-actor-0: state-1: visible step completed -> state-2: goal achieved",
+      "propStates": "state-1: visible step completed -> state-2: goal achieved"
+    },
+    {
+      "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page6",
+      "order": 6,
+      "beatIds": [
+        "03-toddler-msa-routine-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "ask-help: helping enables Try one familiar action with caregiver support a familiar play corner",
+      "mustShow": [
+        "helping enables Try one familiar action with caregiver support",
+        "state-2: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "03-toddler-msa-routine-plan-r1-actor-0: state-1: visible step completed -> state-2: goal achieved",
+      "propStates": "state-1: visible step completed -> state-2: goal achieved"
+    },
+    {
+      "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page7",
+      "order": 7,
+      "beatIds": [
+        "03-toddler-msa-routine-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "repeat: Reassured closure of the same shared experience a familiar play corner",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-3: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "03-toddler-msa-routine-plan-r1-actor-0: state-2: goal achieved -> state-3: visible step completed",
+      "propStates": "state-2: goal achieved -> state-3: visible step completed"
+    },
+    {
+      "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page8",
+      "order": 8,
+      "beatIds": [
+        "03-toddler-msa-routine-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "repeat: Reassured closure of the same shared experience a familiar play corner",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-3: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "03-toddler-msa-routine-plan-r1-actor-0: state-2: goal achieved -> state-3: visible step completed",
+      "propStates": "state-2: goal achieved -> state-3: visible step completed"
+    }
+  ],
+  "languageVersions": [
+    {
+      "languageVersionId": "03-toddler-msa-routine-request-03-toddler-msa-routine-blueprint-r-ed135632-ar-MSA-simple",
+      "mode": "ar-MSA-simple",
+      "sourceRevision": "03-toddler-msa-routine-blueprint-r1",
+      "status": "draft",
+      "diacriticsPolicy": "Pending native language review",
+      "pages": [
+        {
+          "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page1",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page2",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page3",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page4",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page5",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page6",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page7",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "03-toddler-msa-routine-plan-r1-beat-1-a2d087cd-page8",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        }
+      ],
+      "totalWords": 0,
+      "glossaryRefs": [],
+      "review": "Placeholder only: prose not drafted or approved."
+    }
+  ],
+  "illustrationBrief": "Layered paper-cut; visible actions and stable character references; no generated art.",
+  "styleProfileRef": "paper-cut-style-bible",
+  "videoAdaptationNotes": {
+    "childViewingEligibility": "ineligible-child-viewing",
+    "reason": "Under-two product policy",
+    "shotPlanStatus": "not planned"
+  },
+  "outputIntents": [
+    "print",
+    "digital"
+  ],
+  "safetyQualityChecks": [
+    {
+      "check": "Human literary, age and native-language review",
+      "status": "pending; not approved"
+    }
+  ],
+  "approvalRecords": [],
+  "lineage": {
+    "parentRevisionId": null
+  },
+  "dependencyHashes": {},
+  "generatedAssets": [],
+  "exportRefs": [],
+  "parentParticipation": "Invite gesture or one word; revisit pages. Warm, slow; caregiver supports action. Caregiver cues are optional and separate from child narration."
+}

@@ -1,0 +1,384 @@
+{
+  "schemaVersion": "story-plan/1.0",
+  "planId": "06-preschool-msa-sharing-plan",
+  "revisionId": "06-preschool-msa-sharing-plan-r1",
+  "planning": {
+    "schemaVersion": "planning-request/1.0",
+    "planningRevisionId": "06-preschool-msa-sharing-planning",
+    "request": {
+      "schemaVersion": "story-request/1.0",
+      "requestId": "06-preschool-msa-sharing-request",
+      "revisionId": "06-preschool-msa-sharing-request-r1",
+      "projectId": "06-preschool-msa-sharing-project",
+      "storyId": "06-preschool-msa-sharing-story",
+      "ageMonths": 48,
+      "languageModes": [
+        "ar-MSA-simple"
+      ],
+      "primaryLanguageMode": "ar-MSA-simple",
+      "primaryCategory": "values",
+      "objective": {
+        "kind": "behavioral",
+        "description": "Sharing materials",
+        "successScenario": "Two friends use the same materials together"
+      },
+      "theme": "Sharing materials",
+      "readingMode": "adult-read",
+      "personalization": {
+        "origin": "synthetic",
+        "profileId": "synthetic-trial",
+        "level": 0,
+        "preferences": [],
+        "heroMode": "none"
+      },
+      "sourceStrategy": "hybrid",
+      "trustedFacts": [],
+      "outputIntents": [
+        "print",
+        "digital"
+      ]
+    },
+    "profile": "EGYPTIAN_ARAB_MUSLIM_FAMILY",
+    "variation": "SimilarVersion",
+    "generation": 5,
+    "selectedFamily": {
+      "recordId": "structure-pattern-14198870",
+      "version": 1
+    },
+    "selectedCharacter": null,
+    "selectedSetting": null,
+    "constraints": [
+      "Synthetic-only fictional story. No private identifying details; no unsolicited religious lesson."
+    ],
+    "inspirationReviewed": true,
+    "adaptationAcknowledged": true,
+    "sensitiveOptIn": false,
+    "religiousOptIn": false
+  },
+  "title": "Sharing materials — discovery",
+  "protagonistId": "06-preschool-msa-sharing-plan-r1-actor-0",
+  "recognitionSubject": null,
+  "goal": {
+    "goalId": "06-preschool-msa-sharing-plan-r1-goal",
+    "description": "Practice Sharing materials; visible success: Two friends use the same materials together"
+  },
+  "need": "Try a supported alternative rather than repeat the ineffective approach",
+  "setting": {
+    "locationId": "06-preschool-msa-sharing-plan-r1-place",
+    "description": "a familiar play corner"
+  },
+  "openingState": "goal is introduced; familiar materials and support are available",
+  "problem": {
+    "problemId": "06-preschool-msa-sharing-plan-r1-problem",
+    "description": "The first approach does not yet achieve Two friends use the same materials together; a safe discovery approach is needed"
+  },
+  "stakes": "The familiar activity is not complete yet; reassurance and adult support remain available",
+  "incitingBeatId": "06-preschool-msa-sharing-plan-r1-beat-2",
+  "turningBeatId": "06-preschool-msa-sharing-plan-r1-beat-3",
+  "climaxBeatId": "06-preschool-msa-sharing-plan-r1-beat-4",
+  "discovery": "A visible discovery approach enables the requested success",
+  "characters": [
+    {
+      "characterId": "06-preschool-msa-sharing-plan-r1-actor-0",
+      "bibleVersion": "06-preschool-msa-sharing-plan-r1-bible-0",
+      "origin": "synthetic",
+      "displayName": "نور",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    },
+    {
+      "characterId": "06-preschool-msa-sharing-plan-r1-actor-1",
+      "bibleVersion": "06-preschool-msa-sharing-plan-r1-bible-1",
+      "origin": "synthetic",
+      "displayName": "سلمى",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    }
+  ],
+  "beats": [
+    {
+      "beatId": "06-preschool-msa-sharing-plan-r1-beat-1",
+      "sequence": 1,
+      "role": "OPENING",
+      "action": "notice",
+      "actorId": "06-preschool-msa-sharing-plan-r1-actor-0",
+      "locationId": "06-preschool-msa-sharing-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "goal is introduced; familiar materials and support are available",
+      "afterState": "state-1: visible step completed",
+      "summary": "Introduce Practice Sharing materials; visible success: Two friends use the same materials together at a familiar play corner",
+      "emotion": "curious",
+      "causes": [],
+      "setupRefs": [],
+      "introduces": [
+        "06-preschool-msa-sharing-plan-r1-actor-0",
+        "06-preschool-msa-sharing-plan-r1-actor-1"
+      ],
+      "requires": [],
+      "establishes": [
+        "06-preschool-msa-sharing-plan-r1-setup"
+      ],
+      "addressesProblemId": null,
+      "achievesGoalId": null,
+      "progress": "Goal, support and materials established"
+    },
+    {
+      "beatId": "06-preschool-msa-sharing-plan-r1-beat-2",
+      "sequence": 2,
+      "role": "INCITING",
+      "action": "try",
+      "actorId": "06-preschool-msa-sharing-plan-r1-actor-1",
+      "locationId": "06-preschool-msa-sharing-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "state-1: visible step completed",
+      "afterState": "state-2: visible step completed",
+      "summary": "Approach 1: try; discovery; use the next visible clue; step 1",
+      "emotion": "curious",
+      "causes": [
+        "06-preschool-msa-sharing-plan-r1-beat-1"
+      ],
+      "setupRefs": [],
+      "introduces": [],
+      "requires": [],
+      "establishes": [],
+      "addressesProblemId": "06-preschool-msa-sharing-plan-r1-problem",
+      "achievesGoalId": null,
+      "progress": "Approach 1: try; discovery; use the next visible clue; step 1"
+    },
+    {
+      "beatId": "06-preschool-msa-sharing-plan-r1-beat-3",
+      "sequence": 3,
+      "role": "TURN",
+      "action": "compare",
+      "actorId": "06-preschool-msa-sharing-plan-r1-actor-0",
+      "locationId": "06-preschool-msa-sharing-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "state-2: visible step completed",
+      "afterState": "state-3: visible step completed",
+      "summary": "Approach 2: compare; discovery; use the next visible clue; step 2",
+      "emotion": "curious",
+      "causes": [
+        "06-preschool-msa-sharing-plan-r1-beat-2"
+      ],
+      "setupRefs": [],
+      "introduces": [],
+      "requires": [],
+      "establishes": [],
+      "addressesProblemId": "06-preschool-msa-sharing-plan-r1-problem",
+      "achievesGoalId": null,
+      "progress": "Approach 2: compare; discovery; use the next visible clue; step 2"
+    },
+    {
+      "beatId": "06-preschool-msa-sharing-plan-r1-beat-4",
+      "sequence": 4,
+      "role": "RESOLUTION",
+      "action": "discover",
+      "actorId": "06-preschool-msa-sharing-plan-r1-actor-1",
+      "locationId": "06-preschool-msa-sharing-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "state-3: visible step completed",
+      "afterState": "state-4: goal achieved",
+      "summary": "discovery enables Two friends use the same materials together",
+      "emotion": "curious",
+      "causes": [
+        "06-preschool-msa-sharing-plan-r1-beat-3"
+      ],
+      "setupRefs": [
+        "06-preschool-msa-sharing-plan-r1-beat-1"
+      ],
+      "introduces": [],
+      "requires": [
+        "06-preschool-msa-sharing-plan-r1-setup"
+      ],
+      "establishes": [],
+      "addressesProblemId": "06-preschool-msa-sharing-plan-r1-problem",
+      "achievesGoalId": "06-preschool-msa-sharing-plan-r1-goal",
+      "progress": "Visible achievement: Two friends use the same materials together"
+    },
+    {
+      "beatId": "06-preschool-msa-sharing-plan-r1-beat-5",
+      "sequence": 5,
+      "role": "ENDING",
+      "action": "settle",
+      "actorId": "06-preschool-msa-sharing-plan-r1-actor-0",
+      "locationId": "06-preschool-msa-sharing-plan-r1-place",
+      "fromLocationId": null,
+      "beforeState": "state-4: goal achieved",
+      "afterState": "state-5: visible step completed",
+      "summary": "Reassured closure of the same shared experience",
+      "emotion": "reassured",
+      "causes": [
+        "06-preschool-msa-sharing-plan-r1-beat-4"
+      ],
+      "setupRefs": [],
+      "introduces": [],
+      "requires": [],
+      "establishes": [],
+      "addressesProblemId": "06-preschool-msa-sharing-plan-r1-problem",
+      "achievesGoalId": null,
+      "progress": "Reassured closure of the same shared experience"
+    }
+  ],
+  "resolutionBeatId": "06-preschool-msa-sharing-plan-r1-beat-4",
+  "endingBeatId": "06-preschool-msa-sharing-plan-r1-beat-5",
+  "emotionalArc": "Shared curiosity → supported change → reassurance",
+  "guidance": {
+    "ageBandId": "36-59m",
+    "authority": "editorial-D/H",
+    "narrativeForm": "short-plot",
+    "conventionalPlot": true,
+    "beatRange": [
+      3,
+      6
+    ],
+    "activeCharacterRange": [
+      2,
+      4
+    ],
+    "pageRange": [
+      12,
+      20
+    ],
+    "wordsPerPage": [
+      8,
+      25
+    ],
+    "sentenceWords": [
+      4,
+      12
+    ],
+    "allowedMechanisms": [
+      "discovery",
+      "problem-solving",
+      "cooperation",
+      "journey",
+      "mystery",
+      "treasure-hunt",
+      "building",
+      "helping"
+    ],
+    "conflict": "bounded-problem",
+    "repetition": "Moderate",
+    "vocabulary": "Explain one unfamiliar word in context",
+    "dialogue": "Brief dialogue plus narration",
+    "emotionalComplexity": "Friendship and supported problem solving",
+    "adventure": "Bounded reassuring adventure",
+    "educationalComplexity": "Choices/comparison/cooperation",
+    "parentParticipation": "Optional prediction/feeling question, not quiz. Reassuring, unhurried. Caregiver cues are optional and separate from child narration.",
+    "durationGuidance": "Read at the child's pace, pause for response and stop freely. Use actual read-aloud review; there is no universal minutes-per-year rule or guaranteed attention duration.",
+    "warnings": [
+      "All numeric budgets are provisional editorial advice, not medical certainty or guaranteed outcomes."
+    ]
+  },
+  "languageGuidance": [
+    "Planning metadata may be English; write child-facing prose independently in each requested register.",
+    "ar-MSA-simple: natural simplified Modern Standard Arabic; age-appropriate concrete clauses.",
+    "ar-EG: idiomatic Egyptian children's Arabic; never word-replacement from MSA.",
+    "Native linguistic review required; no bidi control characters."
+  ],
+  "provenance": {
+    "selectedStoryFamilyId": "structure-pattern-14198870",
+    "selectedPatternId": "pattern-14198870",
+    "sourceDnaIds": [
+      "structure-pattern-14198870"
+    ],
+    "sources": [
+      {
+        "ref": {
+          "recordId": "structure-pattern-14198870",
+          "version": 1
+        },
+        "digest": "dd490ef863b9dee660138248c855b6f85efa66222beca547e7bb2f90c5f77792",
+        "lifecycle": "GENERATED",
+        "fit": "NEEDS_ADAPTATION",
+        "provisional": true
+      }
+    ],
+    "derivedBlocks": [
+      {
+        "blockId": "derived-e3e0c6f1-0",
+        "kind": "mechanism",
+        "value": "dream-reality-reversal",
+        "source": {
+          "recordId": "structure-pattern-14198870",
+          "version": 1
+        },
+        "sourceField": "payload.structure.mechanism",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-df6a9ccc-1",
+        "kind": "conflict",
+        "value": "imagined-opportunity",
+        "source": {
+          "recordId": "structure-pattern-14198870",
+          "version": 1
+        },
+        "sourceField": "payload.structure.conflictPattern",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-71d52ad4-2",
+        "kind": "attempt",
+        "value": "{\"attemptSequence\":\"bargain→wake→lower-demand\",\"conflictCategory\":\"imagined-opportunity\",\"goalCategory\":\"gain-resource\",\"mechanism\":\"dream-reality-reversal\",\"resolutionCategory\":\"opportunity-vanishes\",\"turn\":\"payment-is-imaginary\"}",
+        "source": {
+          "recordId": "structure-pattern-14198870",
+          "version": 1
+        },
+        "sourceField": "payload.structure.narrativePattern",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-d8bca11c-3",
+        "kind": "resolution",
+        "value": "opportunity-vanishes",
+        "source": {
+          "recordId": "structure-pattern-14198870",
+          "version": 1
+        },
+        "sourceField": "payload.structure.resolutionPattern",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      },
+      {
+        "blockId": "derived-ab0860ec-4",
+        "kind": "emotion",
+        "value": "Not established by structural classification; human adaptation required.",
+        "source": {
+          "recordId": "structure-pattern-14198870",
+          "version": 1
+        },
+        "sourceField": "payload.structure.emotionalArc",
+        "basis": "DERIVED_EDITORIAL_ABSTRACTION_NOT_SOURCE_FACT"
+      }
+    ],
+    "sourceMode": "ACKNOWLEDGED_PROVISIONAL",
+    "mechanism": "discovery",
+    "patternVector": {
+      "goalCategory": "gain-resource",
+      "conflictCategory": "imagined-opportunity",
+      "mechanism": "dream-reality-reversal",
+      "attemptSequence": "bargain→wake→lower-demand",
+      "turn": "payment-is-imaginary",
+      "resolutionCategory": "opportunity-vanishes"
+    },
+    "selectionSignals": [
+      "Reusable structural family",
+      "Complete structural vector; not theme-only grouping",
+      "Story type fit",
+      "Requested cultural profile",
+      "Adaptation explicitly acknowledged",
+      "Explicitly reviewed provisional inspiration; no promotion implied",
+      "Actual operational approval/rejection history only",
+      "Creator-selected family and variation intent"
+    ],
+    "limitations": [
+      "Derived plan is an editorial adaptation, not an account of source events.",
+      "Objective delivery and literary quality require human review.",
+      "Creator constraints are recorded verbatim for human review and manual writing; no automatic free-text compliance certification."
+    ]
+  }
+}

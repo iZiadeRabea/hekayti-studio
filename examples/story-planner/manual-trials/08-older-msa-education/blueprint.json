@@ -1,0 +1,683 @@
+{
+  "schemaVersion": "blueprint/1.1",
+  "profileOrigin": "synthetic",
+  "specificationOnly": false,
+  "storyId": "08-older-msa-education-story",
+  "projectId": "08-older-msa-education-project",
+  "revisionId": "08-older-msa-education-blueprint-r1",
+  "workingTitle": "Sorting familiar leaves — discovery",
+  "ageMonths": 72,
+  "ageBandId": "60-95m",
+  "ageProfileVersion": "age-profiles/0.1",
+  "languageModes": [
+    "ar-MSA-simple"
+  ],
+  "primaryLanguageMode": "ar-MSA-simple",
+  "primaryCategory": "educational",
+  "secondaryCategories": [],
+  "objective": {
+    "kind": "educational",
+    "description": "Sorting familiar leaves",
+    "successScenario": "Compare visible features and explain one simple grouping"
+  },
+  "educationalObjective": "Sorting familiar leaves",
+  "behavioralObjective": null,
+  "emotionalObjective": null,
+  "theme": "Sorting familiar leaves",
+  "tone": "warm and concrete",
+  "readingMode": "adult-read",
+  "protagonistId": "08-older-msa-education-plan-r1-actor-0",
+  "supportingCharacterIds": [
+    "08-older-msa-education-plan-r1-actor-1",
+    "08-older-msa-education-plan-r1-actor-2"
+  ],
+  "characterBibleRefs": [
+    {
+      "characterId": "08-older-msa-education-plan-r1-actor-0",
+      "bibleVersion": "08-older-msa-education-plan-r1-bible-0"
+    },
+    {
+      "characterId": "08-older-msa-education-plan-r1-actor-1",
+      "bibleVersion": "08-older-msa-education-plan-r1-bible-1"
+    },
+    {
+      "characterId": "08-older-msa-education-plan-r1-actor-2",
+      "bibleVersion": "08-older-msa-education-plan-r1-bible-2"
+    }
+  ],
+  "characterBibles": [
+    {
+      "characterId": "08-older-msa-education-plan-r1-actor-0",
+      "bibleVersion": "08-older-msa-education-plan-r1-bible-0",
+      "origin": "synthetic",
+      "displayName": "نور",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    },
+    {
+      "characterId": "08-older-msa-education-plan-r1-actor-1",
+      "bibleVersion": "08-older-msa-education-plan-r1-bible-1",
+      "origin": "synthetic",
+      "displayName": "سلمى",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    },
+    {
+      "characterId": "08-older-msa-education-plan-r1-actor-2",
+      "bibleVersion": "08-older-msa-education-plan-r1-bible-2",
+      "origin": "synthetic",
+      "displayName": "سلمى",
+      "species": "human",
+      "clothing": "simple everyday clothes",
+      "approvedReferenceImages": [],
+      "consistencyNotes": "Fictional character; stable identity across pages."
+    }
+  ],
+  "personalization": {
+    "level": 0,
+    "heroMode": "none",
+    "privateProfileRef": null
+  },
+  "syntheticPersonalization": {
+    "origin": "synthetic",
+    "profileId": "synthetic-trial",
+    "level": 0,
+    "preferences": [],
+    "heroMode": "none"
+  },
+  "setting": "a familiar play corner",
+  "environmentBibleRef": "08-older-msa-education-plan-r1-concept-2f23fb58-environment",
+  "meaningBeats": [
+    {
+      "beatId": "08-older-msa-education-plan-r1-beat-1",
+      "sequence": 1,
+      "purpose": "Sorting familiar leaves",
+      "actionOrDiscovery": "notice: Introduce Practice Sorting familiar leaves; visible success: Compare visible features and explain one simple grouping at a familiar play corner a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Introduce Practice Sorting familiar leaves; visible success: Compare visible features and explain one simple grouping at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "beforeState": "goal is introduced; familiar materials and support are available",
+      "afterState": "state-1: visible step completed",
+      "nextBeatId": "08-older-msa-education-plan-r1-beat-2"
+    },
+    {
+      "beatId": "08-older-msa-education-plan-r1-beat-2",
+      "sequence": 2,
+      "purpose": "Sorting familiar leaves",
+      "actionOrDiscovery": "compare: Approach 1: compare; discovery; use the next visible clue; step 2 a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Approach 1: compare; discovery; use the next visible clue; step 2",
+        "state-2: visible step completed"
+      ],
+      "beforeState": "state-1: visible step completed",
+      "afterState": "state-2: visible step completed",
+      "nextBeatId": "08-older-msa-education-plan-r1-beat-3"
+    },
+    {
+      "beatId": "08-older-msa-education-plan-r1-beat-3",
+      "sequence": 3,
+      "purpose": "Sorting familiar leaves",
+      "actionOrDiscovery": "ask-help: Approach 2: ask-help; discovery; use the next visible clue; step 3 a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Approach 2: ask-help; discovery; use the next visible clue; step 3",
+        "state-3: visible step completed"
+      ],
+      "beforeState": "state-2: visible step completed",
+      "afterState": "state-3: visible step completed",
+      "nextBeatId": "08-older-msa-education-plan-r1-beat-4"
+    },
+    {
+      "beatId": "08-older-msa-education-plan-r1-beat-4",
+      "sequence": 4,
+      "purpose": "Sorting familiar leaves",
+      "actionOrDiscovery": "try: Approach 3: try; discovery; use the next visible clue; step 1 a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Approach 3: try; discovery; use the next visible clue; step 1",
+        "state-4: visible step completed"
+      ],
+      "beforeState": "state-3: visible step completed",
+      "afterState": "state-4: visible step completed",
+      "nextBeatId": "08-older-msa-education-plan-r1-beat-5"
+    },
+    {
+      "beatId": "08-older-msa-education-plan-r1-beat-5",
+      "sequence": 5,
+      "purpose": "Sorting familiar leaves",
+      "actionOrDiscovery": "compare: Approach 4: compare; discovery; use the next visible clue; step 2 a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "Approach 4: compare; discovery; use the next visible clue; step 2",
+        "state-5: visible step completed"
+      ],
+      "beforeState": "state-4: visible step completed",
+      "afterState": "state-5: visible step completed",
+      "nextBeatId": "08-older-msa-education-plan-r1-beat-6"
+    },
+    {
+      "beatId": "08-older-msa-education-plan-r1-beat-6",
+      "sequence": 6,
+      "purpose": "Sorting familiar leaves",
+      "actionOrDiscovery": "discover: discovery enables Compare visible features and explain one simple grouping a familiar play corner",
+      "emotion": "curious",
+      "visibleFacts": [
+        "discovery enables Compare visible features and explain one simple grouping",
+        "state-6: goal achieved"
+      ],
+      "beforeState": "state-5: visible step completed",
+      "afterState": "state-6: goal achieved",
+      "nextBeatId": "08-older-msa-education-plan-r1-beat-7"
+    },
+    {
+      "beatId": "08-older-msa-education-plan-r1-beat-7",
+      "sequence": 7,
+      "purpose": "Sorting familiar leaves",
+      "actionOrDiscovery": "settle: Reassured closure of the same shared experience a familiar play corner",
+      "emotion": "reassured",
+      "visibleFacts": [
+        "Reassured closure of the same shared experience",
+        "state-7: visible step completed"
+      ],
+      "beforeState": "state-6: goal achieved",
+      "afterState": "state-7: visible step completed",
+      "nextBeatId": null
+    }
+  ],
+  "pagePlan": [
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page1",
+      "order": 1,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Sorting familiar leaves; visible success: Compare visible features and explain one simple grouping at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Sorting familiar leaves; visible success: Compare visible features and explain one simple grouping at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page2",
+      "order": 2,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Sorting familiar leaves; visible success: Compare visible features and explain one simple grouping at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Sorting familiar leaves; visible success: Compare visible features and explain one simple grouping at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page3",
+      "order": 3,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-1"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "notice: Introduce Practice Sorting familiar leaves; visible success: Compare visible features and explain one simple grouping at a familiar play corner a familiar play corner",
+      "mustShow": [
+        "Introduce Practice Sorting familiar leaves; visible success: Compare visible features and explain one simple grouping at a familiar play corner",
+        "state-1: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-0: goal is introduced; familiar materials and support are available -> state-1: visible step completed",
+      "propStates": "goal is introduced; familiar materials and support are available -> state-1: visible step completed"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page4",
+      "order": 4,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "compare: Approach 1: compare; discovery; use the next visible clue; step 2 a familiar play corner",
+      "mustShow": [
+        "Approach 1: compare; discovery; use the next visible clue; step 2",
+        "state-2: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-1: state-1: visible step completed -> state-2: visible step completed",
+      "propStates": "state-1: visible step completed -> state-2: visible step completed"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page5",
+      "order": 5,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-2"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "compare: Approach 1: compare; discovery; use the next visible clue; step 2 a familiar play corner",
+      "mustShow": [
+        "Approach 1: compare; discovery; use the next visible clue; step 2",
+        "state-2: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-1: state-1: visible step completed -> state-2: visible step completed",
+      "propStates": "state-1: visible step completed -> state-2: visible step completed"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page6",
+      "order": 6,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "ask-help: Approach 2: ask-help; discovery; use the next visible clue; step 3 a familiar play corner",
+      "mustShow": [
+        "Approach 2: ask-help; discovery; use the next visible clue; step 3",
+        "state-3: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-2: state-2: visible step completed -> state-3: visible step completed",
+      "propStates": "state-2: visible step completed -> state-3: visible step completed"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page7",
+      "order": 7,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-3"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "ask-help: Approach 2: ask-help; discovery; use the next visible clue; step 3 a familiar play corner",
+      "mustShow": [
+        "Approach 2: ask-help; discovery; use the next visible clue; step 3",
+        "state-3: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-2: state-2: visible step completed -> state-3: visible step completed",
+      "propStates": "state-2: visible step completed -> state-3: visible step completed"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page8",
+      "order": 8,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "try: Approach 3: try; discovery; use the next visible clue; step 1 a familiar play corner",
+      "mustShow": [
+        "Approach 3: try; discovery; use the next visible clue; step 1",
+        "state-4: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-0: state-3: visible step completed -> state-4: visible step completed",
+      "propStates": "state-3: visible step completed -> state-4: visible step completed"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page9",
+      "order": 9,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "try: Approach 3: try; discovery; use the next visible clue; step 1 a familiar play corner",
+      "mustShow": [
+        "Approach 3: try; discovery; use the next visible clue; step 1",
+        "state-4: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-0: state-3: visible step completed -> state-4: visible step completed",
+      "propStates": "state-3: visible step completed -> state-4: visible step completed"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page10",
+      "order": 10,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-4"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "try: Approach 3: try; discovery; use the next visible clue; step 1 a familiar play corner",
+      "mustShow": [
+        "Approach 3: try; discovery; use the next visible clue; step 1",
+        "state-4: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-0: state-3: visible step completed -> state-4: visible step completed",
+      "propStates": "state-3: visible step completed -> state-4: visible step completed"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page11",
+      "order": 11,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-5"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "compare: Approach 4: compare; discovery; use the next visible clue; step 2 a familiar play corner",
+      "mustShow": [
+        "Approach 4: compare; discovery; use the next visible clue; step 2",
+        "state-5: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-1: state-4: visible step completed -> state-5: visible step completed",
+      "propStates": "state-4: visible step completed -> state-5: visible step completed"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page12",
+      "order": 12,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-5"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "compare: Approach 4: compare; discovery; use the next visible clue; step 2 a familiar play corner",
+      "mustShow": [
+        "Approach 4: compare; discovery; use the next visible clue; step 2",
+        "state-5: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-1: state-4: visible step completed -> state-5: visible step completed",
+      "propStates": "state-4: visible step completed -> state-5: visible step completed"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page13",
+      "order": 13,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-6"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "discover: discovery enables Compare visible features and explain one simple grouping a familiar play corner",
+      "mustShow": [
+        "discovery enables Compare visible features and explain one simple grouping",
+        "state-6: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-2: state-5: visible step completed -> state-6: goal achieved",
+      "propStates": "state-5: visible step completed -> state-6: goal achieved"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page14",
+      "order": 14,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-6"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "discover: discovery enables Compare visible features and explain one simple grouping a familiar play corner",
+      "mustShow": [
+        "discovery enables Compare visible features and explain one simple grouping",
+        "state-6: goal achieved"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-2: state-5: visible step completed -> state-6: goal achieved",
+      "propStates": "state-5: visible step completed -> state-6: goal achieved"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page15",
+      "order": 15,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-7"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "settle: Reassured closure of the same shared experience a familiar play corner",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-7: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-0: state-6: goal achieved -> state-7: visible step completed",
+      "propStates": "state-6: goal achieved -> state-7: visible step completed"
+    },
+    {
+      "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page16",
+      "order": 16,
+      "beatIds": [
+        "08-older-msa-education-plan-r1-beat-7"
+      ],
+      "spreadGroup": null,
+      "textSafeRegion": "Reserve clear upper area for RTL/LTR text.",
+      "artBrief": "settle: Reassured closure of the same shared experience a familiar play corner",
+      "mustShow": [
+        "Reassured closure of the same shared experience",
+        "state-7: visible step completed"
+      ],
+      "mustNotShow": [
+        "private photos",
+        "unsafe copyable actions",
+        "embedded text"
+      ],
+      "characterStates": "08-older-msa-education-plan-r1-actor-0: state-6: goal achieved -> state-7: visible step completed",
+      "propStates": "state-6: goal achieved -> state-7: visible step completed"
+    }
+  ],
+  "languageVersions": [
+    {
+      "languageVersionId": "08-older-msa-education-request-08-older-msa-education-blueprint-r-9e312580-ar-MSA-simple",
+      "mode": "ar-MSA-simple",
+      "sourceRevision": "08-older-msa-education-blueprint-r1",
+      "status": "draft",
+      "diacriticsPolicy": "Pending native language review",
+      "pages": [
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page1",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page2",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page3",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page4",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page5",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page6",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page7",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page8",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page9",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page10",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page11",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page12",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page13",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page14",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page15",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        },
+        {
+          "pageId": "08-older-msa-education-plan-r1-beat-1-7fe3165a-page16",
+          "narration": "",
+          "dialogue": [],
+          "altText": "",
+          "wordCount": 0
+        }
+      ],
+      "totalWords": 0,
+      "glossaryRefs": [],
+      "review": "Placeholder only: prose not drafted or approved."
+    }
+  ],
+  "illustrationBrief": "Layered paper-cut; visible actions and stable character references; no generated art.",
+  "styleProfileRef": "paper-cut-style-bible",
+  "videoAdaptationNotes": {
+    "childViewingEligibility": "eligible-co-viewing",
+    "reason": "Finite caregiver co-viewing requires review",
+    "shotPlanStatus": "not planned"
+  },
+  "outputIntents": [
+    "print",
+    "digital"
+  ],
+  "safetyQualityChecks": [
+    {
+      "check": "Human literary, age and native-language review",
+      "status": "pending; not approved"
+    }
+  ],
+  "approvalRecords": [],
+  "lineage": {
+    "parentRevisionId": null
+  },
+  "dependencyHashes": {},
+  "generatedAssets": [],
+  "exportRefs": [],
+  "parentParticipation": "Retelling/why/how and safe off-screen activity. Read-aloud still supported; independent literacy not assumed. Caregiver cues are optional and separate from child narration."
+}
