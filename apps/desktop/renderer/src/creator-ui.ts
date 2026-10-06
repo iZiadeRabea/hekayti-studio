@@ -165,6 +165,10 @@ export const creatorArabic = {
   "Prepare image prompts": "تجهيز برومبتات الصور",
   "Edit character descriptions": "تعديل وصف الشخصيات",
   "Edit visual style": "تعديل الأسلوب البصري",
+  "Edit working character descriptions": "تعديل وصف الشخصيات الجاري",
+  "Edit working visual style": "تعديل الأسلوب البصري الجاري",
+  "Working definition edits do not change retained illustration plans.":
+    "تعديلات التعريفات الجارية لا تغيّر خطط الصور المحفوظة السابقة.",
   Save: "حفظ",
   Cancel: "إلغاء",
   "Age appearance": "العمر الظاهر",

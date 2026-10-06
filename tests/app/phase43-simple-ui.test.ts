@@ -651,6 +651,58 @@ test("M2 unapproved illustration source is labeled honestly and never presented 
       !html.includes("اعتمدت بعد المراجعة البشرية"),
   );
 });
+test("H3 historical character-reference heading uses immutable plan bible, not the latest working cast", () => {
+  const snapshot = imageSnapshot("A");
+  const character = {
+    characterId: "retained-character",
+    name: "شخصية النسخة السابقة",
+    origin: "synthetic" as const,
+    appearanceBasis: "SYNTHETIC_DEFAULT" as const,
+    ageDescription: "طفلة",
+    presentation: "بسيطة",
+    skin: "بشرة",
+    hair: "شعر",
+    face: "وجه",
+    clothes: "ملابس",
+    colors: "ألوان",
+    proportions: "نسب",
+    carriedItem: "لعبة",
+    expressions: "مبتسمة",
+    stabilityRules: "ثابتة",
+  };
+  snapshot.plan!.bible = { ...snapshot.plan!.bible, characters: [character] };
+  snapshot.bible = {
+    ...snapshot.bible!,
+    revisionId: "latest-working",
+    characters: [
+      {
+        ...character,
+        characterId: "new-character",
+        name: "شخصية التعريف الجاري",
+      },
+    ],
+  };
+  snapshot.prompts[0]!.characterId = character.characterId;
+  const html = render(
+    React.createElement(SimpleIllustrations, {
+      snapshot,
+      source: { ...reader, draftId: "A", historical: true },
+      busy: false,
+      onBack: () => {},
+      onPrepare: () => {},
+      onGenerate: () => {},
+      onCopy: () => {},
+      onEditBible: () => {},
+      onEditStyle: () => {},
+    }),
+  );
+  assert.ok(html.includes("<h3>شخصية النسخة السابقة</h3>"));
+  assert.ok(!html.includes("شخصية التعريف الجاري"));
+  assert.ok(
+    html.includes("تعديل وصف الشخصيات الجاري") &&
+      html.includes("لا تغيّر خطط الصور المحفوظة السابقة"),
+  );
+});
 test("M3 repeated advisories group by reason/severity with exact counts and locations; blockers remain separate", () => {
   const notices: PlanPresentation["notices"] = [
     {

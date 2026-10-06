@@ -114,11 +114,16 @@ export function SimpleIllustrations({
         {c("Prepare image prompts")}
       </button>
       <button disabled={busy || !snapshot.bible} onClick={onEditBible}>
-        {c("Edit character descriptions")}
+        {c("Edit working character descriptions")}
       </button>
       <button disabled={busy || !snapshot.style} onClick={onEditStyle}>
-        {c("Edit visual style")}
+        {c("Edit working visual style")}
       </button>
+      <p>
+        {c(
+          "Working definition edits do not change retained illustration plans.",
+        )}
+      </p>
       <p>{c("Review the character references before using page prompts.")}</p>
       <nav>
         <button
@@ -146,7 +151,7 @@ export function SimpleIllustrations({
         <article key={x.promptId}>
           <h3>
             {x.characterId
-              ? snapshot.bible?.characters.find(
+              ? snapshot.plan?.bible.characters.find(
                   (character) => character.characterId === x.characterId,
                 )?.name
               : c(x.kind === "COVER" ? "Story cover" : "Image description")}
