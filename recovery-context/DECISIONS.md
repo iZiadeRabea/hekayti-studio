@@ -1,5 +1,7 @@
 # Architecture / product decision log
 
+Final Astra architecture/release review APPROVED preparation 76eafab92b7b3e52c09100fbffa269257b6e2bf4 on 2026-10-06. Phase4 implemented within accepted internal-prototype scope: four independent QA findings closed, 154 application tests and consolidated build/security/development+packaged restart regressions PASS. Prior PENDING review/QA notes below are historical, not current. Mechanical v0.5.0-hybrid-library / checkpoint/phase4-hybrid-library-complete publication and ONE verified private source recovery authorized; stop afterward. Exact future final SHA/archive/cloud/readback/restore identity belongs in ignored local backups/receipts/hekayti-studio-phase4-final-<SHA8>.json and private Drive Manifests, not this source commit. Prior Phase3 verified receipt retained. Backup includes source+Git+context ONLY, not runtime user Library database; operational database backup remains a future security decision. No later features/provider login/paid AI/private data authorized.
+
 D037 / 2026-10-06: prepare 0.5.0 after independent QA closes all four Phase4 findings. Reuse verified GPT-6.1 Sol implementation and independent Sol QA routes, no extra probe/worker; Astra supplies approved plan and one final review. One consolidated full regression/package/security gate after batched fixes. No API dependency, later features or stable publication before final approval. Exact evidence phase4-testing.md; verified Phase4 recovery remains pending.
 
 ## Phase 4 — 2026-10-06

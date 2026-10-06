@@ -1,5 +1,7 @@
 # Changelog
 
+Final Astra architecture/release review APPROVED preparation 76eafab92b7b3e52c09100fbffa269257b6e2bf4 on 2026-10-06. Phase4 implemented within accepted internal-prototype scope: four independent QA findings closed, 154 application tests and consolidated build/security/development+packaged restart regressions PASS. Prior PENDING review/QA notes below are historical, not current. Mechanical v0.5.0-hybrid-library / checkpoint/phase4-hybrid-library-complete publication and ONE verified private source recovery authorized; stop afterward. Exact future final SHA/archive/cloud/readback/restore identity belongs in ignored local backups/receipts/hekayti-studio-phase4-final-<SHA8>.json and private Drive Manifests, not this source commit. Prior Phase3 verified receipt retained. Backup includes source+Git+context ONLY, not runtime user Library database; operational database backup remains a future security decision. No later features/provider login/paid AI/private data authorized.
+
 ## 0.5.0 preparation — 2026-10-06 (not released)
 
 Independent QA confirms four findings CLOSED, 84 focused tests/typecheck. Consolidated 100 foundation + 329 design + 154 application tests/typecheck, production build, online health/history security, development/packaged Phase4 and Phase3 restart, legacy UI and isolated desktop export PASS. Workspace/internal versions advanced without dependency upgrades; original product/app/data paths retained. Astra final review and publication/recovery pending; exact receipts phase4-testing.md.

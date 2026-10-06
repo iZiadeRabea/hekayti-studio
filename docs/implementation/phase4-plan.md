@@ -1,5 +1,7 @@
 # Phase 4 compact approved plan — 2026-10-06
 
+Final Astra architecture/release review approved 76eafab92b7b3e52c09100fbffa269257b6e2bf4. Approved scope implemented, independent QA four findings CLOSED and consolidated gates PASS. Historical pending gates below are prior stages; mechanical 0.5.0 publication and one verified source recovery authorized. Exact final identity external; runtime Library database excluded.
+
 Baseline: clean main 58d4c52d22e52c43f684e3da2eb0bfd5056545f5, v0.4.0-story-engine and checkpoint/phase3-story-engine-complete. Online health PASS, zero warnings. Existing stable checkpoint and verified Drive receipt provide pre-change recovery; no redundant backup/probe. Branch feature/phase4-hybrid-library.
 
 ## Decisions and boundaries
