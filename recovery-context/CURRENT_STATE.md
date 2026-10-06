@@ -1,11 +1,11 @@
 # Current state
 
-- Current project version: v0.5.2-story-planner
+- Current project version: v0.5.3-planner-quality
 - Current workspace version: 0.5.3
-- Current branch at milestone: feature/phase4.2.1-planner-quality
-- Latest stable checkpoint: checkpoint/phase4.2-story-planner-complete
-- Latest stable tag: v0.5.2-story-planner
-- Last successful tests: 2026-10-06 —100foundation/329design/266application/typecheck PASS; actual UI/package gates recorded separately
+- Current branch at milestone: main
+- Latest stable checkpoint: checkpoint/phase4.2.1-planner-quality-complete
+- Latest stable tag: v0.5.3-planner-quality
+- Last successful tests: 2026-10-06 13:00:16 +03:00 — foundation, design and available application suites passed; visual/packaging gates recorded separately
 
 Current authorization: Astra final compact review APPROVED FOR RELEASE exact05dd02ab3f337c61d4a9db34d62283ae93b60462 including quality+ArabicUI. Same serial MEDIUM owns safe mainFF/immutable0.5.3release+checkpoint/privateGit/readback/ONE source+separate791 creative cloud rawdownload/hash/freshrestores. Actual final identity/completion is external, not inferred from this source. Root two normal compact review points, no intervening architecture escalation.
 
