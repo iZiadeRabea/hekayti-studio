@@ -1,6 +1,6 @@
 # Hekayti Studio agent entrypoint
 
-Current authority: Phase4.2.2 writer bridge/category+Arabic UI preparation validated; root final compact approval PENDING. Feature/phase4.2.2-writer-bridge, workspace0.5.4. No main/tag/push/Drive before explicit APPROVED FOR RELEASE. CURRENT_STATE.md and docs/implementation/phase4.2.2-release-packet.md summarize actual evidence; historical approval banners in CHANGELOG do not authorize this patch.
+Current authority: Astra final compact review APPROVED FOR RELEASE exact483d855a80e9739cf1617d824d989e7b67b7abfb. Same MEDIUM routine safeFFmain/immutable v0.5.4-writer-bridge/checkpoint/phase4.2.2-writer-bridge-complete/privatepush and mandatory checkpoint/sourcebackup/rawcloudhash/freshrestores authorized. Actual completion requires ignored external receipt, not approval alone. No postbackup sourcecommit/tagmove. CURRENT_STATE.md and docs/implementation/phase4.2.2-release-packet.md summarize evidence.
 
 Stable e34ea7edb411cc886ac910e3e723c6ed09e7e71a/v0.5.3-planner-quality/checkpoint/phase4.2.1-planner-quality-complete and verified ignored receipt backups/receipts/hekayti-studio-phase421-final-e34ea7ed.json remain preserved. Do not touch owner trial/runtime databases.
 

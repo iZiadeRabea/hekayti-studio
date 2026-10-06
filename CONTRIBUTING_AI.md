@@ -4,7 +4,7 @@ Current authorization override: Phase4.2.2 owner-approved writer bridge/category
 
 Before coding: read START_HERE.md, PROJECT_CONTEXT.md, CURRENT_STATE.md, DECISIONS.md and SKILLS.md; inspect Git status and read SECURITY.md.
 Repository files are authoritative. Never keep decisions or recovery details only in chat.
-Current owner authorization: Phase4.2.2 writer bridge preparation and compact review; no release/main/tag/push/Drive until explicit final approval. Evidence CURRENT_STATE.md and docs/implementation/phase4.2.2-release-packet.md; preserve stable e34ea7ed/v0.5.3 receipt, ownerDB,791 corpus and historical hashes. One consolidated gate plus targeted stale test correction; mandatory recovery checks follow only after approval.
+Current owner authorization: Astra APPROVED FOR RELEASE Phase4.2.2 exact483d855a80e9739cf1617d824d989e7b67b7abfb. Same MEDIUM safe release/privateGit/immutabletags and mandatory source/separate791 rawcloudhash/freshrestore checks authorized; actual completion external, no postbackup sourcecommit/tagmove. Evidence CURRENT_STATE.md and docs/implementation/phase4.2.2-release-packet.md; preserve stable e34ea7ed/v0.5.3 receipt, ownerDB,791 corpus and historical hashes. One consolidated gate plus targeted stale test correction; mandatory recovery checks follow only after approval.
 Stop after the current authorized writer bridge; later phases require owner instructions.
 
 Before major/risky changes, create a checkpoint. Use feature/story-engine, feature/character-builder, feature/illustration-engine, feature/book-generator, feature/video-pipeline or feature/arabic-engine when appropriate. Trivial documentation changes do not need elaborate branching. Merge only stable reviewed work into main.

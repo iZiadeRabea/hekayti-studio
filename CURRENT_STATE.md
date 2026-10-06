@@ -1,6 +1,13 @@
 # Current state
 
-Phase4.2.2 writer bridge preparation is validated on feature/phase4.2.2-writer-bridge, workspace0.5.4. Root final compact approval is PENDING; no main merge/tag/push/cloud authority yet.
+Phase4.2.2 APPROVED FOR RELEASE by Astra final compact review for exact clean preparation483d855a80e9739cf1617d824d989e7b67b7abfb. Same MEDIUM may safelyFFmain, run mandatory checkpoint/sourcebackup/freshrestore gates, create immutable0.5.4tags/privatepush and verify separate source/unchanged791 Library cloud recoveries. Actual final completion/identity requires external receipt; approval alone is not verification.
+
+- Current project version: v0.5.3-planner-quality
+- Current workspace version: 0.5.4
+- Current branch at milestone: feature/phase4.2.2-writer-bridge
+- Latest stable checkpoint: checkpoint/phase4.2.1-planner-quality-complete
+- Latest stable tag: v0.5.3-planner-quality
+- Last successful tests: 2026-10-06 — single pre-release gate plus targeted stale fixture correction; mandatory release/recovery proof recorded externally
 
 Stable safety anchor: main e34ea7edb411cc886ac910e3e723c6ed09e7e71a, v0.5.3-planner-quality, checkpoint/phase4.2.1-planner-quality-complete; verified external receipt backups/receipts/hekayti-studio-phase421-final-e34ea7ed.json. Local/remote main remain unchanged. Older approval/pending entries in CHANGELOG are historical, not current release authority.
 
@@ -14,4 +21,4 @@ Routing: ONE new SolHIGH implementation and ONE new independent SolHIGH QA becau
 
 791 corpus unchanged:765 IDEA_SEED+26 synthetic families,READY0. New planner-derived projection tested only in isolated smoke; no operational history/approval authority in creative ZIP. Baseline unchanged791 snapshot may be reused honestly with original absent appversion/time metadata, verified with restored0.5.4 after approval. Final release/cloud identity requires ignored external receipt; no fabricated completion.
 
-Remaining risks: bounded lexical/category checks, human native/literary/developmental/cultural/child-appeal/provider review;8moderate tooling advisories,0high/critical; unsigned internal prototype and bundle size warning. Source/Library raw readback and fresh restores remain PENDING approval. No owner/runtime DB/trials/customer/child/photos/API/consumer automation/new corpus/illustration/video/site/Phase5. Stop after this authorized writer bridge.
+Remaining risks: bounded lexical/category checks, human native/literary/developmental/cultural/child-appeal/provider review;8moderate tooling advisories,0high/critical; unsigned internal prototype and bundle size warning. Source/Library raw readback and fresh restores require actual external evidence after this approval. No owner/runtime DB/trials/customer/child/photos/API/consumer automation/new corpus/illustration/video/site/Phase5. Stop after this authorized writer bridge.

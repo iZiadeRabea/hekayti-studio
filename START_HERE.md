@@ -1,6 +1,6 @@
 # Start here — new AI session
 
-Current: Phase4.2.2 writer bridge/category composition and Arabic UI validated; root final compact approval PENDING. Read CURRENT_STATE.md and docs/implementation/phase4.2.2-release-packet.md / phase4.2.2-testing.md. Workspace0.5.4 on feature/phase4.2.2-writer-bridge; no main/tag/push/cloud authority yet.
+Current: Astra final compact review APPROVED FOR RELEASE exact483d855a80e9739cf1617d824d989e7b67b7abfb. Same MEDIUM safeFF/immutable0.5.4tags/privatepush and mandatory source/separate791 rawcloudhash/freshrestores authorized. Actual final identity/completion is external, not asserted by approval. Read CURRENT_STATE.md and docs/implementation/phase4.2.2-release-packet.md / phase4.2.2-testing.md. No postbackup sourcecommit/tagmove/later phase.
 
 Stable main e34ea7edb411cc886ac910e3e723c6ed09e7e71a/v0.5.3-planner-quality/checkpoint/phase4.2.1-planner-quality-complete is VERIFIED in ignored backups/receipts/hekayti-studio-phase421-final-e34ea7ed.json. Preserve old history/tags/backups and owner/runtime trial databases. Historical milestones are in CHANGELOG, not current pending banners.
 

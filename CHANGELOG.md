@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.4-writer-bridge final compact approval —2026-10-06
+
+Astra APPROVED FOR RELEASE exact483d855a80e9739cf1617d824d989e7b67b7abfb. All4QA CLOSED; initial300/301+targeted version correction accepted honestly. Same MEDIUM safeFF/main privatepush/immutabletags/mandatory checkpoint/sourcebackup and separate unchanged791 Library rawreadback/freshrestores authorized. Actual completion belongs in ignored external receipt; no postbackup sourcecommit/tagmove/provider/newphase. Earlier preparation/pending entries below are historical.
+
 ## 0.5.4 writer bridge preparation —2026-10-06 (not released)
 
 Same independent QA all4 CLOSED/11PASS. One consolidated100/329/typecheck PASS, app300/301 initial with stale historical desktop-version assertion; same QA preserved legacy assertions and added current1.2 boundary, targeted1PASS. Build/unsigned0.5.4package/onlinehealth0warnings/historysecurity/dev+packaged writer/Arabic/history regressions PASS. Exact synthetic42 adventure+sharing: family2/nullpattern/A–Itrue,2medium+3low human cautions. Root compact approval/release/cloud readbacks/freshrestores PENDING. Evidence phase4.2.2-testing.md and phase4.2.2-release-packet.md. Stable e34ea7ed/v0.5.3 external receipt preserved; no ownerDB/corpus/provider calls. Earlier pending/approval entries below are historical.
