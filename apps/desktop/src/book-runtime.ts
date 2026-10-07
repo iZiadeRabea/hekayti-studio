@@ -21,6 +21,7 @@ import {
 } from "@hekayti/contracts/book";
 import {
   PrivateBookAssetStore,
+  ensurePrivateBookDirectory,
   SqliteProjectRepository,
 } from "@hekayti/persistence";
 import { BookStudioService } from "@hekayti/core/book";
@@ -95,7 +96,10 @@ export function installBookRuntime(
         renderer: BOOK_RENDERER_VERSION,
       });
     const tempDir = join(privateRoot, "render-temp");
-    await mkdir(tempDir, { recursive: true });
+    await ensurePrivateBookDirectory(tempDir, [
+      app.getAppPath(),
+      process.cwd(),
+    ]);
     const path = join(tempDir, randomUUID() + ".html");
     await writeFile(path, html, { flag: "wx" });
     const view = new BrowserWindow({
@@ -193,7 +197,10 @@ export function installBookRuntime(
     if (!a) throw new AppError("BOOK_ASSET", "الصورة غير موجودة في المشروع.");
     return a;
   };
-  const preflight = async (s: BookStudioSnapshot) => {
+  const preflight = async (
+    s: BookStudioSnapshot,
+    sheetVersions: string[] = [],
+  ) => {
     for (const identity of s.identities)
       for (const id of identity.referenceAssets)
         if (!(await assets.read(ref(s.book.projectId, id))))
@@ -201,6 +208,16 @@ export function installBookRuntime(
             "BOOK_ASSET_MISSING",
             "الصورة المرجعية غير موجودة في مكانها. أعد ربط الصورة.",
           );
+    for (const sheetId of new Set(sheetVersions)) {
+      const sheet = s.book.images.find(
+        (i) => i.imageId === sheetId && i.kind === "CHARACTER_SHEET",
+      );
+      if (!sheet || !(await assets.read(ref(s.book.projectId, sheet.assetId))))
+        throw new AppError(
+          "BOOK_ASSET_MISSING",
+          "مرجع شكل الشخصية المعتمد غير موجود؛ أعد ربط نفس الصورة قبل تجهيز البرومبت أو اعتماد الكتاب.",
+        );
+    }
   };
   handle("studio:defaults", (arg) => {
     const x = z
@@ -228,7 +245,28 @@ export function installBookRuntime(
     const x = BookCommandSchema.parse(arg),
       snapshot = studio.load(x.projectId);
     if (["PROMPT", "COPY_PROMPT", "APPROVE_BOOK"].includes(x.action))
-      await preflight(snapshot);
+      await preflight(
+        snapshot,
+        x.action === "COPY_PROMPT"
+          ? (snapshot.prompts.find((p) => p.promptId === x.promptId)?.binding
+              .sheetVersions ?? [])
+          : x.action === "PROMPT"
+            ? x.kind === "CHARACTER_REFERENCE"
+              ? []
+              : snapshot.images
+                  .filter((i) => i.kind === "CHARACTER_SHEET" && i.selected)
+                  .map((i) => i.imageId)
+            : [
+                ...snapshot.images
+                  .filter((i) => i.kind === "CHARACTER_SHEET" && i.selected)
+                  .map((i) => i.imageId),
+                ...(snapshot.layout?.pages.flatMap(
+                  (p) =>
+                    snapshot.images.find((i) => i.imageId === p.imageId)
+                      ?.binding.sheetVersions ?? [],
+                ) ?? []),
+              ],
+      );
     if (
       x.action === "IMAGE_DECISION" &&
       ["APPROVE", "USE"].includes(x.choice)
@@ -335,9 +373,16 @@ export function installBookRuntime(
   handle("studio:export", async (arg) => {
     const x = base.extend({ kind: z.enum(["digital", "print"]) }).parse(arg),
       s = await studio.exportModel(x.projectId, x.expectedBook);
-    await preflight(s);
+    await preflight(
+      s,
+      s.layout?.pages.flatMap(
+        (p) =>
+          s.images.find((i) => i.imageId === p.imageId)?.binding
+            .sheetVersions ?? [],
+      ) ?? [],
+    );
     const output = join(privateRoot, "exports", x.projectId);
-    await mkdir(output, { recursive: true });
+    await ensurePrivateBookDirectory(output, [app.getAppPath(), process.cwd()]);
     const choice = await dialog.showSaveDialog(win, {
       title: x.kind === "print" ? "تصدير كتاب للطباعة" : "تصدير كتاب رقمي",
       defaultPath: join(output, `book-${x.kind}.pdf`),
@@ -346,7 +391,10 @@ export function installBookRuntime(
     if (choice.canceled || !choice.filePath) return null;
     const target = resolve(choice.filePath),
       parent = dirname(target),
-      canonicalParent = await realpath(parent);
+      canonicalParent = await ensurePrivateBookDirectory(parent, [
+        app.getAppPath(),
+        process.cwd(),
+      ]);
     if (canonicalParent.toLowerCase() !== resolve(parent).toLowerCase())
       throw new AppError(
         "BOOK_EXPORT_PATH",

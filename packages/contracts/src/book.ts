@@ -336,6 +336,7 @@ export const BookStateSchema = z
             layoutRevisionId: Id,
             contentHash: hash,
             renderFingerprint: hash,
+            selectionDecisions: z.array(Id).max(121).optional(),
             createdAt: text,
           })
           .strict(),
@@ -414,6 +415,7 @@ export interface BookStudioSnapshot {
   scenes: ScenePage[];
   identities: IdentityPack[];
   images: (BookImage & {
+    selected: boolean;
     status:
       "IMPORTED" | "REVIEW_REQUIRED" | "APPROVED" | "REJECTED" | "ARCHIVED";
     stale: boolean;

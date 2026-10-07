@@ -285,6 +285,10 @@ export function guidedAgeStructure(
 }
 const normalize = (s: string) =>
   s.normalize("NFKC").replace(/[\u064b-\u065f\u0670]/g, "");
+const negatedAction = (s: string) =>
+  /(?:^|\s)(?:لا|ولا|لن|ليس|ليست|بدون|دون|عدم|مش)\s|(?:^|\s)ما\s+\p{L}+ش(?=\s|[.!؟،]|$)|\b(?:not|never|without|cannot|can't|don't|doesn't|no)\b/iu.test(
+    normalize(s),
+  );
 export function composeGuidedStoryPlan(
   base: StoryPlan,
   input: BookIntent,
@@ -329,7 +333,7 @@ export function composeGuidedStoryPlan(
       ? intent.path.steps
       : preserve
         ? presentation.events.map((event) => event.action)
-        : cloth
+        : cloth && intent.path.mode === "AUTO"
           ? [
               "يلحظ الطفل جزءًا مدورًا وناعمًا ظاهرًا من تحت قماشة مألوفة.",
               "يقترب من الشيء بهدوء وبدعم مألوف.",
@@ -424,10 +428,7 @@ export function composeGuidedStoryPlan(
       s = normalize(preserve ? base.beats[i]!.summary : step),
       after = structuredClone(states);
     let known = preserve;
-    const denied =
-      /(?:^|\s)(?:لا|ولا|لن|ليس|ليست|بدون|دون|عدم|مش)\s|\b(?:not|never|without|cannot|can't|don't|doesn't|no)\b/iu.test(
-        s,
-      );
+    const denied = negatedAction(s);
     if (preserve) {
       props.forEach(([name, pattern]) => {
         const e = after.find((e) => e.name === name)!;
@@ -519,8 +520,7 @@ export function composeGuidedStoryPlan(
         action:
           i === steps.length - 1
             ? ("settle" as const)
-            : !/(?:^|\s)(?:لا|لن|مش)\s/.test(scene.intent) &&
-                /كشف|يرفع|ترفع/.test(scene.intent)
+            : !negatedAction(scene.intent) && /كشف|يرفع|ترفع/.test(scene.intent)
               ? ("reveal" as const)
               : ("notice" as const),
         actorId: actor,

@@ -8,7 +8,7 @@ import {
   link,
   unlink,
 } from "node:fs/promises";
-import { join, resolve, sep } from "node:path";
+import { join, resolve, sep, dirname } from "node:path";
 import { AppError, Id } from "@hekayti/contracts";
 import {
   AssetManifestSchema,
@@ -16,6 +16,65 @@ import {
 } from "@hekayti/contracts/book";
 export interface ImageDecoder {
   dimensions(bytes: Uint8Array): { width: number; height: number } | null;
+}
+/** Validate existing ancestors before mkdir: a descendant of a junction is not a safe root. */
+export async function ensurePrivateBookDirectory(
+  path: string,
+  forbiddenRoots: string[] = [],
+) {
+  const target = resolve(path);
+  let nearest = target;
+  for (;;) {
+    try {
+      const info = await lstat(nearest);
+      if (info.isSymbolicLink() || !info.isDirectory())
+        throw new AppError(
+          "BOOK_ASSET_PATH",
+          "Private root path or ancestor cannot be a link or file.",
+        );
+      if ((await realpath(nearest)).toLowerCase() !== nearest.toLowerCase())
+        throw new AppError(
+          "BOOK_ASSET_PATH",
+          "Private root ancestor differs from canonical path authority.",
+        );
+      break;
+    } catch (e) {
+      if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e;
+      const parent = dirname(nearest);
+      if (parent === nearest) throw e;
+      nearest = parent;
+    }
+  }
+  for (const root of forbiddenRoots) {
+    const lexical = resolve(root);
+    let canonical = lexical;
+    try {
+      canonical = await realpath(lexical);
+    } catch (e) {
+      if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e;
+    }
+    if (
+      [lexical, canonical].some(
+        (r) =>
+          target.toLowerCase() === r.toLowerCase() ||
+          target.toLowerCase().startsWith(r.toLowerCase() + sep),
+      )
+    )
+      throw new AppError(
+        "BOOK_ASSET_ROOT",
+        "Private root must remain outside source/recovery directories.",
+      );
+  }
+  await mkdir(target, { recursive: true });
+  if (
+    (await lstat(target)).isSymbolicLink() ||
+    (await realpath(target)).toLowerCase() !== target.toLowerCase()
+  )
+    throw new AppError(
+      "BOOK_ASSET_PATH",
+      "Private root changed its path authority.",
+    );
+  return target;
 }
 export function sniffImage(bytes: Uint8Array): AssetManifest["mime"] {
   const b = Buffer.from(bytes);
@@ -65,14 +124,12 @@ export class PrivateBookAssetStore {
   }
   private async folder(projectId: string) {
     Id.parse(projectId);
-    await mkdir(this.root, { recursive: true });
-    if ((await lstat(this.root)).isSymbolicLink())
-      throw new AppError("BOOK_ASSET_PATH", "Asset root cannot be a link.");
-    const root = await realpath(this.root),
+    const root = await ensurePrivateBookDirectory(
+        this.root,
+        this.forbiddenRoots,
+      ),
       folder = join(root, projectId);
-    await mkdir(folder, { recursive: true });
-    if ((await lstat(folder)).isSymbolicLink())
-      throw new AppError("BOOK_ASSET_PATH", "Asset project cannot be a link.");
+    await ensurePrivateBookDirectory(folder, this.forbiddenRoots);
     if (
       (await realpath(folder)).toLowerCase() !== resolve(folder).toLowerCase()
     )

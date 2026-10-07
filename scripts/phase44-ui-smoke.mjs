@@ -2,13 +2,13 @@
 // Dialog selection is supplied by the harness; all storage/review/layout/export
 // still use the actual main-process endpoints and their approval/fit checks.
 import { _electron as electron } from "playwright";
-import { mkdir, mkdtemp, writeFile, readFile } from "node:fs/promises";
-import { resolve, join } from "node:path";
+import { mkdtemp, writeFile, readFile, unlink } from "node:fs/promises";
+import { resolve, join, sep } from "node:path";
+import { tmpdir } from "node:os";
 import { deflateSync } from "node:zlib";
 import assert from "node:assert/strict";
 const packaged = process.argv.includes("--packaged");
-await mkdir("temp/phase44-ui", { recursive: true });
-const data = await mkdtemp(resolve("temp/phase44-ui/run-"));
+const data = await mkdtemp(join(tmpdir(), "hekayti-phase44-ui-"));
 const gates = [];
 const must = (result) => {
   assert.equal(result.ok, true, result.error?.code);
@@ -329,6 +329,68 @@ try {
   assert.equal(s.approved, true);
   gates.push(
     "actualart Arabiclivecanvas dragpersist trustedpreview fitapproval",
+  );
+  const selectedSheet = s.images.find(
+    (image) =>
+      image.kind === "CHARACTER_SHEET" &&
+      image.selected &&
+      image.status === "APPROVED",
+  );
+  assert.ok(selectedSheet);
+  const userData = await app.evaluate(({ app }) => app.getPath("userData"));
+  const sheetPath = resolve(
+    userData,
+    "private-books",
+    "assets",
+    projectId,
+    selectedSheet.assetId + ".png",
+  );
+  assert.ok(
+    sheetPath.toLowerCase().startsWith(resolve(data).toLowerCase() + sep),
+  );
+  assert.ok((await readFile(sheetPath)).length > 0);
+  await unlink(sheetPath); // Controlled synthetic missing-file fault; never an owner file.
+  const rejected = async (method, input) => {
+    const result = await page.evaluate(
+      ({ method, input }) => window.hekayti[method](input),
+      { method, input },
+    );
+    assert.equal(result.ok, false, "Missing sheet must block " + method);
+    assert.equal(result.error.code, "BOOK_ASSET_MISSING");
+  };
+  await rejected("studioCommand", {
+    projectId,
+    expectedBook: s.book.recordVersion,
+    action: "PROMPT",
+    kind: "PAGE",
+    pageId: edition.pages[0].pageId,
+  });
+  const boundPrompt = s.prompts.find((prompt) => prompt.kind === "PAGE");
+  await rejected("studioCommand", {
+    projectId,
+    expectedBook: s.book.recordVersion,
+    action: "COPY_PROMPT",
+    promptId: boundPrompt.promptId,
+  });
+  await rejected("studioCommand", {
+    projectId,
+    expectedBook: s.book.recordVersion,
+    action: "APPROVE_BOOK",
+  });
+  await rejected("studioExport", {
+    projectId,
+    expectedBook: s.book.recordVersion,
+    kind: "print",
+  });
+  await choose(art);
+  s = await call("studioRelinkAsset", {
+    projectId,
+    expectedBook: s.book.recordVersion,
+    assetId: selectedSheet.assetId,
+  });
+  assert.ok(s.approved);
+  gates.push(
+    "missingsyntheticapprovedsheet blocks dependentpreparecopy approval export exactrelinkrestores",
   );
   const exports = [];
   for (const kind of ["digital", "print"]) {

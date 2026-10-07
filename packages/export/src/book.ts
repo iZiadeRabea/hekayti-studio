@@ -5,7 +5,7 @@ import type {
   AssetManifest,
 } from "@hekayti/contracts/book";
 import { AppError, languageInfo } from "@hekayti/contracts";
-export const BOOK_RENDERER_VERSION = "book-renderer/1.0";
+export const BOOK_RENDERER_VERSION = "book-renderer/1.1";
 export const escapeBookText = (s: string) =>
   s
     .replaceAll("&", "&amp;")
@@ -13,7 +13,20 @@ export const escapeBookText = (s: string) =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
-export const bookPageCss = `*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;font-family:HekaytiBook,'Noto Sans Arabic',sans-serif;font-weight:400}.book-page{position:relative;break-after:page;overflow:hidden;background:#fff9ed}.book-page:last-child{break-after:auto}.book-trim{position:absolute}.book-art{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}.book-box{position:absolute;line-height:1.65;padding:2.5mm;white-space:pre-wrap;overflow-wrap:anywhere;text-align:start;unicode-bidi:plaintext;color:#282a2b}.book-box.PAPER{background:rgba(255,250,235,.94);border-radius:3mm;box-shadow:.4mm .7mm 1mm #0002}.book-box.CAPTION{background:#fff9edcc;border-bottom:.3mm solid #dcbea1}.book-box.BUBBLE{background:#fffef8;border:.4mm solid #403c35;border-radius:5mm;z-index:2}.book-box.PAGE_NUMBER{padding:0;line-height:1.25;text-align:center}.bubble-tail{position:absolute;pointer-events:none;z-index:1;overflow:visible}.book-text{display:block;min-width:0;white-space:pre-wrap;overflow-wrap:anywhere}`;
+export const bookPageCss = `*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;font-family:HekaytiBook,'Noto Sans Arabic',sans-serif;font-weight:400}.book-page{position:relative;break-after:page;overflow:hidden;background:#fff9ed}.book-page:last-child{break-after:auto}.book-trim{position:absolute}.book-art{position:absolute;object-fit:cover;pointer-events:none}.book-box{position:absolute;line-height:1.65;padding:2.5mm;white-space:pre-wrap;overflow-wrap:anywhere;text-align:start;unicode-bidi:plaintext;color:#282a2b}.book-box.PAPER{background:rgba(255,250,235,.94);border-radius:3mm;box-shadow:.4mm .7mm 1mm #0002}.book-box.CAPTION{background:#fff9edcc;border-bottom:.3mm solid #dcbea1}.book-box.BUBBLE{background:#fffef8;border:.4mm solid #403c35;border-radius:5mm;z-index:2}.book-box.PAGE_NUMBER{padding:0;line-height:1.25;text-align:center}.bubble-tail{position:absolute;pointer-events:none;z-index:1;overflow:visible}.book-text{display:block;min-width:0;white-space:pre-wrap;overflow-wrap:anywhere}`;
+// Digital clips off the same bleed that print includes: identical art inside trim, never stretched.
+export function bookArtworkGeometry(
+  settings: BookLayout["settings"],
+  kind: "digital" | "print",
+) {
+  const offset = kind === "digital" ? -settings.bleedMm : 0;
+  return {
+    xMm: offset,
+    yMm: offset,
+    widthMm: settings.widthMm + 2 * settings.bleedMm,
+    heightMm: settings.heightMm + 2 * settings.bleedMm,
+  };
+}
 function tailSvg(
   box: TextBox,
   page: PageLayout,
@@ -68,8 +81,9 @@ export function bookPageMarkup(
     );
   const bleed = kind === "print" ? layout.settings.bleedMm : 0,
     width = layout.settings.widthMm,
-    height = layout.settings.heightMm;
-  return `<section class="book-page" data-page="${page.pageNumber}" style="width:${width + 2 * bleed}mm;height:${height + 2 * bleed}mm"><div class="book-trim" style="left:${bleed}mm;top:${bleed}mm;width:${width}mm;height:${height}mm"><img class="book-art" src="${imageData}" alt="">${page.boxes.map((box) => `${tailSvg(box, page, width, height)}<div data-box="${escapeBookText(box.boxId)}" class="book-box ${box.style} ${box.kind}" style="left:${box.x * width}mm;top:${box.y * height}mm;width:${box.width * width}mm;height:${box.height * height}mm;font-size:${box.fontPt}pt"><span class="book-text">${escapeBookText(box.text)}</span></div>`).join("")}</div></section>`;
+    height = layout.settings.heightMm,
+    art = bookArtworkGeometry(layout.settings, kind);
+  return `<section class="book-page" data-page="${page.pageNumber}" style="width:${width + 2 * bleed}mm;height:${height + 2 * bleed}mm"><img class="book-art" src="${imageData}" alt="" style="left:${art.xMm}mm;top:${art.yMm}mm;width:${art.widthMm}mm;height:${art.heightMm}mm"><div class="book-trim" style="left:${bleed}mm;top:${bleed}mm;width:${width}mm;height:${height}mm">${page.boxes.map((box) => `${tailSvg(box, page, width, height)}<div data-box="${escapeBookText(box.boxId)}" class="book-box ${box.style} ${box.kind}" style="left:${box.x * width}mm;top:${box.y * height}mm;width:${box.width * width}mm;height:${box.height * height}mm;font-size:${box.fontPt}pt"><span class="book-text">${escapeBookText(box.text)}</span></div>`).join("")}</div></section>`;
 }
 export function bookHtml(
   layout: BookLayout,
@@ -93,8 +107,8 @@ export function printResolution(
   settings: BookLayout["settings"],
 ) {
   const dpi = Math.min(
-    asset.width / (settings.widthMm / 25.4),
-    asset.height / (settings.heightMm / 25.4),
+    asset.width / ((settings.widthMm + 2 * settings.bleedMm) / 25.4),
+    asset.height / ((settings.heightMm + 2 * settings.bleedMm) / 25.4),
   );
   return { dpi: Math.round(dpi), low: dpi < 200, recommendedDpi: 300 };
 }

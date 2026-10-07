@@ -125,6 +125,7 @@ function ComposedPage({
       artwork={artwork}
       aspectRatio={layout.settings.widthMm / layout.settings.heightMm}
       pageWidthMm={layout.settings.widthMm}
+      bookSettings={layout.settings}
       margin={
         layout.settings.safeMm /
         Math.min(layout.settings.widthMm, layout.settings.heightMm)

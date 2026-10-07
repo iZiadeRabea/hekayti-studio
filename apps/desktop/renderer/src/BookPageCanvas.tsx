@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { constrainCanvasRect, useStudioUi, type CanvasRect } from "./studio-ui";
+import { bookArtworkGeometry } from "@hekayti/export/book";
+import type { BookSettings } from "@hekayti/contracts/book";
 
 export interface CanvasTextLayer {
   key: string;
@@ -22,6 +24,7 @@ export function BookPageCanvas({
   anchors = {},
   margin = 0.04,
   pageWidthMm = 200,
+  bookSettings,
   onSelect,
   onChange,
   onAnchor,
@@ -36,12 +39,16 @@ export function BookPageCanvas({
   anchors?: Record<string, { x: number; y: number }>;
   margin?: number;
   pageWidthMm?: number;
+  bookSettings?: BookSettings;
   onSelect?: (key: string) => void;
   onChange?: (key: string, rect: CanvasRect) => void;
   onAnchor?: (speakerId: string, point: { x: number; y: number }) => void;
   onOverflow?: (keys: string[]) => void;
 }) {
   const { say } = useStudioUi();
+  const art = bookSettings
+    ? bookArtworkGeometry(bookSettings, "digital")
+    : null;
   const canvas = useRef<HTMLDivElement>(null);
   const drag = useRef<{
     key: string;
@@ -145,6 +152,17 @@ export function BookPageCanvas({
       {artwork ? (
         <img
           className="book-artwork"
+          style={
+            art && bookSettings
+              ? {
+                  left: (art.xMm / bookSettings.widthMm) * 100 + "%",
+                  top: (art.yMm / bookSettings.heightMm) * 100 + "%",
+                  width: (art.widthMm / bookSettings.widthMm) * 100 + "%",
+                  height: (art.heightMm / bookSettings.heightMm) * 100 + "%",
+                  objectFit: "cover",
+                }
+              : undefined
+          }
           src={artwork}
           alt={say("رسم الصفحة", "Page artwork")}
         />

@@ -39,7 +39,11 @@ import {
 } from "@hekayti/core/library";
 import { storyStructureFor } from "@hekayti/core/age";
 export { LocalAssetStore, writeNewFile } from "./assets";
-export { PrivateBookAssetStore, sniffImage } from "./book-assets";
+export {
+  PrivateBookAssetStore,
+  sniffImage,
+  ensurePrivateBookDirectory,
+} from "./book-assets";
 export * from "./creative-archive";
 import {
   LibraryQuerySchema,
@@ -423,6 +427,9 @@ export class SqliteProjectRepository
             layout,
             classification: state.classification,
             renderFingerprint: approval.renderFingerprint,
+            ...(approval.selectionDecisions
+              ? { selectionDecisions: approval.selectionDecisions }
+              : {}),
           }),
         )
         .digest("hex");
@@ -435,6 +442,9 @@ export class SqliteProjectRepository
               layout,
               classification: "PUBLIC_SYNTHETIC",
               renderFingerprint: approval.renderFingerprint,
+              ...(approval.selectionDecisions
+                ? { selectionDecisions: approval.selectionDecisions }
+                : {}),
             }),
           )
           .digest("hex") === approval.contentHash;
@@ -442,6 +452,19 @@ export class SqliteProjectRepository
         throw new AppError(
           "BOOK_APPROVAL_SOURCE",
           "Book approval differs from exact retained layout, classification and renderer.",
+        );
+      if (
+        approval.selectionDecisions?.some(
+          (id) =>
+            !state.decisions.some(
+              (d) =>
+                d.decisionId === id && ["USE", "APPROVE"].includes(d.choice),
+            ),
+        )
+      )
+        throw new AppError(
+          "BOOK_APPROVAL_SOURCE",
+          "Book selection authority event is missing.",
         );
       if (
         !this.loadWorkflow(state.projectId)?.approvals.some(

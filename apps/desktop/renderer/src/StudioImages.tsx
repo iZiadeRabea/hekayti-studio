@@ -464,7 +464,7 @@ export function StudioImages({
             const size = snapshot.layout?.settings;
             const resolution =
               asset && size && image.kind !== "CHARACTER_SHEET"
-                ? printResolution(asset,size)
+                ? printResolution(asset, size)
                 : null;
             return (
               <article key={image.imageId}>
@@ -472,6 +472,14 @@ export function StudioImages({
                   {say("نسخة صورة", "Image version")}{" "}
                   {selectedImages.length - i} · {status(image.status)}
                 </h3>
+                {image.selected && (
+                  <p className="studio-muted">
+                    {say(
+                      "الصورة المستخدمة حاليًا لهذا الموضع",
+                      "Currently selected artwork for this slot",
+                    )}
+                  </p>
+                )}
                 {image.stale && (
                   <p className="studio-warning">
                     {say(
@@ -490,7 +498,11 @@ export function StudioImages({
                   </p>
                 )}
                 {resolution !== null && (
-                  <p className={resolution.low ? "studio-warning" : "studio-muted"}>
+                  <p
+                    className={
+                      resolution.low ? "studio-warning" : "studio-muted"
+                    }
+                  >
                     {say(
                       "دقة الطباعة التقريبية",
                       "Approximate print resolution",
@@ -527,7 +539,11 @@ export function StudioImages({
                     (choice, j) => (
                       <button
                         key={choice}
-                        disabled={busy || (choice === "APPROVE" && image.stale)}
+                        disabled={
+                          busy ||
+                          ((choice === "APPROVE" || choice === "USE") &&
+                            image.stale)
+                        }
                         onClick={() =>
                           onCommand({
                             ...bindings,
