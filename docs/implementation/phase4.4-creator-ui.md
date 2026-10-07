@@ -1,4 +1,4 @@
-# Phase4.4 creator UI — implementation, validation pending
+# Phase4.4 creator UI — validated candidate, release approval pending
 
 Normal entry is BookStudioApp; retained SimpleApp and Advanced components preserve historical regression surfaces. Home is كتاب جديد / كتبي / المكتبة / الإعدادات; a project has القصة / الصور / الكتاب. UI-language preference stays independent of story language.
 
@@ -12,4 +12,4 @@ Book composer adapts canonical page boxes to editable live text over artwork. Ea
 
 Square20cm, A5 and custom dimensions, orientation, margins/gutter/bleed/page-number controls feed the typed settings. Cover title/subtitle/brand remain app text. Automatic layout, manual edits, near-final whole-book preview, explicit book approval and native digital/print export are integrated. Unchanged source modules are trusted; focused UI proof is not literary, child-development, image-likeness or universal print-shop certification.
 
-Initial focused evidence: Phase4.4 geometry/custom-path/canonical-two-speaker/Arabic-live-text tests4 plus retained Phase4.3 UI tests18 =22PASS; typecheckPASS. Consolidated/native/package/PDF validation pending integration. Only synthetic assets may be used for evidence.
+Final focused UI:6 new tests (including page-number line-height parity) and retained18 tests; included in fresh application379/379 PASS. Packaged actual UI/IPC flow and25 PDF-page synthetic visual checks are recorded in phase4.4-testing.md. Story fonts were not shrunk: measured footer/brand fit uses larger safe areas and unchanged readable fonts. Final release approval/recovery remains pending.

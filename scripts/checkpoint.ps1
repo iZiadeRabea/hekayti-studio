@@ -6,7 +6,8 @@ param(
     [string]$StableTag,
     [string]$ChangeNote,
     [switch]$Push,
-    [switch]$Backup
+    [switch]$Backup,
+    [string]$ApplicationTestEvidence
 )
 . "$PSScriptRoot/common.ps1"
 if($Name -notmatch '^checkpoint/[a-z0-9][a-z0-9/.-]*$') { throw 'Use checkpoint/descriptive-name' }
@@ -22,7 +23,7 @@ Write-Host 'Current work:'
 Invoke-Git @('status','--short','--branch') | ForEach-Object { Write-Host $_ }
 $null=Test-Security
 if(-not $PSCmdlet.ShouldProcess($script:ProjectRoot,"Update milestone docs, stage eligible source, test, commit and create immutable $Name tag")) { return }
-& "$PSScriptRoot/test.ps1"
+& "$PSScriptRoot/test.ps1" -ApplicationTestEvidence $ApplicationTestEvidence
 if($LASTEXITCODE -ne 0) { throw 'Tests failed; checkpoint not committed' }
 & "$PSScriptRoot/health-check.ps1" -Offline
 if($LASTEXITCODE -ne 0) { throw 'Health failed; checkpoint not committed' }
@@ -54,4 +55,4 @@ if($Push) {
     if(-not $remote.Reachable -or -not ($remote.Refs -match "^$sha\s+refs/heads/main$")) { throw 'Push returned but remote main readback did not match HEAD' }
     Write-Host 'PASS GitHub main readback matches checkpoint commit'
 }
-if($Backup) { & "$PSScriptRoot/backup.ps1"; if($LASTEXITCODE -ne 0){ throw 'Checkpoint preserved; backup failed' } }
+if($Backup) { & "$PSScriptRoot/backup.ps1" -ApplicationTestEvidence $ApplicationTestEvidence; if($LASTEXITCODE -ne 0){ throw 'Checkpoint preserved; backup failed' } }

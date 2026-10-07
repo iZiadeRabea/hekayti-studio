@@ -1,5 +1,7 @@
 # Hekayti Studio
 
+Current candidate0.7.0: Arabic-first illustrated Story Studio with manual image import, private local reference-photo feature, editable layered book pages and explicit approval before digital/print PDF. See [compact Phase4.4 packet](docs/implementation/phase4.4-release-packet.md) and CURRENT_STATE.md for validation/approval status; no release or cloud recovery is implied. The older feasibility paragraph below is historical.
+
 Milestone: v0.3.0-core (foundation/design tags preserved). Phase 2 reusable core and scoped Windows/Arabic/persistence/export feasibility complete. This is a synthetic internal lab, not a production publishing product. Read CURRENT_STATE.md and live Git tags for stable state.
 
 Hekayti Studio will be an owner-operated creator studio for children's stories in Egypt, initially in simplified Modern Standard Arabic and Egyptian Arabic. Read [START_HERE.md](START_HERE.md) before changing anything.

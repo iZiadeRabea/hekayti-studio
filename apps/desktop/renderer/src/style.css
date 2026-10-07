@@ -194,6 +194,10 @@
   height: 100%;
   overflow: visible;
 }
+.book-text-layer.page-number {
+  line-height: 1.25;
+  text-align: center;
+}
 .book-text-layer.dialogue::after {
   content: "";
   position: absolute;
@@ -260,7 +264,13 @@
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
 }
-.studio-print-preview { display: block; width: 100%; min-height: 780px; border: 1px solid #d6ded2; background: #edf1e9; }
+.studio-print-preview {
+  display: block;
+  width: 100%;
+  min-height: 780px;
+  border: 1px solid #d6ded2;
+  background: #edf1e9;
+}
 @media (max-width: 850px) {
   .studio-composer-grid {
     grid-template-columns: 1fr;

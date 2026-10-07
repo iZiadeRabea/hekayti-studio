@@ -1,5 +1,15 @@
 # Current state
 
+## Current authority — Phase4.4 candidate0.7.0, approval pending (2026-10-07)
+
+The owner-verified stable baseline is 344fe2e8084e52a8a82582b2fa629ef035de1c7b, v0.6.0-simple-creator / checkpoint/phase4.3-simple-creator-complete. Historical preparation/backup-pending statements below are retained history, not the current release authority; the completed release receipt remains external and ignored.
+
+Current branch: feature/phase4.4-illustrated-story-studio. One integrated illustrated-book release is authorized: natural age-aware ideas/paths and editable canonical prose; explicitly selected private reference assets and identity/sheet authority; scene-ledger-bound manual prompts and versioned image reviews; live Arabic layered text/bubbles; measured Chromium preview and atomic digital/print PDF publishing. Existing Simple/Advanced history and the unchanged 791 provisional Library records remain available. Operational private projects do not enter Library learning or source/public recovery.
+
+Implementation is not a released0.7 checkpoint. Same QA is closed; final fresh application379/379 PASS and exact-content evidence Verify PASS. Final portable gate101 foundation/329 design/typecheck PASS; offline health0 failures/0 warnings. Actual packaged native story/identity/history/composer/approval/relink/export flows and all25 Arabic PDF pages passed synthetic inspection. Essential evidence and limits: docs/implementation/phase4.4-testing.md; final compact review: phase4.4-release-packet.md. Explicit release approval and verified source/separate791 fresh recovery remain required. No owner photos/database, image API, video/site/payment or Phase5 work.
+
+## Retained Phase4.3 preparation history
+
 Phase4.3 APPROVED FOR RELEASE by Astra final compact review of clean preparation d5bbeeab217b9f05219d53219f2cabcaab0fc96a. Only essential safe integration/immutable0.6.0 checkpoint/private push and mandatory source/separate791 recovery authorized. Actual released SHA/cloud verification belong to ignored external receipt, not this approval. No postbackup source commit/tag move. See phase4.3-release-packet.md/testing.md; historical milestones belong in CHANGELOG.
 
 - Current project version: v0.6.0-simple-creator

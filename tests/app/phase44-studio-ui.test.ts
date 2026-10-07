@@ -1,5 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { bookPageCss } from "@hekayti/export/book";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { UiLanguageProvider } from "../../apps/desktop/renderer/src/UiLanguage";
@@ -12,6 +14,19 @@ import {
   movePathStep,
 } from "../../apps/desktop/renderer/src/studio-ui";
 import type { PageLayout } from "@hekayti/contracts/book";
+
+test("live page-number fit uses the same line height as trusted PDF rendering", () => {
+  const liveCss = readFileSync("apps/desktop/renderer/src/style.css", "utf8");
+  const live =
+    /\.book-text-layer\.page-number\s*\{[^}]*line-height:\s*([\d.]+)/.exec(
+      liveCss,
+    )?.[1];
+  const print = /\.book-box\.PAGE_NUMBER\{[^}]*line-height:([\d.]+)/.exec(
+    bookPageCss,
+  )?.[1];
+  assert.ok(live);
+  assert.equal(live, print);
+});
 
 test("creator custom path reorders without replacing or mutating its Arabic intent", () => {
   const source = [

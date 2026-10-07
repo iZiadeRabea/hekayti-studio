@@ -1,5 +1,11 @@
 # Architecture / product decision log
 
+## Phase4.4 —2026-10-07 (candidate; release pending)
+
+- Story/path/scene authority is additive to the canonical workflow; exact draft/image/identity/sheet/style dependencies invalidate stale approval. Asset paths stay main-only/private-local and source/ancestor-junction guards remain fail-closed.
+- Arabic prose/cover/dialogue are app layers with physical Noto geometry; preview and digital/print share the existing Chromium renderer. Readable footer/brand areas increased after measured native overflow; never hide clipping or silently shrink fonts. Print art extends through bleed while digital crops the same trim composition.
+- Application-test reuse is optional, exact-content and execution-bound: actual fresh Run seals before/after input+runtime hashes, zero exit and complete unskipped log. Machine documentation inputs are covered; operational prose is excluded only from application reuse. Foundation/design/typecheck still run; default and fresh restored application tests are never skipped.
+
 ## Phase4.3 —2026-10-06 (implementation; release pending)
 
 - D059: Native repeated Simple writer advisory UX and Reader index-locator mapping were fixed narrowly; Advanced assertions, precise original locations and visible HIGH/BLOCKER remain. Same QA verified UI18 plus bounded countercases. Retain honest initial app337/342 and targeted old-migration maintenance51/51, not a claimed whole-suite rerun.

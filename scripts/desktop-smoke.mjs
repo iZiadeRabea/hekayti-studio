@@ -1,10 +1,10 @@
 import { spawn } from "node:child_process";
-import { mkdir, mkdtemp, readFile } from "node:fs/promises";
+import { mkdtemp, readFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { resolve, join } from "node:path";
 import assert from "node:assert/strict";
 const packaged = process.argv.includes("--packaged");
-await mkdir("temp/phase2-smoke", { recursive: true });
-const data = await mkdtemp(resolve("temp/phase2-smoke/run-"));
+const data = await mkdtemp(join(tmpdir(), "hekayti-phase2-smoke-"));
 const exe = packaged
   ? resolve("dist/phase2-package/win-unpacked/Hekayti Studio Phase 2.exe")
   : resolve("node_modules/electron/dist/electron.exe");

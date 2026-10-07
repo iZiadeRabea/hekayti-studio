@@ -1,6 +1,6 @@
 {
   "name": "@hekayti/core",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "type": "module",
   "exports": {
@@ -18,7 +18,7 @@
     "./book": "./src/book-studio.ts"
   },
   "dependencies": {
-    "@hekayti/contracts": "0.6.0",
+    "@hekayti/contracts": "0.7.0",
     "zod": "4.6.5"
   }
 }

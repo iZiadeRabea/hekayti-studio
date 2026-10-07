@@ -1,5 +1,9 @@
 # Changelog
 
+## Phase4.4 illustrated Story Studio —2026-10-07 (candidate0.7.0; approval pending)
+
+Arabic staged ideas/AUTO-GUIDED-CUSTOM paths, canonical editable story revisions, private local reference/identity and approved-sheet authority, scene-bound manual prompts, imported image history/selection/review, live Arabic text/bubbles/anchors/drag-resize, measured preview/book approval and digital/print PDF. Same QA closed; fresh application379/379 PASS, native synthetic flows and25 rendered PDF pages inspected. Native readable footer/cover defaults corrected without shrinking text. No third-party additions/provider API/real photos;791 unchanged. Final approval/release/source+Library recovery remain pending; see compact packet/testing.
+
 ## Phase4.3 Simple Arabic creator / Reader / illustration descriptions —2026-10-06 (not released)
 
 Candidate0.6.0: same QA closed six findings/history heading/compact writer/bounded locator follow-ups. Consolidated foundation100/design329/typecheck PASS; app337/342 initially, old migration fixture maintenance affected51/51 PASS. Native dev/packaged Simple/Advanced/manual writer/Library/runtime evidence: phase4.3-testing.md. Final approval/cloud recovery PENDING. Older entries are historical; stable0.5.4 receipt preserved.

@@ -1,9 +1,9 @@
 #requires -Version 7.0
-param([string]$DriveDestination,[ValidateSet('Recovery','Checkpoints','Releases')][string]$Category='Recovery')
+param([string]$DriveDestination,[ValidateSet('Recovery','Checkpoints','Releases')][string]$Category='Recovery',[string]$ApplicationTestEvidence)
 . "$PSScriptRoot/common.ps1"
 Assert-Clean
 $null=Test-Security -History
-& "$PSScriptRoot/test.ps1"
+& "$PSScriptRoot/test.ps1" -ApplicationTestEvidence $ApplicationTestEvidence
 if($LASTEXITCODE -ne 0) { throw 'Tests failed; no recovery package created' }
 $healthLines=@(& pwsh -NoProfile -File "$PSScriptRoot/health-check.ps1" -Offline)
 if($LASTEXITCODE -ne 0) { throw 'Health failed; no recovery package created' }

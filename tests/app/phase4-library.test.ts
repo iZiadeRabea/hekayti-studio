@@ -600,7 +600,7 @@ test("Phase4 CAS rejects competing writes; lifecycle corruption is detected on r
   );
   check.close();
 });
-test("Phase4 additive actual SQLite2→3→4 migration preserves Phase3 workflow and approval bytes", async () => {
+test("Phase4 additive actual SQLite2→3→4→5 migration preserves Phase3 workflow and approval bytes", async () => {
   mkdirSync("temp/app-tests", { recursive: true });
   const path = join(
       mkdtempSync("temp/app-tests/phase4-v2-"),
@@ -633,7 +633,7 @@ test("Phase4 additive actual SQLite2→3→4 migration preserves Phase3 workflow
   // Only original v2 tables remain; later sealed/index/planner/creator tables
   // must not survive a synthetic historical downversion.
   db.exec(
-    "DROP TABLE story_creator; DROP TABLE story_planners; DROP TABLE story_planner_meta; DROP TABLE library_index; DROP TABLE library_index_meta; DROP TABLE generation_package_seals; DROP TABLE manual_imports; DROP TABLE generation_packages; DROP TABLE story_library; PRAGMA application_id=0; PRAGMA user_version=2",
+    "DROP TABLE illustrated_books; DROP TABLE story_creator; DROP TABLE story_planners; DROP TABLE story_planner_meta; DROP TABLE library_index; DROP TABLE library_index_meta; DROP TABLE generation_package_seals; DROP TABLE manual_imports; DROP TABLE generation_packages; DROP TABLE story_library; PRAGMA application_id=0; PRAGMA user_version=2",
   );
   assert.deepEqual(
     db
@@ -647,7 +647,7 @@ test("Phase4 additive actual SQLite2→3→4 migration preserves Phase3 workflow
   assert.equal(db.prepare("PRAGMA user_version").get()!.user_version, 2);
   db.close();
   const migrated = new SqliteProjectRepository(path);
-  assert.equal(migrated.diagnostics().schemaVersion, 4);
+  assert.equal(migrated.diagnostics().schemaVersion, 5);
   assert.deepEqual(migrated.loadWorkflow(s.projectId), s);
   assert.equal(migrated.loadLibrary().records.length, 0);
   migrated.close();
@@ -656,7 +656,11 @@ test("Phase4 additive actual SQLite2→3→4 migration preserves Phase3 workflow
     legacyTables.map((table) => check.prepare(`SELECT * FROM ${table}`).all()),
     legacyRows,
   );
-  assert.equal(check.prepare("PRAGMA user_version").get()!.user_version, 4);
+  assert.equal(check.prepare("PRAGMA user_version").get()!.user_version, 5);
+  assert.equal(
+    check.prepare("SELECT count(*) n FROM illustrated_books").get()!.n,
+    0,
+  );
   assert.deepEqual(
     check
       .prepare("PRAGMA table_info(story_creator)")
@@ -981,18 +985,45 @@ test("Phase4 unsealed v3 package hardening preserves frozen bytes; missing initi
   const db = new DatabaseSync(path),
     original = db.prepare("SELECT payload FROM generation_packages").get()!
       .payload;
-  // Real unsealed v3: creator storage does not exist until the v4 boundary.
+  // Real unsealed v3: creator/book storage do not exist until the v4/v5 boundaries.
   db.exec(
-    "DROP TABLE story_creator; DROP TABLE generation_package_seals; PRAGMA application_id=0; PRAGMA user_version=3;",
+    "DROP TABLE illustrated_books; DROP TABLE story_creator; DROP TABLE generation_package_seals; PRAGMA application_id=0; PRAGMA user_version=3;",
   );
   assert.equal(db.prepare("PRAGMA user_version").get()!.user_version, 3);
+  assert.equal(db.prepare("PRAGMA application_id").get()!.application_id, 0);
+  assert.deepEqual(
+    db
+      .prepare(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name",
+      )
+      .all()
+      .map((row) => row.name),
+    [
+      "blueprints",
+      "characters",
+      "editions",
+      "generation_packages",
+      "library_index",
+      "library_index_meta",
+      "manual_imports",
+      "projects",
+      "story_library",
+      "story_planner_meta",
+      "story_planners",
+      "story_workflows",
+    ],
+  );
   db.close();
   const migrated = new SqliteProjectRepository(path);
-  assert.equal(migrated.diagnostics().schemaVersion, 4);
+  assert.equal(migrated.diagnostics().schemaVersion, 5);
   assert.deepEqual(migrated.loadGenerationPackage(p.packageId), p);
   migrated.close();
   const corrupt = new DatabaseSync(path);
-  assert.equal(corrupt.prepare("PRAGMA user_version").get()!.user_version, 4);
+  assert.equal(corrupt.prepare("PRAGMA user_version").get()!.user_version, 5);
+  assert.equal(
+    corrupt.prepare("SELECT count(*) n FROM illustrated_books").get()!.n,
+    0,
+  );
   assert.equal(
     corrupt.prepare("SELECT count(*) n FROM story_creator").get()!.n,
     0,
@@ -1005,7 +1036,7 @@ test("Phase4 unsealed v3 package hardening preserves frozen bytes; missing initi
   corrupt.close();
   assert.throws(() => new SqliteProjectRepository(path), /missing.*retained/);
   const retained = new DatabaseSync(path);
-  assert.equal(retained.prepare("PRAGMA user_version").get()!.user_version, 4);
+  assert.equal(retained.prepare("PRAGMA user_version").get()!.user_version, 5);
   assert.equal(
     retained.prepare("SELECT payload FROM generation_packages").get()!.payload,
     original,
