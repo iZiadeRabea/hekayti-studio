@@ -324,6 +324,30 @@ test("private synthetic-photo identity, image locks, editable Arabic book and sc
       );
     }
   }
+  const branded = h.studio.autoLayout(
+      s,
+      "ar-EG",
+      s.layout!.settings,
+      "حكاية هادية",
+      "حكايتي",
+    ),
+    coverBoxes = branded.pages[0]!.boxes,
+    brand = coverBoxes.find((b) => b.kind === "BRAND")!;
+  assert.equal(brand.text, "حكايتي");
+  assert.equal(brand.fontPt, 26);
+  assert.ok(brand.height * branded.settings.heightMm >= 28 - 1e-8);
+  assert.ok(
+    coverBoxes.every(
+      (b) =>
+        b.y + b.height <=
+        1 - branded.settings.safeMm / branded.settings.heightMm,
+    ),
+  );
+  assert.ok(
+    coverBoxes
+      .filter((b) => b.kind !== "BRAND")
+      .every((b) => b.y + b.height <= brand.y),
+  );
   const html = bookHtml(
     s.layout!,
     "print",

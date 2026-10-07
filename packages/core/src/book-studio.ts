@@ -1367,17 +1367,36 @@ export class BookStudioService {
     });
     const cover = approvedImage(b, w, p, "cover");
     if (!cover) throw new AppError("BOOK_IMAGES", "اعتمد صورة الغلاف أولًا.");
+    const titleHeight = Math.max(0.18, 36 / settings.heightMm),
+      subtitleHeight = Math.max(0.12, 24 / settings.heightMm),
+      brandHeight = Math.max(0.14, 28 / settings.heightMm),
+      subtitleY = Math.max(0.26, safeY + titleHeight + 4 / settings.heightMm),
+      brandY = Math.min(0.78, 1 - safeY - brandHeight - 1 / settings.heightMm),
+      coverBoxes = [
+        box("TITLE", title, safeY, titleHeight),
+        ...(subtitle
+          ? [box("SUBTITLE", subtitle, subtitleY, subtitleHeight)]
+          : []),
+        ...(brand ? [box("BRAND", brand, brandY, brandHeight)] : []),
+      ];
+    if (
+      coverBoxes.some((b) => b.y + b.height > 1 - safeY + 0.000001) ||
+      (brand &&
+        (subtitle ? subtitleY + subtitleHeight : safeY + titleHeight) +
+          4 / settings.heightMm >
+          brandY)
+    )
+      throw new AppError(
+        "BOOK_TEXT_FIT",
+        "مساحة الغلاف لا تكفي للنص بخط مقروء؛ كبّر المقاس أو قلل الهوامش أو عدّل نص الغلاف.",
+      );
     const pages: PageLayout[] = [
       {
         pageId: `${b.projectId}-cover`,
         pageNumber: 0,
         imageId: cover.imageId,
         anchors: [],
-        boxes: [
-          box("TITLE", title, safeY, 0.18),
-          ...(subtitle ? [box("SUBTITLE", subtitle, 0.26, 0.12)] : []),
-          ...(brand ? [box("BRAND", brand, 0.78, 0.1)] : []),
-        ],
+        boxes: coverBoxes,
       },
     ];
     for (const [index, page] of edition.pages.entries()) {
