@@ -413,7 +413,7 @@ export class IllustrationService {
                 beats.some(
                   (b) =>
                     b.actorId === c.characterId ||
-                    (source.p.schemaVersion !== "story-plan/1.0" &&
+                    ("quality" in source.p &&
                       source.p.quality.transitions
                         .find((t) => t.beatId === b.beatId)
                         ?.participantIds.includes(c.characterId)),

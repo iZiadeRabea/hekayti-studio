@@ -1,5 +1,7 @@
 import type { Project, StoryBlueprint, StoryRequest } from "@hekayti/contracts";
 import type { LanguageMode } from "@hekayti/contracts";
+import type { BookDefaults, BookStudioSnapshot, BookCommand, SelectBookAssets } from "@hekayti/contracts/book";
+import type { SimpleCreateInput } from "@hekayti/contracts/creator";
 import type {
   SimpleDefaults,
   SimpleCommand,
@@ -28,6 +30,16 @@ export type Result<T> =
   | { ok: true; value: T }
   | { ok: false; error: { code: string; message: string } };
 export interface DesktopApi {
+  studioDefaults(input:{ageMonths:number;category:string;goalPreset:string;mode:LanguageMode}):Promise<Result<BookDefaults>>;
+  studioCreate(input:SimpleCreateInput):Promise<Result<BookStudioSnapshot>>;
+  studioLoad(input:{projectId:string;mode?:LanguageMode}):Promise<Result<BookStudioSnapshot>>;
+  studioCommand(input:BookCommand):Promise<Result<BookStudioSnapshot>>;
+  studioSelectAssets(input:SelectBookAssets):Promise<Result<BookStudioSnapshot|null>>;
+  studioAssetPreview(input:{projectId:string;assetId:string}):Promise<Result<string|null>>;
+  studioRelinkAsset(input:{projectId:string;expectedBook:number;assetId:string}):Promise<Result<BookStudioSnapshot|null>>;
+  studioPreview(input:{projectId:string;expectedBook:number}):Promise<Result<{html:string;pages:number;errors:{boxId:string;page:string;reason:string}[]}>>;
+  studioShowPreview(input:{projectId:string;expectedBook:number}):Promise<Result<{pages:number;errors:{boxId:string;page:string;reason:string}[]}>>;
+  studioExport(input:{projectId:string;expectedBook:number;kind:"digital"|"print"}):Promise<Result<{path:string;pages:number;sha256:string}|null>>;
   simpleDefaults(): Promise<Result<SimpleDefaults>>;
   simpleCommand(input: SimpleCommand): Promise<Result<SimpleSession>>;
   simpleLoad(input: {

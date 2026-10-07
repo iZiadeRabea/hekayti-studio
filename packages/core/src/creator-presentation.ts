@@ -416,7 +416,7 @@ export function presentPlan(
     for (const [en, ar] of replacements) {
       if (
         en === "the first ground marker" &&
-        p.schemaVersion !== "story-plan/1.0" &&
+        "quality" in p &&
         p.quality.objectiveIntent.primaryIntent === "SHARING_TURN_TAKING"
       )
         continue;
@@ -429,7 +429,7 @@ export function presentPlan(
     ? `${mode === "ar-MSA-simple" ? "الرحلة القصيرة" : "المشوار الصغير"}: ${selectedTitles[p.title.slice(17)] ?? unknown()}`
     : (selectedTitles[p.title] ?? (arabic ? unknown() : p.title));
   if (!arabic) title = p.title;
-  const q = p.schemaVersion === "story-plan/1.0" ? null : p.quality;
+  const q = "quality" in p ? p.quality : null;
   const events = p.beats.map((beat, i) => ({
     sequence: beat.sequence,
     action: convert(beat.summary),

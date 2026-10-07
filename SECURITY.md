@@ -1,5 +1,7 @@
 # Privacy and security model
 
+Phase4.4 capability: reference photos may be selected explicitly through the native picker for a private-local book. Main process copies decoded PNG/JPEG/WEBP into opaque hash-verified files under the application's user-data/private-books directory, outside source. Photo identity makes the whole project and derived text/art/export private; no automatic Library learning, provider upload, cloud backup or evidence capture is permitted. Reference use remains a manual owner action with approved profile/sheet authority, not biometric recognition or a likeness guarantee. Missing files fail safely and exact-byte relink preserves classification. Consent/legal retention/encryption and authorized private backups are separate decisions, not compliance claims. All tracked/native test fixtures must remain synthetic.
+
 Real child/customer photos, identifying names/details, customer databases, private production exports and secrets must never enter GitHub or project recovery archives, even though the repository is private.
 Use synthetic/demo/test data only for tracked examples, tests and source assets.
 Parent/guardian photo consent, legal/privacy compliance, retention/deletion, encryption, access control, provider handling and private-data backups need separate decisions before real data processing. Foundation does not implement or assert regulatory compliance.

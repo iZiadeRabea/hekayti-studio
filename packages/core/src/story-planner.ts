@@ -32,6 +32,7 @@ import {
 } from "@hekayti/contracts/planner";
 import { canonicalJson, contentHash } from "./index";
 import { storyStructureFor } from "./story-age";
+import { guidedAgeStructure, validateGuidedPlan } from "./guided-story";
 import {
   detectObjectiveIntent,
   objectiveStructureCompatibility,
@@ -61,7 +62,7 @@ export function validatePlanQualitySource(
   plan: StoryPlan,
   records: LibraryRecord[],
 ) {
-  if (plan.schemaVersion === "story-plan/1.0") return;
+  if (!("quality" in plan) || plan.schemaVersion === "story-plan/1.3") return;
   const sources = plan.provenance.sources.map((s) =>
     records.find(
       (r) => r.recordId === s.ref.recordId && r.version === s.ref.version,
@@ -825,7 +826,10 @@ export async function composeWriterStoryPlan(
 
 export function validateStoryPlan(input: StoryPlan) {
   const p = validate(StoryPlanSchema, input),
-    g = storyStructureFor(p.planning.request),
+    g =
+      p.schemaVersion === "story-plan/1.3"
+        ? guidedAgeStructure(p.planning.request, p.guided.intent)
+        : storyStructureFor(p.planning.request),
     findings: QaFinding[] = [];
   const add = (
     category: string,
@@ -1042,10 +1046,12 @@ export function validateStoryPlan(input: StoryPlan) {
       "climaxBeatId",
       "Climax precedes its inciting experience or turn.",
     );
-  if (p.schemaVersion !== "story-plan/1.0")
+  if ("quality" in p && p.schemaVersion !== "story-plan/1.3")
     findings.push(...qualityFindings(p));
   if (p.schemaVersion === "story-plan/1.2")
     findings.push(...categoryFindings(p));
+  if (p.schemaVersion === "story-plan/1.3")
+    findings.push(...validateGuidedPlan(p));
   const blockers = findings.filter((f) =>
     ["high", "blocker"].includes(f.severity),
   ).length;
@@ -1067,7 +1073,8 @@ export function validateStoryPlan(input: StoryPlan) {
     findings.some((f) => f.severity === "high" && groups.includes(f.category));
   return validate(PlanQaSchema, {
     schemaVersion:
-      p.schemaVersion === "story-plan/1.2"
+      p.schemaVersion === "story-plan/1.2" ||
+      p.schemaVersion === "story-plan/1.3"
         ? "plan-qa/1.2"
         : p.schemaVersion === "story-plan/1.1"
           ? "plan-qa/1.1"
@@ -1097,7 +1104,7 @@ export function validateStoryPlan(input: StoryPlan) {
       )
         ? "REVIEW"
         : "ACCEPTABLE",
-      ...(p.schemaVersion !== "story-plan/1.0"
+      ...("quality" in p
         ? {
             ObjectiveIntentFit: fails([
               "SOCIAL_INTENT_CAST_MISMATCH",
@@ -1128,7 +1135,8 @@ export function validateStoryPlan(input: StoryPlan) {
               : "ACCEPTABLE",
           }
         : {}),
-      ...(p.schemaVersion === "story-plan/1.2"
+      ...(p.schemaVersion === "story-plan/1.2" ||
+      p.schemaVersion === "story-plan/1.3"
         ? { CategoryPresence: "REVIEW" }
         : {}),
     },
@@ -1168,6 +1176,13 @@ export function planToConcept(input: StoryPlan): StoryConcept {
       sequence: b.sequence,
       action: b.action,
       actorId: b.actorId,
+      ...(p.schemaVersion === "story-plan/1.3"
+        ? {
+            participantIds:
+              p.quality.transitions.find((t) => t.beatId === b.beatId)
+                ?.participantIds ?? (b.actorId ? [b.actorId] : []),
+          }
+        : {}),
       focus: local(b.summary),
       detail: local(p.setting.description),
       emotion: b.emotion,
@@ -1181,6 +1196,7 @@ export function planToConcept(input: StoryPlan): StoryConcept {
 }
 
 export interface PlannerRepository extends LibraryRepository {
+  isLocalBook?(projectId: string): boolean;
   loadPlanner(projectId: string): PlannerSnapshot | null;
   savePlanner(state: PlannerSnapshot, expectedVersion: number): PlannerSnapshot;
 }
@@ -1379,6 +1395,8 @@ export class StoryPlannerService {
         planToConcept(p).conceptId,
       );
       workflow = this.workflow.build(id, workflow.recordVersion);
+      // Local book content never enters the general creative Library implicitly.
+      if (this.repo.isLocalBook?.(id)) return { planner: saved, workflow };
       let lib = library;
       const service = new StoryLibraryService(this.repo, this.seam);
       const familySource = p.provenance.sources.find(

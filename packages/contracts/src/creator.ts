@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { Id, LanguageModeSchema } from "./index";
+import { BookIntentSchema } from "./book";
 import {
   ConsumerTargetSchema,
   CulturalProfileSchema,
@@ -52,6 +53,7 @@ export const SimpleCreateInputSchema = z
     setting: authored.optional(),
     constraints: authored.optional(),
     fictionalName: z.string().min(1).max(80).optional(),
+    bookIntent: BookIntentSchema.optional(),
     profile: CulturalProfileSchema.default("EGYPTIAN_ARAB_MUSLIM_FAMILY"),
     variation: VariationSchema.default("FreshConcept"),
     provisionalAcknowledged: z.boolean().default(false),

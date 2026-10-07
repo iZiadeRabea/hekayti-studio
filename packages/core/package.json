@@ -14,7 +14,8 @@
     "./dna": "./src/story-dna.ts",
     "./planner": "./src/story-planner.ts",
     "./creator": "./src/simple-creator.ts",
-    "./illustration": "./src/illustration.ts"
+    "./illustration": "./src/illustration.ts",
+    "./book": "./src/book-studio.ts"
   },
   "dependencies": {
     "@hekayti/contracts": "0.6.0",

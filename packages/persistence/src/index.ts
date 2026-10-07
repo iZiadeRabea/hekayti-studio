@@ -39,12 +39,19 @@ import {
 } from "@hekayti/core/library";
 import { storyStructureFor } from "@hekayti/core/age";
 export { LocalAssetStore, writeNewFile } from "./assets";
+export { PrivateBookAssetStore, sniffImage } from "./book-assets";
 export * from "./creative-archive";
 import {
   LibraryQuerySchema,
   type LibraryQuery,
 } from "@hekayti/contracts/library";
 import { latestLibraryRecords } from "@hekayti/core/library";
+import { BookStateSchema, type BookState } from "@hekayti/contracts/book";
+import {
+  emptyBook,
+  validateBookSources,
+  validateBookAppend,
+} from "@hekayti/core/book";
 import {
   CreatorStateSchema,
   type CreatorState,
@@ -74,7 +81,7 @@ export class SqliteProjectRepository
       const version = Number(
         this.db.prepare("PRAGMA user_version").get()!.user_version,
       );
-      if (version > 4)
+      if (version > 5)
         throw new AppError(
           "DATABASE_VERSION",
           "Database is newer than this prototype; it was not downgraded.",
@@ -291,6 +298,17 @@ export class SqliteProjectRepository
           "SELECT project_id,payload,version,digest FROM story_creator LIMIT 0",
         )
         .all();
+      if (version < 5)
+        this.transaction(() =>
+          this.db.exec(
+            "CREATE TABLE illustrated_books(project_id TEXT PRIMARY KEY REFERENCES projects(id),payload TEXT NOT NULL,version INTEGER NOT NULL,digest TEXT NOT NULL); PRAGMA user_version=5;",
+          ),
+        );
+      this.db
+        .prepare(
+          "SELECT project_id,payload,version,digest FROM illustrated_books LIMIT 0",
+        )
+        .all();
     } catch (e) {
       this.db.close();
       throw e;
@@ -327,6 +345,115 @@ export class SqliteProjectRepository
     this.validateCreatorSource(state);
     return state;
   }
+  isLocalBook(projectId: string): boolean {
+    return !!this.db
+      .prepare("SELECT project_id FROM illustrated_books WHERE project_id=?")
+      .get(projectId);
+  }
+  bookDraftTitle(projectId: string, draftId: string) {
+    return this.loadBook(projectId).storyTitles.find(
+      (t) => t.draftId === draftId,
+    )?.title;
+  }
+  loadBook(projectId: string): BookState {
+    const row = this.db
+      .prepare("SELECT * FROM illustrated_books WHERE project_id=?")
+      .get(projectId);
+    if (!row) return emptyBook(projectId);
+    const state = BookStateSchema.parse(JSON.parse(String(row.payload)));
+    if (
+      state.projectId !== projectId ||
+      state.recordVersion !== Number(row.version) ||
+      createHash("sha256").update(canonicalJson(state)).digest("hex") !==
+        row.digest
+    )
+      throw new AppError(
+        "BOOK_CORRUPT",
+        "Book storage seal differs; original record preserved.",
+      );
+    validateBookSources(
+      state,
+      this.loadWorkflow(projectId),
+      this.loadPlanner(projectId),
+    );
+    this.validateBookApprovals(state);
+    return state;
+  }
+  saveBook(input: BookState, expected: number): BookState {
+    return this.transaction(() => {
+      const state = BookStateSchema.parse(input),
+        before = this.loadBook(state.projectId);
+      if (before.recordVersion !== expected || state.recordVersion !== expected)
+        throw new AppError(
+          "BOOK_CONFLICT",
+          "Reload this book before continuing.",
+        );
+      validateBookAppend(before, state);
+      const next = BookStateSchema.parse({
+        ...state,
+        recordVersion: expected + 1,
+      });
+      validateBookSources(
+        next,
+        this.loadWorkflow(state.projectId),
+        this.loadPlanner(state.projectId),
+      );
+      this.validateBookApprovals(next);
+      this.db
+        .prepare(
+          "INSERT INTO illustrated_books VALUES(?,?,?,?) ON CONFLICT(project_id) DO UPDATE SET payload=excluded.payload,version=excluded.version,digest=excluded.digest",
+        )
+        .run(
+          next.projectId,
+          canonicalJson(next),
+          next.recordVersion,
+          createHash("sha256").update(canonicalJson(next)).digest("hex"),
+        );
+      return next;
+    });
+  }
+  private validateBookApprovals(state: BookState) {
+    for (const approval of state.approvals) {
+      const layout = state.layouts.find(
+        (l) => l.revisionId === approval.layoutRevisionId,
+      );
+      const hash = createHash("sha256")
+        .update(
+          canonicalJson({
+            layout,
+            classification: state.classification,
+            renderFingerprint: approval.renderFingerprint,
+          }),
+        )
+        .digest("hex");
+      // A later privacy upgrade retains a former public approval as stale history.
+      const formerlyPublic =
+        state.classification === "PRIVATE_LOCAL_PROJECT" &&
+        createHash("sha256")
+          .update(
+            canonicalJson({
+              layout,
+              classification: "PUBLIC_SYNTHETIC",
+              renderFingerprint: approval.renderFingerprint,
+            }),
+          )
+          .digest("hex") === approval.contentHash;
+      if (hash !== approval.contentHash && !formerlyPublic)
+        throw new AppError(
+          "BOOK_APPROVAL_SOURCE",
+          "Book approval differs from exact retained layout, classification and renderer.",
+        );
+      if (
+        !this.loadWorkflow(state.projectId)?.approvals.some(
+          (a) => a.draftId === layout?.draftId,
+        )
+      )
+        throw new AppError(
+          "BOOK_APPROVAL_SOURCE",
+          "Book approval requires retained canonical story approval.",
+        );
+    }
+  }
   private validateCreatorSource(state: CreatorState) {
     const w = this.loadWorkflow(state.projectId),
       s = this.loadPlanner(state.projectId);
@@ -360,6 +487,7 @@ export class SqliteProjectRepository
         fail();
       if (
         review.choice === "REJECTED" &&
+        !this.isLocalBook(state.projectId) &&
         !s?.feedback.some(
           (f) =>
             f.draftId === review.draftId &&

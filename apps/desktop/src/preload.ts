@@ -1,6 +1,16 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { DesktopApi } from "./api";
 const api: DesktopApi = {
+  studioDefaults:input=>ipcRenderer.invoke("studio:defaults",input),
+  studioCreate:input=>ipcRenderer.invoke("studio:create",input),
+  studioLoad:input=>ipcRenderer.invoke("studio:load",input),
+  studioCommand:input=>ipcRenderer.invoke("studio:command",input),
+  studioSelectAssets:input=>ipcRenderer.invoke("studio:select-assets",input),
+  studioAssetPreview:input=>ipcRenderer.invoke("studio:asset-preview",input),
+  studioRelinkAsset:input=>ipcRenderer.invoke("studio:relink-asset",input),
+  studioPreview:input=>ipcRenderer.invoke("studio:preview",input),
+  studioShowPreview:input=>ipcRenderer.invoke("studio:show-preview",input),
+  studioExport:input=>ipcRenderer.invoke("studio:export",input),
   simpleDefaults: () => ipcRenderer.invoke("simple:defaults"),
   simpleCommand: (input) => ipcRenderer.invoke("simple:command", input),
   simpleLoad: (input) => ipcRenderer.invoke("simple:load", input),

@@ -28,6 +28,7 @@ import {
 } from "@hekayti/contracts/planner";
 import { type ConsumerTargetSchema } from "@hekayti/contracts/library";
 import { canonicalJson, contentHash } from "./index";
+import { composeGuidedStoryPlan, naturalWriterContext } from "./guided-story";
 import {
   composeWriterStoryPlan,
   emptyPlanner,
@@ -52,6 +53,7 @@ export {
   presentQaFindings,
 } from "./creator-presentation";
 export interface CreatorRepository extends PlannerRepository {
+  bookDraftTitle?(projectId: string, draftId: string): string | undefined;
   validateCurrentPlannerSource?(workflow: WorkflowSnapshot): void;
   loadCreator(projectId: string): CreatorState;
   saveCreator(state: CreatorState, expectedVersion: number): CreatorState;
@@ -381,7 +383,7 @@ export class SimpleCreatorService {
       presentation.constraints = [authoredInput.constraints];
     if (
       authoredInput?.goalPreset === "CUSTOM" &&
-      plan.schemaVersion !== "story-plan/1.0" &&
+      "quality" in plan &&
       plan.quality.objectiveIntent.limited
     ) {
       presentation.supported = false;
@@ -405,7 +407,13 @@ export class SimpleCreatorService {
       authoredInput,
     };
   }
-  async create(input: SimpleCreateInput): Promise<SimpleSession> {
+  async create(
+    input: SimpleCreateInput,
+    onCreated?: (
+      projectId: string,
+      plan: import("@hekayti/contracts/planner").StoryPlan,
+    ) => void,
+  ): Promise<SimpleSession> {
     const x = SimpleCreateInputSchema.parse(input),
       defaults = this.defaults(),
       library = this.repo.loadLibrary();
@@ -429,7 +437,23 @@ export class SimpleCreatorService {
       age =
         x.exactAgeMonths ??
         defaults.agePresets.find((p) => p.key === x.agePreset)!.ageMonths;
-    const description = x.customGoal ?? data[2][mode];
+    const infantGoal =
+      age < 12
+        ? x.goalPreset === "SLEEP"
+          ? mode === "en"
+            ? "Sensory calm, familiar recognition and settling for caregiver reading"
+            : "انتباه حسي لشيء مألوف وطمأنينة واستقرار هادئ للنوم"
+          : x.goalPreset === "COLORS"
+            ? mode === "en"
+              ? "Notice a familiar object's color without naming or sorting demands"
+              : "الانتباه إلى لون شيء مألوف، بلا طلب تسمية أو فرز"
+            : x.goalPreset === "FEELINGS"
+              ? mode === "en"
+                ? "Reassurance and a gentle attention shift with familiar caregiver support"
+                : "طمأنينة وانتقال انتباه لطيف مع دعم شخص مألوف"
+              : null
+        : null;
+    const description = x.customGoal ?? infantGoal ?? data[2][mode];
     const authoredGoal =
       x.customGoal !== undefined || x.goalPreset === "CUSTOM";
     const normalizedGoal = description
@@ -456,9 +480,11 @@ export class SimpleCreatorService {
         ? description
         : customSharing
           ? goalData[0]![3][mode]
-          : x.goalPreset === "CUSTOM"
+          : infantGoal
             ? description
-            : data[3][mode]);
+            : x.goalPreset === "CUSTOM"
+              ? description
+              : data[3][mode]);
     const projectId = this.seam.id(),
       now = this.seam.now(),
       request = StoryRequestSchema.parse({
@@ -494,7 +520,24 @@ export class SimpleCreatorService {
       profile: x.profile,
       variation: x.variation,
       generation: 0,
-      selectedFamily: null,
+      selectedFamily:
+        x.bookIntent?.idea.source === "LIBRARY"
+          ? (() => {
+              const ref = x.bookIntent!.idea.libraryRef!,
+                record = latestLibraryRecords(library).find(
+                  (r) =>
+                    r.recordId === ref.recordId && r.version === ref.version,
+                );
+              if (!record || record.status === "ARCHIVED")
+                throw new AppError(
+                  "BOOK_IDEA_SOURCE",
+                  "مصدر الفكرة تغير؛ اختره من جديد.",
+                );
+              return record.payload.type === "STORY_FAMILY"
+                ? ref
+                : (record.family ?? null);
+            })()
+          : null,
       selectedCharacter: x.fictionalName
         ? {
             characterId: this.seam.id(),
@@ -524,10 +567,13 @@ export class SimpleCreatorService {
     });
     // Compose outside storage, then commit the existing canonical workflow and
     // plan atomically. A failed age/Library/plan check creates no orphan story.
-    const plan = await composeWriterStoryPlan(planning, library, {
+    const basePlan = await composeWriterStoryPlan(planning, library, {
       planId: this.seam.id(),
       revisionId: this.seam.id(),
     });
+    const plan = x.bookIntent
+      ? composeGuidedStoryPlan(basePlan, x.bookIntent)
+      : basePlan;
     const qa = validateStoryPlan(plan);
     if (
       qa.findings.some((f) => f.severity === "high" || f.severity === "blocker")
@@ -570,6 +616,7 @@ export class SimpleCreatorService {
         },
         creator.recordVersion,
       );
+      onCreated?.(projectId, plan);
     });
     return this.load(projectId);
   }
@@ -657,11 +704,13 @@ export class SimpleCreatorService {
       notices,
       projectId,
       draftId: d.draftId,
-      title: plan
-        ? presentPlan(plan, mode).title
-        : mode === "en"
-          ? (c?.title ?? "Retained story")
-          : "قصة محفوظة؛ عنوانها الأصلي في التفاصيل المتقدمة",
+      title:
+        this.repo.bookDraftTitle?.(projectId, d.draftId) ??
+        (plan
+          ? presentPlan(plan, mode).title
+          : mode === "en"
+            ? (c?.title ?? "Retained story")
+            : "قصة محفوظة؛ عنوانها الأصلي في التفاصيل المتقدمة"),
       ageMonths: r.ageMonths,
       category: categoryLabel(r.primaryCategory, mode),
       mode,
@@ -938,7 +987,7 @@ export class SimpleCreatorService {
         this.repo.loadLibrary().recordVersion !== x.expectedLibrary
       )
         throw new AppError("PLANNER_STALE", "Review sources changed; reload.");
-      if (x.choice !== "NEEDS_EDIT")
+      if (x.choice !== "NEEDS_EDIT" && !this.repo.isLocalBook?.(x.projectId))
         this.planner.feedback(
           x.projectId,
           {
@@ -1021,6 +1070,7 @@ export function simpleWriterInstructions(
   const heading = `حكاياتي — تعليمات كتابة القصة (${target}: تنسيق فقط، لا يغير القصة)`;
   return [
     heading,
+    naturalWriterContext(pkg.plan),
     "القصة المطلوبة",
     view.title,
     "العمر",

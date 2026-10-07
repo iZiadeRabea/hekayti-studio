@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { Id, CharacterBibleSchema, LanguageModeSchema } from "./index";
+import { BookIntentSchema, ScenePageSchema } from "./book";
 import {
   StoryRequestSchema,
   StoryStructureProfileSchema,
@@ -278,6 +279,17 @@ export const StoryPlanSchema = z.union([
   LegacyStoryPlanSchema,
   QualityStoryPlanSchema,
   WriterStoryPlanSchema,
+  WriterStoryPlanSchema.extend({
+    schemaVersion: z.literal("story-plan/1.3"),
+    guided: z
+      .object({
+        schemaVersion: z.literal("guided-story/1.0"),
+        intent: BookIntentSchema,
+        scenes: z.array(ScenePageSchema).min(1).max(100),
+        reviewRequired: z.boolean(),
+      })
+      .strict(),
+  }),
 ]);
 export type StoryPlan = z.infer<typeof StoryPlanSchema>;
 export const LegacyPlanQaSchema = z

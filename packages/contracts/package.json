@@ -9,7 +9,8 @@
     "./library": "./src/library.ts",
     "./planner": "./src/story-planner.ts",
     "./creator": "./src/creator.ts",
-    "./illustration": "./src/illustration.ts"
+    "./illustration": "./src/illustration.ts",
+    "./book": "./src/book.ts"
   },
   "dependencies": {
     "zod": "4.6.5"

@@ -206,7 +206,7 @@ export const WorkflowSnapshotSchema = z
         )
           fail("Concept objective or fact ownership mismatch.");
         try {
-          const structure = storyStructureFor(r);
+          const structure = workflowStructure(s, r);
           if (
             evaluateConcepts(
               r,
@@ -386,6 +386,14 @@ export const WorkflowSnapshotSchema = z
       fail("Current approval mismatch.");
   });
 export type WorkflowSnapshot = z.infer<typeof WorkflowSnapshotSchema>;
+function workflowStructure(s: WorkflowSnapshot, r: StoryRequest) {
+  const plan = s.plannerImports?.find(
+    (x) => x.plan.planning.request.revisionId === r.revisionId,
+  )?.plan;
+  return plan?.schemaVersion === "story-plan/1.3"
+    ? plan.guidance
+    : storyStructureFor(r);
+}
 export interface StoryWorkflowRepository {
   validateCurrentPlannerSource?(value: WorkflowSnapshot): void;
   loadWorkflow(projectId: string): WorkflowSnapshot | null;
@@ -569,7 +577,7 @@ export function workflowFindings(s: WorkflowSnapshot, draftId: string) {
   const groups = {
     concept: evaluateConcepts(
       request,
-      storyStructureFor(request),
+      workflowStructure(s, request),
       set,
       set.concepts.every((x) => manual(s, x.provenance)),
     ).find((x) => x.conceptId === concept.conceptId)!.findings,
@@ -750,7 +758,7 @@ export class StoryWorkflowService {
       { request, concept } = this.sources(s);
     const b = buildStoryBlueprint(
       request,
-      storyStructureFor(request),
+      workflowStructure(s, request),
       concept,
       this.seam.id(),
       manual(s, concept.provenance),

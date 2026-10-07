@@ -37,6 +37,7 @@ import {
 import { parseLibraryBatch, importLibraryBatch } from "@hekayti/core/creative";
 import { proofHtml, proofMetadata, proofPages } from "@hekayti/export";
 import type { Result } from "./api";
+import {installBookRuntime} from "./book-runtime";
 import { StoryRequestSchema } from "@hekayti/contracts/story";
 import { StoryWorkflowService } from "@hekayti/core/workflow";
 import { SimpleCreatorService } from "@hekayti/core/creator";
@@ -691,6 +692,7 @@ app
       id: randomUUID,
       now: () => new Date().toISOString(),
     });
+    installBookRuntime(repo,creator,workflow,planner,win,handle,root);
     const simpleLoadInput = z
       .object({ projectId: Id, mode: LanguageModeSchema.optional() })
       .strict();

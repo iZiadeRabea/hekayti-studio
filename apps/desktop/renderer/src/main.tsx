@@ -4,9 +4,9 @@ import "./style.css";
 import { UiLanguageProvider } from "./UiLanguage";
 import { CreatorModeShell } from "./CreatorMode";
 import { AdvancedApp } from "./AdvancedApp";
-import { SimpleApp } from "./SimpleApp";
+import { BookStudioApp } from "./BookStudioApp";
 createRoot(document.getElementById("root")!).render(
   <UiLanguageProvider>
-    <CreatorModeShell simple={<SimpleApp />} advanced={<AdvancedApp />} />
+    <CreatorModeShell simple={<BookStudioApp />} advanced={<AdvancedApp />} />
   </UiLanguageProvider>,
 );

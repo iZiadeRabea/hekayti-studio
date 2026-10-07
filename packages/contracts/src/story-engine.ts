@@ -100,6 +100,8 @@ export type BeatAction =
   | "return"
   | "settle";
 export interface StoryBeat {
+  /** Explicit active participants from a versioned guided plan; absent in retained legacy beats. */
+  participantIds?: string[];
   beatId: string;
   sequence: number;
   action: BeatAction;

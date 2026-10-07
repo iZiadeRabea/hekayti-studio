@@ -187,6 +187,7 @@ export const IdeaComponentSchema: z.ZodType<IdeaComponent> = z
   .strict();
 export const StoryBeatSchema: z.ZodType<StoryBeat> = z
   .object({
+    participantIds: z.array(Id).max(20).optional(),
     beatId: Id,
     sequence: z.number().int().positive().max(200),
     action: z.enum([
@@ -236,6 +237,18 @@ export const StoryConceptSchema: z.ZodType<StoryConcept> = z
   .strict()
   .superRefine((s, c) => {
     const chars = new Set(s.characters.map((x) => x.characterId));
+    if (
+      s.outline.some(
+        (b) =>
+          b.participantIds &&
+          (new Set(b.participantIds).size !== b.participantIds.length ||
+            b.participantIds.some((id) => !chars.has(id))),
+      )
+    )
+      c.addIssue({
+        code: "custom",
+        message: "Beat participants must be unique canonical characters.",
+      });
     if (
       chars.size !== s.characters.length ||
       new Set(s.outline.map((b) => b.beatId)).size !== s.outline.length

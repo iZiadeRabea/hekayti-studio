@@ -768,7 +768,10 @@ export function reviewStoryLanguage(
           !plan.beatIds.some(
             (id) =>
               concept.outline.find((b) => b.beatId === id)?.actorId ===
-              d.speakerId,
+                d.speakerId ||
+              concept.outline
+                .find((b) => b.beatId === id)
+                ?.participantIds?.includes(d.speakerId),
           )
         )
           add(

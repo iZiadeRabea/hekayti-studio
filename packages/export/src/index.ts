@@ -1,6 +1,7 @@
 import type { StoryBlueprint, LanguageMode } from "@hekayti/contracts";
 import { languageInfo } from "@hekayti/contracts";
 import { contentHash } from "@hekayti/core";
+export * from "./book";
 
 export interface PdfProofProfile {
   id: "phase2-print" | "phase2-digital";
