@@ -131,3 +131,6 @@ Astra approved preparation483d855; mandatory tests and offlinehealth precede imm
 
 ### 2026-10-06 23:08:05 +03:00 — checkpoint/phase4.3-simple-creator-complete
 Astra approved exact preparation d5bbeeab; essential release and mandatory recovery only. Final SHA/cloud verification recorded externally; no postbackup source commit/tag movement.
+
+### 2026-10-07 14:17:43 +03:00 — checkpoint/phase4.4-illustrated-story-studio-complete
+Approved compact Phase4.4 packet; native synthetic/PDF gates and independent QA complete. Source/separate791 cloud and fresh restore completion belong to the external receipt.
