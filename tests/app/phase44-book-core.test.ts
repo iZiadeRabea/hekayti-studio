@@ -300,6 +300,30 @@ test("private synthetic-photo identity, image locks, editable Arabic book and sc
   assert.equal(s.layout!.pages.length, 7);
   const bubble = s.layout!.pages[1]!.boxes.find((b) => b.kind === "DIALOGUE")!;
   assert.equal(bubble.speakerId, s.identities[0]!.characterId);
+  for (const settings of [
+    s.layout!.settings,
+    {
+      ...s.layout!.settings,
+      preset: "CUSTOM" as const,
+      heightMm: 90,
+      safeMm: 5,
+    },
+  ]) {
+    const proof = h.studio.autoLayout(s, "ar-EG", settings);
+    for (const page of proof.pages.slice(1)) {
+      const number = page.boxes.find((b) => b.kind === "PAGE_NUMBER")!;
+      assert.equal(number.fontPt, 14);
+      assert.ok(number.height * settings.heightMm >= 11 - 1e-8);
+      assert.ok(
+        number.y + number.height <= 1 - settings.safeMm / settings.heightMm,
+      );
+      assert.ok(
+        page.boxes
+          .filter((b) => b.kind !== "PAGE_NUMBER")
+          .every((b) => b.y + b.height <= number.y - 0.01),
+      );
+    }
+  }
   const html = bookHtml(
     s.layout!,
     "print",

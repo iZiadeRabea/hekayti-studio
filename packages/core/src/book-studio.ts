@@ -1388,9 +1388,14 @@ export class BookStudioService {
           `اعتمد صورة الصفحة ${index + 1} أولًا.`,
         );
       const boxes: TextBox[] = [];
+      // Reserve physical space for Noto's readable 14pt glyphs, independent of page height.
+      const numberHeight = 11 / settings.heightMm,
+        numberY = 1 - safeY - numberHeight - 1 / settings.heightMm;
       if (page.narration)
         boxes.push(box("NARRATION", page.narration, safeY, 0.24));
-      const dialogueArea = 0.5,
+      const dialogueArea = settings.pageNumbers
+          ? Math.min(0.5, numberY - 0.35 - 0.02)
+          : 0.5,
         each = dialogueArea / Math.max(1, page.dialogue.length);
       if (page.dialogue.length > 4)
         throw new AppError(
@@ -1402,15 +1407,21 @@ export class BookStudioService {
           box("DIALOGUE", d.text, 0.35 + i * each, each - 0.02, i, d.speakerId),
         ),
       );
-      if (settings.pageNumbers)
+      if (settings.pageNumbers) {
+        if (boxes.some((b) => b.y + b.height > numberY - 0.01))
+          throw new AppError(
+            "BOOK_TEXT_FIT",
+            "مساحة الصفحة لا تكفي للنص ورقم الصفحة بخط مقروء؛ كبّر المقاس أو قلل الهوامش أو عدّل النص.",
+          );
         boxes.push({
-          ...box("PAGE_NUMBER", String(index + 1), 1 - safeY - 0.045, 0.035),
+          ...box("PAGE_NUMBER", String(index + 1), numberY, numberHeight),
           fontPt: 14,
           style: "CLEAN",
         });
+      }
       if (!boxes.length)
         boxes.push({
-          ...box("PAGE_NUMBER", String(index + 1), 1 - safeY - 0.045, 0.035),
+          ...box("PAGE_NUMBER", String(index + 1), numberY, numberHeight),
           fontPt: 14,
           style: "CLEAN",
         });
