@@ -138,3 +138,6 @@ Astra approved exact preparation d5bbeeab; essential release and mandatory recov
 
 ### 2026-10-07 14:17:43 +03:00 — checkpoint/phase4.4-illustrated-story-studio-complete
 Approved compact Phase4.4 packet; native synthetic/PDF gates and independent QA complete. Source/separate791 cloud and fresh restore completion belong to the external receipt.
+
+### 2026-10-08 11:26:49 +03:00 — checkpoint/phase4.4.1-creator-workflow-fixes-complete
+Approved exact preparation ce5dddde9b31cb15f8baa0c54bb6469cc0ea83bd; final403/403 application, foundation101/design329, independent29, actualIPC6 and packaged legacy/new reopen2 PASS. Main checkout newline normalization required a fresh403 byte-bound proof, not a weakened reuse check. Additive composition/recovery/shared Arabic renderer; synthetic visual evidence only. Recovery receipts remain external; no next phase.

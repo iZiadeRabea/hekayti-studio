@@ -2,7 +2,7 @@
 
 ## Current authority — Phase4.4.1 implementation (2026-10-08)
 
-Verified baseline: clean main471cec18cae1843b6a0e4dbf4529193773973b75 / v0.7.0-illustrated-story-studio. Current feature/phase4.4.1-creator-workflow-fixes, local candidate0.7.1 (not released). Owner sections0–55 implementation and same-QA fixes are integrated; final exact-content validation, packaged legacy reopen, compact approval and recovery remain gates. Evidence: docs/implementation/phase4.4.1-continuation.md. Optional book-state fields preserve legacy schema/hash/history and SQLitev5; historical geometry remains editable but save/approval/export revalidate. Private assets/corpus remain untouched. Earlier approval/recovery banners below are retained history.
+Phase4.4.1 APPROVED FOR RELEASE by compact review of exact clean preparation ce5dddde9b31cb15f8baa0c54bb6469cc0ea83bd. Safe integration onto unchanged main471cec18 is complete. Final403 frozen application, foundation101/design329/typecheck/security/health, independent29, actual IPC6/reopen2 and inspected synthetic PDF gates passed. Only immutable0.7.1 checkpoint/private push and verified source/separate791 fresh recovery are authorized; actual final SHA/cloud receipt belongs in ignored external receipts, never predicted here. No postbackup source commit/tag movement or next phase. Optional book-state fields preserve SQLitev5/canonical hashes/history; historical geometry is editable but fresh save/approval/export revalidates. No owner DB/photos/corpus/provider access. Earlier banners are retained history.
 
 ## Current authority — Phase4.4 approved0.7.0 release, recovery pending (2026-10-07)
 
@@ -18,10 +18,10 @@ Phase4.3 APPROVED FOR RELEASE by Astra final compact review of clean preparation
 
 - Current project version: v0.7.1-creator-workflow-fixes
 - Current workspace version: 0.7.1
-- Current branch at milestone: feature/phase4.4.1-creator-workflow-fixes
-- Latest stable checkpoint: checkpoint/phase4.4-illustrated-story-studio-complete
-- Latest stable tag: v0.7.0-illustrated-story-studio
-- Last successful tests: 2026-10-07 14:17:43 +03:00 — foundation, design and available application suites passed; visual/packaging gates recorded separately
+- Current branch at milestone: main
+- Latest stable checkpoint: checkpoint/phase4.4.1-creator-workflow-fixes-complete
+- Latest stable tag: v0.7.1-creator-workflow-fixes
+- Last successful tests: 2026-10-08 11:26:49 +03:00 — foundation, design and available application suites passed; visual/packaging gates recorded separately
 
 Stable main ad581cbc6cd5cefa05fdefb0148a94f81bb548fb is verified by ignored receipt backups/receipts/hekayti-studio-phase422-final-ad581cbc.json. Preserve old history/tags/backups, normal owner databases/settings/trials and791 public/synthetic rows (765 seeds+26 families). Phase4.3 source/Library cloud recovery has NOT happened.
 
