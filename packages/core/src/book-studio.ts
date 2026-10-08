@@ -33,6 +33,8 @@ import {
   compositionBoxes,
   layoutGeometryIssues,
   visualActionSignature,
+  hasVisualNegation,
+  rectanglesOverlap,
 } from "./book-composition";
 export {
   deriveVisualIntent,
@@ -229,7 +231,9 @@ export function validateBookSources(
     )
       fail("Page image slot differs from canonical draft page.");
   }
-  for (const l of b.layouts) validateLayoutSources(l, b, w!);
+  // Historical geometry remains editable. New fit/overlap rules must not make
+  // retained older layouts unreadable; save/approval/export recheck geometry.
+  for (const l of b.layouts) validateLayoutSources(l, b, w!, false);
   for (const cp of b.compositionPlans ?? []) {
     const page = canonicalPage(w!, cp.draftId, cp.mode, cp.pageId);
     if (
@@ -283,6 +287,7 @@ export function validateLayoutSources(
   l: BookLayout,
   b: BookState,
   w: WorkflowSnapshot,
+  enforceGeometry = true,
 ) {
   const draft = w.drafts.find((d) => d.draftId === l.draftId),
     edition = draft?.editions.find((e) => e.mode === l.mode);
@@ -359,7 +364,7 @@ export function validateLayoutSources(
           "Text exceeds safe print margins.",
         );
     }
-    const geometry = layoutGeometryIssues(page);
+    const geometry = enforceGeometry ? layoutGeometryIssues(page) : [];
     if (geometry.length)
       throw new AppError(
         "BOOK_LAYOUT_GEOMETRY",
@@ -452,7 +457,7 @@ function effectiveScenes(
       const prose = current
         ? [current.narration, ...current.dialogue.map((d) => d.text)].join(" ")
         : "";
-      const denied = /(?:لا |لم |لن |مش |ما |not |never )/.test(prose);
+      const denied = hasVisualNegation(prose);
       for (const [key, name, pattern] of [
         ["book", "الكتاب", /كتاب|\bbook\b/i],
         ["teddy", "الدبدوب", /دبدوب|دب[ّ]? صغير|\bteddy\b/i],
@@ -911,6 +916,7 @@ export class BookStudioService {
     s: BookStudioSnapshot,
     pageId: string,
     settings: import("@hekayti/contracts/book").BookSettings,
+    rearrange = false,
   ): CompositionPlan {
     const w = s.session.workflow,
       draft = w.drafts.find((d) => d.draftId === w.current.draftId),
@@ -918,7 +924,7 @@ export class BookStudioService {
       page = edition?.pages.find((q) => q.pageId === pageId);
     if (!draft || !page) throw new AppError("BOOK_PAGE", "اختر صفحة حالية.");
     const pageNumber = edition!.pages.indexOf(page) + 1;
-    const visual = deriveVisualIntent(
+    let visual = deriveVisualIntent(
       page,
       pageNumber,
       draft.draftId,
@@ -933,7 +939,20 @@ export class BookStudioService {
           q.draftId === draft.draftId &&
           q.mode === s.mode,
       );
-    if (prior && canonicalJson(prior.settings) === canonicalJson(settings))
+    if (prior && prior.visual.pageAction === visual.pageAction)
+      visual = {
+        ...visual,
+        cameraFraming: prior.visual.cameraFraming,
+        compositionHint: prior.visual.compositionHint,
+      };
+    if (
+      !rearrange &&
+      prior &&
+      !prior.regions.some((r) =>
+        prior.protectedRegions.some((p) => rectanglesOverlap(r.rect, p)),
+      ) &&
+      canonicalJson(prior.settings) === canonicalJson(settings)
+    )
       return {
         ...prior,
         revisionId: this.seam.id(),
@@ -1145,6 +1164,7 @@ export class BookStudioService {
               s,
               x.pageId,
               x.settings ?? s.layout?.settings ?? defaultBookSettings,
+              true,
             )
           : x.plan;
       if (

@@ -57,8 +57,12 @@ function tailSvg(
   }
   const horizontal = direction === "LEFT" || direction === "RIGHT",
     sign = direction === "LEFT" || direction === "TOP" ? -1 : 1;
-  const sx = horizontal ? cx + (sign * box.width * width) / 2 : cx,
-    sy = horizontal ? cy : cy + (sign * box.height * height) / 2;
+  // Organic cloud contours sit inside their rectangular edit bounds. Start
+  // the tail inside the filled contour; the bubble paints over its base so
+  // all directions remain attached instead of floating at the rectangle edge.
+  const attachment = box.bubbleShape === "CLOUD" ? 0.34 : 0.5;
+  const sx = horizontal ? cx + sign * box.width * width * attachment : cx,
+    sy = horizontal ? cy : cy + sign * box.height * height * attachment;
   const target =
     box.tail === "ANCHOR" && anchor
       ? { x: anchor.x * width, y: anchor.y * height }
@@ -70,7 +74,7 @@ function tailSvg(
     ay = sy + (horizontal ? -3 : 0),
     bx = sx + (horizontal ? 0 : 3),
     by = sy + (horizontal ? 3 : 0);
-  return `<svg class="bubble-tail" width="${width}mm" height="${height}mm" viewBox="0 0 ${width} ${height}" style="left:0;top:0"><path d="M${ax},${ay} L${target.x},${target.y} L${bx},${by}" fill="#fffef8" stroke="#403c35" stroke-width=".4"/></svg>`;
+  return `<svg class="bubble-tail" width="${width}mm" height="${height}mm" viewBox="0 0 ${width} ${height}" style="left:0;top:0"><path d="M${ax},${ay} L${target.x},${target.y} L${bx},${by}" fill="#fffef8" stroke="${box.bubbleShape === "CLOUD" ? "#b59e7e" : "#403c35"}" stroke-width=".4"/></svg>`;
 }
 export function bookPageMarkup(
   layout: BookLayout,

@@ -200,7 +200,12 @@ export function StudioImages({
       const identity = snapshot.identities.find(
         (i) => i.characterId === target.characterId,
       );
-      if (identity) setEditIdentity(structuredClone(identity));
+      if (identity)
+        setEditIdentity((current) =>
+          current?.characterId === identity.characterId
+            ? current
+            : structuredClone(identity),
+        );
     }
   }, [target]);
   const bindings = {

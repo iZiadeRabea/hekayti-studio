@@ -2,7 +2,7 @@
 
 ## Current authority — Phase4.4.1 implementation (2026-10-08)
 
-Verified baseline: clean main471cec18cae1843b6a0e4dbf4529193773973b75 / v0.7.0-illustrated-story-studio. Current feature/phase4.4.1-creator-workflow-fixes. Consolidated owner sections0–55 authorize contextual recovery, optional ideas, individual character/page workspaces, exact prose/ledger visual plans and text-aware organic composition. Actual implementation/evidence/remaining gates: docs/implementation/phase4.4.1-continuation.md. Additive optional book-state fields preserve legacy schema/hash/history and SQLitev5; private assets/corpus remain untouched. Release and consolidated Windows/independent QA gates still pending. Earlier approval/recovery banners below are retained history.
+Verified baseline: clean main471cec18cae1843b6a0e4dbf4529193773973b75 / v0.7.0-illustrated-story-studio. Current feature/phase4.4.1-creator-workflow-fixes, local candidate0.7.1 (not released). Owner sections0–55 implementation and same-QA fixes are integrated; final exact-content validation, packaged legacy reopen, compact approval and recovery remain gates. Evidence: docs/implementation/phase4.4.1-continuation.md. Optional book-state fields preserve legacy schema/hash/history and SQLitev5; historical geometry remains editable but save/approval/export revalidate. Private assets/corpus remain untouched. Earlier approval/recovery banners below are retained history.
 
 ## Current authority — Phase4.4 approved0.7.0 release, recovery pending (2026-10-07)
 
@@ -16,9 +16,9 @@ Same QA is closed; final fresh application379/379 PASS and exact-content evidenc
 
 Phase4.3 APPROVED FOR RELEASE by Astra final compact review of clean preparation d5bbeeab217b9f05219d53219f2cabcaab0fc96a. Only essential safe integration/immutable0.6.0 checkpoint/private push and mandatory source/separate791 recovery authorized. Actual released SHA/cloud verification belong to ignored external receipt, not this approval. No postbackup source commit/tag move. See phase4.3-release-packet.md/testing.md; historical milestones belong in CHANGELOG.
 
-- Current project version: v0.7.0-illustrated-story-studio
-- Current workspace version: 0.6.0
-- Current branch at milestone: main
+- Current project version: v0.7.1-creator-workflow-fixes
+- Current workspace version: 0.7.1
+- Current branch at milestone: feature/phase4.4.1-creator-workflow-fixes
 - Latest stable checkpoint: checkpoint/phase4.4-illustrated-story-studio-complete
 - Latest stable tag: v0.7.0-illustrated-story-studio
 - Last successful tests: 2026-10-07 14:17:43 +03:00 — foundation, design and available application suites passed; visual/packaging gates recorded separately

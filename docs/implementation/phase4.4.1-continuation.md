@@ -1,5 +1,19 @@
 # Phase4.4.1 implementation checkpoint — 2026-10-08
 
+## Current candidate evidence (supersedes checkpoint progress below)
+
+Local candidate0.7.1, SQLitev5/book-state/1.0 unchanged; WIP commit15a17fa. All implementation/QA fixes integrated, including conservative actor/destination/dialogue/unknown-action staleness, word-boundary negation, saved framing/manual placement, protected re-packing, attached cloud tails, identity-buffer recovery and retained legacy geometry readability. Fresh save/approval/export still revalidate geometry; canonical/history/source checks are unchanged.
+
+First consolidated application402/402 PASS before version/late compatibility fix: not final reusable proof. Production build/typecheck PASS; necessary second rebuild/package justified actual legacy-load defect. Local unsigned Windows0.7.1 candidate417,575,539bytes. No external dependency/appID/product/data-path changes.
+
+Actual current-source Electron/main services+IPC6/6PASS: exact synthetic16-page `سرير مريح` action/plan; persisted framing/repetition; story-approval error exact focus/unsaved subtitle return; identity metadata/separate approved sheets; guarded17-page measured layout; actual process reopen; native17-page digital/print export. Raw evidence: `C:\Users\Ziad\AppData\Local\Temp\hekayti-phase44-ui-441-native-HFCbNo`. Packaged0.7.1 reopen2/2PASS for current optional plans and actual0.7.0 synthetic legacy projects (`hekayti-phase44-ui-hx7HDv`), no history mutation/additional plans. All34 export PDF pages Poppler-rendered/inspected: embedded Noto, shaped Arabic, readable margins and attached tail, nominal200/206mm within Chromium rounding. Art is deliberately blank synthetic, no human quality/likeness claim.
+
+Eight text scenarios: composition1–7 plus native PDF scenario8. Separate art-aware renderer12/12 PDF pages inspected at `hekayti-phase44-ui-441-render-dck1uG`, zero measured overflow. Native actual-source DOM5/5 at `hekayti-phase44-ui-441-recovery-qsdGDt` uses explicitly mocked transport: optional/default/manual idea buffers, exact identity focus, unsaved subtitle and repeated identity-buffer return. This is distinct from actual IPC proof. Independent closure is in the owned phase4.4.1-independent-qa report.
+
+Final frozen schema2 application403/403 PASS, foundation101/design329/typecheck/health0fail0warn/history+staged security PASS. Exact preparation/review packet: phase4.4.1-release-packet.md. Remaining gates: candidate commit+compact root approval; only afterward release/tag/private push and source/separate791 verified cloud/fresh recovery. No owner DB/photos/corpus/provider access; literary/style/child appeal/photo likeness/printer review remains human. Earlier checkpoint below is retained history, not current progress.
+
+## Retained WIP checkpoint
+
 Authority: consolidated owner sections0–55; baseline clean main471cec18cae1843b6a0e4dbf4529193773973b75 / v0.7.0. Current feature/phase4.4.1-creator-workflow-fixes. No release/tag/main/cloud action yet; owner data and791 corpus untouched.
 
 Implemented: typed exact error targets and Arabic recovery/progress, mounted tab preservation; optional AUTO/CHOOSE/MANUAL ideas with manual buffer and relevant public Library seeds; canonical per-character sheet/prompt/history grouping; additive optional composition plans and source validation; canonical prose+ledger VisualIntent, literal prop continuity, human repetition override; pre-art text geometry/protection/notes; cloud/rounded/paper shapes, canonical speaker anchors, dynamic geometry, collision checks; shared page markup for inline preview/PDF. New fields remain optional in book-state/1.0; SQLitev5 unchanged, old histories/hashes retained. Final modern dialogue requires manual canonical anchors; unknown/negated action remains human review.

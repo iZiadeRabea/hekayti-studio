@@ -20,33 +20,31 @@ const comparable = (s: string) =>
     .replace(/[\p{P}\p{Z}\u064b-\u065f]/gu, "")
     .toLowerCase();
 export function visualActionSignature(page: StoryPageText): string {
-  if (
-    page.narration &&
-    !/(?:قلب|قلّب|يقلب|يمسك|مسك|رفع|يرفع|كشف|يكشف|فتح|يفتح|قفل|يقفل|حضن|يحضن|شاف|يشوف|بص|يبص|نظر|ينظر|ابتسم|ضحك|نام|ينام|مش[ىي]|يجري|جر[ىي]|حط|يحط|أخذ|ياخد|وقف|جلس|turn|hold|open|close|smil|look|sleep)/i.test(
-      page.narration,
-    )
-  )
-    return comparable([page.narration, page.altText].join(" "));
-  const prose = [page.narration, page.altText].join(" ").normalize("NFKC");
-  const actions = prose.match(
-    /(?:بي|ي|ت)?(?:قلب|قلّب|يقلب|يمسك|مسك|رفع|يرفع|كشف|يكشف|فتح|يفتح|قفل|يقفل|حضن|يحضن|شاف|يشوف|بص|يبص|نظر|ينظر|ابتسم|ضحك|نام|ينام|مش[ىي]|يجري|جر[ىي]|حط|يحط|أخذ|ياخد|وقف|جلس|جلس|turn\w*|hold\w*|open\w*|close\w*|smil\w*|look\w*|sleep\w*)/gi,
-  );
-  // Unknown prose stays conservative rather than pretending semantic understanding.
-  if (!actions?.length) return comparable(prose);
-  const props =
-    prose.match(
-      /(?:كتاب|دبدوب|قماش[ةه]|سرير|وساد[ةه]|بطاني[ةه]|كر[ةه]|باب|شباك|غرف[ةه]|book|teddy|bed|blanket|ball|door|room)/gi,
-    ) ?? [];
-  const negation = /(?:لا |لم |لن |مش |ما |not |never )/.test(prose)
-    ? "NEGATED"
-    : "";
+  // Compare the complete structural wording, including actors, ownership,
+  // destinations, dialogue and unknown actions. Only a bounded allowlist of
+  // non-structural delivery/ambient phrases can reflow without art review.
+  const structural = (text: string) =>
+    comparable(
+      text
+        .normalize("NFKC")
+        .replace(
+          /(?:^|(?<=[\s\p{P}]))(?:و?بهدوء|و?براحة|وسط الضوء الناعم|gently|calmly)(?=$|[\s\p{P}])/giu,
+          " ",
+        ),
+    );
   return JSON.stringify({
-    actions: [...new Set(actions.map(comparable))].sort(),
-    props: [...new Set(props.map(comparable))].sort(),
-    negation,
+    narration: structural(page.narration),
+    dialogue: page.dialogue.map((d) => ({
+      speakerId: d.speakerId,
+      text: structural(d.text),
+    })),
     alt: comparable(page.altText),
   });
 }
+export const hasVisualNegation = (text: string) =>
+  /(?:^|[^\p{L}\p{N}])(?:لا|لم|لن|مش|ما|not|never)(?=$|[^\p{L}\p{N}])/iu.test(
+    text,
+  );
 export function deriveVisualIntent(
   page: StoryPageText,
   pageNumber: number,
@@ -73,7 +71,7 @@ export function deriveVisualIntent(
       ...speakers,
     ]),
   ];
-  const negated = /(?:لا |لم |لن |مش |ما |not |never )/.test(action);
+  const negated = hasVisualNegation(action);
   const turn =
       !negated && /(?:يقل[بّ]|قلب|تقليب|turn.{0,15}page)/i.test(action),
     picture = !negated && /(?:صور[ةه]|picture|illustration)/i.test(action),
