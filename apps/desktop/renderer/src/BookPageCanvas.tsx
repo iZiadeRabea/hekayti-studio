@@ -1,7 +1,18 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { constrainCanvasRect, useStudioUi, type CanvasRect } from "./studio-ui";
-import { bookArtworkGeometry } from "@hekayti/export/book";
-import type { BookSettings } from "@hekayti/contracts/book";
+import {
+  bookArtworkGeometry,
+  bookPageMarkup,
+  bookPageCss,
+} from "@hekayti/export/book";
+import type {
+  BookSettings,
+  BookLayout,
+  PageLayout,
+} from "@hekayti/contracts/book";
+const previewPageCss = bookPageCss
+  .replace("*{", ".shared-book-render *{")
+  .replace("html,body{", ".shared-book-render{");
 
 export interface CanvasTextLayer {
   key: string;
@@ -29,6 +40,8 @@ export function BookPageCanvas({
   onChange,
   onAnchor,
   onOverflow,
+  renderLayout,
+  renderPage,
 }: {
   layers: CanvasTextLayer[];
   artwork?: string;
@@ -44,12 +57,27 @@ export function BookPageCanvas({
   onChange?: (key: string, rect: CanvasRect) => void;
   onAnchor?: (speakerId: string, point: { x: number; y: number }) => void;
   onOverflow?: (keys: string[]) => void;
+  renderLayout?: BookLayout;
+  renderPage?: PageLayout;
 }) {
   const { say } = useStudioUi();
   const art = bookSettings
     ? bookArtworkGeometry(bookSettings, "digital")
     : null;
   const canvas = useRef<HTMLDivElement>(null);
+  const [renderScale, setRenderScale] = useState(1);
+  useEffect(() => {
+    const el = canvas.current;
+    if (!el || !renderLayout) return;
+    const update = () =>
+      setRenderScale(
+        el.clientWidth / ((renderLayout.settings.widthMm * 96) / 25.4),
+      );
+    const o = new ResizeObserver(update);
+    o.observe(el);
+    update();
+    return () => o.disconnect();
+  }, [renderLayout?.settings.widthMm]);
   const drag = useRef<{
     key: string;
     startX: number;
@@ -67,15 +95,38 @@ export function BookPageCanvas({
     const check = () => {
       const keys: string[] = [];
       element
-        .querySelectorAll<HTMLElement>(".book-text-layer")
+        .querySelectorAll<HTMLElement>(
+          renderPage ? ".shared-book-render .book-box" : ".book-text-layer",
+        )
         .forEach((layer) => {
-          const text = layer.querySelector<HTMLElement>(".book-layer-text");
+          const text = layer.querySelector<HTMLElement>(
+            renderPage ? ".book-text" : ".book-layer-text",
+          );
+          const css = getComputedStyle(layer),
+            innerH =
+              layer.clientHeight -
+              parseFloat(css.paddingTop) -
+              parseFloat(css.paddingBottom),
+            innerW =
+              layer.clientWidth -
+              parseFloat(css.paddingLeft) -
+              parseFloat(css.paddingRight);
           if (
             text &&
-            (text.scrollHeight > text.clientHeight + 2 ||
-              text.scrollWidth > text.clientWidth + 2)
+            (text.scrollHeight >
+              (getComputedStyle(text).position === "absolute"
+                ? text.clientHeight
+                : innerH) +
+                2 ||
+              text.scrollWidth >
+                (getComputedStyle(text).position === "absolute"
+                  ? text.clientWidth
+                  : innerW) +
+                  2)
           )
-            keys.push(layer.dataset.layerKey!);
+            keys.push(
+              (renderPage ? layer.dataset.box : layer.dataset.layerKey)!,
+            );
         });
       onOverflow(keys);
     };
@@ -149,7 +200,24 @@ export function BookPageCanvas({
         });
       }}
     >
-      {artwork ? (
+      {renderLayout && renderPage && artwork && (
+        <div
+          className="shared-book-render"
+          dir={renderLayout.mode === "en" ? "ltr" : "rtl"}
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            transform: `scale(${renderScale})`,
+            transformOrigin: "top left",
+            width: (renderLayout.settings.widthMm * 96) / 25.4,
+          }}
+          dangerouslySetInnerHTML={{
+            __html: `<style>${previewPageCss}</style>${bookPageMarkup(renderLayout, working ? { ...renderPage, boxes: renderPage.boxes.map((b) => (b.boxId === working.key ? { ...b, ...working.rect } : b)) } : renderPage, artwork, "digital")}`,
+          }}
+        />
+      )}
+      {artwork && !renderPage ? (
         <img
           className="book-artwork"
           style={
@@ -166,14 +234,14 @@ export function BookPageCanvas({
           src={artwork}
           alt={say("رسم الصفحة", "Page artwork")}
         />
-      ) : (
+      ) : !artwork ? (
         <div className="book-art-placeholder">
           {say(
             "استورد صورة الصفحة من تبويب الصور",
             "Import artwork from Pictures",
           )}
         </div>
-      )}
+      ) : null}
       {editable && (
         <div
           className="book-safe-guide"
@@ -186,7 +254,7 @@ export function BookPageCanvas({
         return (
           <div
             key={layer.key}
-            className={`book-text-layer ${layer.kind} ${layer.style} tail-${layer.tail ?? "none"} ${selected === layer.key ? "selected" : ""}`}
+            className={`book-text-layer ${renderPage ? "shared-hitbox" : ""} ${layer.kind} ${layer.style} tail-${layer.tail ?? "none"} ${selected === layer.key ? "selected" : ""}`}
             data-layer-key={layer.key}
             data-speaker-id={layer.speakerId}
             dir="auto"
@@ -212,7 +280,7 @@ export function BookPageCanvas({
             {layer.kind === "dialogue" && editable && (
               <small className="bubble-speaker">{layer.speakerName}</small>
             )}
-            <div className="book-layer-text">{layer.text}</div>
+            {!renderPage && <div className="book-layer-text">{layer.text}</div>}
             {editable && selected === layer.key && (
               <button
                 type="button"

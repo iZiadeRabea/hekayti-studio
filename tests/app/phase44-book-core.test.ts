@@ -265,7 +265,8 @@ test("private synthetic-photo identity, image locks, editable Arabic book and sc
     pageId: s.session.workflow.drafts.at(-1)!.editions[0]!.pages[2]!.pageId,
   });
   assert.match(s.text!, /Character Sheet/);
-  assert.match(s.text!, /coveredBy/);
+  assert.match(s.text!, /القماشة المألوفة.*مرفوعة بعيدًا/);
+  assert.doesNotMatch(s.text!, /identityRevision|referenceAssets|Exact approved bindings/);
   assert.match(s.text!, /No reset of cloth coverage/);
   s = await h.studio.addSelectedAssets(
     {
@@ -358,7 +359,7 @@ test("private synthetic-photo identity, image locks, editable Arabic book and sc
   );
   assert.match(html, /dir="rtl"/);
   assert.match(html, /206mm/);
-  assert.match(html, /class="book-box BUBBLE DIALOGUE"/);
+  assert.match(html, /class="book-box BUBBLE CLOUD DIALOGUE"/);
   assert.doesNotMatch(html, /RevisionHash|technical metadata/);
   assert.equal(
     printResolution({ width: 2400, height: 2400 }, s.layout!.settings).low,
@@ -368,6 +369,9 @@ test("private synthetic-photo identity, image locks, editable Arabic book and sc
     printResolution({ width: 120, height: 120 }, s.layout!.settings).low,
     true,
   );
+  const anchoredLayout=structuredClone(s.layout!);
+  for(const page of anchoredLayout.pages)for(const box of page.boxes.filter(b=>b.kind==="DIALOGUE")){page.anchors.push({speakerId:box.speakerId!,x:.8,y:.7});box.tail="ANCHOR";}
+  await run({action:"SAVE_LAYOUT",layout:anchoredLayout});
   await run({ action: "APPROVE_BOOK" });
   assert.ok(s.approved);
   await h.studio.exportModel(s.book.projectId, s.book.recordVersion);

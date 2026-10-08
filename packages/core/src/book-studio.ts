@@ -19,12 +19,29 @@ import {
   type SelectBookAssets,
   type TextBox,
   type PageLayout,
+  type CompositionPlan,
 } from "@hekayti/contracts/book";
 import type { PlannerSnapshot, StoryPlan } from "@hekayti/contracts/planner";
 import { canonicalJson, contentHash } from "./index";
 import { SimpleCreatorService, type CreatorRepository } from "./simple-creator";
 import { StoryPlannerService } from "./story-planner";
 import { StoryWorkflowService, type WorkflowSnapshot } from "./story-workflow";
+import {
+  deriveVisualIntent,
+  similarVisualIntents,
+  planComposition,
+  compositionBoxes,
+  layoutGeometryIssues,
+  visualActionSignature,
+} from "./book-composition";
+export {
+  deriveVisualIntent,
+  similarVisualIntents,
+  planComposition,
+  compositionBoxes,
+  layoutGeometryIssues,
+  visualActionSignature,
+} from "./book-composition";
 import {
   composeGuidedStoryPlan,
   bookDefaults,
@@ -109,6 +126,15 @@ export function validateBookAppend(before: BookState, next: BookState) {
       canonicalJson(before[k])
     )
       throw new AppError("BOOK_IMMUTABLE", "Book history is append-only.");
+  if (
+    canonicalJson(
+      (next.compositionPlans ?? []).slice(
+        0,
+        (before.compositionPlans ?? []).length,
+      ),
+    ) !== canonicalJson(before.compositionPlans ?? [])
+  )
+    throw new AppError("BOOK_IMMUTABLE", "Composition history is append-only.");
 }
 export function validateBookSources(
   b: BookState,
@@ -204,6 +230,40 @@ export function validateBookSources(
       fail("Page image slot differs from canonical draft page.");
   }
   for (const l of b.layouts) validateLayoutSources(l, b, w!);
+  for (const cp of b.compositionPlans ?? []) {
+    const page = canonicalPage(w!, cp.draftId, cp.mode, cp.pageId);
+    if (
+      !page ||
+      !p!.plans.some((q) => q.revisionId === cp.storyRevision) ||
+      cp.visual.pageId !== cp.pageId ||
+      cp.visual.draftId !== cp.draftId ||
+      cp.visual.storyRevision !== cp.storyRevision ||
+      (cp.imageId &&
+        !b.images.some(
+          (i) => i.imageId === cp.imageId && i.pageId === cp.pageId,
+        ))
+    )
+      fail("Composition source differs from exact page/art authority.");
+    const authoredAction =
+      page &&
+      [page.narration, ...page.dialogue.map((d) => d.text)]
+        .filter(Boolean)
+        .join(" ");
+    if (authoredAction && cp.visual.pageAction !== authoredAction)
+      fail("Visual event differs from exact authored page.");
+    for (const region of cp.regions)
+      if (
+        region.kind === "DIALOGUE" &&
+        region.speakerId !== page!.dialogue[region.sourceIndex]?.speakerId
+      )
+        fail("Composition speaker differs from canonical dialogue.");
+    if (
+      cp.anchors.some(
+        (a) => !page!.dialogue.some((d) => d.speakerId === a.speakerId),
+      )
+    )
+      fail("Composition anchor speaker differs.");
+  }
   for (const title of b.storyTitles)
     if (!w!.drafts.some((d) => d.draftId === title.draftId))
       fail("Edited title has no canonical draft.");
@@ -299,6 +359,13 @@ export function validateLayoutSources(
           "Text exceeds safe print margins.",
         );
     }
+    const geometry = layoutGeometryIssues(page);
+    if (geometry.length)
+      throw new AppError(
+        "BOOK_LAYOUT_GEOMETRY",
+        "مساحات الكلام متداخلة أو تغطي منطقة مهمة؛ عدّل مكان الكلام.",
+        { section: "book", pageId: page.pageId, control: "layout" },
+      );
     if (
       index === 0 &&
       page.boxes.filter((x) => x.kind === "TITLE").length !== 1
@@ -379,7 +446,41 @@ function effectiveScenes(
             coveredBy: null,
             state: "يحتاج مراجعة بعد تغيير معنى النص؛ لا تفترض حالة قديمة",
           }))
-        : last.after;
+        : structuredClone(last.after);
+      // Supplemental literal props use stable identities across exact authored pages.
+      // Existing planner-ledger entities keep their authority; no appearance/holder is inferred.
+      const prose = current
+        ? [current.narration, ...current.dialogue.map((d) => d.text)].join(" ")
+        : "";
+      const denied = /(?:لا |لم |لن |مش |ما |not |never )/.test(prose);
+      for (const [key, name, pattern] of [
+        ["book", "الكتاب", /كتاب|\bbook\b/i],
+        ["teddy", "الدبدوب", /دبدوب|دب[ّ]? صغير|\bteddy\b/i],
+        ["bed", "السرير", /سرير|\bbed\b/i],
+        ["pillow", "الوسادة", /وساد[ةه]|\bpillow\b/i],
+      ] as const) {
+        const existing = after.find(
+          (e) => e.kind === "PROP" && pattern.test(e.name),
+        );
+        if (existing) continue;
+        const priorProp = before.find(
+          (e) =>
+            e.entityId ===
+            `${p.currentPlanRevisionId!.slice(0, 65)}-literal-${key}`,
+        );
+        if (pattern.test(prose) && !denied)
+          after.push({
+            entityId: `${p.currentPlanRevisionId!.slice(0, 65)}-literal-${key}`,
+            kind: "PROP",
+            name,
+            location: last.after[0]?.location ?? "المكان الموصوف؛ يحتاج مراجعة",
+            visibility: "VISIBLE",
+            heldBy: null,
+            coveredBy: null,
+            state: prose,
+          });
+        else if (priorProp) after.push({ ...priorProp });
+      }
       previous = after;
       return {
         ...last,
@@ -439,16 +540,16 @@ export function imageState(
         const prior = old.editions.find((e) => e.mode === edition.mode);
         const pages =
           image.kind === "PAGE"
-            ? edition.pages.slice(
-                0,
-                edition.pages.findIndex((p) => p.pageId === image.pageId) + 1,
-              )
+            ? edition.pages.filter((p) => p.pageId === image.pageId)
             : edition.pages;
         if (
           !prior ||
           pages.some((p) => {
             const before = prior.pages.find((q) => q.pageId === p.pageId);
-            return !before || pageMeaning(p) !== pageMeaning(before);
+            return (
+              !before ||
+              visualActionSignature(p) !== visualActionSignature(before)
+            );
           })
         )
           reasons.push("المشهد أو فعله تغير ويحتاج مراجعة الصورة");
@@ -582,7 +683,71 @@ export class BookStudioService {
         r.creative?.culture.religiousReview !==
           "RELIGIOUS_ACCURACY_REVIEW_REQUIRED",
     );
-    for (const r of latest.slice(0, 3))
+    const relevant = latest
+      .filter(
+        (r) =>
+          r.tags.storyTypes.includes(category as never) &&
+          r.payload.type === "IDEA_SEED" &&
+          /\p{Script=Arabic}/u.test(r.payload.idea),
+      )
+      .sort(
+        (a, b) =>
+          Number(
+            b.tags.themes.some((t) =>
+              t.toLowerCase().includes(goal.toLowerCase()),
+            ),
+          ) -
+          Number(
+            a.tags.themes.some((t) =>
+              t.toLowerCase().includes(goal.toLowerCase()),
+            ),
+          ),
+      );
+    result.ideas = result.ideas.filter((i) => i.category === category);
+    const quiet = age < 24 || category === "bedtime" || goal === "SLEEP";
+    const goalText =
+      result.goalChoices.find((g) => g.key === goal)?.description ??
+      "لحظة مألوفة مناسبة للعمر";
+    const originals = quiet
+      ? [
+          [
+            "كتاب جنب الوسادة",
+            "صفحات كتاب مألوف، وصورة جديدة يلاحظها الطفل في حضن قريب، ثم يهدأ بجوار وسادته.",
+          ],
+          [
+            "صوت البيت الهادي",
+            "ينتبه الطفل لصوت مألوف، ويتابعه مع شخص قريب، ثم يعود للهدوء.",
+          ],
+          [
+            "نور صغير قبل النوم",
+            "بقعة نور ناعمة على بطانية مألوفة يلاحظها الطفل ثم يستقر للنوم بدعم قريب.",
+          ],
+        ]
+      : [
+          [
+            "العلامة الصغيرة",
+            `في مكان مألوف يلاحظ الطفل علامة بسيطة ويتتبعها مع رفيق قريب؛ تجارب قصيرة حول ${goalText}.`,
+          ],
+          [
+            "صندوق الحكاية",
+            `شيء مألوف داخل صندوق يفتح حديثًا وتجربة صغيرة مع صديق؛ يكتشفان معًا معنى ${goalText}.`,
+          ],
+          [
+            "اختيار في الطريق",
+            `في مشوار قريب وآمن يجرب الطفل اختيارًا بسيطًا مع شخص مألوف؛ تظهر نتيجة ملموسة مرتبطة بـ ${goalText}.`,
+          ],
+        ];
+    for (const [n, d] of originals)
+      if (result.ideas.length < 3)
+        result.ideas.push({
+          key: `original-${category}-${goal}-${result.ideas.length}`,
+          title: n!,
+          description: d!,
+          ageMin: age < 12 ? 0 : age < 24 ? 12 : 24,
+          ageMax: age < 12 ? 11 : 95,
+          category,
+        });
+    for (const r of relevant.slice(0, 3))
       result.ideas.push({
         key: `library:${r.recordId}`,
         title: /\p{Script=Arabic}/u.test(r.title)
@@ -737,10 +902,62 @@ export class BookStudioService {
           ["LAYOUT_STALE", "IMAGE_STALE", "LAYOUT_ART_STALE"].includes(n.code),
         ),
       notices,
+      compositionPlans: (b.compositionPlans ?? []).filter(
+        (q) => q.draftId === w.current.draftId && q.mode === language,
+      ),
     };
   }
-  private baseline(projectId: string, expected: number) {
-    const s = this.load(projectId);
+  private composePage(
+    s: BookStudioSnapshot,
+    pageId: string,
+    settings: import("@hekayti/contracts/book").BookSettings,
+  ): CompositionPlan {
+    const w = s.session.workflow,
+      draft = w.drafts.find((d) => d.draftId === w.current.draftId),
+      edition = draft?.editions.find((e) => e.mode === s.mode),
+      page = edition?.pages.find((q) => q.pageId === pageId);
+    if (!draft || !page) throw new AppError("BOOK_PAGE", "اختر صفحة حالية.");
+    const pageNumber = edition!.pages.indexOf(page) + 1;
+    const visual = deriveVisualIntent(
+      page,
+      pageNumber,
+      draft.draftId,
+      s.session.planner.currentPlanRevisionId!,
+      s.scenes.find((q) => q.pageNumber === pageNumber),
+    );
+    const prior = [...(s.book.compositionPlans ?? [])]
+      .reverse()
+      .find(
+        (q) =>
+          q.pageId === pageId &&
+          q.draftId === draft.draftId &&
+          q.mode === s.mode,
+      );
+    if (prior && canonicalJson(prior.settings) === canonicalJson(settings))
+      return {
+        ...prior,
+        revisionId: this.seam.id(),
+        visual,
+        createdAt: this.seam.now(),
+        imageId: selectedImage(s.book, `page:${pageId}`)?.imageId ?? null,
+        anchors:
+          prior.imageId === selectedImage(s.book, `page:${pageId}`)?.imageId
+            ? prior.anchors
+            : [],
+      };
+    return planComposition({
+      page,
+      visual,
+      settings,
+      revisionId: this.seam.id(),
+      mode: s.mode,
+      createdAt: this.seam.now(),
+      imageId: selectedImage(s.book, `page:${pageId}`)?.imageId,
+      prior,
+    });
+  }
+  private baseline(projectId: string, expected: number, mode?: LanguageMode) {
+    const s = this.load(projectId, mode);
     if (s.book.recordVersion !== expected)
       throw new AppError("BOOK_CONFLICT", "الكتاب تغير؛ افتحه من جديد.");
     return s;
@@ -775,8 +992,17 @@ export class BookStudioService {
     const identities = ids.map((id) =>
       s.identities.find((i) => i.characterId === id),
     );
-    if (identities.some((i) => !i?.approvedProfile))
-      throw new AppError("BOOK_IDENTITY", "راجع واعتمد تعريف كل شخصية أولًا.");
+    const missingIdentity = identities.findIndex((i) => !i?.approvedProfile);
+    if (missingIdentity >= 0)
+      throw new AppError(
+        "BOOK_IDENTITY",
+        `تعريف شخصية ${plan.characters.find((c) => c.characterId === ids[missingIdentity])?.displayName ?? "القصة"} لسه محتاج اعتماد.`,
+        {
+          section: "images",
+          characterId: ids[missingIdentity],
+          control: "identity",
+        },
+      );
     const sheets =
       kind === "CHARACTER_SHEET"
         ? []
@@ -788,8 +1014,13 @@ export class BookStudioService {
               `character:${id}`,
             ),
           );
-    if (sheets.some((i) => !i))
-      throw new AppError("BOOK_SHEET", "اعتمد شكل الشخصية أولًا.");
+    const missingSheet = sheets.findIndex((i) => !i);
+    if (missingSheet >= 0)
+      throw new AppError("BOOK_SHEET", "شكل الشخصية لسه محتاج اعتماد.", {
+        section: "images",
+        characterId: ids[missingSheet],
+        control: "sheet",
+      });
     return {
       storyRevision: plan.revisionId,
       draftId:
@@ -808,7 +1039,7 @@ export class BookStudioService {
   }
   async addSelectedAssets(input: SelectBookAssets, assets: AssetManifest[]) {
     SelectBookAssetsSchema.parse(input);
-    const s = this.baseline(input.projectId, input.expectedBook),
+    const s = this.baseline(input.projectId, input.expectedBook, input.mode),
       b = s.book;
     if (!assets.length) return s;
     if (
@@ -898,7 +1129,7 @@ export class BookStudioService {
   }
   async command(input: BookCommand): Promise<BookStudioSnapshot> {
     const x = BookCommandSchema.parse(input),
-      s = this.baseline(x.projectId, x.expectedBook),
+      s = this.baseline(x.projectId, x.expectedBook, x.mode),
       b = s.book,
       w = s.session.workflow,
       p = s.session.planner;
@@ -907,7 +1138,37 @@ export class BookStudioService {
         this.assertSourceCurrent(s);
       return this.repo.saveBook(next, x.expectedBook);
     };
-    if (x.action === "COPY_PROMPT") {
+    if (x.action === "PLAN_PAGE" || x.action === "SAVE_COMPOSITION") {
+      const plan =
+        x.action === "PLAN_PAGE"
+          ? this.composePage(
+              s,
+              x.pageId,
+              x.settings ?? s.layout?.settings ?? defaultBookSettings,
+            )
+          : x.plan;
+      if (
+        plan.draftId !== w.current.draftId ||
+        plan.storyRevision !== p.currentPlanRevisionId ||
+        plan.mode !== s.mode
+      )
+        throw new AppError(
+          "BOOK_SOURCE_CONFLICT",
+          "خطة الصفحة قديمة؛ راجع الصفحة الحالية.",
+        );
+      if (
+        plan.visual.pageAction !==
+        this.composePage(s, plan.pageId, plan.settings).visual.pageAction
+      )
+        throw new AppError("BOOK_SOURCE", "خطة الصفحة لا تطابق النص الفعلي.");
+      commit({
+        ...b,
+        compositionPlans: [
+          ...(b.compositionPlans ?? []),
+          { ...plan, revisionId: this.seam.id(), createdAt: this.seam.now() },
+        ],
+      });
+    } else if (x.action === "COPY_PROMPT") {
       const prompt = b.prompts.find((q) => q.promptId === x.promptId);
       if (!prompt) throw new AppError("BOOK_PROMPT", "البرومبت غير موجودة.");
       const image: BookImage = {
@@ -1135,6 +1396,13 @@ export class BookStudioService {
       const identities = binding.identityRevisions.map((id) =>
         b.identities.find((i) => i.revisionId === id)!,
       );
+      const composition = page
+        ? this.composePage(
+            s,
+            page.pageId,
+            s.layout?.settings ?? defaultBookSettings,
+          )
+        : null;
       const text = [
         "Create artwork only. NO written words, Arabic text, title, captions, letters, logos or watermarks. Hekayti adds all final text itself.",
         x.kind === "CHARACTER_REFERENCE"
@@ -1155,9 +1423,7 @@ export class BookStudioService {
               ? "Attach/use the approved Character Sheet as a style/consistency reference. The creator must attach it manually. The approved sheet is design authority; approved visual profile is continuity authority."
               : "Transform only into the selected illustration style.",
             canonicalJson({
-              characterId: i.characterId,
-              identityRevision: i.revisionId,
-              referenceAssets: i.referenceAssets,
+              name: i.name,
               likeness: i.likeness,
               face: i.faceRule,
               hair: i.hairRule,
@@ -1174,30 +1440,33 @@ export class BookStudioService {
             "END CREATOR AUTHORED NOTES",
           ].join("\n"),
         ),
+        composition
+          ? `Exact visible event: ${composition.visual.pageAction}\nFocus: ${composition.visual.focus}\nFraming: ${composition.visual.cameraFraming}\nComposition: ${composition.visual.compositionHint}\nState changes: ${composition.visual.stateChange.join("; ")}\nContinuity: ${composition.visual.continuity.join("; ")}`
+          : "",
         scene
-          ? canonicalJson({
-              action: scene.action,
-              before: scene.before,
-              after: scene.after,
-              mustShow: scene.after.map(
-                (e) => `${e.name}: ${e.state}, ${e.visibility}`,
-              ),
-              mustNotShow: [
-                "No reset of cloth coverage or object ownership without a story event",
-                "No extra actor or unexplained accessory",
-              ],
-            })
+          ? "No reset of cloth coverage or object ownership without a story event. No extra actor or unexplained accessory."
           : "",
         page
           ? `Story page text is context only, never print it in the artwork: ${page.narration} ${page.dialogue.map((d) => d.text).join(" ")}`
           : "",
-        "Composition: generous quiet upper or lower region for narration; leave air around speaking faces for separate live-text bubbles. Keep focal action unobscured. No invented exact speaker positions.",
+        composition
+          ? [
+              `Later editable narration: ${page!.narration ? "yes" : "none"}; dialogue bubbles: ${page!.dialogue.length}.`,
+              ...composition.regions.map(
+                (r) =>
+                  `Leave an organic calm ${r.kind === "NARRATION" ? "narration" : "speech"} region about ${Math.round(r.rect.width * 100)}% wide and ${Math.round(r.rect.height * 100)}% high, near ${Math.round(r.rect.x * 100)}% across / ${Math.round(r.rect.y * 100)}% down${r.speakerId ? `; speaker ${identities.find((i) => i.characterId === r.speakerId)?.name ?? "approved speaking actor"}` : ""}.`,
+              ),
+              `Listening actors: ${composition.visual.listeners.map((id) => identities.find((i) => i.characterId === id)?.name ?? "approved actor").join(", ") || "none declared"}. Keep speaking faces, expressive hands and the focal action clear. Do not render words, letters, bubbles or text placeholders.`,
+              composition.notes,
+            ].join("\n")
+          : "Use naturally calm cover title space away from the character; no rendered words or bubbles.",
         "Extend artwork/background to all edges for bleed. Keep important faces, actions and identifying details well inside the safe central area; print may trim outer artwork. Never place text in the image.",
-        "Exact approved bindings:",
-        canonicalJson(binding),
       ].join("\n");
       commit({
         ...b,
+        ...(composition
+          ? { compositionPlans: [...(b.compositionPlans ?? []), composition] }
+          : {}),
         prompts: [
           ...b.prompts,
           {
@@ -1211,7 +1480,7 @@ export class BookStudioService {
             kind: x.kind,
             binding,
             summary:
-              scene?.action ??
+              composition?.visual.pageAction ??
               (x.kind === "COVER"
                 ? "غلاف بدون نص؛ حكايتي يضيف العنوان"
                 : "شكل الشخصية ومرجعها المعتمد"),
@@ -1237,6 +1506,18 @@ export class BookStudioService {
         throw new AppError(
           "BOOK_IMAGE_STALE",
           "الصورة قديمة؛ جهز نسخة مرتبطة بالمشهد الحالي ثم اعتمدها.",
+          {
+            section: "images",
+            characterId: image.characterId,
+            pageId: image.pageId,
+            imageId: image.imageId,
+            control:
+              image.kind === "CHARACTER_SHEET"
+                ? "sheet"
+                : image.kind === "COVER"
+                  ? "cover"
+                  : "image",
+          },
         );
       commit({
         ...b,
@@ -1366,7 +1647,11 @@ export class BookStudioService {
       text,
     });
     const cover = approvedImage(b, w, p, "cover");
-    if (!cover) throw new AppError("BOOK_IMAGES", "اعتمد صورة الغلاف أولًا.");
+    if (!cover)
+      throw new AppError("BOOK_IMAGES", "اعتمد صورة الغلاف أولًا.", {
+        section: "images",
+        control: "cover",
+      });
     const titleHeight = Math.max(0.18, 36 / settings.heightMm),
       subtitleHeight = Math.max(0.12, 24 / settings.heightMm),
       brandHeight = Math.max(0.14, 28 / settings.heightMm),
@@ -1405,27 +1690,19 @@ export class BookStudioService {
         throw new AppError(
           "BOOK_IMAGES",
           `اعتمد صورة الصفحة ${index + 1} أولًا.`,
+          { section: "images", pageId: page.pageId, control: "image" },
         );
-      const boxes: TextBox[] = [];
+      const composition = this.composePage(
+        { ...s, mode },
+        page.pageId,
+        settings,
+      );
+      const boxes: TextBox[] = compositionBoxes(composition, page, () =>
+        this.seam.id(),
+      );
       // Reserve physical space for Noto's readable 14pt glyphs, independent of page height.
       const numberHeight = 11 / settings.heightMm,
         numberY = 1 - safeY - numberHeight - 1 / settings.heightMm;
-      if (page.narration)
-        boxes.push(box("NARRATION", page.narration, safeY, 0.24));
-      const dialogueArea = settings.pageNumbers
-          ? Math.min(0.5, numberY - 0.35 - 0.02)
-          : 0.5,
-        each = dialogueArea / Math.max(1, page.dialogue.length);
-      if (page.dialogue.length > 4)
-        throw new AppError(
-          "BOOK_TEXT_FIT",
-          "الحوار طويل؛ وزعه أو عدّل النص قبل الترتيب التلقائي.",
-        );
-      page.dialogue.forEach((d, i) =>
-        boxes.push(
-          box("DIALOGUE", d.text, 0.35 + i * each, each - 0.02, i, d.speakerId),
-        ),
-      );
       if (settings.pageNumbers) {
         if (boxes.some((b) => b.y + b.height > numberY - 0.01))
           throw new AppError(
@@ -1448,7 +1725,8 @@ export class BookStudioService {
         pageId: page.pageId,
         pageNumber: index + 1,
         imageId: image.imageId,
-        anchors: [],
+        anchors: composition.anchors,
+        protectedRegions: composition.protectedRegions,
         boxes,
       });
     }
@@ -1477,6 +1755,18 @@ export class BookStudioService {
       );
     validateLayoutSources(l, s.book, w);
     for (const page of l.pages) {
+      for (const box of page.boxes.filter(
+        (b) => b.kind === "DIALOGUE" && b.bubbleShape,
+      ))
+        if (
+          box.tail !== "ANCHOR" ||
+          !page.anchors.some((a) => a.speakerId === box.speakerId)
+        )
+          throw new AppError(
+            "BOOK_SPEAKER_ANCHOR",
+            "حدد مكان الشخصية المتحدثة واتجاه ذيل الفقاعة قبل اعتماد الكتاب.",
+            { section: "book", pageId: page.pageId, control: "layout" },
+          );
       const image = s.images.find((i) => i.imageId === page.imageId);
       if (
         !image ||
@@ -1487,6 +1777,12 @@ export class BookStudioService {
         throw new AppError(
           "BOOK_IMAGE_STALE",
           "كل صور الكتاب يجب أن تكون معتمدة وحالية.",
+          {
+            section: "images",
+            pageId: image?.pageId,
+            imageId: image?.imageId,
+            control: image?.kind === "COVER" ? "cover" : "image",
+          },
         );
     }
     return l;

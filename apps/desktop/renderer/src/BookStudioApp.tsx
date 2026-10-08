@@ -20,6 +20,13 @@ import { StudioStory } from "./StudioStory";
 import { StudioImages } from "./StudioImages";
 import { BookComposer } from "./BookComposer";
 import { useStudioUi } from "./studio-ui";
+import {
+  studioIssue,
+  studioPrerequisites,
+  targetElementId,
+  type StudioIssue,
+  type StudioTarget,
+} from "./studio-recovery";
 
 export function BookStudioApp() {
   const { say, label } = useStudioUi();
@@ -37,6 +44,24 @@ export function BookStudioApp() {
   const [error, setError] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [status, setStatus] = useState("");
+  const [issue, setIssue] = useState<StudioIssue>();
+  const [target, setTarget] = useState<StudioTarget>();
+  const [returnTab, setReturnTab] = useState<typeof tab>();
+  const lastAction = useRef<string | undefined>(undefined);
+  function navigate(t: StudioTarget, from = tab) {
+    setReturnTab(from);
+    setTarget(t);
+    setTab(t.section);
+  }
+  useEffect(() => {
+    if (!target) return;
+    const timer = setTimeout(() => {
+      const el = document.getElementById(targetElementId(target));
+      el?.scrollIntoView({ block: "center", behavior: "smooth" });
+      el?.focus({ preventScroll: true });
+    }, 30);
+    return () => clearTimeout(timer);
+  }, [target, tab, snapshot?.book.recordVersion]);
   const [writerText, setWriterText] = useState("");
   const [preview, setPreview] = useState<WriterPreview | null>(null);
   const choiceSequence = useRef(0);
@@ -46,6 +71,7 @@ export function BookStudioApp() {
   ): Promise<T | undefined> {
     const result = await promise;
     if (!result.ok) {
+      setIssue(studioIssue(result.error, tab));
       setError(result.error.code);
       setErrorMessage(
         /[\u0600-\u06ff]/.test(result.error.message)
@@ -63,6 +89,7 @@ export function BookStudioApp() {
     setError(undefined);
     setErrorMessage(undefined);
     setStatus("");
+    setIssue(undefined);
     try {
       return await action();
     } catch {
@@ -117,6 +144,9 @@ export function BookStudioApp() {
   async function apply(next: BookStudioSnapshot) {
     setSnapshot(next);
     await loadReader(next);
+    setStatus(
+      say("✓ تم حفظ الخطوة على جهازك.", "✓ Step saved on this device."),
+    );
   }
   async function load(projectId: string) {
     const next = await unwrap(window.hekayti.studioLoad({ projectId }));
@@ -129,7 +159,13 @@ export function BookStudioApp() {
     }
   }
   async function command(input: BookCommand) {
-    const next = await unwrap(window.hekayti.studioCommand(input));
+    lastAction.current = input.action;
+    const next = await unwrap(
+      window.hekayti.studioCommand({
+        ...input,
+        mode: input.mode ?? snapshot?.mode ?? "ar-EG",
+      }),
+    );
     if (next) {
       if (input.action === "PREPARE_WRITER" && next.text)
         setWriterText(next.text);
@@ -138,7 +174,9 @@ export function BookStudioApp() {
     return next;
   }
   async function selectAssets(input: SelectBookAssets) {
-    const next = await unwrap(window.hekayti.studioSelectAssets(input));
+    const next = await unwrap(
+      window.hekayti.studioSelectAssets({ ...input, mode: snapshot?.mode }),
+    );
     if (next) await apply(next);
   }
   async function simpleCommand(input: SimpleCommand) {
@@ -256,7 +294,7 @@ export function BookStudioApp() {
         </nav>
       </header>
       <main>
-        {error && (
+        {error && !snapshot && (
           <div className="studio-error" role="alert">
             <p>
               {errorMessage ??
@@ -270,14 +308,6 @@ export function BookStudioApp() {
               <summary>{say("التفاصيل التقنية", "Technical details")}</summary>
               <code dir="ltr">{error}</code>
             </details>
-            {snapshot && (
-              <button
-                disabled={busy}
-                onClick={() => void run(() => load(snapshot.book.projectId))}
-              >
-                {say("إعادة فتح الكتاب", "Reopen book")}
-              </button>
-            )}
           </div>
         )}
         {status && <p role="status">{status}</p>}
@@ -362,6 +392,98 @@ export function BookStudioApp() {
                 </button>
               ))}
             </nav>
+            <div className="studio-progress" role="status">
+              <p>
+                {say("القصة: ", "Story: ")}
+                {snapshot.session.workflow.current.approvalId
+                  ? say("معتمدة", "Approved")
+                  : say("تحتاج مراجعة", "Needs review")}{" "}
+                · {say("الشخصيات: ", "Characters: ")}
+                {
+                  snapshot.identities.filter(
+                    (i) =>
+                      i.approvedProfile &&
+                      snapshot.images.some(
+                        (q) =>
+                          q.characterId === i.characterId &&
+                          q.selected &&
+                          q.status === "APPROVED" &&
+                          !q.stale,
+                      ),
+                  ).length
+                }
+                /{snapshot.identities.length} ·{" "}
+                {say("الصور المعتمدة: ", "Approved page images: ")}
+                {
+                  snapshot.images.filter(
+                    (i) =>
+                      i.kind === "PAGE" &&
+                      i.selected &&
+                      i.status === "APPROVED" &&
+                      !i.stale,
+                  ).length
+                }{" "}
+                ·{" "}
+                {snapshot.approved
+                  ? say("الكتاب معتمد", "Book approved")
+                  : say("الكتاب يحتاج مراجعة", "Book needs review")}
+              </p>
+              {studioPrerequisites(snapshot)[0] && (
+                <button
+                  disabled={busy}
+                  onClick={() =>
+                    navigate(studioPrerequisites(snapshot)[0]!.target!)
+                  }
+                >
+                  {say("الخطوة التالية: ", "Next: ")}
+                  {studioPrerequisites(snapshot)[0]!.message}
+                </button>
+              )}
+              {returnTab && (
+                <button
+                  onClick={() => {
+                    setTab(returnTab);
+                    setReturnTab(undefined);
+                    setTarget(undefined);
+                  }}
+                >
+                  {returnTab === "book"
+                    ? say("العودة إلى الكتاب", "Return to book")
+                    : say("العودة للخطوة السابقة", "Return to previous step")}
+                </button>
+              )}
+            </div>
+            {issue && (
+              <div className="studio-error studio-local-error" role="alert">
+                <p>{issue.message}</p>
+                {issue.target && (
+                  <button
+                    onClick={() => navigate(issue.target!, issue.returnTo)}
+                  >
+                    {issue.action}
+                  </button>
+                )}
+                <details>
+                  <summary>
+                    {say("التفاصيل التقنية", "Technical details")}
+                  </summary>
+                  {issue.code}
+                </details>
+              </div>
+            )}
+            {tab === "book" && studioPrerequisites(snapshot).length > 0 && (
+              <section className="studio-warning">
+                <h3>{say("خطوات محتاجة استكمال", "Steps to complete")}</h3>
+                {studioPrerequisites(snapshot).map((q, i) => (
+                  <p key={i}>
+                    {q.message}{" "}
+                    <button onClick={() => navigate(q.target!, "book")}>
+                      {q.action}
+                    </button>
+                  </p>
+                ))}
+              </section>
+            )}
             {snapshot.book.classification === "PRIVATE_LOCAL_PROJECT" && (
               <p className="studio-muted">
                 {say(
@@ -370,7 +492,7 @@ export function BookStudioApp() {
                 )}
               </p>
             )}
-            {tab === "story" && (
+            <div hidden={tab !== "story"}>
               <StudioStory
                 key={snapshot.book.projectId}
                 snapshot={snapshot}
@@ -450,12 +572,13 @@ export function BookStudioApp() {
                 preview={preview}
                 writerText={writerText}
               />
-            )}
-            {tab === "images" && (
+            </div>
+            <div hidden={tab !== "images"}>
               <StudioImages
                 key={snapshot.book.projectId}
                 snapshot={snapshot}
                 busy={busy}
+                target={target}
                 onCommand={(input) => run(() => command(input)).then(Boolean)}
                 onImport={(input) => void run(() => selectAssets(input))}
                 onRelink={(assetId) =>
@@ -475,6 +598,7 @@ export function BookStudioApp() {
                       window.hekayti.studioCommand({
                         ...bookBindings(),
                         action: "COPY_PROMPT",
+                        mode: snapshot.mode,
                         promptId,
                       }),
                     );
@@ -489,9 +613,10 @@ export function BookStudioApp() {
                   })
                 }
               />
-            )}
-            {tab === "book" && (
+            </div>
+            <div hidden={tab !== "book"}>
               <BookComposer
+                target={target}
                 key={snapshot.book.projectId}
                 snapshot={snapshot}
                 busy={busy}
@@ -530,7 +655,7 @@ export function BookStudioApp() {
                   })
                 }
               />
-            )}
+            </div>
           </>
         )}
         {home === "books" && (

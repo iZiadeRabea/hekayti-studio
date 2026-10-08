@@ -1,5 +1,7 @@
 # Checkpoints
 
+Phase4.4.1 implementation in feature/phase4.4.1-creator-workflow-fixes starts from verified471cec18 / v0.7.0. WIP is recoverable source work only; target0.7.1 and completion checkpoint are not created before required QA/Windows/final review gates. Actual evidence: docs/implementation/phase4.4.1-continuation.md.
+
 | Checkpoint | Stable tag | Version | Meaning | Verification |
 |---|---|---|---|---|
 | checkpoint/project-foundation | v0.1.0-foundation | v0.1.0-foundation | Recovery infrastructure; no application | Initial verification recorded in docs/VERIFICATION.md |

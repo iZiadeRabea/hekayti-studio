@@ -76,14 +76,29 @@ export class AppError extends Error {
   constructor(
     public readonly code: string,
     message: string,
+    public readonly target?: {
+      section: "story" | "images" | "book";
+      characterId?: string;
+      pageId?: string;
+      imageId?: string;
+      control: string;
+    },
   ) {
     super(message);
     this.name = "AppError";
   }
 }
-export function publicError(error: unknown): { code: string; message: string } {
+export function publicError(error: unknown): {
+  code: string;
+  message: string;
+  target?: AppError["target"];
+} {
   return error instanceof AppError
-    ? { code: error.code, message: error.message }
+    ? {
+        code: error.code,
+        message: error.message,
+        ...(error.target ? { target: error.target } : {}),
+      }
     : error instanceof ValidationError
       ? { code: "VALIDATION", message: error.message }
       : {

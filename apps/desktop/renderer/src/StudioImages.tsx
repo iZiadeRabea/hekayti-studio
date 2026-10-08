@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { PageCompositionPlan } from "./PageCompositionPlan";
+import { targetElementId, type StudioTarget } from "./studio-recovery";
 import { printResolution } from "@hekayti/export/book";
 import type {
   BookCommand,
@@ -54,6 +57,117 @@ export function PrivateAssetPreview({
   );
 }
 
+function CharacterVisuals({
+  snapshot,
+  characterId,
+  busy,
+  onCommand,
+  onCopy,
+  onRelink,
+}: {
+  snapshot: BookStudioSnapshot;
+  characterId: string;
+  busy: boolean;
+  onCommand: (c: BookCommand) => Promise<boolean>;
+  onCopy: (id: string) => void;
+  onRelink: (id: string) => void;
+}) {
+  const { say } = useStudioUi();
+  const images = snapshot.images.filter(
+      (i) => i.kind === "CHARACTER_SHEET" && i.characterId === characterId,
+    ),
+    current = images.find((i) => i.selected) ?? images.at(-1),
+    prompts = snapshot.prompts.filter(
+      (p) => p.slot === `character:${characterId}`,
+    ),
+    prompt = prompts.at(-1);
+  const render = (image: (typeof images)[number]) => (
+    <article key={image.imageId}>
+      <p role="status">
+        {image.stale
+          ? say("قديمة بعد التعديل", "Stale after changes")
+          : image.status === "APPROVED"
+            ? say("✓ شكل الشخصية معتمد", "✓ Sheet approved")
+            : say(
+                "صورة مستوردة — تحتاج مراجعة",
+                "Imported sheet — needs review",
+              )}
+      </p>
+      <PrivateAssetPreview
+        projectId={snapshot.book.projectId}
+        assetId={image.assetId}
+      />
+      <div className="studio-actions">
+        {(["APPROVE", "USE", "REJECT", "ARCHIVE"] as const).map((choice, j) => (
+          <button
+            key={choice}
+            disabled={
+              busy ||
+              (image.stale && (choice === "USE" || choice === "APPROVE"))
+            }
+            onClick={() =>
+              onCommand({
+                projectId: snapshot.book.projectId,
+                expectedBook: snapshot.book.recordVersion,
+                action: "IMAGE_DECISION",
+                imageId: image.imageId,
+                choice,
+                notes: "",
+              })
+            }
+          >
+            {
+              [
+                say("اعتماد شكل الشخصية", "Approve sheet"),
+                say("استخدام هذه النسخة", "Use version"),
+                say("رفض", "Reject"),
+                say("أرشفة", "Archive"),
+              ][j]
+            }
+          </button>
+        ))}
+        <button disabled={busy} onClick={() => onRelink(image.assetId)}>
+          {say("إعادة ربط الصورة", "Relink image")}
+        </button>
+      </div>
+    </article>
+  );
+  return (
+    <section
+      id={targetElementId({ section: "images", characterId, control: "sheet" })}
+      tabIndex={-1}
+    >
+      <h4>{say("شكل الشخصية", "Character sheet")}</h4>
+      {current ? (
+        render(current)
+      ) : (
+        <p>{say("لم تُستورد لوحة الشخصية", "No sheet imported")}</p>
+      )}
+      {prompt && (
+        <details>
+          <summary>
+            {say("برومبت الشخصية الحالي", "Current character prompt")}
+          </summary>
+          <textarea readOnly value={prompt.text} rows={6} />
+          <button disabled={busy} onClick={() => onCopy(prompt.promptId)}>
+            {say("نسخ البرومبت", "Copy prompt")}
+          </button>
+        </details>
+      )}
+      <details>
+        <summary>
+          {say("نسخ الشخصية السابقة", "Character history")} (
+          {Math.max(0, images.length - 1)})
+        </summary>
+        {images
+          .filter((i) => i.imageId !== current?.imageId)
+          .slice()
+          .reverse()
+          .map(render)}
+      </details>
+    </section>
+  );
+}
 export function StudioImages({
   snapshot,
   busy,
@@ -61,6 +175,7 @@ export function StudioImages({
   onImport,
   onRelink,
   onCopy,
+  target,
 }: {
   snapshot: BookStudioSnapshot;
   busy: boolean;
@@ -68,6 +183,7 @@ export function StudioImages({
   onImport: (input: SelectBookAssets) => void;
   onRelink: (assetId: string) => void;
   onCopy: (promptId: string) => void;
+  target?: StudioTarget;
 }) {
   const { say } = useStudioUi();
   const characters = studioCharacters(snapshot);
@@ -75,6 +191,18 @@ export function StudioImages({
   const [editIdentity, setEditIdentity] = useState<IdentityPack | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [style, setStyle] = useState("");
+  useEffect(() => {
+    if (target?.section !== "images") return;
+    setSelected(
+      target.pageId ?? (target.control === "cover" ? "cover" : "characters"),
+    );
+    if (target.characterId && target.control === "identity") {
+      const identity = snapshot.identities.find(
+        (i) => i.characterId === target.characterId,
+      );
+      if (identity) setEditIdentity(structuredClone(identity));
+    }
+  }, [target]);
   const bindings = {
     projectId: snapshot.book.projectId,
     expectedBook: snapshot.book.recordVersion,
@@ -95,17 +223,17 @@ export function StudioImages({
   const page = edition?.pages.find((p) => p.pageId === selected);
   const selectedImages = snapshot.images.filter((image) =>
     selected === "characters"
-      ? image.kind === "CHARACTER_SHEET"
+      ? false
       : selected === "cover"
         ? image.kind === "COVER"
         : image.pageId === selected,
   );
   const selectedPrompts = snapshot.prompts.filter((prompt) =>
     selected === "characters"
-      ? prompt.kind === "CHARACTER_REFERENCE"
+      ? false
       : selected === "cover"
         ? prompt.kind === "COVER"
-        : prompt.slot.includes(selected),
+        : prompt.slot === `page:${selected}`,
   );
   function status(raw: string) {
     return (
@@ -162,8 +290,30 @@ export function StudioImages({
         characters.map((character) => {
           const identity = identityFor(character.characterId);
           return (
-            <article className="studio-panel" key={character.characterId}>
+            <article
+              className="studio-panel"
+              key={character.characterId}
+              id={targetElementId({
+                section: "images",
+                characterId: character.characterId,
+                control: "identity",
+              })}
+              tabIndex={-1}
+            >
               <h3>{character.displayName}</h3>
+              <p role="status">
+                {say("تعريف الشخصية: ", "Definition: ")}
+                {identity?.approvedProfile
+                  ? say("✓ معتمد", "✓ Approved")
+                  : say("يحتاج اعتماد", "Needs approval")}
+              </p>
+              <p>
+                {say(
+                  "اعتماد بيانات ومواصفات الشخصية، ثم اعتماد الصورة كمرجع ثابت لباقي صور القصة.",
+                  "Approve identity rules, then approve the sheet as the visual reference for story artwork.",
+                )}
+              </p>
+              <div id={`identity-editor-${character.characterId}`} />
               {identity && (
                 <>
                   <p>
@@ -241,133 +391,160 @@ export function StudioImages({
                   </article>
                 ))}
               </div>
+              <CharacterVisuals
+                snapshot={snapshot}
+                characterId={character.characterId}
+                busy={busy}
+                onCommand={onCommand}
+                onCopy={onCopy}
+                onRelink={onRelink}
+              />
             </article>
           );
         })}
-      {editIdentity && (
-        <section className="studio-panel">
-          <h3>{say("تعريف الشخصية", "Character definition")}</h3>
-          <p>
-            {say(
-              "تغيير التعريف ينشئ نسخة جديدة؛ راجع الصور المعتمدة التي تعتمد عليه.",
-              "Changes create a new definition revision; review artwork that depends on it.",
-            )}
-          </p>
-          <label>
-            {say("الاسم", "Name")}
-            <input
-              dir="auto"
-              value={editIdentity.name}
-              onChange={(e) =>
-                setEditIdentity({ ...editIdentity, name: e.target.value })
-              }
-            />
-          </label>
-          <label>
-            {say("درجة التشابه", "Likeness")}
-            <select
-              value={editIdentity.likeness}
-              onChange={(e) =>
-                setEditIdentity({
-                  ...editIdentity,
-                  likeness: e.target.value as IdentityPack["likeness"],
-                })
-              }
-            >
-              <option value="NATURAL">{say("تشابه طبيعي", "Natural")}</option>
-              <option value="STRONG">{say("تشابه قوي", "Strong")}</option>
-              <option value="CLOSEST">
-                {say("أقرب تطابق ممكن", "Closest possible")}
-              </option>
-            </select>
-          </label>
-          <label>
-            {say("ملاحظاتك عن الشخصية", "Your character notes")}
-            <textarea
-              dir="auto"
-              value={editIdentity.creatorNotes}
-              maxLength={4000}
-              onChange={(e) =>
-                setEditIdentity({
-                  ...editIdentity,
-                  creatorNotes: e.target.value,
-                })
-              }
-            />
-          </label>
-          <details>
-            <summary>
+      {editIdentity &&
+        typeof document !== "undefined" &&
+        document.getElementById(
+          `identity-editor-${editIdentity.characterId}`,
+        ) &&
+        createPortal(
+          <section className="studio-panel">
+            <h3>{say("تعريف الشخصية", "Character definition")}</h3>
+            <p>
               {say(
-                "التفاصيل التقنية لتعريف الشخصية",
-                "Technical character rules",
+                "تغيير التعريف ينشئ نسخة جديدة؛ راجع الصور المعتمدة التي تعتمد عليه.",
+                "Changes create a new definition revision; review artwork that depends on it.",
               )}
-            </summary>
-            {(
-              [
-                "hairRule",
-                "appearanceRule",
-                "faceRule",
-                "clothingRule",
-                "proportionsRule",
-                "accessoryRule",
-                "styleAllowance",
-              ] as const
-            ).map((key, i) => (
-              <label key={key}>
-                {
-                  [
-                    say("الشعر", "Hair"),
-                    say(
-                      "المظهر الذي يجب الحفاظ عليه",
-                      "Appearance preservation",
-                    ),
-                    say("ملامح الوجه", "Face"),
-                    say("الملابس", "Clothing"),
-                    say("نسب الجسم", "Body proportions"),
-                    say("الإكسسوارات", "Accessories"),
-                    say("التحويل إلى أسلوب الرسم", "Style transformation"),
-                  ][i]
+            </p>
+            <label>
+              {say("الاسم", "Name")}
+              <input
+                dir="auto"
+                value={editIdentity.name}
+                onChange={(e) =>
+                  setEditIdentity({ ...editIdentity, name: e.target.value })
                 }
-                <textarea
-                  dir="auto"
-                  value={editIdentity[key]}
-                  maxLength={4000}
-                  onChange={(e) =>
-                    setEditIdentity({ ...editIdentity, [key]: e.target.value })
-                  }
-                />
-              </label>
-            ))}
-          </details>
-          <div className="studio-actions">
-            <button
-              disabled={busy}
-              onClick={async () => {
-                const saved = await onCommand({
-                  ...bindings,
-                  action: "IDENTITY",
-                  identity: {
+              />
+            </label>
+            <label>
+              {say("درجة التشابه", "Likeness")}
+              <select
+                value={editIdentity.likeness}
+                onChange={(e) =>
+                  setEditIdentity({
                     ...editIdentity,
-                    revisionId: crypto.randomUUID(),
-                    approvedProfile: true,
-                  },
-                });
-                if (saved) setEditIdentity(null);
-              }}
-            >
-              {say(
-                "حفظ واعتماد تعريف الشخصية",
-                "Save and approve character definition",
-              )}
-            </button>
-            <button onClick={() => setEditIdentity(null)}>
-              {say("إلغاء", "Cancel")}
-            </button>
-          </div>
-        </section>
-      )}
+                    likeness: e.target.value as IdentityPack["likeness"],
+                  })
+                }
+              >
+                <option value="NATURAL">{say("تشابه طبيعي", "Natural")}</option>
+                <option value="STRONG">{say("تشابه قوي", "Strong")}</option>
+                <option value="CLOSEST">
+                  {say("أقرب تطابق ممكن", "Closest possible")}
+                </option>
+              </select>
+            </label>
+            <label>
+              {say("ملاحظاتك عن الشخصية", "Your character notes")}
+              <textarea
+                dir="auto"
+                value={editIdentity.creatorNotes}
+                maxLength={4000}
+                onChange={(e) =>
+                  setEditIdentity({
+                    ...editIdentity,
+                    creatorNotes: e.target.value,
+                  })
+                }
+              />
+            </label>
+            <details>
+              <summary>
+                {say(
+                  "التفاصيل التقنية لتعريف الشخصية",
+                  "Technical character rules",
+                )}
+              </summary>
+              {(
+                [
+                  "hairRule",
+                  "appearanceRule",
+                  "faceRule",
+                  "clothingRule",
+                  "proportionsRule",
+                  "accessoryRule",
+                  "styleAllowance",
+                ] as const
+              ).map((key, i) => (
+                <label key={key}>
+                  {
+                    [
+                      say("الشعر", "Hair"),
+                      say(
+                        "المظهر الذي يجب الحفاظ عليه",
+                        "Appearance preservation",
+                      ),
+                      say("ملامح الوجه", "Face"),
+                      say("الملابس", "Clothing"),
+                      say("نسب الجسم", "Body proportions"),
+                      say("الإكسسوارات", "Accessories"),
+                      say("التحويل إلى أسلوب الرسم", "Style transformation"),
+                    ][i]
+                  }
+                  <textarea
+                    dir="auto"
+                    value={editIdentity[key]}
+                    maxLength={4000}
+                    onChange={(e) =>
+                      setEditIdentity({
+                        ...editIdentity,
+                        [key]: e.target.value,
+                      })
+                    }
+                  />
+                </label>
+              ))}
+            </details>
+            <div className="studio-actions">
+              <button
+                disabled={busy}
+                onClick={async () => {
+                  const saved = await onCommand({
+                    ...bindings,
+                    action: "IDENTITY",
+                    identity: {
+                      ...editIdentity,
+                      revisionId: crypto.randomUUID(),
+                      approvedProfile: true,
+                    },
+                  });
+                  if (saved) setEditIdentity(null);
+                }}
+              >
+                {say(
+                  "حفظ واعتماد تعريف الشخصية",
+                  "Save and approve character definition",
+                )}
+              </button>
+              <button onClick={() => setEditIdentity(null)}>
+                {say("إلغاء", "Cancel")}
+              </button>
+            </div>
+          </section>,
+          document.getElementById(
+            `identity-editor-${editIdentity.characterId}`,
+          )!,
+        )}
       {selected !== "characters" && (
         <>
+          <div
+            id={targetElementId({
+              section: "images",
+              pageId: page?.pageId,
+              control: selected === "cover" ? "cover" : "image",
+            })}
+            tabIndex={-1}
+          />
           {page && (
             <article>
               <h3>
@@ -396,6 +573,14 @@ export function StudioImages({
                   ))}
               </details>
             </article>
+          )}
+          {page && (
+            <PageCompositionPlan
+              snapshot={snapshot}
+              pageId={page.pageId}
+              onCommand={onCommand}
+              busy={busy}
+            />
           )}
           <div className="studio-actions">
             <button

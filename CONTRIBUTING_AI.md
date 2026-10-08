@@ -1,5 +1,7 @@
 # Rules for future AI/Codex sessions
 
+Current authorized scope: consolidated Phase4.4.1 creator UX, visual intent and organic composition correction from471cec18/v0.7.0. Lean primary implementation and one independent QA; focused tests during waves, one consolidated final build/package validation. No owner runtime/791 corpus access, provider calls, main/tag/release/cloud before final gates and root review. See phase4.4.1-continuation.md; previous phase restrictions/routing below are historical.
+
 Current authorization override: Phase4.2.2 owner-approved writer bridge/category composition from clean e34ea7ed stable0.5.3. Docs/implementation/phase4.2.2-writer-bridge.md defines current contracts/evidence/limits. Focused checks now, one independent QA after integration and one final consolidated gate later. No release/cloud operations before new final approval; prior Phase4.2.1 authority below is historical. Preserve ownerDB,791 source rows and historical accepted hashes.
 
 Before coding: read START_HERE.md, PROJECT_CONTEXT.md, CURRENT_STATE.md, DECISIONS.md and SKILLS.md; inspect Git status and read SECURITY.md.

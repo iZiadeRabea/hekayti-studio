@@ -239,6 +239,80 @@ export const BookSettingsSchema = z
       c.addIssue({ code: "custom", message: "Margins leave no usable page." });
   });
 export type BookSettings = z.infer<typeof BookSettingsSchema>;
+export const RegionSchema = z
+  .object({
+    x: finite.min(0).max(1),
+    y: finite.min(0).max(1),
+    width: finite.min(0.01).max(1),
+    height: finite.min(0.01).max(1),
+  })
+  .strict()
+  .refine(
+    (r) => r.x + r.width <= 1.000001 && r.y + r.height <= 1.000001,
+    "Region exceeds page",
+  );
+export const VisualIntentSchema = z
+  .object({
+    pageId: Id,
+    pageNumber: z.number().int().positive(),
+    draftId: Id,
+    storyRevision: Id,
+    pageAction: text,
+    narrativePurpose: text,
+    stateChange: z.array(text).max(40),
+    charactersPresent: z.array(Id).max(20),
+    speakers: z.array(Id).max(20),
+    listeners: z.array(Id).max(20),
+    focus: text,
+    cameraFraming: text,
+    compositionHint: text,
+    continuity: z.array(text).max(40),
+    reviewRequired: z.boolean(),
+  })
+  .strict();
+export type VisualIntent = z.infer<typeof VisualIntentSchema>;
+export const CompositionPlanSchema = z
+  .object({
+    revisionId: Id,
+    pageId: Id,
+    draftId: Id,
+    storyRevision: Id,
+    mode: LanguageModeSchema,
+    imageId: Id.nullable(),
+    settings: BookSettingsSchema,
+    visual: VisualIntentSchema,
+    regions: z
+      .array(
+        z
+          .object({
+            kind: z.enum(["NARRATION", "DIALOGUE"]),
+            sourceIndex: z.number().int().nonnegative(),
+            speakerId: Id.optional(),
+            rect: RegionSchema,
+            fontPt: finite.min(14).max(60),
+          })
+          .strict(),
+      )
+      .max(21),
+    protectedRegions: z.array(RegionSchema).max(40),
+    anchors: z
+      .array(
+        z
+          .object({
+            speakerId: Id,
+            x: finite.min(0).max(1),
+            y: finite.min(0).max(1),
+          })
+          .strict(),
+      )
+      .max(20),
+    notes: z.string().max(4000),
+    repetitionOverride: z.boolean(),
+    layoutReviewRequired: z.boolean(),
+    createdAt: text,
+  })
+  .strict();
+export type CompositionPlan = z.infer<typeof CompositionPlanSchema>;
 export const AnchorSchema = z
   .object({ speakerId: Id, x: finite.min(0).max(1), y: finite.min(0).max(1) })
   .strict();
@@ -261,6 +335,7 @@ export const TextBoxSchema = z
     height: finite.min(0.03).max(1),
     fontPt: finite.min(14).max(60),
     style: z.enum(["CLEAN", "PAPER", "CAPTION", "BUBBLE"]),
+    bubbleShape: z.enum(["CLOUD", "ROUNDED", "PAPER"]).optional(),
     tail: z.enum(["NONE", "LEFT", "RIGHT", "TOP", "BOTTOM", "ANCHOR"]),
     text: z.string().max(8000),
   })
@@ -282,6 +357,8 @@ export const PageLayoutSchema = z
     imageId: Id,
     anchors: z.array(AnchorSchema).max(20),
     boxes: z.array(TextBoxSchema).min(1).max(102),
+    protectedRegions: z.array(RegionSchema).max(40).optional(),
+    compositionRevisionId: Id.optional(),
   })
   .strict();
 export type PageLayout = z.infer<typeof PageLayoutSchema>;
@@ -359,6 +436,7 @@ export const BookStateSchema = z
     storyTitles: z
       .array(z.object({ draftId: Id, title: text }).strict())
       .max(1000),
+    compositionPlans: z.array(CompositionPlanSchema).max(10000).optional(),
   })
   .strict()
   .superRefine((x, c) => {
@@ -425,10 +503,30 @@ export interface BookStudioSnapshot {
   layout: BookLayout | null;
   approved: boolean;
   notices: { code: string; text: string; pageId?: string }[];
+  compositionPlans?: CompositionPlan[];
   text?: string;
 }
-const base = { projectId: Id, expectedBook: version };
+const base = {
+  projectId: Id,
+  expectedBook: version,
+  mode: LanguageModeSchema.optional(),
+};
 export const BookCommandSchema = z.discriminatedUnion("action", [
+  z
+    .object({
+      ...base,
+      action: z.literal("PLAN_PAGE"),
+      pageId: Id,
+      settings: BookSettingsSchema.optional(),
+    })
+    .strict(),
+  z
+    .object({
+      ...base,
+      action: z.literal("SAVE_COMPOSITION"),
+      plan: CompositionPlanSchema,
+    })
+    .strict(),
   z
     .object({ ...base, action: z.literal("COPY_PROMPT"), promptId: Id })
     .strict(),

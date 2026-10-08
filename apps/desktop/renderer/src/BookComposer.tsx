@@ -8,6 +8,7 @@ import type {
   TextBox,
 } from "@hekayti/contracts/book";
 import { BookPageCanvas, type CanvasTextLayer } from "./BookPageCanvas";
+import { targetElementId, type StudioTarget } from "./studio-recovery";
 import {
   constrainCanvasRect,
   studioCharacters,
@@ -126,6 +127,8 @@ function ComposedPage({
       aspectRatio={layout.settings.widthMm / layout.settings.heightMm}
       pageWidthMm={layout.settings.widthMm}
       bookSettings={layout.settings}
+      renderLayout={layout}
+      renderPage={page}
       margin={
         layout.settings.safeMm /
         Math.min(layout.settings.widthMm, layout.settings.heightMm)
@@ -153,6 +156,7 @@ export function BookComposer({
   onExport,
   onEditStory,
   onPreview,
+  target,
 }: {
   snapshot: BookStudioSnapshot;
   busy: boolean;
@@ -160,6 +164,7 @@ export function BookComposer({
   onExport: (kind: "digital" | "print") => void;
   onEditStory: () => void;
   onPreview: () => void;
+  target?: StudioTarget;
 }) {
   const { say } = useStudioUi();
   const [layout, setLayout] = useState<BookLayout | null>(
@@ -188,6 +193,11 @@ export function BookComposer({
     expectedBook: snapshot.book.recordVersion,
   };
   const characters = studioCharacters(snapshot);
+  useEffect(() => {
+    if (target?.section !== "book" || !target.pageId) return;
+    const i = layout?.pages.findIndex((p) => p.pageId === target.pageId);
+    if (i !== undefined && i >= 0) setPageIndex(i);
+  }, [target]);
   useEffect(() => {
     setLayout(snapshot.layout ? structuredClone(snapshot.layout) : null);
     if (snapshot.layout) {
@@ -230,6 +240,11 @@ export function BookComposer({
                 ...p.anchors.filter((a) => a.speakerId !== speakerId),
                 { speakerId, ...point },
               ],
+              boxes: p.boxes.map((b) =>
+                b.speakerId === speakerId
+                  ? { ...b, tail: "ANCHOR" as const }
+                  : b,
+              ),
             }
           : p,
       ),
@@ -257,7 +272,16 @@ export function BookComposer({
     });
   }
   return (
-    <section className="studio-panel" data-testid="book-composer">
+    <section
+      className="studio-panel"
+      data-testid="book-composer"
+      id={targetElementId({
+        section: "book",
+        pageId: page?.pageId,
+        control: "layout",
+      })}
+      tabIndex={-1}
+    >
       <h2>{say("الكتاب", "Book")}</h2>
       <p>
         {say(
@@ -576,6 +600,30 @@ export function BookComposer({
                         </option>
                         <option value="CAPTION">
                           {say("تعليق بسيط", "Caption")}
+                        </option>
+                      </select>
+                    </label>
+                  )}
+                  {box.kind === "DIALOGUE" && (
+                    <label>
+                      {say("شكل فقاعة الحوار", "Speech bubble shape")}
+                      <select
+                        value={box.bubbleShape ?? "ROUNDED"}
+                        onChange={(e) =>
+                          updateBox(box.boxId, {
+                            bubbleShape: e.target
+                              .value as TextBox["bubbleShape"],
+                          })
+                        }
+                      >
+                        <option value="CLOUD">
+                          {say("سحابة ناعمة", "Soft cloud")}
+                        </option>
+                        <option value="ROUNDED">
+                          {say("مستديرة", "Rounded")}
+                        </option>
+                        <option value="PAPER">
+                          {say("قصاصة ورق", "Layered paper")}
                         </option>
                       </select>
                     </label>

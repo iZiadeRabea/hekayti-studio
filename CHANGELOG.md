@@ -1,5 +1,9 @@
 # Changelog
 
+## Phase4.4.1 creator workflow fixes —2026-10-08 (implementation checkpoint)
+
+Contextual exact recovery/progress, optional/manual-preserving ideas, character-local visuals/history, pre-art VisualIntent and text composition, repetition review, dynamic narration/cloud bubbles/protected areas, canonical anchors and shared inline/PDF renderer. Focused evidence/remaining release gates recorded in phase4.4.1-continuation.md. No stable0.7.1/release claim yet.
+
 ## Phase4.4 illustrated Story Studio —2026-10-07 (candidate0.7.0; approval pending)
 
 Arabic staged ideas/AUTO-GUIDED-CUSTOM paths, canonical editable story revisions, private local reference/identity and approved-sheet authority, scene-bound manual prompts, imported image history/selection/review, live Arabic text/bubbles/anchors/drag-resize, measured preview/book approval and digital/print PDF. Same QA closed; fresh application379/379 PASS, native synthetic flows and25 rendered PDF pages inspected. Native readable footer/cover defaults corrected without shrinking text. No third-party additions/provider API/real photos;791 unchanged. Final approval/release/source+Library recovery remain pending; see compact packet/testing.

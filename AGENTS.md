@@ -1,5 +1,7 @@
 # Hekayti Studio agent entrypoint
 
+Current authority (2026-10-08): consolidated Phase4.4.1 creator workflow fixes, baseline main471cec18 / stable0.7.0. Feature implementation authorized; root final review/release gates remain. See docs/implementation/phase4.4.1-continuation.md. Lean primary MEDIUM implementation with narrowly justified HIGH escalation; one independent QA, one consolidated near-release build/package gate. No owner runtime/corpus/private data or provider API. Previous scope/stop/routing banners below are historical and superseded only for this scope.
+
 Current authority: Phase4.3 APPROVED FOR RELEASE exact d5bbeeab217b9f05219d53219f2cabcaab0fc96a. Essential safe immutable0.6.0/private Git and mandatory source/separate791 recovery only; no optional work/postbackup source commit/tag move. Actual identity/verification requires ignored external receipt. Existing HIGH/HIGH/MEDIUM reused, zero new contexts/probes/ExtraHigh; root initial/final only. Earlier entries below are historical.
 
 Stable e34ea7edb411cc886ac910e3e723c6ed09e7e71a/v0.5.3-planner-quality/checkpoint/phase4.2.1-planner-quality-complete and verified ignored receipt backups/receipts/hekayti-studio-phase421-final-e34ea7ed.json remain preserved. Do not touch owner trial/runtime databases.

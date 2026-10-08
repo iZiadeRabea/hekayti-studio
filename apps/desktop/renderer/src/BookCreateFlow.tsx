@@ -35,7 +35,7 @@ export function BookCreateFlow({
     useState<NonNullable<SimpleCreateInput["goalPreset"]>>("SHARING");
   const [customGoal, setCustomGoal] = useState("");
   const [idea, setIdea] = useState<BookIntent["idea"]>({
-    source: "CUSTOM",
+    source: "SUGGESTED",
     text: "",
   });
   const [path, setPath] = useState<BookIntent["path"]>({
@@ -46,6 +46,24 @@ export function BookCreateFlow({
   const [characterMode, setCharacterMode] = useState("FICTIONAL");
   const [name, setName] = useState("");
   const [setting, setSetting] = useState("");
+  const [ideaMode, setIdeaMode] = useState<"AUTO" | "CHOOSE" | "MANUAL">(
+    "AUTO",
+  );
+  const [manualIdea, setManualIdea] = useState("");
+  const [ideaOffset, setIdeaOffset] = useState(0);
+  useEffect(() => {
+    if (ideaMode !== "AUTO" || !choices?.ideas.length) return;
+    const chosen = choices.ideas[ideaOffset % choices.ideas.length]!;
+    setIdea(
+      chosen.libraryRef
+        ? {
+            source: "LIBRARY",
+            text: chosen.description,
+            libraryRef: chosen.libraryRef,
+          }
+        : { source: "SUGGESTED", text: chosen.description },
+    );
+  }, [choices, ideaMode, ideaOffset]);
   useEffect(() => {
     const goals = choices?.goalChoices;
     if (goals?.length && !goals.some((item) => item.key === goal)) {
@@ -176,57 +194,79 @@ export function BookCreateFlow({
           <>
             <div className="studio-actions">
               <button
-                aria-pressed={idea.source === "SUGGESTED"}
-                onClick={() => setIdea({ ...idea, source: "SUGGESTED" })}
+                aria-pressed={ideaMode === "AUTO"}
+                onClick={() => setIdeaMode("AUTO")}
               >
-                {say("أفكار مقترحة", "Suggested ideas")}
+                {say("اقترحلي فكرة", "Suggest an idea")}
               </button>
               <button
-                aria-pressed={idea.source === "LIBRARY"}
-                onClick={() => setIdea({ ...idea, source: "LIBRARY" })}
+                aria-pressed={ideaMode === "CHOOSE"}
+                onClick={() => setIdeaMode("CHOOSE")}
               >
-                {say("فكرة من المكتبة", "Library idea")}
+                {say("اختار من الأفكار", "Choose an idea")}
               </button>
               <button
-                aria-pressed={idea.source === "CUSTOM"}
-                onClick={() => setIdea({ ...idea, source: "CUSTOM" })}
+                aria-pressed={ideaMode === "MANUAL"}
+                onClick={() => {
+                  setIdeaMode("MANUAL");
+                  setIdea({ source: "CUSTOM", text: manualIdea });
+                }}
               >
                 {say("أكتب فكرتي", "My own idea")}
               </button>
             </div>
-            {idea.source !== "CUSTOM" && (
+            {ideaMode !== "MANUAL" && (
               <div className="studio-choice-grid">
-                {choices?.ideas
-                  .filter((item) =>
-                    idea.source === "LIBRARY"
-                      ? !!item.libraryRef
-                      : !item.libraryRef,
-                  )
-                  .slice(0, 6)
-                  .map((item) => (
-                    <button
-                      key={item.key}
-                      aria-pressed={idea.text === item.description}
-                      onClick={() =>
-                        setIdea(
-                          item.libraryRef
-                            ? {
-                                source: "LIBRARY",
-                                text: item.description,
-                                libraryRef: item.libraryRef,
-                              }
-                            : { source: "SUGGESTED", text: item.description },
-                        )
-                      }
-                    >
-                      <strong>{item.title}</strong>
-                      <p>{item.description}</p>
-                      <small>
-                        {label(item.category)} · {item.ageMin}–{item.ageMax}{" "}
-                        {say("شهر", "months")}
-                      </small>
-                    </button>
-                  ))}
+                {choices?.ideas.slice(0, 6).map((item) => (
+                  <button
+                    key={item.key}
+                    aria-pressed={idea.text === item.description}
+                    onClick={() => {
+                      setIdeaMode("CHOOSE");
+                      setIdea(
+                        item.libraryRef
+                          ? {
+                              source: "LIBRARY",
+                              text: item.description,
+                              libraryRef: item.libraryRef,
+                            }
+                          : { source: "SUGGESTED", text: item.description },
+                      );
+                    }}
+                  >
+                    <strong>{item.title}</strong>
+                    <p>{item.description}</p>
+                    <small>
+                      {label(item.category)} · {item.ageMin}–{item.ageMax}{" "}
+                      {say("شهر", "months")}
+                    </small>
+                  </button>
+                ))}
+              </div>
+            )}
+            {ideaMode !== "MANUAL" && (
+              <div className="studio-actions">
+                <button
+                  onClick={() => {
+                    setIdeaMode("AUTO");
+                    setIdeaOffset(ideaOffset + 1);
+                  }}
+                >
+                  {say("فكرة تانية", "Another idea")}
+                </button>
+                <button
+                  onClick={() => {
+                    setManualIdea(idea.text);
+                    setIdeaMode("MANUAL");
+                    setIdea({
+                      ...idea,
+                      source: "CUSTOM",
+                      libraryRef: undefined,
+                    });
+                  }}
+                >
+                  {say("تعديل الفكرة", "Edit idea")}
+                </button>
               </div>
             )}
             {idea.source === "LIBRARY" && (
@@ -243,9 +283,11 @@ export function BookCreateFlow({
                 dir="auto"
                 maxLength={4000}
                 value={idea.text}
-                onChange={(e) =>
-                  setIdea({ source: "CUSTOM", text: e.target.value })
-                }
+                onChange={(e) => {
+                  setIdeaMode("MANUAL");
+                  setManualIdea(e.target.value);
+                  setIdea({ source: "CUSTOM", text: e.target.value });
+                }}
                 placeholder={say(
                   "تولين تشوف حاجة ناعمة تحت القماشة، تكشفها وتحضنها وتنام…",
                   "What would you like to happen?",

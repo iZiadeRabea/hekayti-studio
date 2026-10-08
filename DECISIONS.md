@@ -1,5 +1,11 @@
 # Architecture / product decision log
 
+## Phase4.4.1 —2026-10-08 (implementation, release pending)
+
+- Optional typed composition history in book-state/1.0 binds exact canonical page/draft/edition/art, preserving old payloads/hashes and SQLitev5. Local geometry plans precede prompts; exact authored prose outranks generic beat labels. Unknown/negated physical semantics request review instead of invented motion.
+- Renderer1.2 shares cloud/paper shapes and tails between inline preview and Chromium PDF. Shape-safe insets plus actual Noto measurements prevent rectangular-fit false passes. Modern dialogue approval requires canonical manually chosen speaker anchors; no face detection.
+- Scoped heuristic action/prop signatures preserve punctuation and supported descriptive-length compatibility; unknown prose remains conservative. Canonical dialogue bindings and layout fit still require renewed exact draft review. No provider/visual uniqueness guarantee.
+
 ## Phase4.4 —2026-10-07 (candidate; release pending)
 
 - Story/path/scene authority is additive to the canonical workflow; exact draft/image/identity/sheet/style dependencies invalidate stale approval. Asset paths stay main-only/private-local and source/ancestor-junction guards remain fail-closed.

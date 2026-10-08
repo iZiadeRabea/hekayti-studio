@@ -1,5 +1,9 @@
 # Current state
 
+## Current authority — Phase4.4.1 implementation (2026-10-08)
+
+Verified baseline: clean main471cec18cae1843b6a0e4dbf4529193773973b75 / v0.7.0-illustrated-story-studio. Current feature/phase4.4.1-creator-workflow-fixes. Consolidated owner sections0–55 authorize contextual recovery, optional ideas, individual character/page workspaces, exact prose/ledger visual plans and text-aware organic composition. Actual implementation/evidence/remaining gates: docs/implementation/phase4.4.1-continuation.md. Additive optional book-state fields preserve legacy schema/hash/history and SQLitev5; private assets/corpus remain untouched. Release and consolidated Windows/independent QA gates still pending. Earlier approval/recovery banners below are retained history.
+
 ## Current authority — Phase4.4 approved0.7.0 release, recovery pending (2026-10-07)
 
 The owner-verified stable baseline is 344fe2e8084e52a8a82582b2fa629ef035de1c7b, v0.6.0-simple-creator / checkpoint/phase4.3-simple-creator-complete. Historical preparation/backup-pending statements below are retained history, not the current release authority; the completed release receipt remains external and ignored.

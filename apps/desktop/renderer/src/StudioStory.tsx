@@ -107,6 +107,7 @@ export function StudioStory({
               disabled={
                 busy || reader.historical || !!edit || !reader.review.qaReady
               }
+              id="studio-target-approval-current"
               onClick={() =>
                 onCommand({
                   ...bindings,

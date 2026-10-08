@@ -1,5 +1,7 @@
 # Start here — new AI session
 
+Current work: owner-authorized consolidated Phase4.4.1 on feature/phase4.4.1-creator-workflow-fixes from verified clean main471cec18 / v0.7.0. Read docs/implementation/phase4.4.1-continuation.md for actual evidence/remaining gates. No release, stable tag, main integration or cloud before final review; preserve owner data and old history. Earlier phase banners below are historical.
+
 Current approved work: Phase4.3 feature/phase4.3-simple-creator, verified ad581cbc/v0.5.4 preserved. Read CURRENT_STATE.md and docs/implementation/phase4.3-backend.md first. Simple Arabic/Reader/illustration descriptions only; independent QA/final gates/release approval pending. Historical stop/release banners below are not current authority. No images/API/ownerDB/Phase5/release/cloud. Existing HIGH implementation/HIGH QA/MEDIUM UI+ops reused, no new agents.
 
 Current: Phase4.3 APPROVED FOR RELEASE exact d5bbeeab217b9f05219d53219f2cabcaab0fc96a. Essential immutable0.6.0/private Git and mandatory recovery only; actual SHA/cloud completion requires ignored external receipt. See CURRENT_STATE.md/phase4.3-release-packet.md/testing.md. Stable ad581cbc/v0.5.4 receipt preserved. Earlier entries below are historical; no postbackup source commit/tag move.

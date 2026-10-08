@@ -134,6 +134,13 @@ export function installBookRuntime(
         throw new AppError(
           "BOOK_TEXT_OVERFLOW",
           `النص طويل على المساحة الحالية في الصفحة ${measured.errors[0]!.page}. كبّر مساحة النص أو عدّله.`,
+          {
+            section: "book",
+            pageId: layout.pages.find(
+              (p) => String(p.pageNumber) === measured.errors[0]!.page,
+            )?.pageId,
+            control: "layout",
+          },
         );
       const bytes = pdf
         ? await view.webContents.printToPDF({
@@ -185,6 +192,13 @@ export function installBookRuntime(
         throw new AppError(
           "BOOK_TEXT_OVERFLOW",
           `النص طويل على المساحة الحالية في الصفحة ${result.errors[0]!.page}.`,
+          {
+            section: "book",
+            pageId: s.layout?.pages.find(
+              (p) => String(p.pageNumber) === result.errors[0]!.page,
+            )?.pageId,
+            control: "layout",
+          },
         );
       return result.fingerprint;
     },
@@ -207,6 +221,11 @@ export function installBookRuntime(
           throw new AppError(
             "BOOK_ASSET_MISSING",
             "الصورة المرجعية غير موجودة في مكانها. أعد ربط الصورة.",
+            {
+              section: "images",
+              characterId: identity.characterId,
+              control: "identity",
+            },
           );
     for (const sheetId of new Set(sheetVersions)) {
       const sheet = s.book.images.find(
@@ -216,6 +235,12 @@ export function installBookRuntime(
         throw new AppError(
           "BOOK_ASSET_MISSING",
           "مرجع شكل الشخصية المعتمد غير موجود؛ أعد ربط نفس الصورة قبل تجهيز البرومبت أو اعتماد الكتاب.",
+          {
+            section: "images",
+            characterId: sheet?.characterId,
+            imageId: sheet?.imageId,
+            control: "sheet",
+          },
         );
     }
   };
@@ -243,7 +268,7 @@ export function installBookRuntime(
   });
   handle("studio:command", async (arg) => {
     const x = BookCommandSchema.parse(arg),
-      snapshot = studio.load(x.projectId);
+      snapshot = studio.load(x.projectId, x.mode);
     if (["PROMPT", "COPY_PROMPT", "APPROVE_BOOK"].includes(x.action))
       await preflight(
         snapshot,
