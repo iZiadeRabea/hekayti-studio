@@ -2,11 +2,13 @@
 // Only file/save-dialog selections are supplied; approvals/fit/persistence are real.
 import { _electron } from "playwright";
 import { mkdtemp, writeFile, readFile, copyFile } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { join, resolve, dirname, basename } from "node:path";
 import { tmpdir } from "node:os";
 import assert from "node:assert/strict";
 import { deflateSync } from "node:zlib";
-const data = await mkdtemp(join(tmpdir(), "hekayti-readiness-native-"));
+const resume = process.argv.find((arg) => arg.startsWith("--resume="))?.slice(9);
+if (resume) assert.ok(dirname(resolve(resume)) === resolve(tmpdir()) && basename(resume).startsWith("hekayti-readiness-native-"), "Resume only this harness's isolated synthetic OS-temp fixture");
+const data = resume ? resolve(resume) : await mkdtemp(join(tmpdir(), "hekayti-readiness-native-"));
 const packaged = process.argv.includes("--packaged");
 function crc32(bytes) {
   let v = 0xffffffff;
@@ -91,7 +93,7 @@ const reject = async (method, input, code) => {
 };
 const button = (name) => page.getByRole("button", { name, exact: true });
 const idle = () => page.waitForFunction(() => ![...document.querySelectorAll(".studio-project-nav button")].some((button) => button.disabled));
-let s;
+let s, projectId, edition;
 const command = async (input) => {
   s = await call("studioCommand", {
     projectId: s.book.projectId,
@@ -110,6 +112,7 @@ const choose = () =>
   }, art);
 try {
   await page.waitForLoadState("domcontentloaded");
+  if (!resume) {
   await button("تجهيز مكتبة الإلهام").click();
   await page.getByTestId("book-create-flow").waitFor();
   // Real wizard: default automatic idea, no story idea typed.
@@ -155,7 +158,7 @@ try {
       length: "AUTO",
     },
   });
-  const projectId = s.book.projectId;
+  projectId = s.book.projectId;
   await command({ action: "PREPARE_WRITER" });
   assert.ok(s.identities.length >= 2, "Two independently approved characters required");
   const speaker = s.identities[0].name, listener = s.identities[1].name;
@@ -181,8 +184,8 @@ try {
     }),
   });
   s = await call("studioLoad", { projectId });
-  const edition = s.session.workflow.drafts.at(-1).editions[0],
-    pageId = edition.pages[4].pageId;
+  edition = s.session.workflow.drafts.at(-1).editions[0];
+  const pageId = edition.pages[4].pageId;
   assert.equal(edition.pages.length, 16);
   await command({ action: "PLAN_PAGE", pageId });
   let plan = s.compositionPlans.at(-1);
@@ -417,14 +420,28 @@ try {
   await button("فحص الكتاب قبل التصدير").click();
   await page.getByText("جاهز للتصدير الرقمي والطباعة", { exact: true }).waitFor();
   gates.push("Actual UI cover+16 storyboard canonical order/exact page and final review measured ready with nonblocking warnings");
+  } else {
+    const list = await call("simpleList", { query: "", offset: 0, limit: 20 });
+    for (const row of list.stories) {
+      const candidate = await call("studioLoad", { projectId: row.projectId });
+      if (candidate.layout?.pages.length === 17 && candidate.identities.length >= 2) { assert.equal(s, undefined, "Only one complete synthetic fixture"); s = candidate; }
+    }
+    assert.ok(s?.approved);
+    projectId = s.book.projectId;
+    edition = s.session.workflow.drafts.at(-1).editions.find((e) => e.mode === "ar-EG");
+    assert.equal(edition.pages.length, 16);
+    await button("كتبي").click(); await button("فتح الكتاب").first().click();
+    gates.push("Segmented native continuation of saved synthetic16-page fixture; earlier completed gates recorded in predecessor native log, not repeated here");
+  }
   s = await call("studioLoad", { projectId });
   await button("تنسيق الكتاب").click();
   const composer = page.getByTestId("book-composer");
-  await composer.getByLabel("الصفحة", { exact: true }).selectOption("3");
+  await composer.getByLabel(/^الصفحة/).selectOption("3");
   await idle();
   s = await call("studioLoad", { projectId });
   assert.equal(s.book.creatorProgress.pageId, edition.pages[2].pageId);
   const coverSubtitle = composer.getByLabel("عنوان فرعي للغلاف — اختياري", { exact: true });
+  await composer.locator("summary").click();
   const savedSubtitle = await coverSubtitle.inputValue();
   await coverSubtitle.fill("تعديل محلي غير محفوظ");
   await page.getByText("هناك تعديلات تنسيق لم تُحفظ. ارجع إلى تنسيق الكتاب واحفظها قبل الفحص أو التصدير؛ تعديلاتك باقية.", { exact: false }).waitFor();
@@ -485,7 +502,7 @@ try {
     "Actual process reopen preserves optional plans/history/override/art/layout/approval",
   );
   await button("كتبي").click(); await button("فتح الكتاب").first().click();
-  assert.equal(await page.getByTestId("book-composer").getByLabel("الصفحة", { exact: true }).inputValue(), "3");
+  assert.equal(await page.getByTestId("book-composer").getByLabel(/^الصفحة/).inputValue(), "3");
   assert.equal(await page.getByTestId("book-composer").getByLabel("عنوان فرعي للغلاف — اختياري", { exact: true }).inputValue(), "عنوان محفوظ لاختبار الاستعادة");
   gates.push("Actual UI saved canonical composer page3 resumes after process reopen");
   for (const kind of ["digital", "print"]) {
@@ -508,6 +525,7 @@ try {
       {
         data,
         packaged,
+        segmented: !!resume,
         gates,
         artQuality:
           "Blank synthetic fixture; no external art/photolikeness certification",
