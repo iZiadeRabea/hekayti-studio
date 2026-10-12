@@ -70,6 +70,33 @@ after cleanup. It does not mount React or establish native effect/event timing.
 Implementation owns the real mode-toggle/subtitle-retention native evidence and
 the new frozen final Run. No additional broad checks or dependencies were added.
 
+Necessary H1 trapped-settings extension: the early native fixture exposed a real
+HIGH path, not merely fixture ordering. Subtitle/brand/size were editable before
+any layout existed, but Save layout required a layout; the new home/mode guards
+therefore left no safe exit without finishing artwork or restarting. There was
+no discard/cancel or separate settings save. The explicit local discard fix is
+CLOSED: the shared dirty warning outside both layout/no-layout branches offers
+Discard, an explanation, Confirm, and Keep edits. Confirmation clones the latest
+saved layout or returns to no layout/default settings/empty subtitle and brand;
+it clears pending local selection, anchor, overflow and dirty state. It sends no
+command and does not mutate book history or approvals. Busy state blocks discard;
+Keep only dismisses confirmation and retains edits. Same-QA placement follow-up
+caught an initial implementation that offered discard only under `!layout`; the
+controls were moved to the shared dirty warning, also allowing escape from
+existing unsavable edits.
+
+Focused handler closure command:
+`node --import tsx --test --test-name-pattern 'actual (explicit discard|parent mode-switch|header navigation)' tests/app/readiness-independent-qa.test.ts`
+is freshly 3/3 PASS, zero skipped/cancelled, 0.90 seconds. Actual extracted discard
+body is evaluated for no-layout/saved-layout/busy cases; saved state/history is
+unchanged, editable layout is cloned, defaults/restored fields are exact, and no
+persistence/approval ports are available. Actual header/mode handler cases also
+pass, including clean guard registration after dirty=false and cleanup. This is
+source/handler evidence, not mounted React timing proof. Implementation owns the
+early-edit→guard→Keep→Confirm→unchanged-book-version→Advanced native escape and
+saved-layout restoration native cases. The application Run was stopped before
+the discard production change; a new frozen-source final run remains required.
+
 The independent cases verify:
 
 - Fully approved canonical story/sheet/art/layout authority still cannot claim

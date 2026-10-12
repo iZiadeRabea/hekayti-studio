@@ -211,28 +211,37 @@ try {
   await button("كتبي").click();
   await button("فتح الكتاب").first().click();
   await button("تنسيق الكتاب").click();
-  const subtitle = page.getByLabel("عنوان فرعي للغلاف — اختياري", {
-    exact: true,
-  });
-  const originalSubtitle = await subtitle.inputValue();
-  await subtitle.fill("عنوان مؤقت غير محفوظ");
+  const initialSubtitle = page.getByLabel("عنوان فرعي للغلاف — اختياري", { exact: true });
+  const initialSavedSubtitle = await initialSubtitle.inputValue();
+  await initialSubtitle.fill("عنوان مؤقت غير محفوظ");
   await button("ترتيب تلقائي").click();
   await page.locator(".studio-local-error").getByRole("button").click();
   await page.waitForFunction(
     () => document.activeElement?.id === "studio-target-approval-current",
   );
   await button("العودة إلى الكتاب").click();
-  assert.equal(await subtitle.inputValue(), "عنوان مؤقت غير محفوظ");
-  await subtitle.fill(originalSubtitle);
-  await page.waitForFunction(() => !document.querySelector('.studio-warning')?.textContent?.includes('هناك تعديلات تنسيق لم تُحفظ'));
+  assert.equal(await initialSubtitle.inputValue(), "عنوان مؤقت غير محفوظ");
+  await button("كتبي").click(); await idle();
+  await page.getByTestId("creator-mode-switch").click();
+  assert.equal(await page.getByTestId("creator-mode").getAttribute("data-mode"), "SIMPLE");
+  assert.equal(await initialSubtitle.inputValue(), "عنوان مؤقت غير محفوظ");
+  await button("تجاهل التعديلات غير المحفوظة").click();
+  await button("الاحتفاظ بالتعديلات").click();
+  assert.equal(await initialSubtitle.inputValue(), "عنوان مؤقت غير محفوظ");
+  const beforeDiscard = await call("studioLoad", { projectId });
+  await button("تجاهل التعديلات غير المحفوظة").click();
+  await button("تأكيد تجاهل التعديلات").click();
+  assert.equal(await initialSubtitle.inputValue(), initialSavedSubtitle);
+  assert.equal((await call("studioLoad", { projectId })).book.recordVersion, beforeDiscard.book.recordVersion);
+  await page.getByTestId("creator-mode-switch").click();
+  assert.equal(await page.getByTestId("creator-mode").getAttribute("data-mode"), "ADVANCED");
+  await page.getByTestId("creator-mode-switch").click();
+  await button("كتبي").click(); await button("فتح الكتاب").first().click();
   gates.push(
-    "Real IPC story approval recovery exact focus and unsaved subtitle return",
+    "Actual UI prelayout dirty header/Advanced retention, keep edits, explicit local discard without history mutation, clean Advanced escape and exact approval-error recovery",
   );
   s = await call("studioLoad", { projectId });
-  await command({
-    action: "APPROVE_STORY",
-    draftId: s.session.workflow.current.draftId,
-  });
+  await command({ action: "APPROVE_STORY", draftId: s.session.workflow.current.draftId });
   const missing = await reject(
     "studioCommand",
     {
@@ -433,16 +442,28 @@ try {
   await button("الشخصيات").first().click();
   await button("العودة إلى التعديلات").click();
   assert.equal(await coverSubtitle.inputValue(), "تعديل محلي غير محفوظ");
-  await coverSubtitle.fill(savedSubtitle);
+  await button("تجاهل التعديلات غير المحفوظة").click();
+  await button("تأكيد تجاهل التعديلات").click();
+  assert.equal(await coverSubtitle.inputValue(), savedSubtitle);
+  await coverSubtitle.fill("عنوان محفوظ لاختبار الاستعادة");
+  const narrationHitbox = composer.locator(".book-text-layer.narration").first();
+  const dragRect = await narrationHitbox.boundingBox();
+  assert.ok(dragRect);
+  await page.mouse.move(dragRect.x + dragRect.width / 2, dragRect.y + dragRect.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(dragRect.x + dragRect.width / 2 + 3, dragRect.y + dragRect.height / 2, { steps: 3 });
+  await page.mouse.up();
   await button("حفظ التصميم").click();
   await button("اعتماد الكتاب").click();
   await idle();
   s = await call("studioLoad", { projectId });
   assert.equal(s.approved, true);
+  assert.equal(s.layout.subtitle, "عنوان محفوظ لاختبار الاستعادة");
   gates.push("Actual UI final review/header/Advanced switch cannot bypass unsaved composer edits; navigate/return retains edits and explicit save/approval restores readiness");
   await command({ action: "SAVE_PROGRESS", progress: { section: "book", pageId: edition.pages[2].pageId, control: "layout", autoAdvance: false } });
   const bookVersion = s.book.recordVersion,
-    history = s.book.compositionPlans.length;
+    history = s.book.compositionPlans.length,
+    savedGeometry = JSON.stringify(s.layout.pages[3]);
   await app.close();
   app = await launch();
   page = await app.firstWindow();
@@ -452,6 +473,8 @@ try {
   assert.equal(s.book.recordVersion, bookVersion);
   assert.equal(s.book.creatorProgress.pageId, edition.pages[2].pageId);
   assert.equal(s.book.creatorProgress.autoAdvance, false);
+  assert.equal(s.layout.subtitle, "عنوان محفوظ لاختبار الاستعادة");
+  assert.equal(JSON.stringify(s.layout.pages[3]), savedGeometry);
   assert.equal(s.book.compositionPlans.length, history);
   assert.equal(
     s.book.compositionPlans.find((p) => p.repetitionOverride).visual
@@ -463,6 +486,7 @@ try {
   );
   await button("كتبي").click(); await button("فتح الكتاب").first().click();
   assert.equal(await page.getByTestId("book-composer").getByLabel("الصفحة", { exact: true }).inputValue(), "3");
+  assert.equal(await page.getByTestId("book-composer").getByLabel("عنوان فرعي للغلاف — اختياري", { exact: true }).inputValue(), "عنوان محفوظ لاختبار الاستعادة");
   gates.push("Actual UI saved canonical composer page3 resumes after process reopen");
   for (const kind of ["digital", "print"]) {
     const path = join(data, `synthetic-native-${kind}.pdf`);

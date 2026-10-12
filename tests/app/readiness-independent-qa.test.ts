@@ -200,3 +200,31 @@ test("actual parent mode-switch handler honors dirty guard and clears it after s
   cleanCleanup(); assert.equal(guard.current, undefined);
   click("SIMPLE"); assert.equal(mode, "SIMPLE"); assert.equal(stored, "SIMPLE"); assert.equal(saves, 2);
 });
+
+test("actual explicit discard restores only local edits with no layout, saved layout and busy guard", () => {
+  const source = readFileSync("apps/desktop/renderer/src/BookComposer.tsx", "utf8").replace(/\r\n/g, "\n");
+  const handler = /function discardLocalChanges\(\) \{([\s\S]*?)\n  \}/.exec(source)?.[1];
+  assert.ok(handler);
+  const dirtyWarning = source.slice(source.indexOf("{dirty && ("), source.indexOf("{snapshot.approved", source.indexOf("{dirty && (")));
+  assert.match(dirtyWarning, /Confirm discard changes/);
+  assert.match(dirtyWarning, /onClick=\{discardLocalChanges\}/);
+  assert.match(dirtyWarning, /onClick=\{\(\) => setDiscardPending\(false\)\}/);
+  assert.match(dirtyWarning, /disabled=\{busy\}/);
+  const saved = { subtitle: "saved-subtitle", brand: "saved-brand", settings: { preset: "CUSTOM", widthMm: 148, heightMm: 210, safeMm: 12, gutterMm: 4, bleedMm: 3, pageNumbers: true }, pages: [{ pageId: "page-three", boxes: [{ x: .1, text: "saved-canonical-text" }] }] };
+  for (const layout of [null, saved]) for (const busy of [false, true]) {
+    const snapshot = { layout, book: { approvals: ["retained-approval"], decisions: ["retained-image-decision"] } };
+    const before = JSON.stringify(snapshot);
+    const state: Record<string, unknown> = { layout: "pending-layout", settings: "pending-settings", subtitle: "pending-subtitle", brand: "pending-brand", selected: "pending-box", anchor: "pending-anchor", overflow: ["pending-overflow"], dirty: true, discardPending: true };
+    const ports = { snapshot, busy, structuredClone, setLayout: (v: unknown) => { state.layout = v; }, setSettings: (v: unknown) => { state.settings = v; }, setSubtitle: (v: unknown) => { state.subtitle = v; }, setBrand: (v: unknown) => { state.brand = v; }, setSelected: (v: unknown) => { state.selected = v; }, setAnchorSpeaker: (v: unknown) => { state.anchor = v; }, setOverflow: (v: unknown) => { state.overflow = v; }, setDirty: (v: unknown) => { state.dirty = v; }, setDiscardPending: (v: unknown) => { state.discardPending = v; } };
+    const js = transformSync(`const discard = () => { ${handler} };`, { loader: "ts", target: "es2022" }).code + "\nreturn discard;";
+    (new Function(...Object.keys(ports), js)(...Object.values(ports)) as () => void)();
+    assert.equal(JSON.stringify(snapshot), before, "no saved history/source mutation");
+    if (busy) { assert.equal(state.dirty, true); assert.equal(state.subtitle, "pending-subtitle"); assert.equal(state.discardPending, true); continue; }
+    assert.deepEqual(state.layout, layout); if (layout) assert.notEqual(state.layout, layout, "editable layout must be cloned");
+    assert.deepEqual(state.settings, layout?.settings ?? { preset: "SQUARE", widthMm: 200, heightMm: 200, safeMm: 12, gutterMm: 0, bleedMm: 3, pageNumbers: true });
+    assert.equal(state.subtitle, layout?.subtitle ?? ""); assert.equal(state.brand, layout?.brand ?? "");
+    assert.equal(state.dirty, false); assert.equal(state.discardPending, false);
+    assert.equal(state.selected, undefined); assert.equal(state.anchor, undefined); assert.deepEqual(state.overflow, []);
+    // No command/approval/persistence ports are supplied: invoking one fails.
+  }
+});

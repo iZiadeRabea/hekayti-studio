@@ -194,6 +194,19 @@ export function BookComposer({
   const [anchorSpeaker, setAnchorSpeaker] = useState<string>();
   const [overflow, setOverflow] = useState<string[]>([]);
   const [dirty, setDirty] = useState(false);
+  const [discardPending, setDiscardPending] = useState(false);
+  function discardLocalChanges() {
+    if (busy) return;
+    setLayout(snapshot.layout ? structuredClone(snapshot.layout) : null);
+    setSettings(snapshot.layout?.settings ?? { preset: "SQUARE", widthMm: 200, heightMm: 200, safeMm: 12, gutterMm: 0, bleedMm: 3, pageNumbers: true });
+    setSubtitle(snapshot.layout?.subtitle ?? "");
+    setBrand(snapshot.layout?.brand ?? "");
+    setSelected(undefined);
+    setAnchorSpeaker(undefined);
+    setOverflow([]);
+    setDirty(false);
+    setDiscardPending(false);
+  }
   useEffect(() => { onDirtyChange?.(dirty); }, [dirty, onDirtyChange]);
   const bindings = {
     projectId: snapshot.book.projectId,
@@ -215,6 +228,7 @@ export function BookComposer({
       setBrand(snapshot.layout.brand);
     }
     setDirty(false);
+    setDiscardPending(false);
     setOverflow([]);
   }, [snapshot.layout?.revisionId]);
   const page =
@@ -735,12 +749,17 @@ export function BookComposer({
         </>
       )}
       {dirty && (
-        <p className="studio-warning">
+        <div className="studio-warning">
           {say(
             "هناك تعديلات تصميم لم تُحفظ. احفظها وراجعها قبل اعتماد الكتاب.",
             "Layout changes are unsaved. Save and review before approving.",
           )}
-        </p>
+          {!discardPending ? <button disabled={busy} onClick={() => setDiscardPending(true)}>{say("تجاهل التعديلات غير المحفوظة", "Discard unsaved changes")}</button> : <>
+            <p>{say("سيتم تجاهل تعديلات التنسيق المحلية فقط والعودة إلى آخر نسخة محفوظة. لن تتغير الصور أو القصة أو سجل الاعتمادات.", "Discard only local layout edits and return to the last saved version. Images, story and approval history will not change.")}</p>
+            <button disabled={busy} onClick={discardLocalChanges}>{say("تأكيد تجاهل التعديلات", "Confirm discard changes")}</button>
+            <button disabled={busy} onClick={() => setDiscardPending(false)}>{say("الاحتفاظ بالتعديلات", "Keep edits")}</button>
+          </>}
+        </div>
       )}
       <p>
         {snapshot.approved
