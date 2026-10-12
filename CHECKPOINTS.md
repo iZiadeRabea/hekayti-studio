@@ -56,3 +56,5 @@ Create named checkpoints with scripts/checkpoint.ps1. Commit the ledger before c
 - 2026-10-07 14:17:43 +03:00 — checkpoint/phase4.4-illustrated-story-studio-complete; branch main; stable tag: v0.7.0-illustrated-story-studio. Resolve SHA from immutable Git tag. Tests/health passed before commit.
 
 - 2026-10-08 11:26:49 +03:00 — checkpoint/phase4.4.1-creator-workflow-fixes-complete; branch main; stable tag: v0.7.1-creator-workflow-fixes. Resolve SHA from immutable Git tag. Tests/health passed before commit.
+
+- 2026-10-12 23:04:33 +03:00 — checkpoint/final-product-readiness-complete; branch main; stable tag: v0.7.2-release-candidate. Resolve SHA from immutable Git tag. Tests/health passed before commit.
