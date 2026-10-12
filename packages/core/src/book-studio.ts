@@ -382,6 +382,8 @@ export function validateLayoutSources(
       page.boxes.filter((x) => x.kind === "TITLE").length !== 1
     )
       fail();
+    if (index === 0 && enforceGeometry && (["SUBTITLE", "BRAND"] as const).some((kind) => page.boxes.filter((box) => box.kind === kind).length !== (kind === "SUBTITLE" ? (l.subtitle ? 1 : 0) : (l.brand ? 1 : 0))))
+      throw new AppError("BOOK_COVER_TEXT", "نص العنوان الفرعي أو سطر الكاتب لا يطابق طبقات الغلاف؛ احفظ التنسيق لإضافته أو حذفه، ثم راجع الغلاف.", { section: "book", control: "cover" });
     if (source) {
       if (
         page.boxes.filter((x) => x.kind === "NARRATION").length !==
@@ -1632,6 +1634,22 @@ export class BookStudioService {
         revisionId: this.seam.id(),
         createdAt: this.seam.now(),
       });
+      // Synchronize editable cover metadata without rebuilding manually placed pages.
+      const cover = layout.pages[0];
+      if (cover) {
+        const safeX = (layout.settings.safeMm + layout.settings.gutterMm) / layout.settings.widthMm,
+          safeY = layout.settings.safeMm / layout.settings.heightMm;
+        for (const kind of ["TITLE", "SUBTITLE", "BRAND"] as const) {
+          const text = kind === "TITLE" ? layout.title : kind === "SUBTITLE" ? layout.subtitle : layout.brand;
+          if (kind !== "TITLE" && !text) { cover.boxes = cover.boxes.filter((box) => box.kind !== kind); continue; }
+          const existing = cover.boxes.filter((box) => box.kind === kind);
+          if (existing.length) { for (const box of existing) box.text = text; continue; }
+          if (kind === "TITLE") continue; // The authoritative validator requires the existing title.
+          const height = kind === "SUBTITLE" ? Math.max(0.12, 24 / layout.settings.heightMm) : Math.max(0.14, 28 / layout.settings.heightMm),
+            y = kind === "SUBTITLE" ? Math.max(0.26, safeY + Math.max(0.18, 36 / layout.settings.heightMm) + 4 / layout.settings.heightMm) : Math.min(0.78, 1 - safeY - height - 1 / layout.settings.heightMm);
+          cover.boxes.push({ boxId: this.seam.id(), kind, sourceIndex: 0, x: safeX, y, width: 1 - safeX - layout.settings.safeMm / layout.settings.widthMm, height, fontPt: w.requests.at(-1)!.ageMonths < 12 ? 26 : 20, style: "PAPER", tail: "NONE", text });
+        }
+      }
       validateLayoutSources(layout, b, w);
       if (layout.draftId !== w.current.draftId)
         throw new AppError("BOOK_LAYOUT_STALE", "اختر القصة الحالية للتصميم.");

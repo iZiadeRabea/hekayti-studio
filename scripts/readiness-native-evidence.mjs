@@ -471,11 +471,20 @@ try {
   await page.mouse.move(dragRect.x + dragRect.width / 2 + 3, dragRect.y + dragRect.height / 2, { steps: 3 });
   await page.mouse.up();
   await button("حفظ التصميم").click();
+  await idle();
+  s = await call("studioLoad", { projectId });
+  assert.equal(s.approved, false);
+  await button("مراجعة نهائية").click();
+  await button("فحص الكتاب قبل التصدير").click();
+  await page.getByText("الكتاب الحالي يحتاج مراجعة واعتمادًا صريحًا بعد حفظ التنسيق.", { exact: false }).waitFor();
+  assert.equal(await button("تصدير رقمي").isDisabled(), true);
+  await button("تنسيق الكتاب").click(); await idle();
   await button("اعتماد الكتاب").click();
   await idle();
   s = await call("studioLoad", { projectId });
   assert.equal(s.approved, true);
   assert.equal(s.layout.subtitle, "عنوان محفوظ لاختبار الاستعادة");
+  assert.equal(s.layout.pages[0].boxes.find((box) => box.kind === "SUBTITLE")?.text, s.layout.subtitle);
   gates.push("Actual UI final review/header/Advanced switch cannot bypass unsaved composer edits; navigate/return retains edits and explicit save/approval restores readiness");
   await command({ action: "SAVE_PROGRESS", progress: { section: "book", pageId: edition.pages[2].pageId, control: "layout", autoAdvance: false } });
   const bookVersion = s.book.recordVersion,

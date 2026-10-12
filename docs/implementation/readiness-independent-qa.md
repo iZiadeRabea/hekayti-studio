@@ -97,6 +97,27 @@ early-edit→guard→Keep→Confirm→unchanged-book-version→Advanced native e
 saved-layout restoration native cases. The application Run was stopped before
 the discard production change; a new frozen-source final run remains required.
 
+Necessary cover-output fidelity extension: a newly entered subtitle/brand could
+previously persist as metadata without a cover text layer and disappear from the
+PDF. This correction is CLOSED by exact SAVE_LAYOUT diff review and focused
+`--test-name-pattern 'cover metadata add/change/remove'`: 1/1 PASS, zero
+skipped/cancelled, 12.23 seconds. The real canonical service test starts from an
+approved synthetic book and verifies title/subtitle/brand add/change/remove,
+metadata/layer agreement in shared digital and print HTML, preserved manually
+adjusted geometry/box identity, unchanged body pages, cloned caller input,
+append-only retained layout history and unchanged approval history. Saving clears
+current approval status rather than approving automatically. Unsafe new-layer
+placement fails geometry validation without any book/history mutation.
+
+New optional cover-layer cardinality applies only to fresh geometry/source
+validation. The test verifies the historical `enforceGeometry=false` read
+validator still accepts retained metadata without a layer, while fresh validation
+rejects it with actionable `BOOK_COVER_TEXT` targeting Book/cover. This evidence
+does not claim actual legacy native reopen or font/Chromium/PDF measurement;
+implementation owns the packaged correction and actual cover PDF regeneration,
+render/visual inspection and subsequent frozen application proof. No broad QA
+run/build was performed for this closure.
+
 The independent cases verify:
 
 - Fully approved canonical story/sheet/art/layout authority still cannot claim

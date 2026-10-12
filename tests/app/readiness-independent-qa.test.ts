@@ -5,7 +5,7 @@ import { SqliteProjectRepository } from "@hekayti/persistence";
 import { StoryWorkflowService } from "@hekayti/core/workflow";
 import { StoryPlannerService } from "@hekayti/core/planner";
 import { SimpleCreatorService } from "@hekayti/core/creator";
-import { BookStudioService, inspectBookReadiness, readinessSourceKey } from "@hekayti/core/book";
+import { BookStudioService, inspectBookReadiness, readinessSourceKey, validateLayoutSources } from "@hekayti/core/book";
 import { MockStoryConceptProvider } from "@hekayti/core/story";
 import { MockStoryDraftProvider } from "@hekayti/core/language";
 import { importLibraryBatch, parseLibraryBatch } from "@hekayti/core/creative";
@@ -16,6 +16,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { BookComposer } from "../../apps/desktop/renderer/src/BookComposer";
 import { UiLanguageProvider } from "../../apps/desktop/renderer/src/UiLanguage";
 import { transformSync } from "esbuild";
+import { bookHtml } from "@hekayti/export";
 
 // Canonical/service authority only: asset manifests and render fingerprint are
 // controlled ports, not real media availability or native Chromium evidence.
@@ -227,4 +228,55 @@ test("actual explicit discard restores only local edits with no layout, saved la
     assert.equal(state.selected, undefined); assert.equal(state.anchor, undefined); assert.deepEqual(state.overflow, []);
     // No command/approval/persistence ports are supplied: invoking one fails.
   }
+});
+
+test("cover metadata add/change/remove reaches shared output while preserving manual geometry and legacy history", async () => {
+  const h = await fixture();
+  try {
+    const history = canonicalJson(h.s.book.layouts);
+    const approvals = canonicalJson(h.s.book.approvals);
+    const pages = canonicalJson(h.s.layout!.pages.slice(1));
+    const input = structuredClone(h.s.layout!);
+    input.title = "عنوان الغلاف الجديد"; input.subtitle = "عنوان فرعي ظاهر"; input.brand = "الكاتب التجريبي";
+    const title = input.pages[0]!.boxes.find((b) => b.kind === "TITLE")!;
+    title.x += .01; title.width -= .01;
+    const originalInput = canonicalJson(input);
+    let s = await h.run({ action: "SAVE_LAYOUT", layout: input });
+    assert.equal(canonicalJson(input), originalInput, "saving must not mutate the caller or historic payload");
+    assert.equal(canonicalJson(s.book.layouts.slice(0, h.s.book.layouts.length)), history);
+    assert.equal(canonicalJson(s.book.approvals), approvals); assert.equal(s.approved, false);
+    assert.equal(canonicalJson(s.layout!.pages.slice(1)), pages);
+    const texts = s.layout!.pages[0]!.boxes;
+    assert.deepEqual(texts.find((b) => b.kind === "TITLE"), { ...title, text: input.title });
+    for (const kind of ["SUBTITLE", "BRAND"] as const) assert.equal(texts.filter((b) => b.kind === kind).length, 1);
+    for (const kind of ["digital", "print"] as const) {
+      const html = bookHtml(s.layout!, kind, { arabic: "YQ==", latin: "Yg==" }, Object.fromEntries(s.layout!.pages.map((p) => [p.imageId, "data:image/png;base64,YQ=="])));
+      assert.ok(html.includes(input.title)); assert.ok(html.includes(input.subtitle)); assert.ok(html.includes(input.brand));
+    }
+    const changed = structuredClone(s.layout!);
+    changed.title = "عنوان معدل"; changed.subtitle = "عنوان فرعي معدل"; changed.brand = "سطر كاتب معدل";
+    const subtitle = changed.pages[0]!.boxes.find((b) => b.kind === "SUBTITLE")!;
+    subtitle.x += .01; subtitle.width -= .01;
+    const expectedGeometry = { ...subtitle, text: changed.subtitle };
+    s = await h.run({ action: "SAVE_LAYOUT", layout: changed });
+    assert.deepEqual(s.layout!.pages[0]!.boxes.find((b) => b.kind === "SUBTITLE"), expectedGeometry);
+    assert.equal(s.layout!.pages[0]!.boxes.find((b) => b.kind === "BRAND")!.text, changed.brand);
+    const removed = structuredClone(s.layout!); removed.subtitle = ""; removed.brand = "";
+    s = await h.run({ action: "SAVE_LAYOUT", layout: removed });
+    assert.equal(s.layout!.pages[0]!.boxes.some((b) => b.kind === "SUBTITLE" || b.kind === "BRAND"), false);
+    assert.equal(s.layout!.pages[0]!.boxes.find((b) => b.kind === "TITLE")!.text, changed.title);
+    assert.equal(canonicalJson(s.book.approvals), approvals);
+
+    const legacy = structuredClone(h.s.layout!); legacy.subtitle = "historic metadata without a layer";
+    assert.doesNotThrow(() => validateLayoutSources(legacy, h.s.book, h.s.session.workflow, false));
+    assert.throws(() => validateLayoutSources(legacy, h.s.book, h.s.session.workflow, true), (e: unknown) => {
+      const error = e as { code: string; target?: { section: string; control: string } };
+      return error.code === "BOOK_COVER_TEXT" && error.target?.section === "book" && error.target.control === "cover";
+    });
+    const unsafe = structuredClone(s.layout!); unsafe.subtitle = "requires safe placement";
+    const unsafeTitle = unsafe.pages[0]!.boxes.find((b) => b.kind === "TITLE")!; unsafeTitle.height = .4;
+    const beforeReject = canonicalJson(h.studio.load(s.book.projectId).book);
+    await assert.rejects(h.run({ action: "SAVE_LAYOUT", layout: unsafe }), (e: unknown) => (e as { code: string }).code === "BOOK_LAYOUT_GEOMETRY");
+    assert.equal(canonicalJson(h.studio.load(s.book.projectId).book), beforeReject, "unsafe cover must fail without saved-history mutation");
+  } finally { h.repo.close(); }
 });
