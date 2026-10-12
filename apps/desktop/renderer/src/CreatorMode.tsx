@@ -1,7 +1,9 @@
-import { useState, type ReactNode } from "react";
+import { createContext, useContext, useRef, useState, type ReactNode } from "react";
 import { useCreatorUi } from "./creator-ui";
 export type CreatorMode = "SIMPLE" | "ADVANCED";
 export const CREATOR_MODE_KEY = "hekayti.creatorMode";
+export const CreatorModeLeaveGuard = createContext<React.MutableRefObject<(() => boolean) | undefined> | undefined>(undefined);
+export function useCreatorModeLeaveGuard() { return useContext(CreatorModeLeaveGuard); }
 export function readCreatorMode(
   storage?: Pick<Storage, "getItem">,
 ): CreatorMode {
@@ -38,16 +40,18 @@ export function CreatorModeShell({
   advanced: ReactNode;
 }) {
   const { c } = useCreatorUi();
+  const leaveGuard = useRef<(() => boolean) | undefined>(undefined);
   const [mode, setMode] = useState<CreatorMode>(() =>
     readCreatorMode(localStorageOrUndefined()),
   );
   const next = mode === "SIMPLE" ? "ADVANCED" : "SIMPLE";
   return (
-    <>
+    <CreatorModeLeaveGuard.Provider value={leaveGuard}>
       <div className="creator-mode-switch" aria-label={c("Creator modes")}>
         <button
           data-testid="creator-mode-switch"
           onClick={() => {
+            if (leaveGuard.current && !leaveGuard.current()) return;
             saveCreatorMode(next, localStorageOrUndefined());
             setMode(next);
           }}
@@ -58,6 +62,6 @@ export function CreatorModeShell({
       <div data-testid="creator-mode" data-mode={mode}>
         {mode === "SIMPLE" ? simple : advanced}
       </div>
-    </>
+    </CreatorModeLeaveGuard.Provider>
   );
 }

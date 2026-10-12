@@ -170,3 +170,33 @@ test("actual header navigation handler preserves dirty composer for every unmoun
   const books = await invoke(false, "books"); assert.equal(books.home, "books"); assert.equal(books.lists, 1);
   const fresh = await invoke(false, "new"); assert.equal(fresh.current, null); assert.equal(fresh.resets, 1);
 });
+
+test("actual parent mode-switch handler honors dirty guard and clears it after save/unmount", () => {
+  const shell = readFileSync("apps/desktop/renderer/src/CreatorMode.tsx", "utf8").replace(/\r\n/g, "\n");
+  const app = readFileSync("apps/desktop/renderer/src/BookStudioApp.tsx", "utf8").replace(/\r\n/g, "\n");
+  const callback = /onClick=\{([\s\S]*?)\}\n\s*>/.exec(shell)?.[1];
+  const registration = /useEffect\(\(\) => \{\n    if \(!modeLeaveGuard\)([\s\S]*?)\n  \}, \[modeLeaveGuard, bookDirty, say\]\);/.exec(app);
+  assert.ok(callback); assert.ok(registration, "dirty/save changes must refresh the registered guard");
+  const effectBody = "if (!modeLeaveGuard)" + registration[1];
+  const guard: { current: (() => boolean) | undefined } = { current: undefined };
+  let tab = "images", status = "", stored = "SIMPLE", mode = "SIMPLE", saves = 0;
+  const register = (bookDirty: boolean) => {
+    const ports = { modeLeaveGuard: guard, bookDirty, setTab: (v: string) => { tab = v; }, setStatus: (v: string) => { status = v; }, say: (_ar: string, en: string) => en };
+    const code = transformSync(`const effect = () => { ${effectBody} };`, { loader: "ts", target: "es2022" }).code + "\nreturn effect;";
+    return (new Function(...Object.keys(ports), code)(...Object.values(ports)) as () => (() => void) | undefined)();
+  };
+  const click = (next: string) => {
+    const ports = { leaveGuard: guard, next, saveCreatorMode: (v: string) => { stored = v; saves++; }, localStorageOrUndefined: () => undefined, setMode: (v: string) => { mode = v; } };
+    const code = transformSync(`const click = (${callback});`, { loader: "ts", target: "es2022" }).code + "\nreturn click;";
+    (new Function(...Object.keys(ports), code)(...Object.values(ports)) as () => void)();
+  };
+  const dirtyCleanup = register(true); assert.ok(dirtyCleanup);
+  click("ADVANCED");
+  assert.equal(mode, "SIMPLE"); assert.equal(stored, "SIMPLE"); assert.equal(saves, 0);
+  assert.equal(tab, "book"); assert.ok(status.length > 0);
+  dirtyCleanup(); assert.equal(guard.current, undefined);
+  const cleanCleanup = register(false); assert.ok(cleanCleanup);
+  click("ADVANCED"); assert.equal(mode, "ADVANCED"); assert.equal(stored, "ADVANCED"); assert.equal(saves, 1);
+  cleanCleanup(); assert.equal(guard.current, undefined);
+  click("SIMPLE"); assert.equal(mode, "SIMPLE"); assert.equal(stored, "SIMPLE"); assert.equal(saves, 2);
+});

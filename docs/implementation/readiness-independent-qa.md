@@ -54,6 +54,22 @@ The old final application Run was stopped before this production edit and must
 restart against the new source; implementation owns the real four-button native
 regression and final source identity. No broad independent rerun was performed.
 
+Necessary H1 direct-parent extension: CreatorModeShell's Simple→Advanced switch
+also unmounts BookStudioApp. The new context ref registers the book's current dirty
+guard; the shell checks it before either saving the mode preference or setting
+mode. Dirty state returns to the retained Book editor with the same save warning.
+The registration depends on `bookDirty`, so successful layout save updates it to
+allow leaving; effect cleanup removes the callback on replacement/unmount. A
+clean creator can still switch to Advanced and back, including with no active
+book guard. This bounded parent/callback extension is CLOSED. Focused
+`--test-name-pattern 'actual parent mode-switch handler'`: 1/1 PASS, zero
+skipped/cancelled, 0.78 seconds. The test executes the actual extracted parent
+callback and actual registration/cleanup body with controlled ports, verifies no
+mode/preference write while dirty, clean switching after save, and no leaked guard
+after cleanup. It does not mount React or establish native effect/event timing.
+Implementation owns the real mode-toggle/subtitle-retention native evidence and
+the new frozen final Run. No additional broad checks or dependencies were added.
+
 The independent cases verify:
 
 - Fully approved canonical story/sheet/art/layout authority still cannot claim

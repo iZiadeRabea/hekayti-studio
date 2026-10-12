@@ -61,12 +61,13 @@ const launch = () =>
     ],
     timeout: 30000,
   });
+const started = Date.now();
 let app = await launch(),
   page = await app.firstWindow();
+console.log(JSON.stringify({ operation: "launch-to-first-window", elapsedMs: Date.now() - started }));
 const gates = [];
 const recordGate = gates.push.bind(gates);
 gates.push = (...values) => { for (const gate of values) console.log(JSON.stringify({ gate, elapsedMs: Date.now() - started })); return recordGate(...values); };
-const started = Date.now();
 const call = async (method, input) => {
   const result = await page.evaluate(
     ({ method, input }) => window.hekayti[method](input),
@@ -297,6 +298,9 @@ try {
       await button("فتح الكتاب").first().click();
       await button("الصور").click();
       await button("صفحة 3").click();
+      await page.getByText("أرفق المراجع التالية يدويًا مع هذا البرومبت؛ لا تُنقل الصور تلقائيًا.", { exact: true }).waitFor();
+      await page.getByText("غير مطلوب: مراجع الشخصيات التي لا تظهر في هذه الصفحة.", { exact: true }).waitFor();
+      assert.ok(await page.getByText("مطلوب — لوحة الشخصية المرتبطة بهذا البرومبت", { exact: false }).count() > 0);
       await button("اعتماد الصورة").first().click();
       await page.waitForFunction((id) => document.getElementById(`studio-target-image-${id}`), edition.pages[3].pageId);
       s = await call("studioLoad", { projectId });
@@ -420,6 +424,9 @@ try {
     assert.equal(await coverSubtitle.inputValue(), "تعديل محلي غير محفوظ");
     assert.equal(await composer.isVisible(), true);
   }
+  await page.getByTestId("creator-mode-switch").click();
+  assert.equal(await page.getByTestId("creator-mode").getAttribute("data-mode"), "SIMPLE");
+  assert.equal(await coverSubtitle.inputValue(), "تعديل محلي غير محفوظ");
   await button("الشخصيات").first().click();
   await button("العودة إلى التعديلات").click();
   assert.equal(await coverSubtitle.inputValue(), "تعديل محلي غير محفوظ");
@@ -429,7 +436,7 @@ try {
   await idle();
   s = await call("studioLoad", { projectId });
   assert.equal(s.approved, true);
-  gates.push("Actual UI global final review cannot bypass unsaved composer edits; navigate/return retains edits and explicit save/approval restores readiness");
+  gates.push("Actual UI final review/header/Advanced switch cannot bypass unsaved composer edits; navigate/return retains edits and explicit save/approval restores readiness");
   await command({ action: "SAVE_PROGRESS", progress: { section: "book", pageId: edition.pages[2].pageId, control: "layout", autoAdvance: false } });
   const bookVersion = s.book.recordVersion,
     history = s.book.compositionPlans.length;

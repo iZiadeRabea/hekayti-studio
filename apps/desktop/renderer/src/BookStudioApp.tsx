@@ -22,6 +22,7 @@ import { StudioStory } from "./StudioStory";
 import { StudioImages } from "./StudioImages";
 import { BookComposer } from "./BookComposer";
 import { useStudioUi } from "./studio-ui";
+import { useCreatorModeLeaveGuard } from "./CreatorMode";
 import { confirmedArtApproval, nextUnfinishedArt } from "./studio-readiness";
 import { readinessSourceKey } from "@hekayti/core/book";
 import {
@@ -53,6 +54,17 @@ export function BookStudioApp() {
   const [error, setError] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [status, setStatus] = useState("");
+  const modeLeaveGuard = useCreatorModeLeaveGuard();
+  useEffect(() => {
+    if (!modeLeaveGuard) return;
+    modeLeaveGuard.current = () => {
+      if (!bookDirty) return true;
+      setTab("book");
+      setStatus(say("هناك تعديلات تنسيق لم تُحفظ؛ احفظها قبل مغادرة الكتاب.", "Save pending layout edits before leaving the book."));
+      return false;
+    };
+    return () => { modeLeaveGuard.current = undefined; };
+  }, [modeLeaveGuard, bookDirty, say]);
   const [issue, setIssue] = useState<StudioIssue>();
   const [target, setTarget] = useState<StudioTarget>();
   const [returnTab, setReturnTab] = useState<typeof tab>();
