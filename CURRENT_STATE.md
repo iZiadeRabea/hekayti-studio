@@ -1,5 +1,9 @@
 # Current state
 
+## Current authority — final product readiness (2026-10-12)
+
+Owner-authorized v0.7.2 candidate from verified clean main3eb1bdc / stable0.7.1, on feature/final-product-readiness. Explicit saved creator journey, complete canonical storyboard, manual reference/approval navigation and aggregated measured final review are integrated. Same independent QA closed four findings plus the pending-navigation race; focused closure6/6 PASS. Final consolidated/application evidence, packaged two-character16-page native journey, legacy reopen and PDF inspection are pending. Stable main/tags/cloud remain gated on these results. Root source documents supersede retained historical banners below; owner runtime/photos/corpus are untouched. See docs/implementation/final-product-readiness.md and readiness-independent-qa.md.
+
 ## Current authority — Phase4.4.1 implementation (2026-10-08)
 
 Phase4.4.1 APPROVED FOR RELEASE by compact review of exact clean preparation ce5dddde9b31cb15f8baa0c54bb6469cc0ea83bd. Safe integration onto unchanged main471cec18 is complete. Final403 frozen application, foundation101/design329/typecheck/security/health, independent29, actual IPC6/reopen2 and inspected synthetic PDF gates passed. Only immutable0.7.1 checkpoint/private push and verified source/separate791 fresh recovery are authorized; actual final SHA/cloud receipt belongs in ignored external receipts, never predicted here. No postbackup source commit/tag movement or next phase. Optional book-state fields preserve SQLitev5/canonical hashes/history; historical geometry is editable but fresh save/approval/export revalidates. No owner DB/photos/corpus/provider access. Earlier banners are retained history.
@@ -17,7 +21,7 @@ Same QA is closed; final fresh application379/379 PASS and exact-content evidenc
 Phase4.3 APPROVED FOR RELEASE by Astra final compact review of clean preparation d5bbeeab217b9f05219d53219f2cabcaab0fc96a. Only essential safe integration/immutable0.6.0 checkpoint/private push and mandatory source/separate791 recovery authorized. Actual released SHA/cloud verification belong to ignored external receipt, not this approval. No postbackup source commit/tag move. See phase4.3-release-packet.md/testing.md; historical milestones belong in CHANGELOG.
 
 - Current project version: v0.7.1-creator-workflow-fixes
-- Current workspace version: 0.7.1
+- Current workspace version: 0.7.2 (candidate; stable0.7.1 retained until final gates)
 - Current branch at milestone: main
 - Latest stable checkpoint: checkpoint/phase4.4.1-creator-workflow-fixes-complete
 - Latest stable tag: v0.7.1-creator-workflow-fixes

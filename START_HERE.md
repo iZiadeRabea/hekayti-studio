@@ -1,5 +1,7 @@
 # Start here — new AI session
 
+Current owner-authorized work (2026-10-12): final product readiness/v0.7.2 candidate on feature/final-product-readiness from main3eb1bdc/stable0.7.1. Read CURRENT_STATE and docs/implementation/final-product-readiness.md plus readiness-independent-qa.md for the actual closed QA batch and remaining final gates. Preserve owner runtime,791 corpus, private asset guards and exact historical hashes/approvals. Prior phase banners below are history.
+
 Current work: owner-authorized consolidated Phase4.4.1 on feature/phase4.4.1-creator-workflow-fixes from verified clean main471cec18 / v0.7.0. Read docs/implementation/phase4.4.1-continuation.md for actual evidence/remaining gates. No release, stable tag, main integration or cloud before final review; preserve owner data and old history. Earlier phase banners below are historical.
 
 Current approved work: Phase4.3 feature/phase4.3-simple-creator, verified ad581cbc/v0.5.4 preserved. Read CURRENT_STATE.md and docs/implementation/phase4.3-backend.md first. Simple Arabic/Reader/illustration descriptions only; independent QA/final gates/release approval pending. Historical stop/release banners below are not current authority. No images/API/ownerDB/Phase5/release/cloud. Existing HIGH implementation/HIGH QA/MEDIUM UI+ops reused, no new agents.

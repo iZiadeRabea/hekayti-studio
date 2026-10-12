@@ -89,6 +89,7 @@ const reject = async (method, input, code) => {
   return r.error;
 };
 const button = (name) => page.getByRole("button", { name, exact: true });
+const idle = () => page.waitForFunction(() => ![...document.querySelectorAll(".studio-project-nav button")].some((button) => button.disabled));
 let s;
 const command = async (input) => {
   s = await call("studioCommand", {
@@ -118,7 +119,7 @@ try {
   const autoBook = await call("studioLoad", { projectId: initialList.stories[0].projectId });
   assert.ok(autoBook.book.intents.at(-1).intent.idea.text.trim());
   assert.notEqual(autoBook.book.intents.at(-1).intent.idea.source, "CUSTOM");
-  gates.push("Actual packaged wizard default automatic idea without typed idea");
+  gates.push("Actual native wizard default automatic idea without typed idea");
   const defaults = await call("simpleDefaults", {});
   const steps = [
     "نور يشوف الكتاب على السرير.",
@@ -304,6 +305,15 @@ try {
       gates.push("Actual UI native import review approval settles then auto-advances to canonical page4");
       continue;
     }
+    if (slot.pageId === edition.pages.at(-1).pageId) {
+      await button("كتبي").click(); await button("فتح الكتاب").first().click(); await button("الصور").click();
+      await button("صفحة 16").click(); await button("اعتماد الصورة").first().click();
+      await page.getByTestId("book-storyboard").waitFor();
+      s = await call("studioLoad", { projectId });
+      assert.equal(s.book.creatorProgress.pageId, undefined);
+      gates.push("Actual UI last artwork approval offers full canonical book overview");
+      continue;
+    }
     await command({
       action: "IMAGE_DECISION",
       imageId: s.images.at(-1).imageId,
@@ -392,7 +402,30 @@ try {
   await page.getByText("جاهز للتصدير الرقمي والطباعة", { exact: true }).waitFor();
   gates.push("Actual UI cover+16 storyboard canonical order/exact page and final review measured ready with nonblocking warnings");
   s = await call("studioLoad", { projectId });
-  await command({ action: "SAVE_PROGRESS", progress: { section: "images", pageId: edition.pages[2].pageId, control: "image", autoAdvance: false } });
+  await button("تنسيق الكتاب").click();
+  const composer = page.getByTestId("book-composer");
+  await composer.getByLabel("الصفحة", { exact: true }).selectOption("3");
+  await idle();
+  s = await call("studioLoad", { projectId });
+  assert.equal(s.book.creatorProgress.pageId, edition.pages[2].pageId);
+  const coverSubtitle = composer.getByLabel("عنوان فرعي للغلاف — اختياري", { exact: true });
+  const savedSubtitle = await coverSubtitle.inputValue();
+  await coverSubtitle.fill("تعديل محلي غير محفوظ");
+  await page.getByText("هناك تعديلات تنسيق لم تُحفظ. ارجع إلى تنسيق الكتاب واحفظها قبل الفحص أو التصدير؛ تعديلاتك باقية.", { exact: false }).waitFor();
+  await button("مراجعة نهائية").click();
+  assert.equal(await page.getByTestId("final-review").count(), 0);
+  assert.equal(await coverSubtitle.inputValue(), "تعديل محلي غير محفوظ");
+  await button("الشخصيات").first().click();
+  await button("العودة إلى التعديلات").click();
+  assert.equal(await coverSubtitle.inputValue(), "تعديل محلي غير محفوظ");
+  await coverSubtitle.fill(savedSubtitle);
+  await button("حفظ التصميم").click();
+  await button("اعتماد الكتاب").click();
+  await idle();
+  s = await call("studioLoad", { projectId });
+  assert.equal(s.approved, true);
+  gates.push("Actual UI global final review cannot bypass unsaved composer edits; navigate/return retains edits and explicit save/approval restores readiness");
+  await command({ action: "SAVE_PROGRESS", progress: { section: "book", pageId: edition.pages[2].pageId, control: "layout", autoAdvance: false } });
   const bookVersion = s.book.recordVersion,
     history = s.book.compositionPlans.length;
   await app.close();
@@ -402,6 +435,8 @@ try {
   s = await call("studioLoad", { projectId });
   assert.equal(s.approved, true);
   assert.equal(s.book.recordVersion, bookVersion);
+  assert.equal(s.book.creatorProgress.pageId, edition.pages[2].pageId);
+  assert.equal(s.book.creatorProgress.autoAdvance, false);
   assert.equal(s.book.compositionPlans.length, history);
   assert.equal(
     s.book.compositionPlans.find((p) => p.repetitionOverride).visual
@@ -411,6 +446,9 @@ try {
   gates.push(
     "Actual process reopen preserves optional plans/history/override/art/layout/approval",
   );
+  await button("كتبي").click(); await button("فتح الكتاب").first().click();
+  assert.equal(await page.getByTestId("book-composer").getByLabel("الصفحة", { exact: true }).inputValue(), "3");
+  gates.push("Actual UI saved canonical composer page3 resumes after process reopen");
   for (const kind of ["digital", "print"]) {
     const path = join(data, `synthetic-native-${kind}.pdf`);
     await app.evaluate(({ dialog }, path) => {

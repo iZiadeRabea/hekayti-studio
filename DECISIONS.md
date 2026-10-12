@@ -1,5 +1,11 @@
 # Architecture / product decision log
 
+## Final product readiness — 2026-10-12
+
+- Optional mutable creatorProgress in book-state/1.0 stores exact current section/page/control and auto-advance preference; canonical history/approval authority and SQLitev5 remain unchanged. Explicit review/save is preserved: pending composer edits block final inspection/export and remain visible under global navigation.
+- Current snapshot readiness reuses export source/geometry validation, adds original-file availability plus actual Chromium digital/print measurement, and includes project/book/workflow/planner/language identity. Export still reruns its authoritative source/approval/render checks; the inspection is advisory until every blocker clears.
+- Full canonical storyboard uses private hash-checked originals only to create serialized bounded240px previews,24-entry cache and offscreen release. Exact prompt reference guidance derives declared page actors rather than attaching unrelated characters. No visual recognition or quality certification.
+
 ## Phase4.4.1 —2026-10-08 (implementation, release pending)
 
 - Optional typed composition history in book-state/1.0 binds exact canonical page/draft/edition/art, preserving old payloads/hashes and SQLitev5. Local geometry plans precede prompts; exact authored prose outranks generic beat labels. Unknown/negated physical semantics request review instead of invented motion.
