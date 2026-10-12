@@ -2,13 +2,16 @@
 // only mocked native transport. Blank test art is not artistic acceptance.
 import { _electron } from "playwright";
 import { mkdtemp, writeFile } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { join, resolve, dirname, basename } from "node:path";
 import { tmpdir } from "node:os";
 import { deflateSync } from "node:zlib";
 import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
-const data = await mkdtemp(join(tmpdir(), "hekayti-story-flow-native-"));
+const resume = process.argv.find(arg => arg.startsWith("--resume="))?.slice(9);
+if (resume) assert.ok(dirname(resolve(resume)) === resolve(tmpdir()) && basename(resume).startsWith("hekayti-story-flow-native-"), "Resume only this harness's isolated synthetic fixture");
+const data = resume ? resolve(resume) : await mkdtemp(join(tmpdir(), "hekayti-story-flow-native-"));
 const packaged = process.argv.includes("--packaged");
+const legacyOnly = process.argv.includes("--legacy-only");
 const started = Date.now(), gates = [];
 const gate = (name) => { gates.push(name); console.log(JSON.stringify({ gate: name, elapsedMs: Date.now() - started })); };
 const size = 2400, raw = Buffer.alloc((size * 3 + 1) * size);
@@ -33,8 +36,10 @@ const command = async input => s = await call("studioCommand", { projectId, expe
 const reopenBook = async () => { await button("كتبي").click(); await button("فتح الكتاب").first().click(); await idle(); };
 const choose = () => app.evaluate(({ dialog }, path) => { dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [path] }); }, art);
 try {
+  if (!legacyOnly) {
   app = await launch(); page = await app.firstWindow(); await page.waitForLoadState("domcontentloaded"); gate("isolated-native-startup");
   assert.equal(await app.evaluate(({ app }) => app.getVersion()), "0.7.3");
+  if (!resume) {
   await button("تجهيز مكتبة الإلهام").click(); await page.getByTestId("book-create-flow").waitFor();
   await button("تخصيص متقدم").click(); assert.equal(await page.getByTestId("book-create-flow").locator(".studio-steps > li").count(), 8);
   await button("إنشاء سريع").click();
@@ -49,7 +54,8 @@ try {
   gate("actual-two-screen-auto-idea-seven-months-advanced-retained");
   await button("١. نسخ برومبت القصة").click(); await idle(); await load();
   assert.ok((await app.evaluate(({ clipboard }) => clipboard.readText())).includes("writer-response/1.0"));
-  const paste = page.getByLabel("٢. لصق الرد هنا", { exact: true });
+  // React textarea children may append the current value to the label name.
+  const paste = page.getByLabel(/^٢\. لصق الرد هنا/);
   await paste.fill("{}"); await button("٣. مراجعة القصة").click(); await idle();
   assert.equal((await load()).session.workflow.current.approvalId, null);
   const pages = [
@@ -84,10 +90,16 @@ try {
   }
   await page.getByTestId("book-storyboard").waitFor();
   gate("real-ipc-page-specific-prompts-native-human-checklist-art-approval-and-overview");
+  } else {
+    projectId = (await call("simpleList", { query: "", offset: 0, limit: 20 })).stories[0].projectId;
+    await reopenBook(); await load(); assert.equal(s.images.filter(i => i.kind === "PAGE").length, 4);
+    gate("resume-existing-synthetic-late-gates-only");
+  }
   await button("مراجعة الكتاب وتصديره").click(); await button("تنسيق الكتاب").click();
   await button("ترتيب تلقائي").click(); await idle(); await load(); assert.equal(s.layout.pages.length, 5);
   await button("اعتماد الكتاب").click(); await idle(); await load(); assert.equal(s.approved, true);
   await button("مراجعة نهائية").click(); await button("فحص الكتاب قبل التصدير").click(); await idle();
+  await load(); // Stage navigation saves progress; use its settled current CAS.
   const ready = await call("studioReadiness", { projectId, expectedBook: s.book.recordVersion }); assert.equal(ready.digitalReady, true); assert.equal(ready.printReady, true);
   for (const kind of ["digital", "print"]) {
     const path = join(data, `synthetic-${kind}.pdf`);
@@ -101,6 +113,7 @@ try {
   assert.equal(JSON.stringify({ book: s.book, workflow: s.session.workflow }), before);
   gate("actual-close-reopen-exact-story-art-layout-approval-history");
   await app.close(); app = undefined;
+  }
   // Strict established historical synthetic fixture, never arbitrary owner data.
   const legacy = join(tmpdir(), "hekayti-phase44-ui-hx7HDv");
   const legacyRows = () => {
@@ -110,9 +123,13 @@ try {
   };
   const old = legacyRows(); app = await launch(legacy); page = await app.firstWindow(); await page.waitForLoadState("domcontentloaded");
   const list = await call("simpleList", { query: "", offset: 0, limit: 20 }); assert.ok(list.stories.length);
+  await page.getByTestId("creator-mode").waitFor();
+  const wasAdvanced = await page.getByTestId("creator-mode").getAttribute("data-mode") === "ADVANCED";
+  if (wasAdvanced) await page.getByTestId("creator-mode-switch").click();
   await button("كتبي").click(); await button("فتح الكتاب").first().click();
   await page.getByTestId("studio-story").waitFor();
   for (const row of list.stories) await call("studioLoad", { projectId: row.projectId });
+  if (wasAdvanced) await page.getByTestId("creator-mode-switch").click();
   await app.close(); app = undefined; assert.equal(legacyRows(), old);
   gate("actual-old-synthetic-package-open-original-payloads-unchanged");
   console.log(JSON.stringify({ data, projectId, packaged, gates, elapsedMs: Date.now() - started, limits: "Synthetic blank art; no visual recognition/owner-art claims. Owner DB never opened." }));
