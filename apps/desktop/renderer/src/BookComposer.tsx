@@ -459,6 +459,7 @@ export function BookComposer({
           <label>
             {say("الصفحة", "Page")}
             <select
+              disabled={busy}
               value={pageIndex}
               onChange={(e) => {
                 setPageIndex(Number(e.target.value));

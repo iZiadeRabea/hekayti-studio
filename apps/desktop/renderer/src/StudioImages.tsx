@@ -281,14 +281,16 @@ export function StudioImages({
         )}
       </p>
       <nav className="studio-project-nav">
-        <button aria-pressed={selected === "overview"} onClick={() => select("overview")}>{say("العودة إلى الكتاب كاملًا", "Full book overview")}</button>
+        <button disabled={busy} aria-pressed={selected === "overview"} onClick={() => select("overview")}>{say("العودة إلى الكتاب كاملًا", "Full book overview")}</button>
         <button
+          disabled={busy}
           aria-pressed={selected === "characters"}
           onClick={() => select("characters")}
         >
           {say("الشخصيات", "Characters")}
         </button>
         <button
+          disabled={busy}
           aria-pressed={selected === "cover"}
           onClick={() => select("cover")}
         >
@@ -296,6 +298,7 @@ export function StudioImages({
         </button>
         {edition?.pages.map((page) => (
           <button
+            disabled={busy}
             key={page.pageId}
             aria-pressed={selected === page.pageId}
             onClick={() => select(page.pageId)}
