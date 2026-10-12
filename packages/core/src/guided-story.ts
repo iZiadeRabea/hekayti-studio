@@ -297,6 +297,7 @@ const negatedAction = (s: string) =>
   /(?:^|\s)(?:لا|ولا|لن|ليس|ليست|بدون|دون|عدم|مش)\s|(?:^|\s)ما\s+\p{L}+ش(?=\s|[.!؟،]|$)|\b(?:not|never|without|cannot|can't|don't|doesn't|no)\b/iu.test(
     normalize(s),
   );
+const familiarAdultAction = (s: string) => /(?:ال)?شخص\s+(?:ال)?مألوف|familiar person/iu.test(normalize(s));
 export function composeGuidedStoryPlan(
   base: StoryPlan,
   input: BookIntent,
@@ -498,7 +499,7 @@ export function composeGuidedStoryPlan(
         known = true;
     }
     const child = after.find((e) => e.entityId === actor);
-    if (child) child.state = step;
+    if (child && !(infant && familiarAdultAction(s))) child.state = step;
     states = after;
     return {
       pageNumber: i + 1,
@@ -532,7 +533,9 @@ export function composeGuidedStoryPlan(
             : !negatedAction(scene.intent) && /كشف|يرفع|ترفع/.test(scene.intent)
               ? ("reveal" as const)
               : ("notice" as const),
-        actorId: actor,
+        // Familiar support is not a fabricated, approved character identity.
+        // Leave its actor unresolved instead of assigning an adult action to the infant.
+        actorId: infant && familiarAdultAction(scene.intent) ? null : actor,
         locationId: base.setting.locationId,
         fromLocationId: null,
         beforeState: i ? scenes[i - 1]!.intent : base.openingState,

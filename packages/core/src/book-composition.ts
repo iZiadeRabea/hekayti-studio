@@ -7,7 +7,7 @@ import type {
   PageLayout,
 } from "@hekayti/contracts/book";
 import { AppError } from "@hekayti/contracts";
-import { reviewPageScene } from "./page-scene";
+import { hasPageCoverage, reviewPageScene } from "./page-scene";
 
 export type StoryPageText = {
   pageId: string;
@@ -87,7 +87,7 @@ export function deriveVisualIntent(
         ? "الصورة المذكورة واتجاه الانتباه إليها"
         : page.altText || action;
   const sceneReview = reviewPageScene(page, scene, previous, next);
-  const physicalDescription = /قماش|غطاء|مغط|تحت|cloth|covered|beneath|under/iu.test(page.altText);
+  const physicalDescription = hasPageCoverage([page.altText, page.narration, ...page.dialogue.map(d => d.text)].join(" "));
   const changes =
     scene?.after.flatMap((e) => {
       if (physicalDescription && e.kind === "PROP") return [];

@@ -495,14 +495,15 @@ export function effectiveScenes(
       if (current && old && pageMeaning(current) !== pageMeaning(old))
         uncertain = true;
       const before = previous ?? items[0]?.before ?? last.before;
+      const unmapped = items.length === 0;
       const sharedBeat = bp.pagePlan.filter(other => other.beatIds.some(id => page.beatIds.includes(id))).length > 1;
-      const after = uncertain || sharedBeat
-        ? (sharedBeat ? before : last.after).map((e) => ({
+      const after = uncertain || sharedBeat || unmapped
+        ? (sharedBeat || unmapped ? before : last.after).map((e) => ({
             ...e,
             visibility: "UNKNOWN" as const,
             heldBy: null,
             coveredBy: null,
-            state: sharedBeat ? "حدث موزع على صفحات؛ راجع لحظة الصفحة ولا تفترض نهاية الحدث" : "يحتاج مراجعة بعد تغيير معنى النص؛ لا تفترض حالة قديمة",
+            state: unmapped ? "لا يوجد مشهد مطابق لهذه الصفحة؛ راجع الحالة ولا تفترض نهاية القصة" : sharedBeat ? "حدث موزع على صفحات؛ راجع لحظة الصفحة ولا تفترض نهاية الحدث" : "يحتاج مراجعة بعد تغيير معنى النص؛ لا تفترض حالة قديمة",
           }))
         : structuredClone(last.after);
       // Supplemental literal props use stable identities across exact authored pages.
@@ -531,7 +532,7 @@ export function effectiveScenes(
             entityId: `${p.currentPlanRevisionId!.slice(0, 65)}-literal-${key}`,
             kind: "PROP",
             name,
-            location: last.after[0]?.location ?? "المكان الموصوف؛ يحتاج مراجعة",
+            location: (unmapped ? before : last.after)[0]?.location ?? "المكان الموصوف؛ يحتاج مراجعة",
             visibility: "VISIBLE",
             heldBy: null,
             coveredBy: null,
@@ -543,10 +544,11 @@ export function effectiveScenes(
       return {
         ...last,
         pageNumber: index + 1,
+        intent: unmapped ? "راجع غرض هذه الصفحة؛ لا يوجد حدث مطابق" : last.intent,
         before,
         after,
-        action: (uncertain || sharedBeat) && current ? current.narration : last.action,
-        reviewRequired: last.reviewRequired || uncertain || sharedBeat,
+        action: (uncertain || sharedBeat || unmapped) ? current?.narration || "لا يوجد فعل مطابق؛ يحتاج مراجعة" : last.action,
+        reviewRequired: last.reviewRequired || uncertain || sharedBeat || unmapped,
       };
     })
     .filter(Boolean);
