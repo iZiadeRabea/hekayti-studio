@@ -7,7 +7,7 @@ export type StudioIssue = {
   target?: StudioTarget;
   action: string;
   severity: "warning" | "error";
-  returnTo: "story" | "images" | "book";
+  returnTo: "story" | "characters" | "images" | "book" | "review";
 };
 export function studioIssue(
   error: { code: string; message: string; target?: StudioTarget },

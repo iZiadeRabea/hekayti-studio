@@ -157,6 +157,7 @@ export function BookComposer({
   onEditStory,
   onPreview,
   target,
+  onFinalReview,
 }: {
   snapshot: BookStudioSnapshot;
   busy: boolean;
@@ -165,6 +166,7 @@ export function BookComposer({
   onEditStory: () => void;
   onPreview: () => void;
   target?: StudioTarget;
+  onFinalReview?: () => void;
 }) {
   const { say } = useStudioUi();
   const [layout, setLayout] = useState<BookLayout | null>(
@@ -733,12 +735,13 @@ export function BookComposer({
       <p>
         {snapshot.approved
           ? say(
-              "الكتاب معتمد وجاهز للتصدير.",
-              "Book approved and ready for export.",
+              "الكتاب معتمد؛ افتح المراجعة النهائية للفحص والتصدير.",
+              "Book approved; open final review to check and export.",
             )
           : say("الكتاب لم يعتمد بعد.", "Book is not approved yet.")}
       </p>
       <div className="studio-actions">
+        {onFinalReview ? <button disabled={busy || dirty} onClick={onFinalReview}>{say("التالي: مراجعة نهائية", "Next: final review")}</button> : <>
         <button
           disabled={busy || dirty || !snapshot.approved}
           onClick={() => onExport("digital")}
@@ -751,6 +754,7 @@ export function BookComposer({
         >
           {say("تصدير PDF للطباعة", "Export print PDF")}
         </button>
+        </>}
       </div>
       {snapshot.notices.map((notice, i) => (
         <p className="studio-warning" key={i} dir="auto">

@@ -60,7 +60,9 @@ export interface DesktopApi {
   studioAssetPreview(input: {
     projectId: string;
     assetId: string;
+    thumbnail?: boolean;
   }): Promise<Result<string | null>>;
+  studioReadiness(input: { projectId: string; expectedBook: number; mode?: LanguageMode }): Promise<Result<import("@hekayti/contracts/book").BookReadiness>>;
   studioRelinkAsset(input: {
     projectId: string;
     expectedBook: number;

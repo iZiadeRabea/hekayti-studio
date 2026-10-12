@@ -24,7 +24,7 @@ import {
   ensurePrivateBookDirectory,
   SqliteProjectRepository,
 } from "@hekayti/persistence";
-import { BookStudioService } from "@hekayti/core/book";
+import { BookStudioService, inspectBookReadiness, readinessSourceKey, deriveVisualIntent } from "@hekayti/core/book";
 import type { SimpleCreatorService } from "@hekayti/core/creator";
 import type { StoryWorkflowService } from "@hekayti/core/workflow";
 import type { StoryPlannerService } from "@hekayti/core/planner";
@@ -204,6 +204,8 @@ export function installBookRuntime(
     },
   );
   const base = z.object({ projectId: Id, expectedBook: version }).strict();
+  const thumbnailCache = new Map<string, string>();
+  let thumbnailQueue: Promise<unknown> = Promise.resolve();
   const ref = (projectId: string, assetId: string): AssetManifest => {
     const a = repo
       .loadBook(projectId)
@@ -214,8 +216,9 @@ export function installBookRuntime(
   const preflight = async (
     s: BookStudioSnapshot,
     sheetVersions: string[] = [],
+    characterIds?: string[],
   ) => {
-    for (const identity of s.identities)
+    for (const identity of s.identities.filter((i) => !characterIds || characterIds.includes(i.characterId)))
       for (const id of identity.referenceAssets)
         if (!(await assets.read(ref(s.book.projectId, id))))
           throw new AppError(
@@ -269,6 +272,11 @@ export function installBookRuntime(
   handle("studio:command", async (arg) => {
     const x = BookCommandSchema.parse(arg),
       snapshot = studio.load(x.projectId, x.mode);
+    const edition = snapshot.session.workflow.drafts.find((d) => d.draftId === snapshot.session.workflow.current.draftId)?.editions.find((e) => e.mode === snapshot.mode);
+    const promptPage = x.action === "PROMPT" && x.kind === "PAGE" ? edition?.pages.find((p) => p.pageId === x.pageId) : undefined;
+    const requiredCharacters = x.action === "COPY_PROMPT" ? snapshot.book.identities.filter((i) => snapshot.prompts.find((p) => p.promptId === x.promptId)?.binding.identityRevisions.includes(i.revisionId)).map((i) => i.characterId)
+      : x.action === "PROMPT" && x.kind === "CHARACTER_REFERENCE" ? [x.characterId!]
+      : promptPage ? deriveVisualIntent(promptPage, edition!.pages.indexOf(promptPage) + 1, snapshot.session.workflow.current.draftId!, snapshot.session.planner.currentPlanRevisionId!, snapshot.scenes.find((p) => p.pageNumber === edition!.pages.indexOf(promptPage) + 1)).charactersPresent : undefined;
     if (["PROMPT", "COPY_PROMPT", "APPROVE_BOOK"].includes(x.action))
       await preflight(
         snapshot,
@@ -279,7 +287,7 @@ export function installBookRuntime(
             ? x.kind === "CHARACTER_REFERENCE"
               ? []
               : snapshot.images
-                  .filter((i) => i.kind === "CHARACTER_SHEET" && i.selected)
+                  .filter((i) => i.kind === "CHARACTER_SHEET" && i.selected && (!requiredCharacters || requiredCharacters.includes(i.characterId!)))
                   .map((i) => i.imageId)
             : [
                 ...snapshot.images
@@ -291,6 +299,7 @@ export function installBookRuntime(
                       ?.binding.sheetVersions ?? [],
                 ) ?? []),
               ],
+        requiredCharacters,
       );
     if (
       x.action === "IMAGE_DECISION" &&
@@ -360,8 +369,28 @@ export function installBookRuntime(
     return studio.addSelectedAssets(x, imported);
   });
   handle("studio:asset-preview", async (arg) => {
-    const x = z.object({ projectId: Id, assetId: Id }).strict().parse(arg);
-    return assets.preview(ref(x.projectId, x.assetId));
+    const x = z.object({ projectId: Id, assetId: Id, thumbnail: z.boolean().optional() }).strict().parse(arg);
+    const manifest = ref(x.projectId, x.assetId);
+    if (!x.thumbnail) return assets.preview(manifest);
+    const task = thumbnailQueue.then(async () => {
+    // Read/hash-check canonical private bytes every time; cache only small resized images.
+    const bytes = await assets.read(manifest);
+    if (!bytes) return null;
+    const key = `${x.projectId}:${x.assetId}:${manifest.sha256}`;
+    const cached = thumbnailCache.get(key);
+    if (cached) { thumbnailCache.delete(key); thumbnailCache.set(key, cached); return cached; }
+    const image = nativeImage.createFromBuffer(Buffer.from(bytes));
+    if (image.isEmpty()) return null;
+    const size = image.getSize();
+    const scale = Math.min(1, 240 / Math.max(size.width, size.height));
+    const thumbnail = image.resize({ width: Math.max(1, Math.round(size.width * scale)), height: Math.max(1, Math.round(size.height * scale)) }).toDataURL();
+    if (thumbnail.length > 400000) throw new AppError("BOOK_THUMBNAIL_SIZE", "تعذر تجهيز معاينة صغيرة للصورة.");
+    thumbnailCache.set(key, thumbnail);
+    while (thumbnailCache.size > 24) thumbnailCache.delete(thumbnailCache.keys().next().value!);
+    return thumbnail;
+    });
+    thumbnailQueue = task.catch(() => {});
+    return task;
   });
   handle("studio:relink-asset", async (arg) => {
     const x = base.extend({ assetId: Id }).parse(arg);
@@ -394,6 +423,48 @@ export function installBookRuntime(
       throw new AppError("BOOK_CONFLICT", "الكتاب تغير؛ افتحه من جديد.");
     const r = await render(s, "digital", false, true);
     return { pages: r.pages, errors: r.errors };
+  });
+  handle("studio:readiness", async (arg) => {
+    const x = base.extend({ mode: LanguageModeSchema.optional() }).parse(arg), s = studio.load(x.projectId, x.mode);
+    if (s.book.recordVersion !== x.expectedBook) throw new AppError("BOOK_CONFLICT", "الكتاب تغير؛ أعد الفحص.");
+    const report = inspectBookReadiness(s);
+    const add = (code: string, message: string, target: import("@hekayti/contracts/book").BookReadinessFinding["target"]) => {
+      if (!report.findings.some((f) => f.code === code && JSON.stringify(f.target) === JSON.stringify(target))) report.findings.push({ code, severity: "BLOCKER", message, target });
+    };
+    let missingArt = false;
+    const required = new Map<string, import("@hekayti/contracts/book").BookReadinessFinding["target"]>();
+    for (const identity of s.identities) for (const id of identity.referenceAssets) required.set(id, { section: "images", characterId: identity.characterId, control: "identity" });
+    for (const image of s.images.filter((i) => i.selected || s.layout?.pages.some((p) => p.imageId === i.imageId))) {
+      required.set(image.assetId, { section: "images", pageId: image.pageId, characterId: image.characterId, imageId: image.imageId, control: image.kind === "CHARACTER_SHEET" ? "sheet" : image.kind === "COVER" ? "cover" : "image" });
+      for (const sheetId of image.binding.sheetVersions) {
+        const sheet = s.book.images.find((i) => i.imageId === sheetId);
+        if (sheet) required.set(sheet.assetId, { section: "images", characterId: sheet.characterId, imageId: sheet.imageId, control: "sheet" });
+      }
+    }
+    for (const [id, target] of required) {
+      try {
+        if (!(await assets.read(ref(x.projectId, id)))) throw new AppError("BOOK_ASSET_MISSING", "الصورة المحلية ناقصة؛ أعد ربط الصورة نفسها.");
+      } catch (error) {
+        missingArt = true;
+        add("BOOK_ASSET_MISSING", error instanceof AppError ? error.message : "تعذر قراءة الصورة المحلية؛ أعد ربطها.", target);
+      }
+    }
+    if (s.layout && !missingArt) {
+      try {
+        const digital = await render(s, "digital"), print = await render(s, "print");
+        report.measured = true;
+        for (const error of [...digital.errors, ...print.errors]) {
+          const page = s.layout.pages.find((p) => String(p.pageNumber) === error.page);
+          add("BOOK_TEXT_OVERFLOW", `${page?.pageNumber ? `الصفحة ${page.pageNumber}` : "الغلاف"}: الكلام لا يسع المساحة المقاسة؛ كبّرها أو عدّل النص.`, { section: "book", pageId: page?.pageId, control: "layout" });
+        }
+        if (s.approved && digital.fingerprint !== s.book.approvals.at(-1)?.renderFingerprint) add("BOOK_FONT_STALE", "خط الكتاب أو طريقة الرسم تغيرت؛ راجع الكتاب واعتمده من جديد.", { section: "book", control: "layout" });
+      } catch (error) { add("BOOK_RENDER", error instanceof AppError ? error.message : "لم يكتمل قياس النص؛ أعد الفحص.", { section: "book", control: "layout" }); }
+    }
+    try { await studio.exportModel(x.projectId, x.expectedBook); }
+    catch (error) { if (error instanceof AppError) add(error.code, /[\u0600-\u06ff]/.test(error.message) ? error.message : "راجع ربط النص والصور والمتحدثين بالنسخة الحالية.", error.target ?? { section: "book", control: "layout" }); else throw error; }
+    if (readinessSourceKey(studio.load(x.projectId, x.mode)) !== report.sourceKey) throw new AppError("BOOK_CONFLICT", "الكتاب تغير أثناء الفحص؛ أعد الفحص.");
+    report.digitalReady = report.printReady = report.measured && !report.findings.some((f) => f.severity === "BLOCKER");
+    return report;
   });
   handle("studio:export", async (arg) => {
     const x = base.extend({ kind: z.enum(["digital", "print"]) }).parse(arg),

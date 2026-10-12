@@ -5,6 +5,7 @@ const api: DesktopApi = {
   studioCreate:input=>ipcRenderer.invoke("studio:create",input),
   studioLoad:input=>ipcRenderer.invoke("studio:load",input),
   studioCommand:input=>ipcRenderer.invoke("studio:command",input),
+  studioReadiness:input=>ipcRenderer.invoke("studio:readiness",input),
   studioSelectAssets:input=>ipcRenderer.invoke("studio:select-assets",input),
   studioAssetPreview:input=>ipcRenderer.invoke("studio:asset-preview",input),
   studioRelinkAsset:input=>ipcRenderer.invoke("studio:relink-asset",input),

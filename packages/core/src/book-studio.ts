@@ -288,13 +288,16 @@ export function validateLayoutSources(
   b: BookState,
   w: WorkflowSnapshot,
   enforceGeometry = true,
+  issues?: AppError[],
 ) {
+  let checkingPage: PageLayout | undefined;
   const draft = w.drafts.find((d) => d.draftId === l.draftId),
     edition = draft?.editions.find((e) => e.mode === l.mode);
   const fail = () => {
     throw new AppError(
       "BOOK_LAYOUT_SOURCE",
       "Layout must bind exact text, page order, artwork and speakers.",
+      { section: "book", pageId: checkingPage?.pageId, control: "layout" },
     );
   };
   if (
@@ -304,6 +307,8 @@ export function validateLayoutSources(
   )
     fail();
   for (const [index, page] of l.pages.entries()) {
+    checkingPage = page;
+    try {
     const image = b.images.find((i) => i.imageId === page.imageId);
     if (
       !image ||
@@ -362,6 +367,7 @@ export function validateLayoutSources(
         throw new AppError(
           "BOOK_SAFE_MARGIN",
           "Text exceeds safe print margins.",
+          { section: "book", pageId: page.pageId, control: "layout" },
         );
     }
     const geometry = enforceGeometry ? layoutGeometryIssues(page) : [];
@@ -389,8 +395,51 @@ export function validateLayoutSources(
       )
         fail();
     }
+    } catch (error) {
+      if (!issues || !(error instanceof AppError)) throw error;
+      issues.push(error);
+    }
   }
 }
+/** Snapshot checks reuse current approval projections and the export source validator.
+ * Native asset availability and actual Chromium measurements are added by runtime. */
+export function inspectBookReadiness(s: BookStudioSnapshot): import("@hekayti/contracts/book").BookReadiness {
+  const findings: import("@hekayti/contracts/book").BookReadinessFinding[] = [];
+  const add = (code: string, message: string, target: import("@hekayti/contracts/book").BookReadinessFinding["target"], severity: "BLOCKER" | "WARNING" | "INFO" = "BLOCKER") => findings.push({ code, message, target, severity });
+  const w = s.session.workflow;
+  const edition = w.drafts.find((d) => d.draftId === w.current.draftId)?.editions.find((e) => e.mode === s.mode);
+  if (!edition || !w.current.approvalId) add("BOOK_STORY_APPROVAL", "القصة الحالية تحتاج كتابة ومراجعة واعتماد.", { section: "story", control: "approval" });
+  for (const identity of s.identities) {
+    if (!identity.approvedProfile) add("BOOK_IDENTITY", `تعريف شخصية ${identity.name} يحتاج اعتمادًا.`, { section: "images", characterId: identity.characterId, control: "identity" });
+    if (!s.images.some((i) => i.kind === "CHARACTER_SHEET" && i.characterId === identity.characterId && i.selected && i.status === "APPROVED" && !i.stale))
+      add("BOOK_SHEET", `لوحة شخصية ${identity.name} ناقصة أو تحتاج اعتماد النسخة الحالية.`, { section: "images", characterId: identity.characterId, control: "sheet" });
+  }
+  const slots = [{ pageId: undefined as string | undefined, name: "الغلاف" }, ...(edition?.pages ?? []).map((p, index) => ({ pageId: p.pageId, name: `الصفحة ${index + 1}` }))];
+  for (const slot of slots) {
+    const image = s.images.find((i) => i.selected && (slot.pageId ? i.kind === "PAGE" && i.pageId === slot.pageId : i.kind === "COVER"));
+    if (!image || image.status !== "APPROVED" || image.stale)
+      add("BOOK_IMAGE", `صورة ${slot.name} ${!image ? "ناقصة" : image.stale ? "قديمة بعد تغيير مصدرها" : "تحتاج اعتمادًا"}.`, { section: "images", pageId: slot.pageId, imageId: image?.imageId, control: slot.pageId ? "image" : "cover" });
+  }
+  if (!s.layout || s.layout.draftId !== w.current.draftId) add("BOOK_LAYOUT", "احفظ تنسيقًا للقصة الحالية قبل الفحص النهائي.", { section: "book", control: "layout" });
+  else {
+    const errors: AppError[] = [];
+    try { validateLayoutSources(s.layout, s.book, w, true, errors); } catch (error) { if (error instanceof AppError) errors.push(error); else throw error; }
+    for (const error of errors) {
+      const page = s.layout.pages.find((p) => p.pageId === error.target?.pageId);
+      add(error.code, `${page?.pageNumber ? `الصفحة ${page.pageNumber}` : page ? "الغلاف" : "الكتاب"}: ${error.code === "BOOK_SAFE_MARGIN" ? "الكلام خارج الهوامش الآمنة" : error.code === "BOOK_LAYOUT_GEOMETRY" ? "مساحات الكلام متداخلة أو تغطي منطقة مهمة" : "راجع النص وترتيب الصفحة والمتحدثين وربط الصورة بالقصة الحالية"}.`, error.target ?? { section: "book", control: "layout" });
+    }
+    for (const page of s.layout.pages) for (const box of page.boxes.filter((b) => b.kind === "DIALOGUE" && b.bubbleShape))
+      if (box.tail !== "ANCHOR" || !page.anchors.some((a) => a.speakerId === box.speakerId)) add("BOOK_SPEAKER_ANCHOR", `الصفحة ${page.pageNumber}: حدد مكان المتحدث وذيل الفقاعة.`, { section: "book", pageId: page.pageId, control: "layout" });
+  }
+  if (!s.approved) add("BOOK_APPROVAL", "الكتاب الحالي يحتاج مراجعة واعتمادًا صريحًا بعد حفظ التنسيق.", { section: "book", control: "layout" });
+  for (const notice of s.notices.filter((n) => n.code === "LOW_RESOLUTION")) add(notice.code, notice.text, { section: "images", pageId: notice.pageId, control: "image" }, "WARNING");
+  for (const plan of s.compositionPlans ?? []) {
+    if (plan.visual.reviewRequired || plan.repetitionOverride) add("VISUAL_REVIEW", `الصفحة ${(edition?.pages.findIndex((p) => p.pageId === plan.pageId) ?? -1) + 1}: راجع مطابقة الفعل والتكرار بصريًا؛ الفحص لا يثبت جودة الرسم.`, { section: "images", pageId: plan.pageId, control: "image" }, "WARNING");
+  }
+  add("HUMAN_ART_REVIEW", "راجع ثبات الشخصيات والأدوات ومطابقة الصور للنص ومناسبة العمر يدويًا.", { section: "images", control: "image" }, "INFO");
+  return { recordVersion: s.book.recordVersion, sourceKey: readinessSourceKey(s), findings, measured: false, digitalReady: false, printReady: false };
+}
+export const readinessSourceKey = (s: BookStudioSnapshot) => canonicalJson([s.book.projectId, s.book.recordVersion, s.session.workflow.recordVersion, s.session.planner.recordVersion, s.mode]);
 const visualText = (s: string) =>
   s
     .normalize("NFKC")
@@ -1007,7 +1056,9 @@ export class BookStudioService {
     const ids =
       kind === "CHARACTER_SHEET"
         ? [characterId!]
-        : plan.characters.map((c) => c.characterId);
+        : kind === "PAGE"
+          ? this.composePage(s, pageId!, s.layout?.settings ?? defaultBookSettings).visual.charactersPresent
+          : plan.characters.map((c) => c.characterId);
     const identities = ids.map((id) =>
       s.identities.find((i) => i.characterId === id),
     );
@@ -1157,6 +1208,15 @@ export class BookStudioService {
         this.assertSourceCurrent(s);
       return this.repo.saveBook(next, x.expectedBook);
     };
+    if (x.action === "SAVE_PROGRESS") {
+      const edition = w.drafts.find((d) => d.draftId === w.current.draftId)?.editions.find((e) => e.mode === s.mode);
+      if (x.progress.pageId && !edition?.pages.some((page) => page.pageId === x.progress.pageId))
+        throw new AppError("BOOK_PAGE", "اختر صفحة من القصة الحالية.");
+      if (x.progress.characterId && !s.identities.some((i) => i.characterId === x.progress.characterId))
+        throw new AppError("BOOK_IDENTITY", "اختر الشخصية الحالية.");
+      commit({ ...b, creatorProgress: x.progress });
+      return this.load(x.projectId, s.mode);
+    }
     if (x.action === "PLAN_PAGE" || x.action === "SAVE_COMPOSITION") {
       const plan =
         x.action === "PLAN_PAGE"

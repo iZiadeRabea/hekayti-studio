@@ -377,6 +377,28 @@ export const BookLayoutSchema = z
   })
   .strict();
 export type BookLayout = z.infer<typeof BookLayoutSchema>;
+export const CreatorProgressSchema = z.object({
+  section: z.enum(["story", "characters", "images", "book", "review"]),
+  pageId: Id.optional(),
+  characterId: Id.optional(),
+  control: z.enum(["cover", "image", "identity", "sheet", "layout", "approval"]).optional(),
+  autoAdvance: z.boolean(),
+}).strict();
+export type CreatorProgress = z.infer<typeof CreatorProgressSchema>;
+export interface BookReadinessFinding {
+  code: string;
+  severity: "BLOCKER" | "WARNING" | "INFO";
+  message: string;
+  target: NonNullable<import("./index").AppError["target"]>;
+}
+export interface BookReadiness {
+  recordVersion: number;
+  sourceKey: string;
+  findings: BookReadinessFinding[];
+  digitalReady: boolean;
+  printReady: boolean;
+  measured: boolean;
+}
 export const BookStateSchema = z
   .object({
     schemaVersion: z.literal("book-state/1.0"),
@@ -437,6 +459,7 @@ export const BookStateSchema = z
       .array(z.object({ draftId: Id, title: text }).strict())
       .max(1000),
     compositionPlans: z.array(CompositionPlanSchema).max(10000).optional(),
+    creatorProgress: CreatorProgressSchema.optional(),
   })
   .strict()
   .superRefine((x, c) => {
@@ -512,6 +535,7 @@ const base = {
   mode: LanguageModeSchema.optional(),
 };
 export const BookCommandSchema = z.discriminatedUnion("action", [
+  z.object({ ...base, action: z.literal("SAVE_PROGRESS"), progress: CreatorProgressSchema }).strict(),
   z
     .object({
       ...base,

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { PageCompositionPlan } from "./PageCompositionPlan";
+import { BookStoryboard } from "./BookStoryboard";
 import { targetElementId, type StudioTarget } from "./studio-recovery";
 import { printResolution } from "@hekayti/export/book";
 import type {
@@ -176,6 +177,8 @@ export function StudioImages({
   onRelink,
   onCopy,
   target,
+  onSelect,
+  charactersOnly = false,
 }: {
   snapshot: BookStudioSnapshot;
   busy: boolean;
@@ -184,17 +187,21 @@ export function StudioImages({
   onRelink: (assetId: string) => void;
   onCopy: (promptId: string) => void;
   target?: StudioTarget;
+  onSelect?: (key: string) => void;
+  charactersOnly?: boolean;
 }) {
   const { say } = useStudioUi();
   const characters = studioCharacters(snapshot);
-  const [selected, setSelected] = useState("characters");
+  const [selected, setSelected] = useState(snapshot.book.creatorProgress?.pageId ?? (snapshot.book.creatorProgress?.control === "cover" ? "cover" : "overview"));
+  function select(key: string) { setSelected(key); onSelect?.(key); }
+  useEffect(() => { if (charactersOnly) setSelected("characters"); else if (selected === "characters") setSelected("overview"); }, [charactersOnly]);
   const [editIdentity, setEditIdentity] = useState<IdentityPack | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [style, setStyle] = useState("");
   useEffect(() => {
     if (target?.section !== "images") return;
     setSelected(
-      target.pageId ?? (target.control === "cover" ? "cover" : "characters"),
+      target.pageId ?? (target.control === "cover" ? "cover" : target.characterId ? "characters" : "overview"),
     );
     if (target.characterId && target.control === "identity") {
       const identity = snapshot.identities.find(
@@ -261,7 +268,7 @@ export function StudioImages({
   }
   return (
     <section className="studio-panel" data-testid="studio-images">
-      <h2>{say("الصور", "Pictures")}</h2>
+      <h2>{charactersOnly ? say("الشخصيات", "Characters") : say("الصور", "Pictures")}</h2>
       <p>
         {say(
           "جهّز البرومبت، وأرفق المراجع يدويًا في ChatGPT أو Gemini أو خدمة أخرى، ثم استورد الصورة الناتجة هنا. نص القصة والعنوان يضافان داخل حكايتي.",
@@ -269,15 +276,16 @@ export function StudioImages({
         )}
       </p>
       <nav className="studio-project-nav">
+        <button aria-pressed={selected === "overview"} onClick={() => select("overview")}>{say("العودة إلى الكتاب كاملًا", "Full book overview")}</button>
         <button
           aria-pressed={selected === "characters"}
-          onClick={() => setSelected("characters")}
+          onClick={() => select("characters")}
         >
           {say("الشخصيات", "Characters")}
         </button>
         <button
           aria-pressed={selected === "cover"}
-          onClick={() => setSelected("cover")}
+          onClick={() => select("cover")}
         >
           {say("الغلاف", "Cover")}
         </button>
@@ -285,12 +293,14 @@ export function StudioImages({
           <button
             key={page.pageId}
             aria-pressed={selected === page.pageId}
-            onClick={() => setSelected(page.pageId)}
+            onClick={() => select(page.pageId)}
           >
             {say("صفحة", "Page")} {page.pageNumber}
           </button>
         ))}
       </nav>
+      {!charactersOnly && <label><input type="checkbox" checked={snapshot.book.creatorProgress?.autoAdvance ?? true} disabled={busy} onChange={(e) => void onCommand({ ...bindings, action: "SAVE_PROGRESS", progress: { ...(snapshot.book.creatorProgress ?? { section: "images" }), autoAdvance: e.target.checked } })} />{say("انتقل تلقائيًا للصورة التالية بعد حفظ الاعتماد", "Advance after approval is saved")}</label>}
+      {selected === "overview" && <BookStoryboard snapshot={snapshot} busy={busy} onSelect={select} />}
       {selected === "characters" &&
         characters.map((character) => {
           const identity = identityFor(character.characterId);
@@ -540,7 +550,7 @@ export function StudioImages({
             `identity-editor-${editIdentity.characterId}`,
           )!,
         )}
-      {selected !== "characters" && (
+      {selected !== "characters" && selected !== "overview" && (
         <>
           <div
             id={targetElementId({
@@ -620,12 +630,16 @@ export function StudioImages({
         <article className="studio-panel" key={prompt.promptId}>
           <h3>{say("البرومبت جاهز", "Prompt ready")}</h3>
           <p dir="auto">{prompt.summary}</p>
-          <p>
-            {say(
-              "أرفق الصور المرجعية المعتمدة ولوحة الشخصية يدويًا مع البرومبت. لا تُنقل الصور تلقائيًا.",
-              "Manually attach approved reference photos and character sheets. Images are not transferred automatically.",
-            )}
-          </p>
+          <p>{say("أرفق المراجع التالية يدويًا مع هذا البرومبت؛ لا تُنقل الصور تلقائيًا.", "Manually attach these exact prompt references; images are never transferred automatically.")}</p>
+          <ul>{prompt.binding.identityRevisions.map((revisionId) => {
+            const identity = snapshot.book.identities.find((i) => i.revisionId === revisionId);
+            if (!identity) return null;
+            const current = snapshot.identities.find((i) => i.characterId === identity.characterId);
+            const sheet = snapshot.images.find((i) => prompt.binding.sheetVersions.includes(i.imageId) && i.characterId === identity.characterId);
+            return <li key={revisionId}><strong>{identity.name}</strong>: {identity.identityMode === "REAL_PHOTOS" ? say(`مطلوب — صور الهوية المرجعية المعتمدة (${identity.referenceAssets.length})`, `Required — approved identity photos (${identity.referenceAssets.length})`) : say("غير مطلوب — صور هوية لشخصية خيالية", "Not needed — identity photos for a fictional character")}{prompt.kind !== "CHARACTER_REFERENCE" && <span> · {say("مطلوب — لوحة الشخصية المرتبطة بهذا البرومبت", "Required — character sheet bound to this prompt")}{!sheet || !sheet.selected || sheet.stale || sheet.status !== "APPROVED" ? say("؛ المرجع يحتاج تحديث البرومبت أو اعتمادًا", "; update prompt or approve its reference") : " ✓"}</span>}{current?.revisionId !== revisionId || !identity.approvedProfile ? <span className="studio-warning"> · {say("تعريف قديم أو غير معتمد؛ جهّز برومبتًا جديدًا", "Old or unapproved definition; prepare a new prompt")}</span> : null}</li>;
+          })}</ul>
+          <p>{say("غير مطلوب: مراجع الشخصيات التي لا تظهر في هذه الصفحة.", "Not needed: references for characters absent from this page.")}</p>
+          {page && <p>{say("اختياري: صورة الصفحة السابقة المعتمدة لتوضيح استمرار المشهد، إذا كانت في المكان نفسه. لا تستبدل بها لوحة الشخصية.", "Optional: approved preceding page for continuity when it shares this setting. Keep the character sheet as design authority.")}</p>}
           <details>
             <summary>{say("عرض البرومبت", "Show prompt")}</summary>
             <textarea readOnly rows={10} dir="auto" value={prompt.text} />
@@ -635,7 +649,7 @@ export function StudioImages({
           </button>
         </article>
       ))}
-      {selectedImages.length === 0 && (
+      {selectedImages.length === 0 && selected !== "overview" && (
         <p>
           {say(
             "لم تُستورد صورة لهذا الموضع بعد.",

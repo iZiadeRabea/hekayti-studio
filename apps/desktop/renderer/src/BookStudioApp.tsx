@@ -4,6 +4,8 @@ import type {
   BookDefaults,
   BookStudioSnapshot,
   SelectBookAssets,
+  CreatorProgress,
+  BookReadiness,
 } from "@hekayti/contracts/book";
 import type {
   SimpleCommand,
@@ -20,6 +22,8 @@ import { StudioStory } from "./StudioStory";
 import { StudioImages } from "./StudioImages";
 import { BookComposer } from "./BookComposer";
 import { useStudioUi } from "./studio-ui";
+import { confirmedArtApproval, nextUnfinishedArt } from "./studio-readiness";
+import { readinessSourceKey } from "@hekayti/core/book";
 import {
   studioIssue,
   studioPrerequisites,
@@ -33,7 +37,9 @@ export function BookStudioApp() {
   const [home, setHome] = useState<"new" | "books" | "library" | "settings">(
     "new",
   );
-  const [tab, setTab] = useState<"story" | "images" | "book">("story");
+  const [tab, setTab] = useState<CreatorProgress["section"]>("story");
+  const [readiness, setReadiness] = useState<BookReadiness>();
+  const latestSnapshot = useRef<BookStudioSnapshot | null>(null);
   const [simple, setSimple] = useState<SimpleDefaults | null>(null);
   const [choices, setChoices] = useState<BookDefaults | null>(null);
   const [snapshot, setSnapshot] = useState<BookStudioSnapshot | null>(null);
@@ -142,6 +148,8 @@ export function BookStudioApp() {
     if (model) setReader(model);
   }
   async function apply(next: BookStudioSnapshot) {
+    latestSnapshot.current = next;
+    setReadiness(undefined);
     setSnapshot(next);
     await loadReader(next);
     setStatus(
@@ -155,7 +163,9 @@ export function BookStudioApp() {
       setPreview(null);
       await apply(next);
       setHome("new");
-      setTab("story");
+      const progress = next.book.creatorProgress;
+      setTab(progress?.section ?? "story");
+      setTarget(progress && (progress.pageId || progress.characterId || progress.control) ? { section: progress.section === "characters" ? "images" : progress.section === "review" ? "book" : progress.section, pageId: progress.pageId, characterId: progress.characterId, control: progress.control ?? "image" } : undefined);
     }
   }
   async function command(input: BookCommand) {
@@ -170,6 +180,12 @@ export function BookStudioApp() {
       if (input.action === "PREPARE_WRITER" && next.text)
         setWriterText(next.text);
       await apply(next);
+      if (input.action === "IMAGE_DECISION" && input.choice === "APPROVE" && confirmedArtApproval(next, input.imageId) && (next.book.creatorProgress?.autoAdvance ?? true)) {
+        const slot = nextUnfinishedArt(next);
+        const progress: CreatorProgress = { section: "images", autoAdvance: true, ...(slot?.pageId ? { pageId: slot.pageId, control: "image" } : slot ? { control: "cover" } : {}) };
+        const saved = await command({ projectId: next.book.projectId, expectedBook: next.book.recordVersion, action: "SAVE_PROGRESS", progress });
+        if (saved) { setTarget({ section: "images", pageId: slot?.pageId, control: slot ? slot.pageId ? "image" : "cover" : "image" }); setTab("images"); }
+      }
     }
     return next;
   }
@@ -220,6 +236,19 @@ export function BookStudioApp() {
     projectId: snapshot!.book.projectId,
     expectedBook: snapshot!.book.recordVersion,
   });
+  function chooseStage(section: CreatorProgress["section"], selection?: { pageId?: string; characterId?: string; control?: CreatorProgress["control"] }) {
+    setTab(section);
+    setTarget(selection ? { ...selection, section: section === "characters" ? "images" : section === "review" ? "book" : section, control: selection.control ?? "image" } : undefined);
+    void run(() => command({ ...bookBindings(), action: "SAVE_PROGRESS", progress: { section, ...selection, autoAdvance: snapshot?.book.creatorProgress?.autoAdvance ?? true } }));
+  }
+  async function checkBook() {
+    const source = latestSnapshot.current;
+    if (!source) return;
+    setReadiness(undefined);
+    const report = await unwrap(window.hekayti.studioReadiness({ projectId: source.book.projectId, expectedBook: source.book.recordVersion, mode: source.mode }));
+    if (report && latestSnapshot.current && readinessSourceKey(latestSnapshot.current) === report.sourceKey) setReadiness(report);
+  }
+  const reportCurrent = !!snapshot && readiness?.sourceKey === readinessSourceKey(snapshot);
   const writerBindings = () => ({
     projectId: snapshot!.book.projectId,
     expectedPlanner: snapshot!.session.planner.recordVersion,
@@ -375,18 +404,20 @@ export function BookStudioApp() {
         {home === "new" && snapshot && (
           <>
             <nav className="studio-project-nav">
-              {(["story", "images", "book"] as const).map((key, i) => (
+              {(["story", "characters", "images", "book", "review"] as const).map((key, i) => (
                 <button
                   key={key}
                   disabled={busy}
                   aria-pressed={tab === key}
-                  onClick={() => setTab(key)}
+                  onClick={() => chooseStage(key)}
                 >
                   {
                     [
                       say("القصة", "Story"),
+                      say("الشخصيات", "Characters"),
                       say("الصور", "Pictures"),
-                      say("الكتاب", "Book"),
+                      say("تنسيق الكتاب", "Book layout"),
+                      say("مراجعة نهائية", "Final review"),
                     ][i]
                   }
                 </button>
@@ -424,11 +455,12 @@ export function BookStudioApp() {
                   ).length
                 }{" "}
                 ·{" "}
+                {say("التنسيق: ", "Layout: ")}{snapshot.layout ? say("محفوظ", "Saved") : say("لم يُحفظ بعد", "Not saved")} · {say("الفحص النهائي: ", "Final check: ")}{reportCurrent && readiness?.digitalReady ? say("جاهز", "Ready") : say("مطلوب", "Required")} ·{" "}
                 {snapshot.approved
                   ? say("الكتاب معتمد", "Book approved")
                   : say("الكتاب يحتاج مراجعة", "Book needs review")}
               </p>
-              {studioPrerequisites(snapshot)[0] && (
+              {studioPrerequisites(snapshot)[0] ? (
                 <button
                   disabled={busy}
                   onClick={() =>
@@ -438,7 +470,7 @@ export function BookStudioApp() {
                   {say("الخطوة التالية: ", "Next: ")}
                   {studioPrerequisites(snapshot)[0]!.message}
                 </button>
-              )}
+              ) : <button disabled={busy} onClick={() => chooseStage(snapshot.layout ? "review" : "book")}>{say("الخطوة التالية: ", "Next: ")}{snapshot.layout ? say("مراجعة نهائية", "Final review") : say("تنسيق الكتاب", "Book layout")}</button>}
               {returnTab && (
                 <button
                   onClick={() => {
@@ -447,7 +479,7 @@ export function BookStudioApp() {
                     setTarget(undefined);
                   }}
                 >
-                  {returnTab === "book"
+                  {returnTab === "review" ? say("العودة إلى المراجعة النهائية", "Return to final review") : returnTab === "book"
                     ? say("العودة إلى الكتاب", "Return to book")
                     : say("العودة للخطوة السابقة", "Return to previous step")}
                 </button>
@@ -573,12 +605,14 @@ export function BookStudioApp() {
                 writerText={writerText}
               />
             </div>
-            <div hidden={tab !== "images"}>
+            <div hidden={tab !== "images" && tab !== "characters"}>
               <StudioImages
                 key={snapshot.book.projectId}
                 snapshot={snapshot}
                 busy={busy}
                 target={target}
+                charactersOnly={tab === "characters"}
+                onSelect={(key) => chooseStage(key === "characters" ? "characters" : "images", key === "cover" ? { control: "cover" } : key === "characters" || key === "overview" ? undefined : { pageId: key, control: "image" })}
                 onCommand={(input) => run(() => command(input)).then(Boolean)}
                 onImport={(input) => void run(() => selectAssets(input))}
                 onRelink={(assetId) =>
@@ -614,8 +648,18 @@ export function BookStudioApp() {
                 }
               />
             </div>
+            {tab === "review" && <section className="studio-panel" data-testid="final-review">
+              <h2>{say("مراجعة نهائية", "Final review")}</h2>
+              <p>{say("افحص النسخة المحفوظة من القصة والصور والتنسيق وقياس الكلام قبل التصدير.", "Check saved story, artwork, layout and measured text before export.")}</p>
+              <button disabled={busy} onClick={() => void run(checkBook)}>{busy ? say("جارٍ فحص الكتاب…", "Checking book…") : say("فحص الكتاب قبل التصدير", "Check book before export")}</button>
+              {reportCurrent && readiness && <><p role="status">{readiness.digitalReady && readiness.printReady ? say("جاهز للتصدير الرقمي والطباعة", "Ready for digital and print export") : say("استكمل الخطوات التالية ثم أعد الفحص", "Complete these steps and check again")}</p>
+                {readiness.findings.map((finding, index) => <article key={index} className={finding.severity === "BLOCKER" ? "studio-warning" : "studio-muted"}><p>{finding.severity === "BLOCKER" ? "يلزم إصلاح: " : finding.severity === "WARNING" ? "تنبيه: " : "معلومة: "}{finding.message}</p><button disabled={busy} onClick={() => navigate(finding.target, "review")}>{say("فتح موضع الإصلاح", "Open exact fix")}</button></article>)}
+                <div className="studio-actions"><button disabled={busy || !readiness.digitalReady} onClick={() => void run(async () => { await unwrap(window.hekayti.studioShowPreview(bookBindings())); })}>{say("معاينة الكتاب", "Preview book")}</button>{(["digital", "print"] as const).map((kind) => <button key={kind} disabled={busy || !(kind === "digital" ? readiness.digitalReady : readiness.printReady)} onClick={() => void run(async () => { const result = await unwrap(window.hekayti.studioExport({ ...bookBindings(), kind })); if (result) setStatus(`✓ ${result.pages} ${say("صفحات تم تصديرها", "pages exported")}`); })}>{kind === "digital" ? say("تصدير رقمي", "Digital PDF") : say("تصدير للطباعة", "Print PDF")}</button>)}</div>
+              </>}
+            </section>}
             <div hidden={tab !== "book"}>
               <BookComposer
+                onFinalReview={() => chooseStage("review")}
                 target={target}
                 key={snapshot.book.projectId}
                 snapshot={snapshot}
