@@ -427,11 +427,11 @@ export function BookStudioApp() {
         {home === "new" && snapshot && (
           <>
             <nav className="studio-project-nav">
-              {(["story", "characters", "images", "book", "review"] as const).map((key, i) => (
+              {(["story", "characters", "images", "book"] as const).map((key, i) => (
                 <button
                   key={key}
                   disabled={busy}
-                  aria-pressed={tab === key}
+                  aria-pressed={tab === key || (key === "book" && tab === "review")}
                   onClick={() => chooseStage(key)}
                 >
                   {
@@ -439,13 +439,13 @@ export function BookStudioApp() {
                       say("القصة", "Story"),
                       say("الشخصيات", "Characters"),
                       say("الصور", "Pictures"),
-                      say("تنسيق الكتاب", "Book layout"),
-                      say("مراجعة نهائية", "Final review"),
+                      say("مراجعة الكتاب وتصديره", "Review and export book"),
                     ][i]
                   }
                 </button>
               ))}
             </nav>
+            {(tab === "book" || tab === "review") && <div className="studio-actions"><button disabled={busy} aria-pressed={tab === "book"} onClick={() => chooseStage("book")}>{say("تنسيق الكتاب", "Book layout")}</button><button disabled={busy} aria-pressed={tab === "review"} onClick={() => chooseStage("review")}>{say("مراجعة نهائية", "Final review")}</button></div>}
             {bookDirty && <p className="studio-warning" role="status">{say("هناك تعديلات تنسيق لم تُحفظ. ارجع إلى تنسيق الكتاب واحفظها قبل الفحص أو التصدير؛ تعديلاتك باقية.", "Layout edits are unsaved. Return to book layout and save before inspection or export; your edits are retained.")} <button onClick={() => setTab("book")}>{say("العودة إلى التعديلات", "Return to edits")}</button></p>}
             <div className="studio-progress" role="status">
               <p>
@@ -586,10 +586,13 @@ export function BookStudioApp() {
                 }
                 onCopy={(target) =>
                   void run(async () => {
-                    const pkg = snapshot.session.package;
-                    if (pkg)
+                    const source = snapshot.session.package ? snapshot : await command({ ...bookBindings(), action: "PREPARE_WRITER" });
+                    const pkg = source?.session.package;
+                    if (pkg && source) {
                       await simpleCommand({
-                        ...writerBindings(),
+                        projectId: source.book.projectId,
+                        expectedPlanner: source.session.planner.recordVersion,
+                        expectedWorkflow: source.session.workflow.recordVersion,
                         action: "COPY",
                         packageId: pkg.packageId,
                         target,
@@ -601,6 +604,7 @@ export function BookStudioApp() {
                         "Prompt copied. Use the service manually.",
                       ),
                     );
+                    }
                   })
                 }
                 onPreview={(json) =>

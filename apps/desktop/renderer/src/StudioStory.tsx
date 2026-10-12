@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { deriveVisualIntent } from "@hekayti/core/book";
 import type {
   BookCommand,
   BookStudioSnapshot,
@@ -85,6 +86,7 @@ export function StudioStory({
     });
   }
   const characters = studioCharacters(snapshot);
+  const edition = snapshot.session.workflow.drafts.find(d => d.draftId === reader?.draftId)?.editions.find(e => e.mode === reader?.mode);
   return (
     <section className="studio-panel" data-testid="studio-story">
       {reader ? (
@@ -176,7 +178,7 @@ export function StudioStory({
                 />
               </label>
               {edit.pages.map((page, pageIndex) => (
-                <article className="reader-page" key={page.pageNumber}>
+                <article className="reader-page" id={`story-edit-page-${page.pageNumber}`} key={page.pageNumber}>
                   <h3>
                     {say("صفحة", "Page")} {page.pageNumber}
                   </h3>
@@ -356,6 +358,16 @@ export function StudioStory({
             </>
           )}
           <PlanNotices notices={reader.notices} />
+          {!reader.historical && !edit && edition && <section className="studio-panel" data-testid="story-progression">
+            <h3>{say("راجع أحداث الصفحات قبل الصور", "Review page progression before artwork")}</h3>
+            <p>{say("هذه قراءة للنص والوصف، مش فحصًا آليًا للصور. راجع أي حالة غير محددة بدل افتراضها.", "This reads text and descriptions, not images. Review unknown states instead of guessing.")}</p>
+            {new Set(edition.pages.map(p=>p.altText.trim() || p.narration.trim())).size < edition.pages.length && <p className="studio-warning">{say("بعض الصفحات تكرر نفس الوصف. راجع الغرض المرئي أو اقترح طولًا أقصر من تعديل المسار؛ لن نختصر كتابًا معتمدًا تلقائيًا.", "Some pages repeat the same description. Review their visual purpose or suggest a shorter path; approved books are never automatically shortened.")}</p>}
+            {edition.pages.map((page, i) => {
+              const visual = deriveVisualIntent(page, i + 1, reader.draftId, snapshot.session.planner.currentPlanRevisionId!, snapshot.scenes.find(s=>s.pageNumber===i+1), edition.pages[i-1], edition.pages[i+1]);
+              const review = visual.sceneReview!;
+              return <article key={page.pageId}><h4>{say("صفحة", "Page")} {i+1}</h4><p dir="auto">{page.narration}</p><p>{say("الحدث: ", "Action: ")}{visual.pageAction}</p><p>{say("من الصفحة السابقة: ", "Preceding page: ")}{review.before}</p><p>{say("حالة هذه الصفحة: ", "Current state: ")}{review.after}</p><p>{say("التغيير المرئي: ", "Visible change: ")}{visual.stateChange.join("؛ ") || say("قارِن وصف الصفحة بالسابقة؛ لا يوجد انتقال مؤكّد في السجل.", "Compare descriptions; no confirmed ledger transition.")}</p><ul>{review.mustNotShow.map((text,j)=><li key={j}>{text}</li>)}</ul>{review.warnings.map((text,j)=><p className="studio-warning" key={j}>{text}</p>)}<button disabled={busy} onClick={()=>{setIndex(i);startEdit();setTimeout(()=>document.getElementById(`story-edit-page-${i+1}`)?.scrollIntoView({block:"start"}),0);}}>{say("راجع نص هذه الصفحة ووصفها", "Review this page text and description")}</button></article>;
+            })}
+          </section>}
           <details>
             <summary>
               {say("تقييم اختياري للقصة", "Optional editorial ratings")}
@@ -595,22 +607,20 @@ export function StudioStory({
       )}
       {(!reader || writerOpen) && (
         <section className="studio-panel">
-          <h3>{say("كتابة القصة", "Write story")}</h3>
+          <h3>{say("كتابة القصة باستخدام ChatGPT أو Gemini", "Write the story using ChatGPT or Gemini")}</h3>
           <p>
             {say(
               "جهّز النص وانسخه، ثم استخدم الخدمة يدويًا والصق الرد هنا. لا يوجد اتصال تلقائي أو اشتراك API.",
               "Prepare and copy the prompt, use the service manually, then paste its response. No automatic connection or API.",
             )}
           </p>
-          <button disabled={busy} onClick={onPrepare}>
-            {say("جهّز برومبت القصة", "Prepare writer prompt")}
-          </button>
+          <button disabled={busy} onClick={() => onCopy("GENERIC")}>{say("١. نسخ برومبت القصة", "1. Copy story prompt")}</button>
           {writerText && (
             <>
               <details>
-                <summary>{say("نص البرومبت", "Writer prompt")}</summary>
+                <summary>{say("تفاصيل متقدمة للكاتب", "Advanced writer details")}</summary>
                 <textarea readOnly dir="auto" rows={10} value={writerText} />
-              </details>
+                <button disabled={busy} onClick={onPrepare}>{say("إعادة تجهيز البرومبت", "Prepare prompt again")}</button>
               <div className="studio-actions">
                 <button disabled={busy} onClick={() => onCopy("GEMINI")}>
                   {say("نسخ لـ Gemini", "Copy for Gemini")}
@@ -622,8 +632,11 @@ export function StudioStory({
                   {say("نسخ النص", "Copy prompt")}
                 </button>
               </div>
+              <label>{say("الخدمة المستخدمة", "Writer service")}<select value={provider} onChange={e=>setProvider(e.target.value as typeof provider)}><option value="GEMINI">Gemini</option><option value="CHATGPT">ChatGPT</option><option value="OTHER">{say("خدمة أخرى", "Other")}</option></select></label>
+              <button disabled={busy || !raw.trim()} onClick={() => onPreview(raw)}>{say("معاينة التحقق دون استيراد", "Validate preview without importing")}</button>
+              </details>
               <label>
-                {say("الصق رد الكاتب", "Paste writer response")}
+                {say("٢. لصق الرد هنا", "2. Paste response here")}
                 <textarea
                   dir="auto"
                   rows={8}
@@ -632,34 +645,16 @@ export function StudioStory({
                   onChange={(e) => setRaw(e.target.value)}
                 />
               </label>
-              <label>
-                {say("الخدمة المستخدمة", "Writer service")}
-                <select
-                  value={provider}
-                  onChange={(e) =>
-                    setProvider(e.target.value as typeof provider)
-                  }
-                >
-                  <option value="GEMINI">Gemini</option>
-                  <option value="CHATGPT">ChatGPT</option>
-                  <option value="OTHER">{say("خدمة أخرى", "Other")}</option>
-                </select>
-              </label>
               <div className="studio-actions">
-                <button
-                  disabled={busy || !raw.trim()}
-                  onClick={() => onPreview(raw)}
-                >
-                  {say("معاينة الرد", "Preview response")}
-                </button>
                 <button
                   disabled={busy || !raw.trim()}
                   onClick={() => onImport(raw, provider)}
                 >
-                  {say("استيراد القصة", "Import story")}
+                  {say("٣. مراجعة القصة", "3. Review story")}
                 </button>
               </div>
               {preview && <WriterResponseFeedback preview={preview} />}
+              <p>{say("الرد يُفحص قبل استيراده. بعد عرضه اقرأ القصة واضغط اعتماد القصة بنفسك؛ لن تُعتمد تلقائيًا. لو الرد غير صالح انسخ البرومبت الحالي وأعد توليده بنفس الصيغة.", "The response is validated before import. Read it and explicitly approve the story; approval is never automatic. Regenerate an invalid response using the current prompt and format.")}</p>
             </>
           )}
         </section>

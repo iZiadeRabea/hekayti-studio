@@ -265,7 +265,12 @@ test("private synthetic-photo identity, image locks, editable Arabic book and sc
     pageId: s.session.workflow.drafts.at(-1)!.editions[0]!.pages[2]!.pageId,
   });
   assert.match(s.text!, /Character Sheet/);
-  assert.match(s.text!, /القماشة المألوفة.*مرفوعة بعيدًا/);
+  // Retain the historical beat ledger, but an authored lifting event alone
+  // must not instruct a fully uncovered end-state for the current page.
+  assert.match(s.book.intents[0]!.scenes[2]!.after.find(e=>e.name.includes("القماشة"))!.state, /مرفوعة بعيدًا/);
+  assert.match(s.text!, /Required current-page state: تولين ترفع القماشة/);
+  assert.match(s.text!, /Declared visibility: UNKNOWN/);
+  assert.match(s.text!, /HUMAN REVIEW REQUIRED/);
   assert.doesNotMatch(s.text!, /identityRevision|referenceAssets|Exact approved bindings/);
   assert.match(s.text!, /No reset of cloth coverage/);
   s = await h.studio.addSelectedAssets(

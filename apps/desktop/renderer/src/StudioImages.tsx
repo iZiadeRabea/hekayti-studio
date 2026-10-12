@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { deriveVisualIntent } from "@hekayti/core/book";
 import { createPortal } from "react-dom";
 import { PageCompositionPlan } from "./PageCompositionPlan";
 import { BookStoryboard } from "./BookStoryboard";
@@ -238,6 +239,8 @@ export function StudioImages({
       }
     : undefined;
   const page = edition?.pages.find((p) => p.pageId === selected);
+  const pageIndex = page ? edition!.pages.indexOf(page) : -1;
+  const sceneReview = page ? deriveVisualIntent(page, pageIndex+1, draft!.draftId, snapshot.session.planner.currentPlanRevisionId!, snapshot.scenes.find(s=>s.pageNumber===pageIndex+1), edition!.pages[pageIndex-1], edition!.pages[pageIndex+1]).sceneReview : undefined;
   const selectedImages = snapshot.images.filter((image) =>
     selected === "characters"
       ? false
@@ -737,6 +740,7 @@ export function StudioImages({
                     "Review likeness, character consistency and clothing, scene and props, extra elements, and age suitability.",
                   )}
                 </p>
+                {image.kind === "PAGE" && sceneReview && <section data-testid="scene-image-checklist"><h4>{say("راجع الصورة قبل اعتمادها", "Review the image before approval")}</h4><ul><li>{say("هل الحدث الصحيح ظاهر؟ ", "Is the correct event shown? ")}{sceneReview.mustShow.join("؛ ")}</li><li>{say("هل حالة الأشياء مطابقة للصفحة؟ ", "Do object states match? ")}{sceneReview.after}</li><li>{say("هل حدث من صفحة تالية ظهر بدري؟ ", "Is a later event shown too early? ")}{sceneReview.mustNotShow.join("؛ ")}</li><li>{say("هل الشخصيات والأشياء ثابتة دون تغيير أو إعادة غير مبررة؟", "Are characters and props consistent without unexplained resets?")}</li><li>{say("هل مساحة النص مناسبة وبعيدة عن الفعل والوجوه؟", "Is text space clear of the action and faces?")}</li></ul>{sceneReview.warnings.map((w,j)=><p className="studio-warning" key={j}>{w}</p>)}<p>{say("أنت المسؤول عن المراجعة البصرية؛ التطبيق لا يتعرف على محتوى الصورة آليًا.", "You perform visual review; the app does not recognize image content.")}</p></section>}
                 <label>
                   {say("ملاحظات المراجعة", "Review notes")}
                   <textarea

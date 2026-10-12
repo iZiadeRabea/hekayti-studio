@@ -1,5 +1,9 @@
 # Current state
 
+## Targeted story repair —2026-10-13
+
+Owner-authorized narrow story-flow correction from clean071396ce/v0.7.2-release-candidate on feature/story-flow-fixes. Page-specific physical/reveal review, shared-beat projection repair, two-screen Quick creation/Advanced preservation and manual writer guidance integrated; focused20/20 plus overlapping latest11/11/typecheck passed. Separate live read-only SQLite malformed/disk-I/O finding remains unresolved and is not attributed to the app. No owner records/media changed. Independent QA, native acceptance and final release/recovery pending; see docs/implementation/story-flow-fixes.md. Prior readiness release work is completed history, not the current stop boundary.
+
 ## Current authority — final product readiness (2026-10-12)
 
 Owner-authorized v0.7.2 candidate from clean main3eb1bdc/stable0.7.1, on feature/final-product-readiness. Saved exact journey/storyboard/manual approvals/measured final review integrated; same QA closed every bounded finding including dirty header/Advanced exits, explicit discard and exact saved cover layers. Final frozen417/417 application, foundation101/design329, typecheck/build and segmented packaged16-page/two-character journey passed. Final17+17-page PDFs rendered/inspected, saved geometry/selection reopen and four actual old synthetic projects passed. Three packages were necessary for two genuine late corrections; incomplete invocations are not PASS. Stable main/tags/private push/cloud recovery remain separate final authorized operations; actual identity/receipts external. No post-backup source commit/tag move or next phase; owner runtime/photos/791 untouched. Essential evidence/limits: docs/implementation/final-product-readiness-release-packet.md and readiness-independent-qa.md.

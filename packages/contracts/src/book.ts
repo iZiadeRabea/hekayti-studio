@@ -267,6 +267,15 @@ export const VisualIntentSchema = z
     cameraFraming: text,
     compositionHint: text,
     continuity: z.array(text).max(40),
+    sceneReview: z.object({
+      before: text,
+      after: text,
+      visibility: z.enum(["VISIBLE", "PARTIAL", "COVERED", "UNKNOWN"]),
+      mustShow: z.array(text).max(40),
+      mustNotShow: z.array(text).max(40),
+      locks: z.array(text).max(40),
+      warnings: z.array(text).max(40),
+    }).strict().optional(),
     reviewRequired: z.boolean(),
   })
   .strict();

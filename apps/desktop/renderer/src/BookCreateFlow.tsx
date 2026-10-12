@@ -5,6 +5,7 @@ import type {
 } from "@hekayti/contracts/creator";
 import type { BookDefaults, BookIntent } from "@hekayti/contracts/book";
 import { movePathStep, useStudioUi } from "./studio-ui";
+import { infantCoveredProgression } from "@hekayti/core/book";
 
 export function BookCreateFlow({
   simple,
@@ -26,13 +27,14 @@ export function BookCreateFlow({
 }) {
   const { say, label, language } = useStudioUi();
   const [step, setStep] = useState(0);
+  const [advanced, setAdvanced] = useState(false);
   const [age, setAge] = useState(42);
   const [agePreset, setAgePreset] = useState("THREE_FIVE");
   const [mode, setMode] = useState<"ar-EG" | "ar-MSA-simple">("ar-EG");
   const [category, setCategory] =
-    useState<NonNullable<SimpleCreateInput["category"]>>("adventure");
+    useState<NonNullable<SimpleCreateInput["category"]>>("bedtime");
   const [goal, setGoal] =
-    useState<NonNullable<SimpleCreateInput["goalPreset"]>>("SHARING");
+    useState<NonNullable<SimpleCreateInput["goalPreset"]>>("SLEEP");
   const [customGoal, setCustomGoal] = useState("");
   const [idea, setIdea] = useState<BookIntent["idea"]>({
     source: "SUGGESTED",
@@ -42,7 +44,7 @@ export function BookCreateFlow({
     mode: "AUTO",
     steps: [],
   });
-  const [length, setLength] = useState<BookIntent["length"]>("AUTO");
+  const [length, setLength] = useState<BookIntent["length"]>("SHORT");
   const [characterMode, setCharacterMode] = useState("FICTIONAL");
   const [name, setName] = useState("");
   const [setting, setSetting] = useState("");
@@ -51,9 +53,12 @@ export function BookCreateFlow({
   );
   const [manualIdea, setManualIdea] = useState("");
   const [ideaOffset, setIdeaOffset] = useState(0);
+  useEffect(() => { onChoices(age, category, goal, mode); }, []);
   useEffect(() => {
     if (ideaMode !== "AUTO" || !choices?.ideas.length) return;
-    const chosen = choices.ideas[ideaOffset % choices.ideas.length]!;
+    const candidates = choices.ideas.filter(item => item.category === category);
+    const suitable = candidates.length ? candidates : choices.ideas;
+    const chosen = suitable[ideaOffset % suitable.length]!;
     setIdea(
       chosen.libraryRef
         ? {
@@ -63,7 +68,7 @@ export function BookCreateFlow({
           }
         : { source: "SUGGESTED", text: chosen.description },
     );
-  }, [choices, ideaMode, ideaOffset]);
+  }, [choices, ideaMode, ideaOffset, category]);
   useEffect(() => {
     const goals = choices?.goalChoices;
     if (goals?.length && !goals.some((item) => item.key === goal)) {
@@ -92,17 +97,41 @@ export function BookCreateFlow({
     onChoices(age, category, goal, mode);
     setStep(Math.min(headings.length - 1, step + 1));
   };
+  const create = () => onCreate({
+    agePreset: agePreset as SimpleCreateInput["agePreset"], exactAgeMonths: age,
+    primaryLanguageMode: mode, category, goalPreset: goal,
+    ...(customGoal ? { customGoal } : {}), ...(name ? { fictionalName: name } : {}),
+    ...(setting ? { setting } : {}), expectedLibrary: simple.library.recordVersion,
+    provisionalAcknowledged: true, bookIntent: { idea, path, length },
+  }, characterMode === "PHOTO");
+  const quickValid = age >= 0 && age <= 95 && !!idea.text.trim() && pathReady && (goal !== "CUSTOM" || !!customGoal.trim()) && (characterMode === "FICTIONAL" || !!name.trim());
+  const previewSteps = path.mode === "CUSTOM" ? path.steps : path.mode === "AUTO" && age < 12 && /قماش|غطاء|cloth|fabric/iu.test(idea.text) && /ناعم|لعب|مدور|toy|soft/iu.test(idea.text) ? infantCoveredProgression : choices?.paths.find(p => p.key === path.key)?.steps ?? choices?.paths[0]?.steps ?? [];
   return (
     <section className="studio-panel" data-testid="book-create-flow">
+      <div className="studio-actions">
+        <button disabled={busy} aria-pressed={!advanced} onClick={() => { setAdvanced(false); setStep(0); }}>{say("إنشاء سريع", "Quick creation")}</button>
+        <button disabled={busy} aria-pressed={advanced} onClick={() => { setAdvanced(true); setStep(0); }}>{say("تخصيص متقدم", "Advanced customization")}</button>
+      </div>
       <ol className="studio-steps">
-        {headings.map((title, i) => (
+        {(advanced ? headings : [say("عن الطفل والقصة", "Child and story"), say("راجع الفكرة", "Review idea")]).map((title, i) => (
           <li key={title} aria-current={step === i ? "step" : undefined}>
             {i + 1}. {title}
           </li>
         ))}
       </ol>
-      <h2>{headings[step]}</h2>
+      <h2>{advanced ? headings[step] : step === 0 ? say("عن الطفل والقصة", "Child and story") : say("راجع الفكرة", "Review idea")}</h2>
       <fieldset disabled={busy}>
+        {!advanced && step === 1 && <article data-testid="quick-idea-review">
+          <h3>{say("فكرة القصة", "Story premise")}</h3><p dir="auto">{idea.text}</p>
+          <p>{say("الشخصية: ", "Character: ")}{name || say("شخصية خيالية مناسبة للعمر", "Age-appropriate fictional character")}</p>
+          <p>{say("المكان: ", "Setting: ")}{setting || say("مكان مألوف مناسب للفكرة؛ راجعه في مسار القصة", "A familiar setting appropriate to the idea; review it in the story path")}</p>
+          <p>{say("نوع القصة: ", "Story mood: ")}{label(category)} · {say("اللغة: ", "Language: ")}{label(mode)}</p>
+          <p>{say("الطول المختار: ", "Selected length: ")}{label(length)} · {say("المقترح للقصة القصيرة: ", "Short story suggestion: ")}{age < 12 ? 4 : age < 24 ? 6 : age < 36 ? 8 : 10} {say("صفحات؛ عدد الأحداث الفعلي يُراجع قبل الكتابة.", "pages; review actual events before writing.")}</p>
+          <p>{say("مسار مبدئي للمراجعة؛ تجهيز القصة يربطه بتفاصيل فكرتك، ثم تراجع الأحداث قبل الكتابة.", "Suggested progression: preparation binds it to your idea; review actual events before writing.")}</p>
+          <ol>{previewSteps.map((text,i)=><li key={i}>{text}</li>)}</ol>
+          <p>{say("هذه مراجعة للفكرة وليست اعتمادًا للقصة أو الصور. تقدر تضيف الصور المرجعية لاحقًا في الشخصيات.", "This is concept review, not story or artwork approval. Add reference photos later in Characters.")}</p>
+          <button onClick={() => { setStep(0); if (ideaMode === "AUTO") setIdeaOffset(ideaOffset + 1); }}>{say("غير الفكرة", "Change idea")}</button>
+        </article>}
         {step === 0 && (
           <>
             <label>
@@ -152,7 +181,7 @@ export function BookCreateFlow({
             )}
           </>
         )}
-        {step === 1 && (
+        {advanced && step === 1 && (
           <label>
             {headings[1]}
             <select
@@ -164,7 +193,7 @@ export function BookCreateFlow({
             </select>
           </label>
         )}
-        {step === 2 && (
+        {(advanced ? step === 2 : step === 0) && (
           <div className="studio-choice-grid">
             {(
               [
@@ -176,7 +205,7 @@ export function BookCreateFlow({
                 "everyday-life",
                 "values",
               ] as const
-            ).map((type) => (
+            ).filter(type => advanced || age >= 24 || type !== "adventure").map((type) => (
               <button
                 key={type}
                 aria-pressed={category === type}
@@ -190,7 +219,7 @@ export function BookCreateFlow({
             ))}
           </div>
         )}
-        {step === 3 && (
+        {(advanced ? step === 3 : step === 0) && (
           <>
             <div className="studio-actions">
               <button
@@ -215,7 +244,7 @@ export function BookCreateFlow({
                 {say("أكتب فكرتي", "My own idea")}
               </button>
             </div>
-            {ideaMode !== "MANUAL" && (
+            {ideaMode === "CHOOSE" && (
               <div className="studio-choice-grid">
                 {choices?.ideas.slice(0, 6).map((item) => (
                   <button
@@ -277,7 +306,7 @@ export function BookCreateFlow({
                 )}
               </p>
             )}
-            <label>
+            {(advanced || ideaMode === "MANUAL") && <label>
               {say("فكرة القصة", "Story idea")}
               <textarea
                 dir="auto"
@@ -293,10 +322,10 @@ export function BookCreateFlow({
                   "What would you like to happen?",
                 )}
               />
-            </label>
+            </label>}
           </>
         )}
-        {step === 4 && (
+        {advanced && step === 4 && (
           <>
             <label>
               {headings[4]}
@@ -343,7 +372,7 @@ export function BookCreateFlow({
             )}
           </>
         )}
-        {step === 5 && (
+        {advanced && step === 5 && (
           <>
             <div className="studio-actions">
               {(["AUTO", "GUIDED", "CUSTOM"] as const).map((value, i) => (
@@ -482,7 +511,7 @@ export function BookCreateFlow({
             </label>
           </>
         )}
-        {step === 6 && (
+        {advanced && step === 6 && (
           <>
             <label>
               {headings[6]}
@@ -522,7 +551,11 @@ export function BookCreateFlow({
             )}
           </>
         )}
-        {step === 7 && (
+        {!advanced && step === 0 && <>
+          <label>{say("اسم الطفل أو البطل — اختياري", "Child or hero name — optional")}<input dir="auto" maxLength={80} value={name} onChange={e=>setName(e.target.value)} /></label>
+          <p>{say("الصور مش مطلوبة دلوقتي. تقدر تضيف مراجع الشخصية بعد كتابة القصة.", "Photos are not required now. Add character references after writing the story.")}</p>
+        </>}
+        {advanced && step === 7 && (
           <label>
             {say("مكان القصة — اختياري", "Setting — optional")}
             <input
@@ -538,7 +571,7 @@ export function BookCreateFlow({
         <button disabled={busy || step === 0} onClick={() => setStep(step - 1)}>
           {say("السابق", "Back")}
         </button>
-        {step < 7 ? (
+        {!advanced ? <button className="primary-action" disabled={busy || !quickValid} onClick={() => step === 0 ? setStep(1) : create()}>{step === 0 ? say("راجع الفكرة", "Review idea") : say("ابدأ القصة", "Start story")}</button> : step < 7 ? (
           <button
             className="primary-action"
             disabled={
@@ -557,28 +590,7 @@ export function BookCreateFlow({
           <button
             className="primary-action"
             disabled={busy || !idea.text.trim() || !pathReady}
-            onClick={() =>
-              onCreate(
-                {
-                  agePreset: agePreset as SimpleCreateInput["agePreset"],
-                  exactAgeMonths: age,
-                  primaryLanguageMode: mode,
-                  category,
-                  goalPreset: goal,
-                  ...(customGoal ? { customGoal } : {}),
-                  ...(name ? { fictionalName: name } : {}),
-                  ...(setting ? { setting } : {}),
-                  expectedLibrary: simple.library.recordVersion,
-                  provisionalAcknowledged: true,
-                  bookIntent: {
-                    idea,
-                    path,
-                    length,
-                  },
-                },
-                characterMode === "PHOTO",
-              )
-            }
+            onClick={create}
           >
             {say("أنشئ القصة", "Create story")}
           </button>

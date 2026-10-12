@@ -7,6 +7,7 @@ import type {
   PageLayout,
 } from "@hekayti/contracts/book";
 import { AppError } from "@hekayti/contracts";
+import { reviewPageScene } from "./page-scene";
 
 export type StoryPageText = {
   pageId: string;
@@ -51,6 +52,8 @@ export function deriveVisualIntent(
   draftId: string,
   storyRevision: string,
   scene?: ScenePage,
+  previous?: StoryPageText,
+  next?: StoryPageText,
 ): VisualIntent {
   // Authored page prose is authority even when a planner beat is generic.
   const action =
@@ -83,8 +86,11 @@ export function deriveVisualIntent(
       : picture
         ? "الصورة المذكورة واتجاه الانتباه إليها"
         : page.altText || action;
+  const sceneReview = reviewPageScene(page, scene, previous, next);
+  const physicalDescription = /قماش|غطاء|مغط|تحت|cloth|covered|beneath|under/iu.test(page.altText);
   const changes =
     scene?.after.flatMap((e) => {
+      if (physicalDescription && e.kind === "PROP") return [];
       const before = scene.before.find((q) => q.entityId === e.entityId);
       return before && JSON.stringify(before) !== JSON.stringify(e)
         ? [
@@ -118,11 +124,12 @@ export function deriveVisualIntent(
       : reaction
         ? "اترك الوجه ورد الفعل واضحين"
         : "رتب العناصر المذكورة حول فعل الصفحة دون إضافة حدث",
-    continuity: (scene?.after ?? []).map(
+    continuity: (scene?.after ?? []).filter(e => !physicalDescription || e.kind !== "PROP").map(
       (e) =>
         `${e.name}: ${e.location}؛ ${e.state}؛ ${e.visibility}${e.heldBy ? `; held by ${scene?.after.find((q) => q.entityId === e.heldBy)?.name ?? "declared actor"}` : ""}${e.coveredBy ? `; covered by ${scene?.after.find((q) => q.entityId === e.coveredBy)?.name ?? "declared prop"}` : ""}`,
-    ),
-    reviewRequired: !scene || scene.reviewRequired || negated,
+    ).concat(physicalDescription ? [`حالة الأشياء في هذه الصفحة فقط: ${sceneReview.after}؛ ${sceneReview.visibility}`] : []),
+    sceneReview,
+    reviewRequired: !scene || scene.reviewRequired || negated || sceneReview.warnings.length > 0,
   };
 }
 export function similarVisualIntents(

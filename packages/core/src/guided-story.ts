@@ -23,6 +23,14 @@ export const defaultBookSettings: BookDefaults["settings"] = {
   bleedMm: 3,
   pageNumbers: true,
 };
+export const infantCoveredProgression = [
+  "يلحظ الطفل جزءًا مدورًا وناعمًا ظاهرًا من تحت قماشة مألوفة.",
+  "يقترب من الشيء بهدوء وبدعم مألوف.",
+  "يرفع شخص مألوف القماشة قليلًا فيظهر جزء أكبر من الشيء الناعم.",
+  "ينتبه الطفل إلى الجزء الظاهر ويتعرف عليه بدعم مألوف.",
+  "يتفاعل الطفل بلطف مع الجزء الظاهر بدعم مألوف.",
+  "يستقر بهدوء بينما يقرأ له شخص مألوف، ثم ينام.",
+];
 const paths: BookDefaults["paths"] = [
   {
     key: "QUIET_DISCOVERY",
@@ -157,7 +165,7 @@ export function bookDefaults(
           key: "cloth",
           title: "إيه تحت القماشة؟",
           description:
-            "شيء ناعم ومدور تحت قماشة مألوفة؛ يقترب الطفل ويكشفه ويحضنه ويهدأ.",
+            "طرف شيء ناعم ومدور ظاهر تحت قماشة مألوفة؛ يلحظه الطفل، ويرفع شخص مألوف القماشة قليلًا فيظهر جزء أكبر، ثم يستريح الطفل بدعم مألوف.",
           ageMin: 0,
           ageMax: 11,
           category: "bedtime",
@@ -334,7 +342,7 @@ export function composeGuidedStoryPlan(
       : preserve
         ? presentation.events.map((event) => event.action)
         : cloth && intent.path.mode === "AUTO"
-          ? [
+          ? infant ? infantCoveredProgression : [
               "يلحظ الطفل جزءًا مدورًا وناعمًا ظاهرًا من تحت قماشة مألوفة.",
               "يقترب من الشيء بهدوء وبدعم مألوف.",
               "يرفع القماشة فيكشف الشيء الناعم.",
@@ -465,10 +473,11 @@ export function composeGuidedStoryPlan(
       const toy = after.find((e) => e.entityId === entityIds.object)!,
         fabric = after.find((e) => e.entityId === entityIds.cloth)!;
       if (/يرفع|ترفع|رفع|تكشف|يكشف|كشف|lift|uncover/i.test(s)) {
-        toy.visibility = "VISIBLE";
-        toy.coveredBy = null;
-        toy.state = "ظهر بعد رفع القماشة";
-        fabric.state = "مرفوعة بعيدًا عن الشيء";
+        const partly = /قليلا|شوية|جزء|جزئي|partial|portion/iu.test(s);
+        toy.visibility = partly ? "PARTIAL" : "VISIBLE";
+        toy.coveredBy = partly ? entityIds.cloth : null;
+        toy.state = partly ? step : "ظهر بعد رفع القماشة";
+        fabric.state = partly ? "مرفوعة قليلًا وتبقى تغطي بقية الشيء" : "مرفوعة بعيدًا عن الشيء";
         known = true;
       }
       if (/تحضن|يحضن|يحتضن|تحتضن|يحمل|تحمل|hug|hold/i.test(s)) {
