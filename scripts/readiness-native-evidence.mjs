@@ -64,6 +64,9 @@ const launch = () =>
 let app = await launch(),
   page = await app.firstWindow();
 const gates = [];
+const recordGate = gates.push.bind(gates);
+gates.push = (...values) => { for (const gate of values) console.log(JSON.stringify({ gate, elapsedMs: Date.now() - started })); return recordGate(...values); };
+const started = Date.now();
 const call = async (method, input) => {
   const result = await page.evaluate(
     ({ method, input }) => window.hekayti[method](input),
@@ -152,7 +155,8 @@ try {
   });
   const projectId = s.book.projectId;
   await command({ action: "PREPARE_WRITER" });
-  const speaker = s.identities[0].name;
+  assert.ok(s.identities.length >= 2, "Two independently approved characters required");
+  const speaker = s.identities[0].name, listener = s.identities[1].name;
   await call("simpleCommand", {
     action: "IMPORT",
     projectId,
@@ -167,7 +171,7 @@ try {
           pages: steps.map((text, i) => ({
             pageNumber: i + 1,
             narration: text,
-            dialogue: i === 4 ? [{ speaker, text: "نقلب الصفحة سوا؟" }] : [],
+            dialogue: i === 4 ? [{ speaker, text: "نقلب الصفحة سوا؟" }, { speaker: listener, text: "نشوف الصورة الجديدة." }] : [],
             altText: text,
           })),
         },
@@ -219,6 +223,7 @@ try {
   gates.push(
     "Real IPC story approval recovery exact focus and unsaved subtitle return",
   );
+  s = await call("studioLoad", { projectId });
   await command({
     action: "APPROVE_STORY",
     draftId: s.session.workflow.current.draftId,
@@ -265,6 +270,14 @@ try {
     { kind: "COVER" },
     ...edition.pages.map((p) => ({ kind: "PAGE", pageId: p.pageId })),
   ]) {
+    console.log(JSON.stringify({ operation: "manual-art", slot: slot.pageId ? edition.pages.findIndex((p) => p.pageId === slot.pageId) + 1 : "cover", elapsedMs: Date.now() - started }));
+    // Missing-page3 and unapproved art are examined before repair/import approval.
+    if (slot.pageId === edition.pages[2].pageId) {
+      const report = await call("studioReadiness", { projectId, expectedBook: s.book.recordVersion });
+      const finding = report.findings.find((f) => f.code === "BOOK_IMAGE" && f.target.pageId === slot.pageId);
+      assert.ok(finding); assert.equal(finding.severity, "BLOCKER"); assert.equal(report.digitalReady, false);
+      gates.push("Native pre-export missing page3 exact canonical target blocks readiness");
+    }
     await command({ action: "PROMPT", ...slot });
     if (slot.pageId === pageId)
       assert.match(s.text, /لقطة جانبية من فوق السرير/);
@@ -275,6 +288,22 @@ try {
       mode: "ar-EG",
       ...slot,
     });
+    if (slot.pageId === edition.pages[2].pageId) {
+      const report = await call("studioReadiness", { projectId, expectedBook: s.book.recordVersion });
+      assert.ok(report.findings.some((f) => f.code === "BOOK_IMAGE" && f.target.pageId === slot.pageId));
+      gates.push("Native imported unapproved page3 remains blocked until explicit approval");
+      await button("كتبي").click();
+      await button("فتح الكتاب").first().click();
+      await button("الصور").click();
+      await button("صفحة 3").click();
+      await button("اعتماد الصورة").first().click();
+      await page.waitForFunction((id) => document.getElementById(`studio-target-image-${id}`), edition.pages[3].pageId);
+      s = await call("studioLoad", { projectId });
+      assert.equal(s.book.creatorProgress.pageId, edition.pages[3].pageId);
+      assert.equal(s.images.find((i) => i.pageId === slot.pageId && i.selected).status, "APPROVED");
+      gates.push("Actual UI native import review approval settles then auto-advances to canonical page4");
+      continue;
+    }
     await command({
       action: "IMAGE_DECISION",
       imageId: s.images.at(-1).imageId,
@@ -289,6 +318,7 @@ try {
       ...plan,
       anchors: [
         { speakerId: edition.pages[4].dialogue[0].speakerId, x: 0.78, y: 0.7 },
+        { speakerId: edition.pages[4].dialogue[1].speakerId, x: 0.22, y: 0.7 },
       ],
       layoutReviewRequired: false,
     },
@@ -305,6 +335,63 @@ try {
   assert.equal(report.digitalReady, true);
   assert.equal(report.printReady, true);
   assert.ok(report.findings.some((f) => f.severity === "WARNING"));
+  assert.equal(report.findings.some((f) => f.code === "BOOK_IMAGE" && f.target.pageId === edition.pages[2].pageId), false);
+  const goodLayout = structuredClone(s.layout);
+  const sourcePages = edition.pages.map((p, index) => ({ pageNumber: index + 1, narration: p.narration, dialogue: p.dialogue.map((d) => ({ speakerId: d.speakerId, text: d.text })), altText: p.altText }));
+  const longPages = structuredClone(sourcePages);
+  longPages[4].dialogue[0].text = "أنا شايف صورة الكتاب قدامي وبقلب الصفحة بهدوء. ".repeat(32);
+  const editAndRelink = async (pages) => {
+    await command({ action: "EDIT_STORY", draftId: s.session.workflow.current.draftId, title: goodLayout.title, mode: "ar-EG", pages });
+    await command({ action: "APPROVE_STORY", draftId: s.session.workflow.current.draftId });
+    for (const image of s.images.filter((i) => i.selected && i.stale && i.kind !== "CHARACTER_SHEET")) {
+      const slot = { kind: image.kind, ...(image.pageId ? { pageId: image.pageId } : {}) };
+      await command({ action: "PROMPT", ...slot }); await choose();
+      s = await call("studioSelectAssets", { projectId, expectedBook: s.book.recordVersion, mode: "ar-EG", ...slot });
+      await command({ action: "IMAGE_DECISION", imageId: s.images.at(-1).imageId, choice: "APPROVE" });
+    }
+    const layout = structuredClone(goodLayout);
+    layout.draftId = s.session.workflow.current.draftId;
+    for (const p of layout.pages) {
+      p.imageId = s.images.find((i) => i.selected && (p.pageNumber ? i.pageId === p.pageId : i.kind === "COVER")).imageId;
+      if (p.pageNumber) for (const box of p.boxes) {
+        if (box.kind === "NARRATION") box.text = pages[p.pageNumber - 1].narration;
+        if (box.kind === "DIALOGUE") box.text = pages[p.pageNumber - 1].dialogue[box.sourceIndex].text;
+      }
+    }
+    await command({ action: "SAVE_LAYOUT", layout });
+  };
+  await editAndRelink(longPages);
+  const overflow = await call("studioReadiness", { projectId, expectedBook: s.book.recordVersion });
+  assert.equal(overflow.digitalReady, false);
+  assert.ok(overflow.findings.some((f) => f.code === "BOOK_TEXT_OVERFLOW" && f.target.pageId === edition.pages[4].pageId));
+  await button("كتبي").click(); await button("فتح الكتاب").first().click(); await button("مراجعة نهائية").click();
+  await button("فحص الكتاب قبل التصدير").click();
+  const overflowRow = page.locator("[data-testid=final-review] article").filter({ hasText: "الكلام لا يسع المساحة المقاسة" }).first();
+  await overflowRow.getByRole("button").click();
+  await page.waitForFunction((id) => document.getElementById(`studio-target-layout-${id}`) === document.activeElement, edition.pages[4].pageId);
+  await button("العودة إلى المراجعة النهائية").click();
+  s = await call("studioLoad", { projectId });
+  await editAndRelink(sourcePages);
+  await command({ action: "APPROVE_BOOK" });
+  const refreshed = await call("studioReadiness", { projectId, expectedBook: s.book.recordVersion });
+  assert.equal(refreshed.digitalReady, true);
+  assert.equal(refreshed.findings.some((f) => f.code === "BOOK_TEXT_OVERFLOW"), false);
+  gates.push("Native measured long dialogue exact page5 UI fix target/return; repaired source/layout clears obsolete findings");
+  // Current UI opens overview from the persisted snapshot; navigation is real IPC.
+  await button("كتبي").click();
+  await button("فتح الكتاب").first().click();
+  await button("الصور").click();
+  await button("العودة إلى الكتاب كاملًا").click();
+  await page.getByTestId("book-storyboard").waitFor();
+  assert.equal(await page.locator("[data-testid=book-storyboard] [data-slot]").count(), 17);
+  assert.equal(await page.locator("[data-testid=book-storyboard] [data-slot]").first().getAttribute("data-slot"), "cover");
+  await page.locator(`[data-testid=book-storyboard] [data-page-id="${edition.pages[2].pageId}"]`).click();
+  await page.waitForFunction((pageId) => document.getElementById(`studio-target-image-${pageId}`), edition.pages[2].pageId);
+  await button("مراجعة نهائية").click();
+  await button("فحص الكتاب قبل التصدير").click();
+  await page.getByText("جاهز للتصدير الرقمي والطباعة", { exact: true }).waitFor();
+  gates.push("Actual UI cover+16 storyboard canonical order/exact page and final review measured ready with nonblocking warnings");
+  s = await call("studioLoad", { projectId });
   await command({ action: "SAVE_PROGRESS", progress: { section: "images", pageId: edition.pages[2].pageId, control: "image", autoAdvance: false } });
   const bookVersion = s.book.recordVersion,
     history = s.book.compositionPlans.length;

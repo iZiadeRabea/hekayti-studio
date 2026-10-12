@@ -15,9 +15,11 @@ import { studioCharacters, useStudioUi } from "./studio-ui";
 export function PrivateAssetPreview({
   projectId,
   assetId,
+  refreshToken,
 }: {
   projectId: string;
   assetId: string;
+  refreshToken?: object;
 }) {
   const { say } = useStudioUi();
   const [preview, setPreview] = useState<string | null>(null);
@@ -39,7 +41,7 @@ export function PrivateAssetPreview({
     return () => {
       active = false;
     };
-  }, [projectId, assetId]);
+  }, [projectId, assetId, refreshToken]);
   return missing ? (
     <p className="studio-warning">
       {say(
@@ -95,6 +97,7 @@ function CharacterVisuals({
               )}
       </p>
       <PrivateAssetPreview
+        refreshToken={snapshot}
         projectId={snapshot.book.projectId}
         assetId={image.assetId}
       />
@@ -179,6 +182,7 @@ export function StudioImages({
   target,
   onSelect,
   charactersOnly = false,
+  assetRefresh = 0,
 }: {
   snapshot: BookStudioSnapshot;
   busy: boolean;
@@ -189,6 +193,7 @@ export function StudioImages({
   target?: StudioTarget;
   onSelect?: (key: string) => void;
   charactersOnly?: boolean;
+  assetRefresh?: number;
 }) {
   const { say } = useStudioUi();
   const characters = studioCharacters(snapshot);
@@ -300,7 +305,7 @@ export function StudioImages({
         ))}
       </nav>
       {!charactersOnly && <label><input type="checkbox" checked={snapshot.book.creatorProgress?.autoAdvance ?? true} disabled={busy} onChange={(e) => void onCommand({ ...bindings, action: "SAVE_PROGRESS", progress: { ...(snapshot.book.creatorProgress ?? { section: "images" }), autoAdvance: e.target.checked } })} />{say("انتقل تلقائيًا للصورة التالية بعد حفظ الاعتماد", "Advance after approval is saved")}</label>}
-      {selected === "overview" && <BookStoryboard snapshot={snapshot} busy={busy} onSelect={select} />}
+      {selected === "overview" && <BookStoryboard snapshot={snapshot} busy={busy} onSelect={select} refreshToken={assetRefresh} />}
       {selected === "characters" &&
         characters.map((character) => {
           const identity = identityFor(character.characterId);
@@ -397,6 +402,7 @@ export function StudioImages({
                 {identity?.referenceAssets.map((assetId) => (
                   <article key={assetId}>
                     <PrivateAssetPreview
+                      refreshToken={snapshot}
                       projectId={snapshot.book.projectId}
                       assetId={assetId}
                     />
@@ -693,6 +699,7 @@ export function StudioImages({
                   </p>
                 )}
                 <PrivateAssetPreview
+                  refreshToken={snapshot}
                   projectId={snapshot.book.projectId}
                   assetId={image.assetId}
                 />

@@ -39,6 +39,9 @@ export function BookStudioApp() {
   );
   const [tab, setTab] = useState<CreatorProgress["section"]>("story");
   const [readiness, setReadiness] = useState<BookReadiness>();
+  const [bookDirty, setBookDirty] = useState(false);
+  const [assetRefresh, setAssetRefresh] = useState(0);
+  useEffect(() => { if (bookDirty) setReadiness(undefined); }, [bookDirty]);
   const latestSnapshot = useRef<BookStudioSnapshot | null>(null);
   const [simple, setSimple] = useState<SimpleDefaults | null>(null);
   const [choices, setChoices] = useState<BookDefaults | null>(null);
@@ -148,6 +151,7 @@ export function BookStudioApp() {
     if (model) setReader(model);
   }
   async function apply(next: BookStudioSnapshot) {
+    setAssetRefresh((value) => value + 1);
     latestSnapshot.current = next;
     setReadiness(undefined);
     setSnapshot(next);
@@ -237,18 +241,20 @@ export function BookStudioApp() {
     expectedBook: snapshot!.book.recordVersion,
   });
   function chooseStage(section: CreatorProgress["section"], selection?: { pageId?: string; characterId?: string; control?: CreatorProgress["control"] }) {
+    if (section === "review" && bookDirty) { setTab("book"); setStatus(say("هناك تعديلات تنسيق لم تُحفظ؛ احفظها قبل الفحص والتصدير.", "Save pending layout edits before final inspection and export.")); return; }
     setTab(section);
     setTarget(selection ? { ...selection, section: section === "characters" ? "images" : section === "review" ? "book" : section, control: selection.control ?? "image" } : undefined);
     void run(() => command({ ...bookBindings(), action: "SAVE_PROGRESS", progress: { section, ...selection, autoAdvance: snapshot?.book.creatorProgress?.autoAdvance ?? true } }));
   }
   async function checkBook() {
+    if (bookDirty) { setTab("book"); setReadiness(undefined); return; }
     const source = latestSnapshot.current;
     if (!source) return;
     setReadiness(undefined);
     const report = await unwrap(window.hekayti.studioReadiness({ projectId: source.book.projectId, expectedBook: source.book.recordVersion, mode: source.mode }));
     if (report && latestSnapshot.current && readinessSourceKey(latestSnapshot.current) === report.sourceKey) setReadiness(report);
   }
-  const reportCurrent = !!snapshot && readiness?.sourceKey === readinessSourceKey(snapshot);
+  const reportCurrent = !bookDirty && !!snapshot && readiness?.sourceKey === readinessSourceKey(snapshot);
   const writerBindings = () => ({
     projectId: snapshot!.book.projectId,
     expectedPlanner: snapshot!.session.planner.recordVersion,
@@ -423,6 +429,7 @@ export function BookStudioApp() {
                 </button>
               ))}
             </nav>
+            {bookDirty && <p className="studio-warning" role="status">{say("هناك تعديلات تنسيق لم تُحفظ. ارجع إلى تنسيق الكتاب واحفظها قبل الفحص أو التصدير؛ تعديلاتك باقية.", "Layout edits are unsaved. Return to book layout and save before inspection or export; your edits are retained.")} <button onClick={() => setTab("book")}>{say("العودة إلى التعديلات", "Return to edits")}</button></p>}
             <div className="studio-progress" role="status">
               <p>
                 {say("القصة: ", "Story: ")}
@@ -541,6 +548,9 @@ export function BookStudioApp() {
                         }),
                       );
                       if (next) {
+                        latestSnapshot.current = next;
+                        setAssetRefresh((value) => value + 1);
+                        setReadiness(undefined);
                         setSnapshot(next);
                         await loadReader(next, draftId, mode);
                       }
@@ -612,6 +622,7 @@ export function BookStudioApp() {
                 busy={busy}
                 target={target}
                 charactersOnly={tab === "characters"}
+                assetRefresh={assetRefresh}
                 onSelect={(key) => chooseStage(key === "characters" ? "characters" : "images", key === "cover" ? { control: "cover" } : key === "characters" || key === "overview" ? undefined : { pageId: key, control: "image" })}
                 onCommand={(input) => run(() => command(input)).then(Boolean)}
                 onImport={(input) => void run(() => selectAssets(input))}
@@ -660,6 +671,8 @@ export function BookStudioApp() {
             <div hidden={tab !== "book"}>
               <BookComposer
                 onFinalReview={() => chooseStage("review")}
+                onDirtyChange={setBookDirty}
+                onPageSelect={(page) => chooseStage("book", page.pageNumber ? { pageId: page.pageId, control: "layout" } : { control: "cover" })}
                 target={target}
                 key={snapshot.book.projectId}
                 snapshot={snapshot}

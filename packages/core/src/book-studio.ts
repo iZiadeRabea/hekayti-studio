@@ -1057,7 +1057,7 @@ export class BookStudioService {
       kind === "CHARACTER_SHEET"
         ? [characterId!]
         : kind === "PAGE"
-          ? this.composePage(s, pageId!, s.layout?.settings ?? defaultBookSettings).visual.charactersPresent
+          ? deriveVisualIntent(page!, edition!.pages.indexOf(page!) + 1, s.session.workflow.current.draftId!, plan.revisionId, s.scenes.find((scene) => scene.pageNumber === edition!.pages.indexOf(page!) + 1)).charactersPresent
           : plan.characters.map((c) => c.characterId);
     const identities = ids.map((id) =>
       s.identities.find((i) => i.characterId === id),

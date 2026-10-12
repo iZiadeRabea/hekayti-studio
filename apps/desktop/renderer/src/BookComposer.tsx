@@ -158,6 +158,8 @@ export function BookComposer({
   onPreview,
   target,
   onFinalReview,
+  onDirtyChange,
+  onPageSelect,
 }: {
   snapshot: BookStudioSnapshot;
   busy: boolean;
@@ -167,6 +169,8 @@ export function BookComposer({
   onPreview: () => void;
   target?: StudioTarget;
   onFinalReview?: () => void;
+  onDirtyChange?: (dirty: boolean) => void;
+  onPageSelect?: (page: PageLayout) => void;
 }) {
   const { say } = useStudioUi();
   const [layout, setLayout] = useState<BookLayout | null>(
@@ -185,18 +189,21 @@ export function BookComposer({
   );
   const [subtitle, setSubtitle] = useState(snapshot.layout?.subtitle ?? "");
   const [brand, setBrand] = useState(snapshot.layout?.brand ?? "");
-  const [pageIndex, setPageIndex] = useState(0);
+  const [pageIndex, setPageIndex] = useState(() => Math.max(0, snapshot.layout?.pages.findIndex((p) => p.pageId === snapshot.book.creatorProgress?.pageId) ?? 0));
   const [selected, setSelected] = useState<string>();
   const [anchorSpeaker, setAnchorSpeaker] = useState<string>();
   const [overflow, setOverflow] = useState<string[]>([]);
   const [dirty, setDirty] = useState(false);
+  useEffect(() => { onDirtyChange?.(dirty); }, [dirty, onDirtyChange]);
   const bindings = {
     projectId: snapshot.book.projectId,
     expectedBook: snapshot.book.recordVersion,
   };
   const characters = studioCharacters(snapshot);
   useEffect(() => {
-    if (target?.section !== "book" || !target.pageId) return;
+    if (target?.section !== "book") return;
+    if (target.control === "cover") { setPageIndex(0); return; }
+    if (!target.pageId) return;
     const i = layout?.pages.findIndex((p) => p.pageId === target.pageId);
     if (i !== undefined && i >= 0) setPageIndex(i);
   }, [target]);
@@ -455,6 +462,8 @@ export function BookComposer({
               value={pageIndex}
               onChange={(e) => {
                 setPageIndex(Number(e.target.value));
+                const nextPage = layout.pages[Number(e.target.value)];
+                if (nextPage) onPageSelect?.(nextPage);
                 setSelected(undefined);
                 setOverflow([]);
                 setAnchorSpeaker(undefined);
