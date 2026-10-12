@@ -148,3 +148,6 @@ Approved exact preparation ce5dddde9b31cb15f8baa0c54bb6469cc0ea83bd; final403/40
 
 ### 2026-10-12 23:04:33 +03:00 — checkpoint/final-product-readiness-complete
 Final product readiness0.7.2:417 frozen application, all same-QA findings closed, segmented actual Windows16-page/two-character/PDF/legacy acceptance. Explicit local discard and exact saved cover layers;3 necessary packages. Private release/source and unchanged791 recovery receipts external; no post-backup commit/tag move.
+
+### 2026-10-13 01:19:20 +03:00 — checkpoint/story-flow-fixes-complete
+Narrow conservative scene/reveal repair, infant caregiver attribution, Quick creation and manual writer guidance. Synthetic native/PDF and 426 application gates passed; owner SQLite corruption remains unresolved. No owner data changed.
