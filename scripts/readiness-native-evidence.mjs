@@ -415,6 +415,11 @@ try {
   await button("مراجعة نهائية").click();
   assert.equal(await page.getByTestId("final-review").count(), 0);
   assert.equal(await coverSubtitle.inputValue(), "تعديل محلي غير محفوظ");
+  for (const name of ["كتبي", "المكتبة", "الإعدادات", "كتاب جديد"]) {
+    await button(name).click(); await idle();
+    assert.equal(await coverSubtitle.inputValue(), "تعديل محلي غير محفوظ");
+    assert.equal(await composer.isVisible(), true);
+  }
   await button("الشخصيات").first().click();
   await button("العودة إلى التعديلات").click();
   assert.equal(await coverSubtitle.inputValue(), "تعديل محلي غير محفوظ");

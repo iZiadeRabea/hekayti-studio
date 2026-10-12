@@ -15,6 +15,7 @@ import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { BookComposer } from "../../apps/desktop/renderer/src/BookComposer";
 import { UiLanguageProvider } from "../../apps/desktop/renderer/src/UiLanguage";
+import { transformSync } from "esbuild";
 
 // Canonical/service authority only: asset manifests and render fingerprint are
 // controlled ports, not real media availability or native Chromium evidence.
@@ -131,4 +132,41 @@ test("readiness identity rejects each project/book/workflow/planner/language cha
       (s: typeof h.s) => { s.mode = "ar-MSA-simple"; },
     ]) { const next = structuredClone(h.s); change(next); assert.notEqual(readinessSourceKey(next), key); }
   } finally { h.repo.close(); }
+});
+
+test("actual header navigation handler preserves dirty composer for every unmounting destination", async () => {
+  // Execute the real extracted callback with controlled state/action ports. This
+  // checks handler branches; it does not mount React or certify native UI timing.
+  const source = readFileSync("apps/desktop/renderer/src/BookStudioApp.tsx", "utf8").replace(/\r\n/g, "\n");
+  const header = source.slice(source.indexOf('<nav className="studio-home-nav">'), source.indexOf("</nav>", source.indexOf('<nav className="studio-home-nav">')));
+  const callback = /onClick=\{([\s\S]*?)\n\s*\}\n\s*>/.exec(header)?.[1];
+  assert.ok(callback, "extract the exact header callback rather than a copied guard");
+  const js = transformSync(`const click = (${callback});`, { loader: "ts", target: "es2022" }).code + "\nreturn click;";
+  const invoke = async (bookDirty: boolean, key: string) => {
+    const original = { projectId: "pending-synthetic-project" };
+    let current: object | null = original, home = "new", tab = "images", status = "", lists = 0, resets = 0;
+    const pending: Promise<unknown>[] = [];
+    const ports = {
+      bookDirty, key, snapshot: original,
+      run: (action: () => Promise<unknown>) => { const p = action(); pending.push(p); return p; },
+      setHome: (value: string) => { home = value; },
+      setTab: (value: string) => { tab = value; },
+      setStatus: (value: string) => { status = value; },
+      say: (_ar: string, en: string) => en,
+      list: async () => { lists++; },
+      setSnapshot: (value: object | null) => { current = value; resets++; },
+      setReader: () => {}, setWriterText: () => {}, setPreview: () => {},
+    };
+    const click = new Function(...Object.keys(ports), js)(...Object.values(ports)) as () => void;
+    click(); await Promise.all(pending);
+    return { current, original, home, tab, status, lists, resets };
+  };
+  for (const key of ["new", "books", "library", "settings"]) {
+    const state = await invoke(true, key);
+    assert.equal(state.home, "new", key); assert.equal(state.current, state.original, key);
+    assert.equal(state.resets, 0, key); assert.equal(state.lists, 0, key);
+    assert.equal(state.tab, "book", key); assert.ok(state.status.length > 0, key);
+  }
+  const books = await invoke(false, "books"); assert.equal(books.home, "books"); assert.equal(books.lists, 1);
+  const fresh = await invoke(false, "new"); assert.equal(fresh.current, null); assert.equal(fresh.resets, 1);
 });

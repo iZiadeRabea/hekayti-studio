@@ -35,6 +35,25 @@ is 1/1 PASS, zero skipped/cancelled, 0.74 seconds, using actual synthetic file b
 and the controlled decoder port. Thus closure execution is 6/6 focused tests, not
 a whole-suite rerun. No unresolved findings remain in this batch.
 
+Necessary H1 global-navigation extension: the implementation subsequently found
+that header My books/Library/Settings unmounted the dirty composer, and New book
+also cleared the project. Same-QA bounded audit confirms this header is the only
+home/unmount/reset path in BookStudioApp; opening another project is reachable
+only after My books, while ordinary project-stage panels remain mounted/hidden.
+The header callback now returns to Book layout with a save status before any home
+change or snapshot reset when dirty. This extension is CLOSED by source review and
+the focused `--test-name-pattern 'actual header navigation handler'` case:
+1/1 PASS, zero skipped/cancelled, 0.78 seconds. It evaluates the actual extracted
+inline callback using the existing esbuild runtime and controlled state/action
+ports: all four dirty destinations preserve project/home, return to the editor and
+show save guidance; clean My books listing and New book reset remain functional.
+This is handler behavior evidence, not a mounted/native UI timing claim. Two
+initial test-harness setup errors (unsupported TypeScript7 compiler API and CRLF
+extraction) were corrected; neither was a product failure. No dependencies added.
+The old final application Run was stopped before this production edit and must
+restart against the new source; implementation owns the real four-button native
+regression and final source identity. No broad independent rerun was performed.
+
 The independent cases verify:
 
 - Fully approved canonical story/sheet/art/layout authority still cannot claim

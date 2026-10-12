@@ -305,6 +305,11 @@ export function BookStudioApp() {
               aria-pressed={home === key}
               onClick={() =>
                 void run(async () => {
+                  if (bookDirty) {
+                    setTab("book");
+                    setStatus(say("هناك تعديلات تنسيق لم تُحفظ؛ احفظها قبل مغادرة الكتاب.", "Save pending layout edits before leaving this book."));
+                    return;
+                  }
                   setHome(key);
                   if (key === "books") await list();
                   if (key === "new" && snapshot) {
