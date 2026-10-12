@@ -1,6 +1,6 @@
 {
   "name": "@hekayti/export",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "private": true,
   "type": "module",
   "exports": {
@@ -8,7 +8,7 @@
     "./book": "./src/book.ts"
   },
   "dependencies": {
-    "@hekayti/contracts": "0.7.2",
-    "@hekayti/core": "0.7.2"
+    "@hekayti/contracts": "0.7.3",
+    "@hekayti/core": "0.7.3"
   }
 }

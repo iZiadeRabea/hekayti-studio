@@ -6,6 +6,7 @@ import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { deflateSync } from "node:zlib";
 import assert from "node:assert/strict";
+import { DatabaseSync } from "node:sqlite";
 const data = await mkdtemp(join(tmpdir(), "hekayti-story-flow-native-"));
 const packaged = process.argv.includes("--packaged");
 const started = Date.now(), gates = [];
@@ -22,7 +23,7 @@ function chunk(type, bytes) {
 const header = Buffer.alloc(13); header.writeUInt32BE(size); header.writeUInt32BE(size, 4); header[8] = 8; header[9] = 2;
 const art = join(data, "synthetic-blank-art.png");
 await writeFile(art, Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]), chunk("IHDR", header), chunk("IDAT", deflateSync(raw)), chunk("IEND", Buffer.alloc(0))]));
-const launch = () => _electron.launch({ executablePath: resolve(packaged ? "dist/phase2-package/win-unpacked/Hekayti Studio Phase 2.exe" : "node_modules/electron/dist/electron.exe"), args: [...(packaged ? [] : [resolve("apps/desktop")]), "--phase2-data=" + data], timeout: 30000 });
+const launch = (directory = data) => _electron.launch({ executablePath: resolve(packaged ? "dist/story-flow-package/win-unpacked/Hekayti Studio Phase 2.exe" : "node_modules/electron/dist/electron.exe"), args: [...(packaged ? [] : [resolve("apps/desktop")]), "--phase2-data=" + directory], timeout: 30000 });
 let app, page, s, projectId;
 const button = name => page.getByRole("button", { name, exact: true });
 const idle = () => page.waitForFunction(() => ![...document.querySelectorAll(".studio-project-nav button")].some(b => b.disabled));
@@ -33,6 +34,7 @@ const reopenBook = async () => { await button("كتبي").click(); await button(
 const choose = () => app.evaluate(({ dialog }, path) => { dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [path] }); }, art);
 try {
   app = await launch(); page = await app.firstWindow(); await page.waitForLoadState("domcontentloaded"); gate("isolated-native-startup");
+  assert.equal(await app.evaluate(({ app }) => app.getVersion()), "0.7.3");
   await button("تجهيز مكتبة الإلهام").click(); await page.getByTestId("book-create-flow").waitFor();
   await button("تخصيص متقدم").click(); assert.equal(await page.getByTestId("book-create-flow").locator(".studio-steps > li").count(), 8);
   await button("إنشاء سريع").click();
@@ -98,5 +100,20 @@ try {
   await reopenBook(); await load();
   assert.equal(JSON.stringify({ book: s.book, workflow: s.session.workflow }), before);
   gate("actual-close-reopen-exact-story-art-layout-approval-history");
+  await app.close(); app = undefined;
+  // Strict established historical synthetic fixture, never arbitrary owner data.
+  const legacy = join(tmpdir(), "hekayti-phase44-ui-hx7HDv");
+  const legacyRows = () => {
+    const db = new DatabaseSync(join(legacy, "metadata", "synthetic.sqlite"), { readOnly: true });
+    try { return JSON.stringify({ workflow: db.prepare("SELECT project_id,payload FROM story_workflows ORDER BY project_id").all(), book: db.prepare("SELECT project_id,payload FROM illustrated_books ORDER BY project_id").all() }); }
+    finally { db.close(); }
+  };
+  const old = legacyRows(); app = await launch(legacy); page = await app.firstWindow(); await page.waitForLoadState("domcontentloaded");
+  const list = await call("simpleList", { query: "", offset: 0, limit: 20 }); assert.ok(list.stories.length);
+  await button("كتبي").click(); await button("فتح الكتاب").first().click();
+  await page.getByTestId("studio-story").waitFor();
+  for (const row of list.stories) await call("studioLoad", { projectId: row.projectId });
+  await app.close(); app = undefined; assert.equal(legacyRows(), old);
+  gate("actual-old-synthetic-package-open-original-payloads-unchanged");
   console.log(JSON.stringify({ data, projectId, packaged, gates, elapsedMs: Date.now() - started, limits: "Synthetic blank art; no visual recognition/owner-art claims. Owner DB never opened." }));
 } finally { if (app) await app.close(); }
