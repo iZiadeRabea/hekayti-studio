@@ -1,5 +1,9 @@
 # Changelog
 
+## Final product readiness —2026-10-12 (candidate0.7.2)
+
+Saved exact journey/preferences, full bounded canonical storyboard, manual reference/confirmed approval advance and measured aggregate pre-export inspection. Retained unsaved edits with confirmed local discard; exact saved cover layers preserve geometry/history. Same QA closed; final417 application, actual segmented packaged16-page/two-character/native/PDF/legacy gates PASS. Three packages necessary for genuine late corrections; private release/recovery pending separately. Essential packet: docs/implementation/final-product-readiness-release-packet.md.
+
 ## Phase4.4.1 creator workflow fixes —2026-10-08 (implementation checkpoint)
 
 Contextual exact recovery/progress, optional/manual-preserving ideas, character-local visuals/history, pre-art VisualIntent and text composition, repetition review, dynamic narration/cloud bubbles/protected areas, canonical anchors and shared inline/PDF renderer. Focused evidence/remaining release gates recorded in phase4.4.1-continuation.md. No stable0.7.1/release claim yet.

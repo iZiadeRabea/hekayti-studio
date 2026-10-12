@@ -5,6 +5,7 @@
 - Optional mutable creatorProgress in book-state/1.0 stores exact current section/page/control and auto-advance preference; canonical history/approval authority and SQLitev5 remain unchanged. Explicit review/save is preserved: pending composer edits block final inspection/export and remain visible under global navigation.
 - Current snapshot readiness reuses export source/geometry validation, adds original-file availability plus actual Chromium digital/print measurement, and includes project/book/workflow/planner/language identity. Export still reruns its authoritative source/approval/render checks; the inspection is advisory until every blocker clears.
 - Full canonical storyboard uses private hash-checked originals only to create serialized bounded240px previews,24-entry cache and offscreen release. Exact prompt reference guidance derives declared page actors rather than attaching unrelated characters. No visual recognition or quality certification.
+- Dirty compositor exits preserve edits across review/header/Advanced routing; explicit Keep/confirmed local Discard handles unsavable pre-layout or invalid edits without persistence mutation. Fresh SAVE_LAYOUT synchronizes exact cover text layers and preserves manual geometry/history; historical reads remain compatible, fresh approval/export enforce cardinality and measured fit. Final417 and actual segmented Windows/PDF/legacy evidence passed; release/recovery receipt remains external.
 
 ## Phase4.4.1 —2026-10-08 (implementation, release pending)
 
