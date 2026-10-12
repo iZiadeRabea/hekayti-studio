@@ -37,7 +37,7 @@ export function reviewPageScene(page: StoryPageText, scene?: ScenePage, previous
   if (next && uncovering(nextEvidence) && !negated(nextEvidence) && !uncovering(current))
     mustNotShow.push(`لا تنفذ الكشف المحجوز للصفحة التالية: ${exactDescription(next)}`);
   const warnings: string[] = [];
-  if (!page.altText.trim()) warnings.push("وصف الصورة غير موجود؛ راجع حالة الأشياء قبل تجهيز الرسم.");
+  if (!description.trim()) warnings.push("وصف الصورة والنص غير موجودين؛ حدد حالة الأشياء قبل تجهيز الرسم.");
   if (negated(current)) warnings.push("النص يتضمن نفيًا؛ راجع نطاق النفي ولا تفترض أن الفعل حدث.");
   if (ambiguous) warnings.push("الوصف يجمع أشخاصًا وأشياء مجاورة؛ راجع أي شيء يخصه مقدار الظهور.");
   if (constrained && visibility === "UNKNOWN") warnings.push("مقدار ظهور الشيء غير محدد؛ لا تفترض أنه مكشوف بالكامل، راجع وصف الصفحة.");

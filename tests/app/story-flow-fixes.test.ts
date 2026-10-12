@@ -50,6 +50,11 @@ test("Egyptian negation and ambiguous adjacent subjects require review, never fu
     const v=deriveVisualIntent({...a,altText,narration:altText},1,"draft","plan",scene);
     assert.equal(v.sceneReview!.visibility,"UNKNOWN");assert.equal(v.reviewRequired,true);assert.ok(v.sceneReview!.warnings.length);
   }
+  for(const page of [{...a,altText:"",narration:"نور بيقلب صفحة الكتاب مع ماما بهدوء."},{...a,altText:"",narration:"",dialogue:[{speakerId:"child",text:"نشوف صفحة الكتاب سوا."}]}]) {
+    const v=deriveVisualIntent(page,1,"draft","plan",scene);
+    assert.equal(v.reviewRequired,false);assert.equal(v.sceneReview!.mustShow[0],page.narration||page.dialogue[0]!.text);
+  }
+  assert.equal(deriveVisualIntent({...a,altText:"",narration:"",dialogue:[]},1,"draft","plan",scene).reviewRequired,true);
 });
 test("current narration and dialogue suppress contradictory final prop ledger even with a generic alt",()=>{
   const prop={entityId:"toy",kind:"PROP" as const,name:"اللعبة",location:"الغرفة",visibility:"VISIBLE" as const,heldBy:null,coveredBy:null,state:"مكشوفة بالكامل"};
