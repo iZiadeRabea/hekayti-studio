@@ -214,6 +214,7 @@ try {
   const subtitle = page.getByLabel("عنوان فرعي للغلاف — اختياري", {
     exact: true,
   });
+  const originalSubtitle = await subtitle.inputValue();
   await subtitle.fill("عنوان مؤقت غير محفوظ");
   await button("ترتيب تلقائي").click();
   await page.locator(".studio-local-error").getByRole("button").click();
@@ -222,6 +223,8 @@ try {
   );
   await button("العودة إلى الكتاب").click();
   assert.equal(await subtitle.inputValue(), "عنوان مؤقت غير محفوظ");
+  await subtitle.fill(originalSubtitle);
+  await page.waitForFunction(() => !document.querySelector('.studio-warning')?.textContent?.includes('هناك تعديلات تنسيق لم تُحفظ'));
   gates.push(
     "Real IPC story approval recovery exact focus and unsaved subtitle return",
   );
